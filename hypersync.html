@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HyperSync Documentation</title>
+  <meta name="description" content="Visual data routing, automated flow management, and system integration engine built on Apache NiFi.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --accent:    #0284c7;
+      --accent-dim:#0369a1;
+      --accent-bg: #f0f9ff;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="logo-dot" style="background-color: var(--accent);"></span>
+      <span class="wordmark">HyperSync</span>
+      <span class="version-pill">v0.0.1</span>
+    </div>
+    <div class="topbar-right">
+      <a href="index.html" class="topbar-home">← All docs</a>
+    </div>
+  </header>
+  
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="nav-list">
+        <button class="nav-group" aria-expanded="true" aria-controls="group-about">About HyperSync</button>
+        <ul id="group-about" class="open">
+          <li><a href="#what-is-hypersync">What is HyperSync?</a></li>
+          <li><a href="#core-concepts">Core Concepts</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-getting-started">Getting Started</button>
+        <ul id="group-getting-started">
+          <li><a href="#quickstart">Quick Start</a></li>
+          <li><a href="#docker">Docker</a></li>
+          <li><a href="#first-flow">First Flow</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-core-components">Core Components</button>
+        <ul id="group-core-components">
+          <li><a href="#flowfiles">FlowFiles</a></li>
+          <li><a href="#processors">Processors</a></li>
+          <li><a href="#connections">Connections &amp; Queues</a></li>
+          <li><a href="#process-groups">Process Groups</a></li>
+          <li><a href="#controller-services">Controller Services</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-data-provenance">Data Provenance</button>
+        <ul id="group-data-provenance">
+          <li><a href="#provenance">Provenance Overview</a></li>
+          <li><a href="#provenance-search">Searching Provenance</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-operations">Operations</button>
+        <ul id="group-operations">
+          <li><a href="#configuration">Configuration</a></li>
+          <li><a href="#monitoring">Monitoring</a></li>
+          <li><a href="#clustering">Clustering</a></li>
+          <li><a href="#back-pressure">Back Pressure</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-security">Security</button>
+        <ul id="group-security">
+          <li><a href="#tls">TLS</a></li>
+          <li><a href="#authorization">Authorization</a></li>
+          <li><a href="#secrets">Secrets</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-apis">APIs</button>
+        <ul id="group-apis">
+          <li><a href="#rest-api">REST API</a></li>
+          <li><a href="#site-to-site">Site-to-Site</a></li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <main class="content">
+      <div class="page-header">
+        <div class="page-eyebrow">Ingestion &amp; Data Flow</div>
+        <h1 class="page-title">HyperSync</h1>
+        <p class="page-desc">Visual data routing, automated flow management, and system integration engine built on Apache NiFi.</p>
+      </div>
+
+      <section id="what-is-hypersync">
+        <h2>What is HyperSync?</h2>
+        <p>HyperSync is an easy-to-use, powerful, and reliable system to process and distribute data. Based on Apache NiFi, it supports highly configurable directed graphs of data routing, transformation, and system mediation logic. It was originally built to automate the flow of data between multiple computer networks.</p>
+        <p>Some of the high-level capabilities and objectives of HyperSync include a web-based user interface for seamless experience between design, control, feedback, and monitoring. It is highly configurable, allowing you to modify flows dynamically, set back pressure, prioritize queuing, and more.</p>
+        <p>Additionally, HyperSync provides detailed data provenance—tracking data flow from beginning to end—making it easier to troubleshoot, recover, and understand exactly what happened to any given piece of data throughout its lifecycle.</p>
+      </section>
+
+      <section id="core-concepts">
+        <h2>Core Concepts</h2>
+        <p>HyperSync's fundamental design concepts are closely related to Flow-Based Programming (FBP). This conceptual model makes it easy to visualize and manage data flows. The core concepts map directly to the actual components you build in the visual interface.</p>
+        <p>The main concepts include the <strong>FlowFile</strong>, which represents each object moving through the system, containing both the content and its metadata (attributes). The <strong>Processor</strong> is the component responsible for actually doing the work, such as data routing, transformation, or extracting data from external sources.</p>
+        <p>Between Processors, <strong>Connections</strong> act as queues that hold FlowFiles. They allow different Processors to interact at different rates. Finally, a <strong>Flow Controller</strong> manages how and when Processors are given resources to execute, acting as the brain behind the scenes.</p>
+      </section>
+
+      <section id="architecture">
+        <h2>Architecture</h2>
+        <p>HyperSync operates on a robust, JVM-based architecture designed for scale and resilience. At the host level, the Java Virtual Machine runs the HyperSync process, which houses the primary components. The Flow Controller runs within the JVM, managing scheduling and thread allocation.</p>
+        <p>The architecture heavily utilizes three repositories: the <strong>FlowFile Repository</strong> for tracking the state and attributes of data, the <strong>Content Repository</strong> for holding the actual byte arrays of data, and the <strong>Provenance Repository</strong> for storing the historical record of every action taken on the data.</p>
+        <p>When scaled into a cluster, one node acts as the Cluster Coordinator while others act as Primary Nodes. Zookeeper is commonly used to elect these roles and maintain cluster state. This design ensures no single point of failure and high throughput data processing across distributed environments.</p>
+      </section>
+
+      <section id="quickstart">
+        <h2>Quick Start</h2>
+        <p>To get started with HyperSync quickly, you can download the latest binary distribution, unpack it, and run the startup script. Ensure you have Java 11 or Java 21 installed and configured on your system.</p>
+        <p>Navigate to the installation directory and start the application using the following command:</p>
+<pre><code># Start HyperSync in the background
+./bin/hypersync.sh start
+
+# Or run in the foreground to view logs
+./bin/hypersync.sh run</code></pre>
+        <p>Once started, the web interface will be available at <code>https://localhost:8443/hypersync</code>. A set of default credentials will be generated in the <code>logs/hypersync-app.log</code> file, which you can use to log in and begin building your first data flow.</p>
+      </section>
+
+      <section id="docker">
+        <h2>Docker</h2>
+        <p>Running HyperSync via Docker is the recommended approach for testing, development, and containerized deployments. Official Docker images provide a clean, isolated environment with sensible defaults.</p>
+        <p>You can launch a single-node instance using Docker Compose. Create a <code>docker-compose.yml</code> file with the following configuration:</p>
+<pre><code>version: '3'
+services:
+  hypersync:
+    image: hyperlake/hypersync:latest
+    ports:
+      - "8443:8443"
+    environment:
+      - SINGLE_USER_CREDENTIALS_USERNAME=admin
+      - SINGLE_USER_CREDENTIALS_PASSWORD=SuperSecretPassword123!</code></pre>
+        <p>Run <code>docker-compose up -d</code> to start the container. The interface will be accessible securely over HTTPS, and data will be stored ephemerally unless you mount external volumes for the repositories and configuration directories.</p>
+      </section>
+
+      <section id="first-flow">
+        <h2>First Flow</h2>
+        <p>Building your first flow involves dragging components onto the canvas and connecting them. Let's create a simple flow that generates random text and writes it to a local directory.</p>
+        <p>First, drag the Processor icon onto the canvas and search for <code>GenerateFlowFile</code>. Double-click it to configure its properties, setting "Custom Text" to <code>Hello from HyperSync!</code>. Next, drag another Processor onto the canvas, searching for <code>PutFile</code>. Configure its "Directory" property to a valid path on your system, like <code>/tmp/hypersync-output</code>.</p>
+        <p>Connect the two processors by dragging the connection icon from GenerateFlowFile to PutFile. Select the "success" relationship. Finally, right-click anywhere on the canvas and click "Start" to see FlowFiles begin generating and saving to your disk.</p>
+      </section>
+
+      <section id="flowfiles">
+        <h2>FlowFiles</h2>
+        <p>The FlowFile is the foundational concept in HyperSync, representing a single piece of data moving through the system. Rather than moving entire files in memory, a FlowFile is simply a pointer to the actual content on disk, combined with a map of key/value pairs called attributes.</p>
+        <p>This design allows HyperSync to handle massive files—like multi-gigabyte videos—without exhausting JVM heap space. The content remains in the Content Repository, while only the FlowFile object moves between queues and processors.</p>
+        <p>Attributes provide crucial metadata for routing and processing. Standard attributes include <code>filename</code>, <code>path</code>, and <code>uuid</code>, but processors and users can add any arbitrary attributes needed to inform downstream logic, such as an extracted JSON value or an HTTP status code.</p>
+      </section>
+
+      <section id="processors">
+        <h2>Processors</h2>
+        <p>Processors are the workhorses of HyperSync. They are the components that actually interact with FlowFiles, external systems, and the data content itself. HyperSync comes bundled with hundreds of processors supporting protocols ranging from HTTP and Kafka to AWS S3 and traditional RDBMS.</p>
+        <p>Each processor operates independently and conforms to a strict lifecycle. They can be scheduled to run on a timer, via CRON expressions, or event-driven based on incoming data. Processors define "Relationships" (like "success" or "failure"), which dictate where a FlowFile goes after the processor finishes its work.</p>
+        <p>When configuring a processor, you modify its Properties. Many properties support the Expression Language, allowing you to dynamically evaluate values based on FlowFile attributes. For example, setting a file path to <code>/data/${tenant_id}/${filename}</code> dynamically routes data based on the individual FlowFile's context.</p>
+      </section>
+
+      <section id="connections">
+        <h2>Connections &amp; Queues</h2>
+        <p>Connections link Processors together, establishing the routing paths for your data. However, they are more than just visual lines on the canvas; they act as robust queuing mechanisms. When a processor routes a FlowFile to a connection, it sits in that queue until the downstream processor pulls it.</p>
+        <p>Connections can be configured with priorities. By default, they use a First-In-First-Out (FIFO) queue, but you can configure prioritizers, such as prioritizing older data, smaller files, or specific attributes. This ensures critical data is processed first during high-load scenarios.</p>
+        <p>Additionally, connections define Back Pressure thresholds. You can set limits on the total number of objects or the total size (e.g., 10,000 objects or 1 GB). Once a queue reaches this limit, the upstream processor is temporarily paused from sending more data, preventing the system from becoming overwhelmed.</p>
+      </section>
+
+      <section id="process-groups">
+        <h2>Process Groups</h2>
+        <p>As flows grow in complexity, the canvas can quickly become cluttered. Process Groups act as logical containers that help organize your flows into modular, manageable components. You can nest Process Groups deeply to build hierarchical architectures.</p>
+        <p>Process Groups communicate with the outside world through Input Ports and Output Ports. Data entering an Input Port is distributed to processors inside the group, and data sent to an Output Port is passed back out to the parent group. This encapsulation makes it easy to build reusable, standardized flow components.</p>
+        <p>Furthermore, Process Groups enable version control via the HyperSync Registry. You can save a Process Group as a versioned asset, track changes over time, and deploy specific versions across different environments (e.g., dev, test, prod) with ease.</p>
+      </section>
+
+      <section id="controller-services">
+        <h2>Controller Services</h2>
+        <p>Controller Services provide shared resources and configurations that can be utilized by multiple Processors. This is particularly useful for establishing centralized connections, such as database connection pools, SSL context services, or credential providers.</p>
+        <p>Instead of configuring the database username, password, and driver in every single SQL processor, you configure a single <code>DBCPConnectionPool</code> Controller Service. You then point your various Processors to use that shared service.</p>
+        <p>Controller Services exist at the Process Group level and are scoped hierarchically. A service created in the root group is available to all descendant groups, while a service created deep in a nested group is isolated to that specific scope, ensuring clean architectural boundaries.</p>
+      </section>
+
+      <section id="provenance">
+        <h2>Provenance Overview</h2>
+        <p>Data Provenance is a standout feature of HyperSync, providing a complete, immutable lineage of every event that happens to a piece of data. Every time a FlowFile is created, modified, routed, or dropped, a Provenance Event is generated and stored in the Provenance Repository.</p>
+        <p>This lineage includes a snapshot of the FlowFile's attributes at that exact moment in time, the duration of the processing step, and the specific component responsible for the action. You can see the full graph of how a specific record traversed the system.</p>
+        <p>Because the Provenance Repository retains pointers to the actual data in the Content Repository, you can often "Replay" data from a specific point in time. If a downstream system fails and loses data, you can simply locate the data in the Provenance graph and replay it without having to re-fetch it from the original source.</p>
+      </section>
+
+      <section id="provenance-search">
+        <h2>Searching Provenance</h2>
+        <p>To effectively use Data Provenance, HyperSync provides a powerful query interface. From the global menu, you can open the Provenance UI to search for specific events across the entire node or cluster based on time ranges and specific attributes.</p>
+        <p>You can search by the FlowFile UUID, specific filenames, or even custom attributes like a <code>transaction_id</code> if you've extracted it earlier in the flow. The search results provide a timeline of events that match your criteria.</p>
+        <p>When you click on a specific event, you can view its details, see the lineage graph, and even download the content exactly as it existed at that point in time. This makes debugging complex routing logic or addressing compliance audits incredibly straightforward.</p>
+      </section>
+
+      <section id="configuration">
+        <h2>Configuration</h2>
+        <p>HyperSync is configured primarily through a set of properties files located in the <code>conf/</code> directory. The most critical file is <code>hypersync.properties</code>, which dictates core behavior such as repository locations, JVM memory settings, web server ports, and cluster configurations.</p>
+        <p>Other important configuration files include <code>bootstrap.conf</code> for JVM tuning and memory allocation, and <code>logback.xml</code> for logging behavior. Understanding and tuning these properties is essential for running HyperSync in production environments.</p>
+<pre><code># Example hypersync.properties settings
+hypersync.web.https.port=8443
+hypersync.bored.yield.duration=10 millis
+hypersync.provenance.repository.max.storage.size=1 GB</code></pre>
+        <p>Any changes to the core properties require a restart of the application. However, flow configurations (such as adding processors or changing component properties) are dynamic and take effect immediately without requiring a restart.</p>
+      </section>
+
+      <section id="monitoring">
+        <h2>Monitoring</h2>
+        <p>Monitoring the health and performance of your flows is critical. HyperSync's UI provides real-time statistics directly on the canvas, showing the amount of data queued, read, written, and processed over the last 5 minutes for every component.</p>
+        <p>For external monitoring, HyperSync provides an extensive set of reporting tasks. You can configure Reporting Tasks to emit metrics to external systems like Prometheus, Datadog, or InfluxDB. This allows you to build comprehensive dashboards tracking JVM memory, queue sizes, and processor throughput.</p>
+        <p>Additionally, the UI provides a "Summary" page that lists all processors, connections, and system diagnostics in a tabular format, making it easy to identify bottlenecks or back-pressured connections at a glance.</p>
+      </section>
+
+      <section id="clustering">
+        <h2>Clustering</h2>
+        <p>To achieve high throughput and high availability, HyperSync is designed to operate in a clustered environment. A cluster consists of multiple nodes working together to process the flow. Unlike master-slave architectures, HyperSync utilizes a Zero-Master Clustering model managed by Zookeeper.</p>
+        <p>In a cluster, every node runs the exact same flow configuration. When you drag a processor onto the canvas, it is replicated across all nodes. However, they operate on different data. If you have an HTTP listener, a load balancer can distribute incoming requests across the nodes, allowing the cluster to process data concurrently.</p>
+        <p>The UI seamlessly aggregates metrics from all nodes, presenting a unified view of the cluster. If a node fails, the cluster continues operating, and the data on the failed node is preserved until it is restored or manually recovered.</p>
+      </section>
+
+      <section id="back-pressure">
+        <h2>Back Pressure</h2>
+        <p>Back pressure is a crucial mechanism in HyperSync for preventing out-of-memory errors and systemic failures when downstream systems slow down. It is configured on Connections (queues) and dictates how much data can accumulate before upstream components are told to pause.</p>
+        <p>You can configure back pressure based on the number of objects (e.g., 10,000 FlowFiles) or data size (e.g., 1 GB). When the queue reaches this threshold, the connection turns red in the UI, and the processor feeding it stops running until the queue drains below the limit.</p>
+        <p>This localized pausing cascades upwards. If a slow database causes one queue to fill, back pressure propagates back through the flow, eventually pausing the ingestion source (like an HTTP listener or Kafka consumer) rather than indiscriminately accepting data and crashing the application.</p>
+      </section>
+
+      <section id="tls">
+        <h2>TLS</h2>
+        <p>Securing communications is fundamental, and HyperSync heavily relies on TLS for encrypting data in transit. This includes securing the Web UI, inter-node communication in a cluster, and Site-to-Site data transfers.</p>
+        <p>HyperSync requires a Keystore and a Truststore. The Keystore contains the node's private key and certificate, used to identify itself. The Truststore contains public certificates of trusted authorities or trusted clients. These are configured in the <code>hypersync.properties</code> file.</p>
+        <p>When accessing the secure UI or connecting via Site-to-Site, mutual TLS (mTLS) is often utilized. This requires clients to present a valid certificate trusted by HyperSync's Truststore, establishing strong identity verification before any data is exchanged.</p>
+      </section>
+
+      <section id="authorization">
+        <h2>Authorization</h2>
+        <p>Once a user or system is authenticated (via TLS, LDAP, OIDC, etc.), HyperSync enforces a granular authorization model. Access control is managed through Policies, which dictate who can view, modify, or operate specific components in the flow.</p>
+        <p>Policies can be applied globally (e.g., "access the controller", "query provenance") or locally on specific Process Groups or Processors (e.g., "view component X", "modify component Y"). This allows for multi-tenant environments where different teams only see and control their specific data flows.</p>
+        <p>The Initial Admin identity is configured during setup. This user has the ability to bootstrap the initial policies, create user groups, and delegate permissions, ensuring strict governance over data access and flow modifications.</p>
+      </section>
+
+      <section id="secrets">
+        <h2>Secrets</h2>
+        <p>Flow configurations often require sensitive information like database passwords, API keys, and cloud credentials. Storing these in plain text is a significant security risk. HyperSync provides mechanisms to encrypt these sensitive properties.</p>
+        <p>When you enter a sensitive value in a processor's properties (indicated by a masked input field), HyperSync encrypts it before persisting it to the flow configuration file on disk. The master key for this encryption is stored separately, often provided at startup via environment variables or a hardware security module (HSM).</p>
+        <p>Furthermore, Parameter Contexts provide a secure way to manage sets of variables across different environments. You can define sensitive parameters within a context, and those values are never exposed in the UI or exportable flow definitions, ensuring secure CI/CD pipelines.</p>
+      </section>
+
+      <section id="rest-api">
+        <h2>REST API</h2>
+        <p>Every action you can perform in the HyperSync Web UI is powered by the underlying REST API. This API is comprehensive, documented, and fully supported, making it possible to automate any aspect of flow management and deployment.</p>
+        <p>You can use the REST API to programmatically create process groups, instantiate processors, modify properties, check queue sizes, and monitor system health. It forms the backbone for integrating HyperSync into external orchestrators or custom CI/CD pipelines.</p>
+<pre><code># Example: Get the current cluster status
+curl -X GET -H 'Authorization: Bearer &lt;token&gt;' \
+  https://localhost:8443/hypersync-api/controller/cluster</code></pre>
+        <p>Interactive API documentation is built directly into the application, accessible via the help menu, allowing you to easily test endpoints and understand the required JSON schemas for automation scripts.</p>
+      </section>
+
+      <section id="site-to-site">
+        <h2>Site-to-Site</h2>
+        <p>Site-to-Site (S2S) is a specialized protocol native to HyperSync designed for efficient, secure, and reliable data transfer between different HyperSync clusters. Instead of using standard HTTP processors, S2S negotiates the connection and dynamically routes data across nodes.</p>
+        <p>When you use a Remote Process Group to connect to another cluster, the S2S protocol automatically discovers the destination cluster's topology. It identifies which nodes are active and their respective loads, automatically load-balancing the data transfer across the cluster.</p>
+        <p>S2S supports both RAW socket communication and HTTP-based transport, making it highly versatile for traversing firewalls or proxies. It natively supports encryption and compression, ensuring that data moving between data centers or geographic regions is secure and efficient.</p>
+      </section>
+
+    </main>
+  </div>
+  
+  <script>
+    document.querySelectorAll('.nav-group').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var expanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', String(!expanded));
+        document.getElementById(button.getAttribute('aria-controls')).classList.toggle('open', !expanded);
+      });
+    });
+
+    function activateHash() {
+      var hash = location.hash || '#what-is-hypersync';
+      document.querySelectorAll('.nav-list a').forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === hash);
+      });
+      var link = document.querySelector('.nav-list a[href="' + hash + '"]');
+      if (link) {
+        var group = link.closest('ul');
+        if (group && group.id) {
+          var button = document.querySelector('[aria-controls="' + group.id + '"]');
+          if (button) { button.setAttribute('aria-expanded', 'true'); group.classList.add('open'); }
+        }
+      }
+    }
+
+    window.addEventListener('hashchange', activateHash);
+    activateHash();
+  </script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HyperCDC Documentation</title>
+  <meta name="description" content="HyperCDC — row-level change data capture from operational data stores to event streams.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --accent:    #e11d48;
+      --accent-dim:#be123c;
+      --accent-bg: #fff1f2;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <span class="logo-dot"></span>
+    <a class="wordmark" href="index.html">HyperCDC</a>
+    <span class="version-pill">v0.0.1</span>
+    <a class="topbar-home" href="index.html">← All docs</a>
+  </header>
+
+  <div class="layout">
+    <aside aria-label="Documentation navigation">
+      <nav>
+        <ul class="nav-list">
+          <li><a class="active" href="#overview">Overview</a></li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="true" aria-controls="about">
+              About HyperCDC <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="about" class="open">
+              <li><a href="#what-is-cdc">What is CDC?</a></li>
+              <li><a href="#architecture">Architecture</a></li>
+              <li><a href="#delivery">Delivery Guarantees</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="getting-started">
+              Getting Started <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="getting-started">
+              <li><a href="#quickstart">Quick Start</a></li>
+              <li><a href="#docker">Docker</a></li>
+              <li><a href="#connect-source">Connect a Source</a></li>
+              <li><a href="#consume-events">Consume Events</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="connectors">
+              Connectors <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="connectors">
+              <li><a href="#postgres">PostgreSQL</a></li>
+              <li><a href="#mysql">MySQL</a></li>
+              <li><a href="#mongodb">MongoDB</a></li>
+              <li><a href="#oracle">Oracle</a></li>
+              <li><a href="#jdbc">JDBC Sink</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="operations">
+              Operations <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="operations">
+              <li><a href="#configuration">Configuration</a></li>
+              <li><a href="#monitoring">Monitoring</a></li>
+              <li><a href="#errors">Error Handling</a></li>
+              <li><a href="#scaling">Scaling</a></li>
+              <li><a href="#upgrades">Upgrades</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="security">
+              Security <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="security">
+              <li><a href="#authentication">Authentication</a></li>
+              <li><a href="#authorization">Authorization</a></li>
+              <li><a href="#secrets">Secrets</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="overview">
+      <div class="page-header">
+        <div class="page-eyebrow">Change Data Capture</div>
+        <h1 class="page-title">HyperCDC</h1>
+        <p class="page-desc">Captures row-level changes from operational data stores and publishes them as ordered events for downstream streaming and analytics systems.</p>
+      </div>
+
+      <h1 id="releases">Supported Series</h1>
+      <p>This documentation describes the <code>v0.0.1</code> company distribution. Connector support, deployment packaging, and command names must be verified against the released HyperCDC build.</p>
+
+      <h1 id="what-is-cdc">What is change data capture?</h1>
+      <p>Change data capture records inserts, updates, and deletes as they occur in a source system. A CDC connector reads the source change log or transaction stream, converts changes into events, and sends them to a destination such as HyperStream.</p>
+      <ul>
+        <li>Initial snapshots establish the starting state.</li>
+        <li>Streaming reads changes after the snapshot position.</li>
+        <li>Offsets identify the last durable source position.</li>
+        <li>Schema changes are represented separately from row changes where supported.</li>
+      </ul>
+
+      <section id="architecture">
+        <h2>Architecture</h2>
+        <p>HyperCDC runs connectors through workers. A source connector reads a database log, transforms records into a consistent event envelope, and publishes them to destination topics. Sink connectors consume events and apply them to another system.</p>
+        <pre>source database → HyperCDC connector → HyperStream topics → consumers and sinks</pre>
+      </section>
+
+      <section id="delivery">
+        <h2>Delivery Guarantees</h2>
+        <p>Delivery behavior depends on source offsets, destination acknowledgements, connector retries, and sink transaction support. Design consumers to tolerate duplicate delivery and use event keys for idempotent writes.</p>
+      </section>
+
+      <h1 id="quickstart">Getting Started</h1>
+      <p>Start HyperStream, create a connector configuration, run an initial snapshot, and inspect the emitted events. Use a non-production database for the first test.</p>
+
+      <section id="docker">
+        <h2>Docker</h2>
+        <p>Run a local worker with the approved HyperCDC image and connect it to a development database and HyperStream broker.</p>
+        <pre>docker run --name hypercdc-worker --env-file hypercdc.env hypercdc/connect:0.0.1</pre>
+      </section>
+
+      <section id="connect-source">
+        <h2>Connect a Source</h2>
+        <p>Define the connector name, database host, credentials, server identifier, included schemas or tables, topic prefix, and offset storage.</p>
+        <pre>name: orders-source
+connector.class: hypercdc.connector.postgres
+database.hostname: db
+topic.prefix: source.orders
+snapshot.mode: initial</pre>
+      </section>
+
+      <section id="consume-events">
+        <h2>Consume Events</h2>
+        <p>Events contain source metadata, operation type, before and after values, and a source position. Consumers should inspect the operation before applying the record.</p>
+        <pre>{"op":"u","before":{"status":"pending"},"after":{"status":"paid"},"source":{"table":"orders"}}</pre>
+      </section>
+
+      <h1 id="connectors-title">Connectors</h1>
+
+      <section id="postgres">
+        <h2>PostgreSQL</h2>
+        <p>The PostgreSQL connector reads logical replication changes. Configure a publication, replication slot, user permissions, and a stable server name. Monitor slot retention to prevent unbounded WAL growth.</p>
+      </section>
+
+      <section id="mysql">
+        <h2>MySQL</h2>
+        <p>The MySQL connector reads the binary log. Enable row-based logging, configure a durable server identifier, and retain binary logs long enough for connector recovery.</p>
+      </section>
+
+      <section id="mongodb">
+        <h2>MongoDB</h2>
+        <p>The MongoDB connector reads change streams and maps document changes into event records. Define collection filters and review handling for array and nested document updates.</p>
+      </section>
+
+      <section id="oracle">
+        <h2>Oracle</h2>
+        <p>The Oracle connector reads database change information through the supported log-mining configuration. Confirm supplemental logging and required privileges before starting a snapshot.</p>
+      </section>
+
+      <section id="jdbc">
+        <h2>JDBC Sink</h2>
+        <p>The JDBC sink writes events to relational tables. Define primary-key columns, delete handling, insert mode, schema evolution, and dead-letter behavior.</p>
+      </section>
+
+      <h1 id="operations-title">Operations</h1>
+
+      <section id="configuration">
+        <h2>Configuration</h2>
+        <p>Configure worker capacity, connector tasks, offset storage, schema history, retry intervals, topic naming, converters, and dead-letter destinations. Store credentials in a secret provider.</p>
+      </section>
+
+      <section id="monitoring">
+        <h2>Monitoring</h2>
+        <p>Monitor source lag, snapshot progress, transaction-log retention, event publish rate, connector task state, retry counts, and destination errors.</p>
+      </section>
+
+      <section id="errors">
+        <h2>Error Handling</h2>
+        <p>Classify errors as transient, data-related, configuration-related, or unrecoverable. Use retries for transient failures and a dead-letter topic for records that require review.</p>
+      </section>
+
+      <section id="scaling">
+        <h2>Scaling</h2>
+        <p>Scale workers and connector tasks according to source partitions, transaction volume, event size, and downstream throughput. Preserve ordering requirements when increasing parallelism.</p>
+      </section>
+
+      <section id="upgrades">
+        <h2>Upgrades</h2>
+        <p>Back up connector offsets and schema history, review connector compatibility, upgrade a test worker, and verify snapshot, streaming, retry, and schema-change behavior.</p>
+      </section>
+
+      <h1 id="security-title">Security</h1>
+
+      <section id="authentication">
+        <h2>Authentication</h2>
+        <p>Use TLS and approved service identities for source databases, HyperStream brokers, schema services, and sink systems.</p>
+      </section>
+
+      <section id="authorization">
+        <h2>Authorization</h2>
+        <p>Grant the connector only the source log, table, topic, and sink permissions required for its assigned pipeline.</p>
+      </section>
+
+      <section id="secrets">
+        <h2>Secrets</h2>
+        <p>Reference credentials through the platform secret store. Do not place passwords in connector files, logs, shell history, or source control.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var expanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', String(!expanded));
+        document.getElementById(button.getAttribute('aria-controls')).classList.toggle('open', !expanded);
+      });
+    });
+
+    function activateHash() {
+      var hash = location.hash || '#overview';
+      document.querySelectorAll('.nav-list a').forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === hash);
+      });
+      var link = document.querySelector('.nav-list a[href="' + hash + '"]');
+      if (link) {
+        var group = link.closest('ul');
+        if (group && group.id) {
+          var button = document.querySelector('[aria-controls="' + group.id + '"]');
+          if (button) { button.setAttribute('aria-expanded', 'true'); group.classList.add('open'); }
+        }
+      }
+    }
+
+    window.addEventListener('hashchange', activateHash);
+    activateHash();
+  </script>
+</body>
+</html>

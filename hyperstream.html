@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HyperStream Documentation</title>
+  <meta name="description" content="HyperStream — event streaming for publishing, storing, processing, and subscribing to durable streams of records.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --accent:    #0d9488;
+      --accent-dim:#0f766e;
+      --accent-bg: #f0fdfa;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <span class="logo-dot"></span>
+    <a class="wordmark" href="index.html">HyperStream</a>
+    <span class="version-pill">v0.0.1</span>
+    <a class="topbar-home" href="index.html">← All docs</a>
+  </header>
+
+  <div class="layout">
+    <aside aria-label="Documentation navigation">
+      <nav>
+        <ul class="nav-list">
+          <li><a class="active" href="#overview">Overview</a></li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="true" aria-controls="getting-started">
+              Getting Started <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="getting-started" class="open">
+              <li><a href="#introduction">Introduction</a></li>
+              <li><a href="#quickstart">Quick Start</a></li>
+              <li><a href="#use-cases">Use Cases</a></li>
+              <li><a href="#compatibility">Compatibility</a></li>
+              <li><a href="#kraft">KRaft and Coordination</a></li>
+              <li><a href="#docker">Docker</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="concepts">
+              Core Concepts <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="concepts">
+              <li><a href="#events">Events</a></li>
+              <li><a href="#topics">Topics and Partitions</a></li>
+              <li><a href="#brokers">Brokers</a></li>
+              <li><a href="#producers">Producers</a></li>
+              <li><a href="#consumers">Consumers and Groups</a></li>
+              <li><a href="#replication">Replication</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="apis">
+              APIs and Tools <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="apis">
+              <li><a href="#admin-api">Admin API</a></li>
+              <li><a href="#producer-api">Producer API</a></li>
+              <li><a href="#consumer-api">Consumer API</a></li>
+              <li><a href="#streams-api">Streams API</a></li>
+              <li><a href="#connect-api">Connect API</a></li>
+              <li><a href="#command-line">Command-line Tools</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="operations">
+              Operations <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="operations">
+              <li><a href="#configuration">Configuration</a></li>
+              <li><a href="#monitoring">Monitoring</a></li>
+              <li><a href="#security">Security</a></li>
+              <li><a href="#geo-replication">Geo-Replication</a></li>
+              <li><a href="#hardware">Hardware and OS</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="overview">
+      <div class="page-header">
+        <div class="page-eyebrow">Real-Time Event Streaming</div>
+        <h1 class="page-title">HyperStream</h1>
+        <p class="page-desc">An event streaming platform for publishing, storing, processing, and subscribing to streams of records. Connects applications, services, databases, and operational systems through durable, replayable event logs.</p>
+      </div>
+
+      <h1 id="introduction">Introduction</h1>
+      <p>An event can represent a payment, an order change, a device reading, or a service notification. Producers write events to topics; consumers read them independently and maintain their own position in the stream.</p>
+
+      <h1 id="what-is-event-streaming">What is event streaming?</h1>
+      <p>Event streaming captures data as it happens, stores the event history, processes records continuously or retrospectively, and routes results to other systems. This model supports real-time integrations without requiring producers and consumers to run at the same speed.</p>
+      <ul>
+        <li>Application events and audit records</li>
+        <li>Database change capture</li>
+        <li>Sensor and telemetry data</li>
+        <li>Order, payment, and logistics workflows</li>
+        <li>Event-driven services and data platforms</li>
+      </ul>
+
+      <h1 id="how-it-works">How HyperStream works</h1>
+      <p>HyperStream runs as a cluster of brokers. Clients connect over the network to publish and consume records. Topics are divided into partitions so multiple brokers and clients can work in parallel. Replicas keep partition data available when a broker is unavailable.</p>
+      <p>Consumers coordinate through groups. Each partition is assigned to one consumer in a group at a time, allowing a workload to scale across processes while preserving ordering within a partition.</p>
+
+      <h1 id="main-concepts">Main Concepts and Terminology</h1>
+
+      <section id="events">
+        <h2>Events</h2>
+        <p>An event contains a key, value, timestamp, and optional headers. The key is commonly a stable entity identifier such as <code>customer_id</code> or <code>device_id</code>. Records with the same key are normally routed to the same partition.</p>
+        <pre>{"key":"customer-1842","value":{"type":"payment","amount":200},"timestamp":"2026-08-11T09:30:00Z"}</pre>
+      </section>
+
+      <section id="topics">
+        <h2>Topics and Partitions</h2>
+        <p>A topic is a named stream of records. A topic is divided into partitions, and each partition is an ordered append-only log. Partitions determine the unit of parallelism and the maximum number of active consumers in a group.</p>
+        <pre>hyperstream-topics --bootstrap-server broker-1:9092 \
+  --create --topic payments \
+  --partitions 12 \
+  --replication-factor 3</pre>
+      </section>
+
+      <section id="brokers">
+        <h2>Brokers</h2>
+        <p>A broker stores partition segments, serves produce and fetch requests, and participates in cluster metadata management. Use multiple brokers for capacity and availability. Keep broker identities stable when replacing hosts.</p>
+      </section>
+
+      <section id="producers">
+        <h2>Producers</h2>
+        <p>Producers publish records to topics. Configure acknowledgements, retries, batching, compression, and idempotence according to the required delivery behavior. A producer should define a timeout and handle retriable errors.</p>
+      </section>
+
+      <section id="consumers">
+        <h2>Consumers and Groups</h2>
+        <p>Consumers fetch records and commit offsets. A consumer group provides one logical subscriber: members share partitions, and a rebalance redistributes assignments when members join, leave, or fail.</p>
+      </section>
+
+      <section id="replication">
+        <h2>Replication</h2>
+        <p>Each partition may have multiple replicas. The replication factor and in-sync replica policy determine how much failure tolerance the topic has. A common production baseline is a replication factor of three across failure domains.</p>
+      </section>
+
+      <h1 id="apis-tools">APIs and Tools</h1>
+
+      <section id="admin-api">
+        <h2>Admin API</h2>
+        <p>Manage topics, partitions, configurations, consumer groups, and broker metadata. Restrict administrative operations through the authorization policy.</p>
+      </section>
+
+      <section id="producer-api">
+        <h2>Producer API</h2>
+        <p>Publish keyed or unkeyed records and inspect delivery results. Use stable keys when per-entity ordering is required.</p>
+      </section>
+
+      <section id="consumer-api">
+        <h2>Consumer API</h2>
+        <p>Subscribe to topics, poll records, manage offsets, and handle partition assignment. Commit offsets only after the application has completed the corresponding work.</p>
+      </section>
+
+      <section id="streams-api">
+        <h2>Streams API</h2>
+        <p>Build applications that transform, join, aggregate, window, and route event streams. Stateful applications require local state management, changelog topics, and a recovery strategy.</p>
+      </section>
+
+      <section id="connect-api">
+        <h2>Connect API</h2>
+        <p>Run reusable source and sink connectors between HyperStream and external systems. Configure workers, connector tasks, converters, error handling, and dead-letter topics.</p>
+      </section>
+
+      <section id="command-line">
+        <h2>Command-line Tools</h2>
+        <p>Use the command-line tools for local development and administration.</p>
+        <pre>hyperstream-console-producer --bootstrap-server localhost:9092 --topic payments
+hyperstream-console-consumer --bootstrap-server localhost:9092 --topic payments --from-beginning</pre>
+        <p>The <code>hyperstream-</code> command prefix is provisional until confirmed in the company distribution.</p>
+      </section>
+
+      <h1 id="where-to-go">Where to Go from Here</h1>
+
+      <section id="quickstart">
+        <h2>Quick Start</h2>
+        <p>Start a local broker, create a topic, publish a few records, and consume them from the beginning. Then repeat the exercise with two consumers in the same group to observe partition assignment.</p>
+        <pre>hyperstream-topics --bootstrap-server localhost:9092 --create --topic quickstart --partitions 3
+hyperstream-console-producer --bootstrap-server localhost:9092 --topic quickstart
+hyperstream-console-consumer --bootstrap-server localhost:9092 --topic quickstart --from-beginning</pre>
+      </section>
+
+      <section id="use-cases">
+        <h2>Use Cases</h2>
+        <p>Use HyperStream for service integration, change data capture, activity tracking, fraud signals, telemetry pipelines, and durable application event history.</p>
+      </section>
+
+      <section id="compatibility">
+        <h2>Compatibility</h2>
+        <p>Confirm client protocol versions, serialization formats, authentication mechanisms, and broker configuration defaults before connecting an existing Kafka client to HyperStream.</p>
+      </section>
+
+      <section id="kraft">
+        <h2>KRaft and Coordination</h2>
+        <p>HyperStream uses the coordination mode provided by the company distribution. Confirm whether it is compatible with Kafka KRaft metadata controllers before documenting migration procedures.</p>
+      </section>
+
+      <section id="docker">
+        <h2>Docker</h2>
+        <p>For development, run a single-node container with a persistent volume and an explicitly configured listener. Do not use a development container configuration as a production topology.</p>
+      </section>
+
+      <h1 id="operations-title">Operations</h1>
+
+      <section id="configuration">
+        <h2>Configuration</h2>
+        <p>Broker settings control listeners, log directories, retention, replication, request limits, and network threads. Topic settings can override retention and cleanup behavior for individual streams.</p>
+        <pre>log.dirs=/var/lib/hyperstream/data
+num.partitions=12
+log.retention.hours=168
+default.replication.factor=3</pre>
+      </section>
+
+      <section id="monitoring">
+        <h2>Monitoring</h2>
+        <p>Monitor broker availability, request latency, under-replicated partitions, offline partitions, bytes in and out, consumer lag, disk usage, and controller health. Alert on sustained lag and replica loss rather than on single transient samples.</p>
+      </section>
+
+      <section id="security">
+        <h2>Security</h2>
+        <p>Configure TLS for encryption, SASL or another approved mechanism for authentication, and ACLs or policy rules for authorization. Separate producer, consumer, connector, and administrative identities.</p>
+      </section>
+
+      <section id="geo-replication">
+        <h2>Geo-Replication</h2>
+        <p>Replicate selected topics between clusters when recovery objectives or regional data access require it. Define source-of-truth ownership, conflict handling, topic naming, and offset behavior before enabling replication.</p>
+      </section>
+
+      <section id="hardware">
+        <h2>Hardware and OS</h2>
+        <p>Use fast local disks for broker logs, sufficient memory for the page cache, and network capacity sized for replication and client traffic. Spread brokers across failure domains and monitor disk latency.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var expanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', String(!expanded));
+        document.getElementById(button.getAttribute('aria-controls')).classList.toggle('open', !expanded);
+      });
+    });
+
+    function activateHash() {
+      var hash = location.hash || '#overview';
+      document.querySelectorAll('.nav-list a').forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === hash);
+      });
+      var link = document.querySelector('.nav-list a[href="' + hash + '"]');
+      if (link) {
+        var group = link.closest('ul');
+        if (group && group.id) {
+          var button = document.querySelector('[aria-controls="' + group.id + '"]');
+          if (button) { button.setAttribute('aria-expanded', 'true'); group.classList.add('open'); }
+        }
+      }
+    }
+
+    window.addEventListener('hashchange', activateHash);
+    activateHash();
+  </script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HyperGovern Documentation</title>
+  <meta name="description" content="HyperGovern — metadata cataloging, ownership, lineage, glossary, governance, and data-quality workflows.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --accent:    #7c3aed;
+      --accent-dim:#6d28d9;
+      --accent-bg: #f5f3ff;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <span class="logo-dot"></span>
+    <a class="wordmark" href="index.html">HyperGovern</a>
+    <span class="version-pill">v0.0.1</span>
+    <a class="topbar-home" href="index.html">← All docs</a>
+  </header>
+
+  <div class="layout">
+    <aside aria-label="Documentation navigation">
+      <nav>
+        <ul class="nav-list">
+          <li><a class="active" href="#overview">Overview</a></li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="true" aria-controls="quickstart-nav">
+              Quickstart <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="quickstart-nav" class="open">
+              <li><a href="#quickstart">Quickstart</a></li>
+              <li><a href="#docker">Docker</a></li>
+              <li><a href="#kubernetes">Kubernetes</a></li>
+              <li><a href="#sandbox">Sandbox</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="deployment">
+              Deployment <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="deployment">
+              <li><a href="#deployment-overview">Overview</a></li>
+              <li><a href="#docker">Docker</a></li>
+              <li><a href="#kubernetes">Kubernetes</a></li>
+              <li><a href="#helm">Helm</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="connectors">
+              Connectors <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="connectors">
+              <li><a href="#database-connectors">Database Services</a></li>
+              <li><a href="#warehouse-connectors">Data Warehouses</a></li>
+              <li><a href="#messaging-connectors">Messaging</a></li>
+              <li><a href="#connector-config">Connector Configuration</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="guides">
+              How-to Guides <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="guides">
+              <li><a href="#ingestion">Ingest Metadata</a></li>
+              <li><a href="#discovery">Discover Data</a></li>
+              <li><a href="#lineage">Build Lineage</a></li>
+              <li><a href="#quality">Configure Data Quality</a></li>
+              <li><a href="#teams">Manage Teams</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="governance">
+              Governance <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="governance">
+              <li><a href="#glossary">Glossary</a></li>
+              <li><a href="#domains">Domains</a></li>
+              <li><a href="#policies">Policies</a></li>
+              <li><a href="#classification">Classification</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="admin">
+              Admin Guide <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="admin">
+              <li><a href="#users-roles">Users and Roles</a></li>
+              <li><a href="#authentication">Authentication</a></li>
+              <li><a href="#storage">Storage</a></li>
+              <li><a href="#alerts">Alerts</a></li>
+              <li><a href="#upgrade">Upgrade</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="apis">
+              SDK and APIs <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="apis">
+              <li><a href="#rest-api">REST API</a></li>
+              <li><a href="#python-sdk">Python SDK</a></li>
+              <li><a href="#webhooks">Webhooks</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="overview">
+      <div class="page-header">
+        <div class="page-eyebrow">Governance & Metadata Catalog</div>
+        <h1 class="page-title">HyperGovern</h1>
+        <p class="page-desc">A metadata platform for cataloging data assets, documenting ownership, tracing lineage, managing glossary terms, and monitoring data quality.</p>
+      </div>
+
+      <h1 id="getting-started">Getting Started with HyperGovern</h1>
+      <p>This guide covers a local installation, the first service connection, metadata ingestion, and basic discovery. For production, configure persistent storage, authentication, backups, and external search before onboarding users.</p>
+      <p>Choose a deployment path based on the purpose of the environment. Docker is suitable for local evaluation. Kubernetes is suitable for repeatable environments with external storage and managed secrets.</p>
+      <ol>
+        <li>Start HyperGovern and its required services.</li>
+        <li>Open the web application and create the first administrator.</li>
+        <li>Register a database, warehouse, dashboard tool, or messaging service.</li>
+        <li>Run metadata ingestion and verify the service appears in the catalog.</li>
+      </ol>
+
+      <section id="sandbox">
+        <h2>Try the HyperGovern Sandbox</h2>
+        <p>Use the sandbox to review discovery, ownership, glossary, lineage, and data-quality workflows without connecting production systems. Sandbox data is disposable.</p>
+      </section>
+
+      <section id="docker">
+        <h2>Try HyperGovern in Docker</h2>
+        <p>Docker provides a fast local setup for evaluation. Persist the application database and search index outside the containers if the environment will be reused.</p>
+        <pre>docker compose up -d</pre>
+        <p>Replace the image and compose file with the approved HyperGovern distribution.</p>
+      </section>
+
+      <section id="kubernetes">
+        <h2>Try HyperGovern in Kubernetes</h2>
+        <p>Deploy the API service, web application, workers, database, search service, and ingestion jobs in a dedicated namespace. Use persistent volumes for metadata and search data.</p>
+        <pre>helm install hypergovern hypergovern/platform \
+  --namespace hypergovern \
+  --create-namespace</pre>
+        <p>Verify the final chart repository and release name before running.</p>
+      </section>
+
+      <h1 id="deployment-overview">Deployment</h1>
+      <p>HyperGovern normally includes an API service, a web application, a metadata store, a search index, and ingestion workers. The exact components depend on the selected distribution.</p>
+
+      <section id="helm">
+        <h2>Helm</h2>
+        <p>Use Helm values to configure replicas, resource limits, ingress, database connections, search endpoints, object storage, and secret references. Keep environment-specific values separate.</p>
+      </section>
+
+      <h1 id="connectors-overview">Connectors</h1>
+
+      <section id="database-connectors">
+        <h2>Database Services</h2>
+        <p>Database connectors collect schemas, tables, columns, owners, tags, usage statistics, and sample metadata where permitted. Use a read-only service account.</p>
+      </section>
+
+      <section id="warehouse-connectors">
+        <h2>Data Warehouses</h2>
+        <p>Warehouse connectors ingest databases, schemas, tables, views, query usage, and policy metadata. Schedule ingestion outside peak query windows.</p>
+      </section>
+
+      <section id="messaging-connectors">
+        <h2>Messaging</h2>
+        <p>Messaging connectors catalog topics, partitions, schemas, owners, retention settings, and consumer relationships. Disable payload access unless explicitly required.</p>
+      </section>
+
+      <section id="connector-config">
+        <h2>Connector Configuration</h2>
+        <p>Each connector requires a service name, connection endpoint, credential or secret reference, ingestion schedule, and optional filters.</p>
+        <pre>serviceName: warehouse-prod
+serviceType: postgres
+connection: secret://hypergovern/warehouse-prod
+schedule: "0 */6 * * *"</pre>
+      </section>
+
+      <h1 id="how-to">How-to Guides</h1>
+
+      <section id="ingestion">
+        <h2>Ingest Metadata</h2>
+        <p>Register a service, validate the connection, select metadata scopes, and start an ingestion run. Review failures by entity and correct permissions or connectivity before retrying.</p>
+      </section>
+
+      <section id="discovery">
+        <h2>Discover Data</h2>
+        <p>Search by table, column, owner, domain, glossary term, tag, or description. Confirm freshness and ownership before using a result.</p>
+      </section>
+
+      <section id="lineage">
+        <h2>Build Lineage</h2>
+        <p>Lineage can be collected from query logs, pipeline metadata, dashboards, and connector events. Review automated edges before publishing them as authoritative.</p>
+      </section>
+
+      <section id="quality">
+        <h2>Configure Data Quality</h2>
+        <p>Attach tests to tables or columns, define thresholds, schedule checks, and route failures to the responsible team.</p>
+      </section>
+
+      <section id="teams">
+        <h2>Manage Teams</h2>
+        <p>Assign ownership at the service, database, schema, table, dashboard, and glossary levels. Prefer groups for durable ownership.</p>
+      </section>
+
+      <h1 id="governance-title">Data Governance</h1>
+
+      <section id="glossary">
+        <h2>Glossary</h2>
+        <p>Glossary terms define business meaning and can be linked to assets, columns, policies, and domains. Define the term owner, description, status, and related terms.</p>
+      </section>
+
+      <section id="domains">
+        <h2>Domains</h2>
+        <p>Domains organize assets around business or platform ownership. Use a stable domain model for searches, permissions, and reporting.</p>
+      </section>
+
+      <section id="policies">
+        <h2>Policies</h2>
+        <p>Policies describe access, retention, handling, or regulatory requirements. Link policies to classifications and assets.</p>
+      </section>
+
+      <section id="classification">
+        <h2>Classification</h2>
+        <p>Classifications label sensitive or regulated data. Review automated classifications before enforcing access rules.</p>
+      </section>
+
+      <h1 id="admin-title">Admin Guide</h1>
+
+      <section id="users-roles">
+        <h2>Users and Roles</h2>
+        <p>Use groups and roles to control catalog editing, ingestion administration, quality management, and platform configuration.</p>
+      </section>
+
+      <section id="authentication">
+        <h2>Authentication</h2>
+        <p>Configure the identity provider, session duration, service accounts, and API credentials. Rotate secrets during access reviews.</p>
+      </section>
+
+      <section id="storage">
+        <h2>Storage</h2>
+        <p>Back up the metadata database and search index according to the recovery objective. Test restoration in an isolated environment.</p>
+      </section>
+
+      <section id="alerts">
+        <h2>Alerts</h2>
+        <p>Configure alerts for failed ingestion, stale metadata, quality failures, lineage errors, and connector authentication failures.</p>
+      </section>
+
+      <section id="upgrade">
+        <h2>Upgrade</h2>
+        <p>Read release notes, back up persistent stores, validate connector compatibility, upgrade a non-production environment, and verify search and ingestion before production.</p>
+      </section>
+
+      <h1 id="sdk-apis">SDK and APIs</h1>
+
+      <section id="rest-api">
+        <h2>REST API</h2>
+        <p>The REST API exposes entities, relationships, services, users, teams, glossary terms, tests, and ingestion operations. Use scoped tokens and handle pagination.</p>
+      </section>
+
+      <section id="python-sdk">
+        <h2>Python SDK</h2>
+        <p>Use the Python SDK to automate catalog updates, ownership synchronization, glossary management, and quality-test registration.</p>
+        <pre>from hypergovern import Client
+
+client = Client(
+    base_url="https://hypergovern.example",
+    token="${HYPERGOVERN_TOKEN}"
+)</pre>
+      </section>
+
+      <section id="webhooks">
+        <h2>Webhooks</h2>
+        <p>Webhooks notify external systems about entity changes, ingestion completion, quality failures, and ownership updates. Validate signatures and make consumers idempotent.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var expanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', String(!expanded));
+        document.getElementById(button.getAttribute('aria-controls')).classList.toggle('open', !expanded);
+      });
+    });
+
+    function activateHash() {
+      var hash = location.hash || '#overview';
+      document.querySelectorAll('.nav-list a').forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === hash);
+      });
+      var link = document.querySelector('.nav-list a[href="' + hash + '"]');
+      if (link) {
+        var group = link.closest('ul');
+        if (group && group.id) {
+          var button = document.querySelector('[aria-controls="' + group.id + '"]');
+          if (button) { button.setAttribute('aria-expanded', 'true'); group.classList.add('open'); }
+        }
+      }
+    }
+
+    window.addEventListener('hashchange', activateHash);
+    activateHash();
+  </script>
+</body>
+</html>

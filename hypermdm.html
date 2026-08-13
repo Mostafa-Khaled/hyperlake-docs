@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HyperMDM Documentation</title>
+  <meta name="description" content="Centralized master data management, product information, and digital asset platform built on PimCore.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --accent:    #db2777;
+      --accent-dim:#be185d;
+      --accent-bg: #fdf2f8;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span class="logo-dot"></span>
+      <span class="wordmark">HyperMDM</span>
+      <span class="version-pill">v0.0.1</span>
+    </div>
+    <div class="topbar-links">
+      <a href="index.html" class="topbar-home">&larr; All docs</a>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <button class="nav-group" aria-expanded="true" aria-controls="group-about">About HyperMDM</button>
+        <ul class="nav-list open" id="group-about">
+          <li><a href="#what-is-hypermdm">What is HyperMDM?</a></li>
+          <li><a href="#core-concepts">Core Concepts</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-getting-started">Getting Started</button>
+        <ul class="nav-list" id="group-getting-started">
+          <li><a href="#quickstart">Quick Start</a></li>
+          <li><a href="#docker">Docker</a></li>
+          <li><a href="#first-data-class">First Data Class</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-data-modeling">Data Modeling</button>
+        <ul class="nav-list" id="group-data-modeling">
+          <li><a href="#data-classes">Data Classes</a></li>
+          <li><a href="#data-objects">Data Objects</a></li>
+          <li><a href="#object-bricks">Object Bricks</a></li>
+          <li><a href="#field-collections">Field Collections</a></li>
+          <li><a href="#classification-stores">Classification Stores</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-asset-management">Asset Management</button>
+        <ul class="nav-list" id="group-asset-management">
+          <li><a href="#assets">Assets Overview</a></li>
+          <li><a href="#asset-metadata">Metadata &amp; Tags</a></li>
+          <li><a href="#thumbnails">Thumbnails &amp; Transforms</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-data-hub">Data Hub &amp; Integration</button>
+        <ul class="nav-list" id="group-data-hub">
+          <li><a href="#data-hub">Data Hub</a></li>
+          <li><a href="#rest-api">REST API</a></li>
+          <li><a href="#graphql">GraphQL</a></li>
+          <li><a href="#webhooks">Webhooks</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-workflows">Workflows</button>
+        <ul class="nav-list" id="group-workflows">
+          <li><a href="#workflows">Workflow Overview</a></li>
+          <li><a href="#custom-workflows">Custom Workflows</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-operations">Operations</button>
+        <ul class="nav-list" id="group-operations">
+          <li><a href="#configuration">Configuration</a></li>
+          <li><a href="#caching">Caching</a></li>
+          <li><a href="#monitoring">Monitoring</a></li>
+          <li><a href="#upgrade">Upgrade</a></li>
+        </ul>
+
+        <button class="nav-group" aria-expanded="false" aria-controls="group-security">Security</button>
+        <ul class="nav-list" id="group-security">
+          <li><a href="#users-roles">Users &amp; Roles</a></li>
+          <li><a href="#workspaces">Workspaces</a></li>
+          <li><a href="#authentication">Authentication</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="content">
+      <div class="page-header">
+        <div class="page-eyebrow">Master Data &amp; Consumption</div>
+        <h1 class="page-title">HyperMDM</h1>
+        <p class="page-desc">Centralized master data management, product information, and digital asset platform built on PimCore.</p>
+      </div>
+
+      <section id="what-is-hypermdm">
+        <h2>What is HyperMDM?</h2>
+        <p>HyperMDM is a robust, enterprise-grade Master Data Management (MDM) and Product Information Management (PIM) solution tailored for the modern data stack. Built upon the robust foundation of Pimcore, it extends traditional data management by offering seamless integration paths, high-performance data delivery mechanisms, and advanced modeling capabilities designed to support complex, multi-domain environments.</p>
+        <p>It acts as the single source of truth for your critical business data—products, customers, vendors, and digital assets. By consolidating data silos into a unified platform, HyperMDM empowers organizations to maintain high data quality, govern data lifecycles effectively, and orchestrate consistent information distribution across numerous channels, including e-commerce platforms, mobile applications, and print catalogs.</p>
+        <p>HyperMDM goes beyond standard data storage by providing an integrated ecosystem that natively supports Digital Asset Management (DAM), Content Management (CMS), and Customer Experience Management (CXM). This holistic approach ensures that related data entities are inherently connected, allowing you to manage intricate relationships between products and their accompanying media assets seamlessly without switching context.</p>
+      </section>
+
+      <section id="core-concepts">
+        <h2>Core Concepts</h2>
+        <p>At the heart of HyperMDM lies a flexible and dynamic data modeling paradigm based on <strong>Data Objects</strong>. Unlike rigid, traditional database schemas, Data Objects allow administrators to define complex data structures via an intuitive graphical interface or configuration files, supporting inheritance, diverse data types, and sophisticated relationships right out of the box.</p>
+        <p>Another fundamental concept is the separation of data structure from data presentation. Through <strong>Data Classes</strong>, you define the blueprint of your entities. This structure dictates how data is captured, validated, and stored. When it's time to consume this data, HyperMDM leverages its powerful <strong>Data Hub</strong> capabilities to transform and project the internal models into format-agnostic APIs (GraphQL, REST), tailored specifically for the consumption needs of diverse frontends.</p>
+        <p>Finally, the concept of <strong>Digital Assets</strong> is treated as a first-class citizen. Rather than mere file attachments, assets in HyperMDM have their own metadata schemas, can participate in workflows, and maintain bidirectional relations with Data Objects. This means a change in a product's lifecycle can automatically trigger a workflow to review its associated marketing images.</p>
+      </section>
+
+      <section id="architecture">
+        <h2>Architecture</h2>
+        <p>HyperMDM adopts a modern, decoupled architectural approach centered around the robust Symfony PHP framework. It utilizes a powerful MVC (Model-View-Controller) structure where the core MDM engine manages business logic, data persistence, and administrative interfaces. The underlying database layer typically relies on MySQL or MariaDB, leveraging extensive indexing and optimized querying strategies to handle millions of complex entities efficiently.</p>
+        <p>To ensure high performance and scalability, the architecture incorporates comprehensive caching layers. HyperMDM natively supports Redis for object caching and query result caching. This multi-tiered caching strategy drastically reduces database load for read-heavy operations, which is common in environments where PIM data is frequently requested by external e-commerce engines or headless frontends.</p>
+        <p>Integration is facilitated by the <strong>Data Hub</strong> module, which essentially acts as the API gateway for HyperMDM. It translates internal data structures into optimized GraphQL or REST endpoints. This API-first layer allows developers to build custom headless applications, mobile apps, or integrate with ESB (Enterprise Service Bus) systems without direct coupling to the core data models.</p>
+      </section>
+
+      <section id="quickstart">
+        <h2>Quick Start</h2>
+        <p>To get started with HyperMDM quickly, we recommend using the standard Pimcore skeleton package to ensure all required dependencies and directory structures are correctly initialized. The easiest way to create a new HyperMDM project is via Composer, the PHP dependency manager.</p>
+        <pre><code>composer create-project pimcore/skeleton hypermdm-project
+cd hypermdm-project</code></pre>
+        <p>Once the project is cloned, you need to configure your database connection parameters. Edit the <code>.env</code> file in the root directory and update the <code>DATABASE_URL</code> variable to point to your MySQL or MariaDB instance.</p>
+        <pre><code>DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/hypermdm_db?serverVersion=10.6.0-MariaDB"</code></pre>
+        <p>After configuring the environment, run the Pimcore installation command. This script will set up the database schema, initialize the core components, and prompt you to create the initial admin user account. Once complete, you can start the development server and access the admin panel.</p>
+      </section>
+
+      <section id="docker">
+        <h2>Docker</h2>
+        <p>For a consistent and isolated development environment, deploying HyperMDM via Docker is highly recommended. We provide a pre-configured <code>docker-compose.yml</code> stack that includes PHP-FPM, Nginx, MariaDB, and Redis, all tailored for optimal Pimcore performance.</p>
+        <p>Start by downloading the Docker configuration files into your project directory. Then, initiate the build and startup process using Docker Compose. The initial startup might take a few minutes as it downloads the necessary images and builds the PHP environment containing required extensions like GD, Imagick, and Redis.</p>
+        <pre><code>docker-compose up -d --build
+docker-compose exec php bin/console pimcore:install --admin-username=admin --admin-password=secret</code></pre>
+        <p>The above commands will bring up the stack in the background and execute the installation command within the PHP container. You can then access the HyperMDM admin interface by navigating to <code>http://localhost/admin</code> in your web browser. Ensure that you monitor the container logs (<code>docker-compose logs -f</code>) to troubleshoot any startup issues.</p>
+      </section>
+
+      <section id="first-data-class">
+        <h2>First Data Class</h2>
+        <p>A Data Class defines the schema for a specific type of information in HyperMDM. Let's create a fundamental class: a "Product". Navigate to <em>Settings &gt; Data Objects &gt; Classes</em> in the admin interface and click "Add Class". Give it the name "Product".</p>
+        <p>The Class Editor provides a drag-and-drop interface for building your schema. For a basic product, add the following fields from the right-hand panel into a Layout panel: an <strong>Input</strong> field named "SKU", another <strong>Input</strong> for "ProductName", a <strong>Numeric</strong> field for "Price", and a <strong>Wysiwyg</strong> field for "Description". Save the class to generate the underlying PHP models and database tables.</p>
+        <p>Once the "Product" class is saved, you can immediately start creating data objects based on this blueprint. Go to the <em>Data Objects</em> tree on the left, right-click an appropriate folder, select <em>Add Object &gt; Product</em>. You will see an automatically generated form representing the schema you just defined, ready for data entry.</p>
+      </section>
+
+      <section id="data-classes">
+        <h2>Data Classes</h2>
+        <p>Data Classes are the architectural blueprints of your data models in HyperMDM. They define what attributes an object can hold, the data types of those attributes (e.g., text, numbers, relations, geographic coordinates), and the validation rules applied to them. Creating a well-structured set of Data Classes is the most critical step in implementing your MDM strategy.</p>
+        <p>HyperMDM supports advanced class features such as <strong>Inheritance</strong>. You can define a base "Product" class with common attributes and create specific subclasses like "ApparelProduct" or "ElectronicProduct" that inherit the base fields while adding their own specific properties. This dramatically reduces redundancy and simplifies schema maintenance.</p>
+        <p>Classes are defined using a visual editor, which subsequently generates highly optimized PHP classes (found in <code>var/classes/DataObject</code>) and database tables. This dual approach provides non-technical users with an accessible GUI while giving developers robust, strongly-typed PHP objects to interact with programmatically.</p>
+      </section>
+
+      <section id="data-objects">
+        <h2>Data Objects</h2>
+        <p>Data Objects represent the concrete instances of your Data Classes. If the Data Class is the blueprint for a "Car", a Data Object is a specific "2023 Tesla Model 3" with populated attributes. They are managed within a hierarchical folder structure, similar to a traditional file system, allowing for intuitive organization and granular permissions management based on location in the tree.</p>
+        <p>Objects in HyperMDM support rich <strong>Versioning and Drafts</strong>. When you edit an object, a new version is created, allowing you to track changes over time, compare different versions, and roll back if necessary. You can also save objects as drafts without publishing them, enabling complex review and approval workflows before data goes live.</p>
+        <p>Developers can interact with Data Objects seamlessly via the PHP API. Retrieving and updating an object programmatically is straightforward and leverages the generated getters and setters, ensuring data integrity.</p>
+        <pre><code>$product = \Pimcore\Model\DataObject\Product::getById(123);
+$product->setPrice(29.99);
+$product->save();</code></pre>
+      </section>
+
+      <section id="object-bricks">
+        <h2>Object Bricks</h2>
+        <p>Object Bricks offer a powerful way to add optional, structured data to a Data Object on demand. Unlike standard class fields which apply to every instance of a class, Object Bricks allow you to define modular blocks of fields that can be attached to an object only when needed. This is particularly useful for handling sparse data or attributes specific to certain categories without cluttering the main class schema.</p>
+        <p>For example, you might have a generic "Product" class. For a television product, you could attach a "ScreenSpecs" Object Brick containing fields for resolution and refresh rate. For a shirt, you might attach a "ClothingSpecs" brick containing size and material. This keeps the primary Product class lean while still accommodating diverse product attributes.</p>
+        <p>Object Bricks are managed independently and can be assigned to multiple different Data Classes. When working with them via the API, you must instantiate the brick and add it to the object before saving.</p>
+        <pre><code>$screenBrick = new \Pimcore\Model\DataObject\Objectbrick\Data\ScreenSpecs($product);
+$screenBrick->setResolution('4K');
+$product->getBricks()->setScreenSpecs($screenBrick);
+$product->save();</code></pre>
+      </section>
+
+      <section id="field-collections">
+        <h2>Field Collections</h2>
+        <p>Field Collections are used to create repeatable groups of structured data within a single Data Object. While Object Bricks are useful for optional horizontal extensions, Field Collections handle one-to-many relationships of complex data structures directly within the object. They are ideal for representing lists of structured items, such as a product's technical specifications, nutritional facts, or a list of ingredients.</p>
+        <p>To use them, you first define a Field Collection schema, similar to defining a Data Class. Then, you add a "Field Collection" data type to your target Data Class and allow it to use the defined collection schema. In the admin interface, users can then add multiple instances of this collection to the object.</p>
+        <p>Programmatically, Field Collections are handled as arrays of strongly-typed items. You create new item instances and add them to the Field Collection container attached to the Data Object.</p>
+        <pre><code>$items = new \Pimcore\Model\DataObject\Fieldcollection();
+$item = new \Pimcore\Model\DataObject\Fieldcollection\Data\NutritionFact();
+$item->setNutrient('Vitamin C');
+$item->setAmount('50mg');
+$items->add($item);
+$product->setNutritionFacts($items);</code></pre>
+      </section>
+
+      <section id="classification-stores">
+        <h2>Classification Stores</h2>
+        <p>The Classification Store is an advanced feature designed for highly flexible and dynamic attribute management, typical in complex PIM scenarios. It allows you to define a hierarchy of categories (keys) and link specific sets of attributes (features) to those categories. When a Data Object is assigned to a category in the Classification Store, it dynamically inherits the fields associated with that category.</p>
+        <p>This is invaluable for managing vast catalogs with varying attributes (e.g., selling both laptops and clothing on the same platform). You define the Classification Store schema once, and the input forms for products dynamically adapt based on their categorization, presenting only the relevant fields to the user.</p>
+        <p>While extremely powerful for catalog management, the Classification Store relies on a generic key-value storage pattern in the database. This means querying against Classification Store fields requires specialized approaches and can be less performant than querying direct class fields, so they should be used judiciously for sparse, category-specific data.</p>
+      </section>
+
+      <section id="assets">
+        <h2>Assets Overview</h2>
+        <p>HyperMDM integrates a comprehensive Digital Asset Management (DAM) system natively alongside its MDM capabilities. Assets can be images, documents, videos, or any other file type. They are organized in a folder structure within the <em>Assets</em> tree and benefit from the same robust permissions and versioning system as Data Objects.</p>
+        <p>A key advantage of native DAM integration is the ability to create strong, bidirectional relationships between your master data and digital media. A Data Object can reference an Asset, and the Asset maintains a record of which objects use it. This dependency tracking ensures you never accidentally delete an image currently in use by a live product.</p>
+        <p>Assets are accessible via the PHP API, allowing developers to retrieve them, manipulate them, or serve them efficiently. HyperMDM automatically extracts standard metadata (EXIF, IPTC) upon upload, making assets immediately searchable.</p>
+      </section>
+
+      <section id="asset-metadata">
+        <h2>Metadata &amp; Tags</h2>
+        <p>Beyond standard file properties, HyperMDM allows you to enrich assets with custom metadata to improve searchability and governance. You can define custom Metadata Profiles containing specific fields (like "Photographer", "License Expiry", or "Campaign Name") and assign these profiles to different folders or asset types.</p>
+        <p>Tagging provides a more fluid, folksonomy-based approach to categorizing assets. Users can freely apply tags to assets, facilitating quick filtering and discovery across complex folder structures. The tagging system is global and can be shared between Assets, Data Objects, and Documents.</p>
+        <p>Extracting and updating metadata programmatically is a common integration task, especially when synchronizing assets from external systems or DAMs.</p>
+        <pre><code>$asset = \Pimcore\Model\Asset::getById(456);
+$metadata = $asset->getCustomSettings();
+$metadata['license_type'] = 'Commercial';
+$asset->setCustomSettings($metadata);
+$asset->save();</code></pre>
+      </section>
+
+      <section id="thumbnails">
+        <h2>Thumbnails &amp; Transforms</h2>
+        <p>HyperMDM features a powerful, on-the-fly image transformation engine. Instead of manually creating multiple sizes of an image for different frontends, you define <strong>Image Thumbnails</strong> (pipelines). A pipeline defines a sequence of transformations, such as scaling, cropping, watermarking, or changing the format (e.g., converting to WebP).</p>
+        <p>When an image is requested with a specific thumbnail pipeline via the frontend or API, HyperMDM processes the original asset on demand, caches the result, and serves the optimized version. This drastically reduces storage requirements and simplifies asset workflows for editors.</p>
+        <p>In your code, you can easily generate the URL for a transformed asset. The system handles the complexity of checking the cache and triggering the transformation if the cached version does not exist.</p>
+        <pre><code>$asset = \Pimcore\Model\Asset\Image::getById(12);
+// Returns URL to the image processed by the "product_list" pipeline
+$url = $asset->getThumbnail('product_list')->getHtml();</code></pre>
+      </section>
+
+      <section id="data-hub">
+        <h2>Data Hub</h2>
+        <p>The Pimcore Data Hub is a central component of HyperMDM, acting as the primary interface for exposing master data to external systems. It allows administrators to configure sophisticated API endpoints (GraphQL or REST) using a visual interface, mapping internal Data Objects to external schemas without writing custom controller code.</p>
+        <p>With Data Hub, you create configurations defining which classes are exposed, which specific fields are included, and what filtering or mutation capabilities are permitted. This configuration-driven approach enables rapid deployment of APIs tailored for specific consumers, such as an e-commerce storefront needing a read-only product catalog or an ERP system needing to synchronize inventory.</p>
+        <p>The Data Hub supports workspaces, meaning you can configure an endpoint to only expose data residing in a specific folder or matching specific criteria, ensuring secure and compartmentalized data delivery.</p>
+      </section>
+
+      <section id="rest-api">
+        <h2>REST API</h2>
+        <p>While GraphQL is preferred for flexible data retrieval, HyperMDM provides robust REST API capabilities via the Data Hub for systems that require traditional RESTful patterns. The REST endpoints allow for standard CRUD (Create, Read, Update, Delete) operations on Data Objects, Assets, and other core entities.</p>
+        <p>The REST API is highly configurable. You can define specific endpoints that project your complex Data Classes into simplified JSON structures. It supports pagination, sorting, and complex filtering mechanisms using query parameters, making it suitable for integrating with legacy systems or standard integration platforms (iPaaS).</p>
+        <p>Authentication for the REST API typically utilizes API keys or JWT (JSON Web Tokens) managed through the Data Hub configuration, ensuring secure access to your master data.</p>
+        <pre><code># Example: Fetching a product via Data Hub REST endpoint
+curl -X GET "https://hypermdm.local/api/rest/products/123" \
+     -H "apikey: your-secure-api-key"</code></pre>
+      </section>
+
+      <section id="graphql">
+        <h2>GraphQL</h2>
+        <p>GraphQL is the recommended approach for consuming data from HyperMDM, particularly for headless frontends. The Data Hub dynamically generates a comprehensive GraphQL schema based on your Data Class definitions and your Data Hub configuration. This allows frontend developers to query exactly the data they need, mitigating over-fetching and under-fetching issues.</p>
+        <p>The GraphQL API supports complex, deeply nested queries, enabling retrieval of a product, its related assets, and referenced category information in a single round-trip. It also supports mutations for updating data, making it a complete bidirectional integration layer.</p>
+        <p>HyperMDM provides a built-in GraphiQL explorer within the admin interface, allowing developers to test queries and introspect the generated schema interactively before implementing them in client applications.</p>
+        <pre><code>query {
+  getProduct(id: 123) {
+    sku
+    productName
+    price
+    brand {
+      name
+    }
+    mainImage {
+      thumbnail(name: "large") {
+        url
+      }
+    }
+  }
+}</code></pre>
+      </section>
+
+      <section id="webhooks">
+        <h2>Webhooks</h2>
+        <p>To enable event-driven architectures, HyperMDM supports Webhooks to notify external systems when data changes occur. You can configure Webhooks to trigger on specific events, such as when a Data Object is created, updated, or published, or when a workflow state changes.</p>
+        <p>Webhooks are configured to send an HTTP POST request to a defined URL, containing a JSON payload with relevant context (e.g., the ID of the updated object and the event type). This mechanism is crucial for triggering cache invalidation in external CDNs, initiating indexing processes in external search engines (like Elasticsearch), or starting synchronization jobs in an ESB.</p>
+        <p>Administrators can configure Webhooks via the user interface, specifying custom headers (for authentication with the receiving system) and defining retry policies to handle transient network failures.</p>
+      </section>
+
+      <section id="workflows">
+        <h2>Workflow Overview</h2>
+        <p>HyperMDM includes a robust Workflow Management engine designed to enforce business processes and governance rules around your data lifecycle. Workflows define a series of States (e.g., "Draft", "In Review", "Published") and the Actions required to transition an object between these states.</p>
+        <p>Workflows can be applied to Data Objects, Assets, and Documents. They ensure that critical data, such as a new product launch, goes through the necessary enrichment and approval steps by different teams before it becomes available to downstream systems. You can configure permissions so that only specific user roles can execute certain transition actions.</p>
+        <p>The workflow engine maintains a detailed history of all transitions, providing a complete audit trail of who changed the state of an entity and when, which is essential for compliance in enterprise environments.</p>
+      </section>
+
+      <section id="custom-workflows">
+        <h2>Custom Workflows</h2>
+        <p>While simple workflows can be configured entirely via YAML configuration, HyperMDM allows for highly customized business logic during workflow transitions via Event Listeners. You can attach custom PHP code to trigger before or after a state transition occurs.</p>
+        <p>For example, you could implement a custom listener that validates if an object has at least three associated images before allowing it to transition to the "Ready for Review" state. Alternatively, a listener could automatically notify a specific department via email or Slack when a product enters the "Published" state.</p>
+        <p>Custom workflows are defined in configuration files and wire up business logic using the Symfony Event Dispatcher component.</p>
+        <pre><code># config/pimcore/workflows.yaml
+pimcore:
+    workflows:
+        product_approval:
+            label: 'Product Approval'
+            type: 'state_machine'
+            supports:
+                - 'Pimcore\Model\DataObject\Product'
+            places:
+                draft: { label: 'Draft' }
+                review: { label: 'In Review' }
+                published: { label: 'Published' }
+            transitions:
+                submit_for_review:
+                    from: draft
+                    to: review</code></pre>
+      </section>
+
+      <section id="configuration">
+        <h2>Configuration</h2>
+        <p>HyperMDM's configuration is managed through standard Symfony configuration files (YAML, XML, or PHP) located in the <code>config/</code> directory. This approach provides a structured and version-controllable way to define system behavior, services, and integration parameters across different environments (development, staging, production).</p>
+        <p>Environment-specific settings, such as database credentials or API keys, should be managed via environment variables (<code>.env</code> files). This ensures sensitive information is not committed to version control and allows for seamless deployment across different infrastructure platforms.</p>
+        <p>Many system settings, such as thumbnail definitions, class definitions, and Data Hub configurations, are stored in the database by default but can be exported as YAML files. This "configuration as code" approach enables CI/CD pipelines to deploy schema changes automatically between environments without manual intervention in the admin interface.</p>
+      </section>
+
+      <section id="caching">
+        <h2>Caching</h2>
+        <p>High performance in HyperMDM relies heavily on its comprehensive, multi-layered caching architecture. The system utilizes a core caching service that stores complex data objects, rendered page fragments, and API responses. By default, it supports various backends, but Redis is strongly recommended for production environments due to its speed and capability to handle complex tagging and invalidation.</p>
+        <p>HyperMDM employs an intelligent, tag-based cache invalidation strategy. When a Data Object is cached, it is tagged with its ID and the IDs of its dependencies. If a related object is updated, the system automatically invalidates all cache entries sharing those tags. This ensures that frontend systems always receive fresh data without requiring full cache purges.</p>
+        <p>Developers must be mindful of caching when writing custom code or scripts. Long-running import processes, for example, should periodically disable or clear the cache to prevent memory exhaustion, as the system attempts to cache all instantiated objects by default.</p>
+      </section>
+
+      <section id="monitoring">
+        <h2>Monitoring</h2>
+        <p>Monitoring the health and performance of your HyperMDM installation is vital. Since it is built on Symfony, standard Application Performance Monitoring (APM) tools like New Relic, Datadog, or Blackfire integrate seamlessly, providing deep insights into PHP execution times, database query performance, and memory consumption.</p>
+        <p>HyperMDM includes a built-in Application Logger that records system errors, workflow transitions, and important administrative actions. This log is accessible via the admin interface and is crucial for debugging issues without needing direct server access.</p>
+        <p>For system-level monitoring, administrators should track the status of the background task processor (the Symfony Messenger component), which handles asynchronous jobs like thumbnail generation and batch data exports. Monitoring the size of the Redis cache and the database connection pool is also essential for maintaining optimal performance.</p>
+      </section>
+
+      <section id="upgrade">
+        <h2>Upgrade</h2>
+        <p>Keeping HyperMDM up to date ensures you benefit from the latest features, performance improvements, and critical security patches. Upgrades are managed entirely via Composer, aligning with standard PHP ecosystem practices.</p>
+        <p>Before initiating an upgrade, it is imperative to perform a full backup of your database and the file system (specifically the <code>var/</code> and <code>public/var/</code> directories). We recommend testing the upgrade process in a dedicated staging environment that mirrors your production setup to identify any potential compatibility issues with custom code or plugins.</p>
+        <p>The upgrade process typically involves updating the version constraints in your <code>composer.json</code> file, running <code>composer update</code>, and then executing the Pimcore database migration commands to apply necessary schema changes.</p>
+        <pre><code>composer update pimcore/pimcore --with-all-dependencies
+bin/console pimcore:migrations:migrate -s pimcore_core -n</code></pre>
+      </section>
+
+      <section id="users-roles">
+        <h2>Users &amp; Roles</h2>
+        <p>HyperMDM features a granular, Role-Based Access Control (RBAC) system to secure your data and administrative functions. Access rights are determined by assigning Users to one or more Roles. A Role defines a set of permissions, such as the ability to access specific modules (e.g., Data Objects, Assets, Data Hub) or execute specific administrative actions.</p>
+        <p>Permissions can be applied hierarchically. If a Role grants read/write access to a parent folder in the Data Object tree, all child objects inherit those permissions unless explicitly overridden. This hierarchical model simplifies permission management for complex organizational structures.</p>
+        <p>For enterprise deployments, the system supports integration with external identity providers (like LDAP or Active Directory) and Single Sign-On (SSO) solutions via SAML or OIDC, allowing organizations to manage HyperMDM access using their existing centralized corporate credentials.</p>
+      </section>
+
+      <section id="workspaces">
+        <h2>Workspaces</h2>
+        <p>Workspaces provide an additional layer of security and contextual isolation within the data trees. While Roles define <em>what</em> a user can do (e.g., "edit objects"), Workspaces define <em>where</em> they can do it. A Workspace binds specific permissions to specific nodes (folders or objects) in the Data Object, Asset, or Document trees.</p>
+        <p>This is extremely useful in multi-tenant scenarios or large organizations. For instance, you can define a "US Content Team" Workspace that grants editing rights only to the `/Products/US` folder, while the "Global Review Team" might have read-only access to all folders but editing rights to specific workflow states.</p>
+        <p>Workspaces ensure that users only see and interact with the data relevant to their specific role or region, improving both security and the user experience by reducing clutter in the administrative interface.</p>
+      </section>
+
+      <section id="authentication">
+        <h2>Authentication</h2>
+        <p>Authentication in HyperMDM secures both the administrative interface and the data delivery APIs. The admin panel utilizes standard session-based authentication, which can be hardened with Two-Factor Authentication (2FA) enforcement to protect against credential compromise.</p>
+        <p>For API authentication, particularly the Data Hub endpoints, HyperMDM supports several mechanisms. The most common is the use of API Keys, which can be generated and managed within the admin panel and passed via HTTP headers. For more complex, user-centric API access, it supports OAuth2 and JWT (JSON Web Tokens), enabling secure integrations with headless frontends where users need to access personalized data securely.</p>
+        <p>Security best practices dictate that APIs should always be served over HTTPS and that API keys or tokens should be rotated regularly and scoped with the principle of least privilege using Workspaces and specific Data Hub configurations.</p>
+      </section>
+
+    </main>
+  </div>
+  <script>
+    document.querySelectorAll('.nav-group').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var expanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', String(!expanded));
+        document.getElementById(button.getAttribute('aria-controls')).classList.toggle('open', !expanded);
+      });
+    });
+
+    function activateHash() {
+      var hash = location.hash || '#overview';
+      document.querySelectorAll('.nav-list a').forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === hash);
+      });
+      var link = document.querySelector('.nav-list a[href="' + hash + '"]');
+      if (link) {
+        var group = link.closest('ul');
+        if (group && group.id) {
+          var button = document.querySelector('[aria-controls="' + group.id + '"]');
+          if (button) { button.setAttribute('aria-expanded', 'true'); group.classList.add('open'); }
+        }
+      }
+    }
+
+    window.addEventListener('hashchange', activateHash);
+    activateHash();
+  </script>
+</body>
+</html>

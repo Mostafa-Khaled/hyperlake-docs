@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HyperCare Documentation</title>
+  <meta name="description" content="HyperCare — support ticketing and service management system.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --accent:    #4f46e5;
+      --accent-dim:#4338ca;
+      --accent-bg: #eef2ff;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <span class="logo-dot"></span>
+    <a class="wordmark" href="index.html">HyperCare</a>
+    <span class="version-pill">v0.0.1</span>
+    <a class="topbar-home" href="index.html">← All docs</a>
+  </header>
+
+  <div class="layout">
+    <aside aria-label="Documentation navigation">
+      <nav>
+        <ul class="nav-list">
+          <li><a class="active" href="#overview">Overview</a></li>
+          <li>
+            <button class="nav-group" type="button" aria-expanded="true" aria-controls="guides">
+              Guides <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="guides" class="open">
+              <li><a href="#getting-started">Getting Started</a></li>
+              <li><a href="#ticketing">Ticketing Workflow</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="overview">
+      <div class="page-header">
+        <div class="page-eyebrow">Governance & Ticketing</div>
+        <h1 class="page-title">HyperCare</h1>
+        <p class="page-desc">Internal support ticketing and service management system.</p>
+      </div>
+
+      <h1 id="getting-started">Getting Started</h1>
+      <p>Documentation and configuration details for HyperCare will be updated when final copy is available.</p>
+
+      <h1 id="ticketing">Ticketing Workflow</h1>
+      <p>Content pending specification.</p>
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var expanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', String(!expanded));
+        document.getElementById(button.getAttribute('aria-controls')).classList.toggle('open', !expanded);
+      });
+    });
+
+    function activateHash() {
+      var hash = location.hash || '#overview';
+      document.querySelectorAll('.nav-list a').forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === hash);
+      });
+      var link = document.querySelector('.nav-list a[href="' + hash + '"]');
+      if (link) {
+        var group = link.closest('ul');
+        if (group && group.id) {
+          var button = document.querySelector('[aria-controls="' + group.id + '"]');
+          if (button) { button.setAttribute('aria-expanded', 'true'); group.classList.add('open'); }
+        }
+      }
+    }
+
+    window.addEventListener('hashchange', activateHash);
+    activateHash();
+  </script>
+</body>
+</html>

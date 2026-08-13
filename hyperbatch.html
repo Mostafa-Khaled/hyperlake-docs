@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HyperBatch Documentation</title>
+  <meta name="description" content="HyperBatch — distributed batch processing for SQL, DataFrames, streaming, machine learning, and cluster workloads.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --accent:    #ea580c;
+      --accent-dim:#c2410c;
+      --accent-bg: #fff7ed;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <span class="logo-dot"></span>
+    <a class="wordmark" href="index.html">HyperBatch</a>
+    <span class="version-pill">v0.0.1</span>
+    <a class="topbar-home" href="index.html">← All docs</a>
+  </header>
+
+  <div class="layout">
+    <aside aria-label="Documentation navigation">
+      <nav>
+        <ul class="nav-list">
+          <li><a class="active" href="#overview">Overview</a></li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="true" aria-controls="programming">
+              Programming Guides <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="programming" class="open">
+              <li><a href="#quick-start">Quick Start</a></li>
+              <li><a href="#core-programming">Core Programming</a></li>
+              <li><a href="#sql-dataframes">SQL / DataFrames</a></li>
+              <li><a href="#structured-streaming">Structured Streaming</a></li>
+              <li><a href="#legacy-streaming">Streaming (legacy)</a></li>
+              <li><a href="#mllib">MLlib</a></li>
+              <li><a href="#graphx">GraphX</a></li>
+              <li><a href="#r-api">R API</a></li>
+              <li><a href="#python-api">Python API</a></li>
+              <li><a href="#declarative-pipelines">Declarative Pipelines</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="api">
+              API Docs <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="api">
+              <li><a href="#api-python">Python</a></li>
+              <li><a href="#api-scala">Scala</a></li>
+              <li><a href="#api-java">Java</a></li>
+              <li><a href="#api-r">R</a></li>
+              <li><a href="#api-sql">SQL Built-in Functions</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="deploying">
+              Deploying <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="deploying">
+              <li><a href="#deploy-overview">Overview</a></li>
+              <li><a href="#submitting">Submitting Applications</a></li>
+              <li><a href="#standalone">Standalone</a></li>
+              <li><a href="#yarn">YARN</a></li>
+              <li><a href="#kubernetes">Kubernetes</a></li>
+            </ul>
+          </li>
+
+          <li>
+            <button class="nav-group" type="button" aria-expanded="false" aria-controls="more">
+              More <span class="nav-group-arrow">▶</span>
+            </button>
+            <ul id="more">
+              <li><a href="#configuration">Configuration</a></li>
+              <li><a href="#monitoring">Monitoring</a></li>
+              <li><a href="#tuning">Tuning Guide</a></li>
+              <li><a href="#scheduling">Job Scheduling</a></li>
+              <li><a href="#security">Security</a></li>
+              <li><a href="#hardware">Hardware Provisioning</a></li>
+              <li><a href="#migration">Migration Guide</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="overview">
+      <div class="page-header">
+        <div class="page-eyebrow">Batch Processing & ML Engine</div>
+        <h1 class="page-title">HyperBatch</h1>
+        <p class="page-desc">A distributed processing engine for batch and incremental data workloads. Applications are written against DataFrame, SQL, Python, Scala, Java, and R interfaces, then executed locally or on a cluster.</p>
+      </div>
+
+      <h1 id="downloading">Downloading</h1>
+      <p>Download HyperBatch from the internal distribution page. This documentation is for HyperBatch version <code>v0.0.1</code>. HyperBatch can run locally or on a supported cluster manager.</p>
+      <p>For a local installation, unpack the distribution and verify that the launcher is available:</p>
+      <pre>./bin/hyperbatch-submit --version</pre>
+      <p>Applications may be packaged as Python files, JVM artifacts, or language-specific packages supported by the distribution.</p>
+
+      <h1 id="running-the-examples">Running the Examples and Shell</h1>
+      <p>The distribution includes examples for Python, Scala, Java, and R. Run the examples on a local master before submitting an application to a shared cluster.</p>
+      <p>To run the Python shell, use:</p>
+      <pre>./bin/hyperbatch-py --master "local[2]"</pre>
+      <p>To submit a sample application, use:</p>
+      <pre>./bin/hyperbatch-submit examples/pi.py 10</pre>
+      <p>To run the Scala shell, use:</p>
+      <pre>./bin/hyperbatch-shell --master "local[2]"</pre>
+      <p>The <code>--master</code> option selects the local or cluster execution target. See the deployment guide for supported values.</p>
+
+      <h1 id="launching-on-a-cluster">Launching on a Cluster</h1>
+      <p>A HyperBatch application has a driver process that builds the execution plan and executor processes that run tasks. The driver requests executors from the selected cluster manager and coordinates retries, shuffle data, and result collection.</p>
+      <ul>
+        <li><a href="#standalone">Standalone</a>: run HyperBatch on a private cluster</li>
+        <li><a href="#yarn">YARN</a>: deploy HyperBatch through YARN</li>
+        <li><a href="#kubernetes">Kubernetes</a>: deploy HyperBatch through Kubernetes</li>
+      </ul>
+
+      <h1 id="where-to-go-from-here">Where to Go from Here</h1>
+      <p><strong>Programming Guides:</strong></p>
+      <ul>
+        <li><a href="#quick-start">Quick Start</a>: introduction to the HyperBatch API</li>
+        <li><a href="#core-programming">Core Programming Guide</a>: core execution concepts</li>
+        <li><a href="#sql-dataframes">SQL/DataFrames</a>: structured data processing</li>
+        <li><a href="#structured-streaming">Structured Streaming</a>: structured stream processing</li>
+        <li><a href="#legacy-streaming">Streaming (legacy)</a>: legacy stream processing API</li>
+        <li><a href="#mllib">MLlib</a>: machine learning APIs</li>
+        <li><a href="#graphx">GraphX</a>: graph processing APIs</li>
+        <li><a href="#r-api">R API</a>: HyperBatch from R</li>
+        <li><a href="#python-api">Python API</a>: HyperBatch from Python</li>
+        <li><a href="#declarative-pipelines">Declarative Pipelines</a>: pipeline definitions and execution</li>
+      </ul>
+      <p><strong>API Docs:</strong></p>
+      <ul>
+        <li><a href="#api-python">Python API</a></li>
+        <li><a href="#api-scala">Scala API</a></li>
+        <li><a href="#api-java">Java API</a></li>
+        <li><a href="#api-r">R API</a></li>
+        <li><a href="#api-sql">SQL Built-in Functions</a></li>
+      </ul>
+      <p><strong>Deployment Guides:</strong></p>
+      <ul>
+        <li><a href="#deploy-overview">Overview</a>: cluster concepts and components</li>
+        <li><a href="#submitting">Submitting Applications</a>: package and deploy applications</li>
+        <li><a href="#standalone">Standalone</a></li>
+        <li><a href="#yarn">YARN</a></li>
+        <li><a href="#kubernetes">Kubernetes</a></li>
+      </ul>
+      <p><strong>More:</strong></p>
+      <ul>
+        <li><a href="#configuration">Configuration</a></li>
+        <li><a href="#monitoring">Monitoring</a></li>
+        <li><a href="#tuning">Tuning Guide</a></li>
+        <li><a href="#scheduling">Job Scheduling</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#hardware">Hardware Provisioning</a></li>
+        <li><a href="#migration">Migration Guide</a></li>
+      </ul>
+
+      <section id="quick-start">
+        <h2>Quick Start</h2>
+        <p>Create a session, load input data, transform records, and write the result. Transformations are lazy; output is written only when an action is requested.</p>
+        <pre>from hyperbatch.sql import Session
+
+session = Session.builder.appName("Example").getOrCreate()
+session.read.json("data/events.json").write.parquet("output/events")</pre>
+      </section>
+
+      <section id="core-programming">
+        <h2>Core Programming Guide</h2>
+        <p>HyperBatch applications build a logical plan from transformations. Actions execute the plan. The scheduler divides each job into stages at shuffle boundaries, then assigns tasks for each partition to executors.</p>
+        <ul>
+          <li>Use <code>repartition</code> when increasing parallelism or redistributing data.</li>
+          <li>Use <code>cache</code> only for reused data that fits available executor memory.</li>
+          <li>Avoid collecting large datasets to the driver.</li>
+        </ul>
+      </section>
+
+      <section id="sql-dataframes">
+        <h2>SQL / DataFrames</h2>
+        <p>DataFrames provide a structured interface for filtering, joining, aggregating, and writing tabular data. The optimizer can push filters to sources, choose join strategies, and remove unused columns.</p>
+        <pre>SELECT region, count(*) AS total
+FROM events
+WHERE event_date >= DATE '2026-01-01'
+GROUP BY region</pre>
+      </section>
+
+      <section id="structured-streaming">
+        <h2>Structured Streaming</h2>
+        <p>Structured Streaming processes new records in micro-batches using DataFrame operations. A checkpoint location records query progress and should use durable storage. Output sinks must support the required delivery semantics.</p>
+      </section>
+
+      <section id="legacy-streaming">
+        <h2>Streaming (legacy)</h2>
+        <p>The legacy streaming API is retained for existing micro-batch applications.</p>
+      </section>
+
+      <section id="mllib">
+        <h2>MLlib</h2>
+        <p>MLlib provides transformers, estimators, evaluators, feature engineering, and pipeline stages. Fit models on training data, persist the pipeline artifact, and use the same feature transformations during inference.</p>
+      </section>
+
+      <section id="graphx">
+        <h2>GraphX</h2>
+        <p>GraphX represents graphs as distributed vertex and edge collections. Use it for connected components, path analysis, relationship scoring, and iterative graph algorithms.</p>
+      </section>
+
+      <section id="r-api">
+        <h2>R API</h2>
+        <p>The R API exposes DataFrame operations and model workflows for R applications.</p>
+      </section>
+
+      <section id="python-api">
+        <h2>Python API</h2>
+        <p>The Python API provides session, DataFrame, SQL, streaming, and machine learning interfaces.</p>
+      </section>
+
+      <section id="declarative-pipelines">
+        <h2>Declarative Pipelines</h2>
+        <p>Declarative Pipelines describe tables, views, and dependencies. HyperBatch determines execution order and can refresh only the downstream outputs affected by changed input data.</p>
+      </section>
+
+      <section id="api-python">
+        <h2>Python API Reference</h2>
+        <p>Reference for sessions, DataFrames, expressions, functions, readers, writers, and streaming queries.</p>
+      </section>
+
+      <section id="api-scala">
+        <h2>Scala API Reference</h2>
+        <p>Reference for typed datasets, DataFrames, SQL functions, and execution contexts.</p>
+      </section>
+
+      <section id="api-java">
+        <h2>Java API Reference</h2>
+        <p>Reference for sessions, datasets, rows, schemas, and job execution.</p>
+      </section>
+
+      <section id="api-r">
+        <h2>R API Reference</h2>
+        <p>Reference for DataFrame operations and SQL expressions.</p>
+      </section>
+
+      <section id="api-sql">
+        <h2>SQL Built-in Functions</h2>
+        <p>SQL functions include string, date, numeric, conditional, aggregate, and window functions.</p>
+        <pre>SELECT date_trunc('day', event_time), count(*)
+FROM events
+GROUP BY date_trunc('day', event_time)</pre>
+      </section>
+
+      <section id="deploy-overview">
+        <h2>Deploying: Overview</h2>
+        <p>A HyperBatch deployment consists of a driver, executors, distributed storage, and a cluster manager. The driver runs in client mode near the submitter or in cluster mode inside the managed environment.</p>
+      </section>
+
+      <section id="submitting">
+        <h2>Submitting Applications</h2>
+        <p>Use the submission launcher to select the cluster manager, deploy mode, application dependencies, executor resources, and entry point. Keep secrets outside the command line and pass them through the platform secret mechanism.</p>
+        <pre>./bin/hyperbatch-submit \
+  --master hyperbatch://cluster.example \
+  --deploy-mode cluster \
+  --conf hyperbatch.executor.memory=4g \
+  --conf hyperbatch.executor.instances=4 \
+  app.py</pre>
+      </section>
+
+      <section id="standalone">
+        <h2>Standalone</h2>
+        <p>Standalone mode uses a coordinator and workers. Configure worker CPU and memory limits, use more than one coordinator for high availability where supported, and place event logs on shared storage.</p>
+      </section>
+
+      <section id="yarn">
+        <h2>YARN</h2>
+        <p>YARN mode runs the application through Hadoop resource management. The application master manages executor allocation; queue capacity, NodeManager limits, and HDFS access policies apply to submitted jobs.</p>
+      </section>
+
+      <section id="kubernetes">
+        <h2>Kubernetes</h2>
+        <p>Kubernetes mode creates a driver pod and executor pods. Provide a container image, namespace, service account, resource requests and limits, and a storage strategy for application logs and checkpoints.</p>
+      </section>
+
+      <section id="configuration">
+        <h2>Configuration</h2>
+        <p>Configuration can be supplied through command-line options, application code, environment variables, or a properties file. Command-line settings take precedence over values in the properties file.</p>
+        <pre>hyperbatch.executor.memory=4g
+hyperbatch.executor.cores=2
+hyperbatch.sql.shuffle.partitions=200</pre>
+      </section>
+
+      <section id="monitoring">
+        <h2>Monitoring</h2>
+        <p>Monitor applications through the event log, metrics endpoint, and web interface. Track stage time, task skew, shuffle read and write, spilled memory, executor loss, input volume, and failed task attempts.</p>
+      </section>
+
+      <section id="tuning">
+        <h2>Tuning Guide</h2>
+        <p>Start with input partition sizing and skew reduction. Then tune shuffle partitions, executor memory, garbage collection, serialization, cache use, and file compaction. Validate changes with a representative workload and event-log metrics.</p>
+      </section>
+
+      <section id="scheduling">
+        <h2>Job Scheduling</h2>
+        <p>HyperBatch supports queue, pool, and application-level scheduling settings.</p>
+      </section>
+
+      <section id="security">
+        <h2>Security</h2>
+        <p>Configure authentication, authorization, transport encryption, secret handling, and filesystem permissions. Restrict who can submit applications, access application logs, or attach to running executors.</p>
+      </section>
+
+      <section id="hardware">
+        <h2>Hardware Provisioning</h2>
+        <p>Select worker memory, CPU, local storage, and network capacity according to workload shape and concurrency.</p>
+      </section>
+
+      <section id="migration">
+        <h2>Migration Guide</h2>
+        <p>Review renamed binaries, package coordinates, configuration keys, compatibility changes, and output formats when moving an application to HyperBatch.</p>
+        <ul>
+          <li>Replace approved product references.</li>
+          <li>Validate launcher names against the fork.</li>
+          <li>Run representative jobs before changing production defaults.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var expanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', String(!expanded));
+        document.getElementById(button.getAttribute('aria-controls')).classList.toggle('open', !expanded);
+      });
+    });
+
+    function activateHash() {
+      var hash = location.hash || '#overview';
+      document.querySelectorAll('.nav-list a').forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === hash);
+      });
+      var link = document.querySelector('.nav-list a[href="' + hash + '"]');
+      if (link) {
+        var group = link.closest('ul');
+        if (group && group.id) {
+          var button = document.querySelector('[aria-controls="' + group.id + '"]');
+          if (button) { button.setAttribute('aria-expanded', 'true'); group.classList.add('open'); }
+        }
+      }
+    }
+
+    window.addEventListener('hashchange', activateHash);
+    activateHash();
+  </script>
+</body>
+</html>
