@@ -1,0 +1,3430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperCDC Operator — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">HyperCDC Operator</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The HyperCDC Operator is a Kubernetes operator that provides automated deployment and management of HyperCDC Server instances on Kubernetes and OpenShift platforms.
+This operator implements the standard Kubernetes operator pattern to transform user-defined HyperCDCServer custom resources into running change data capture (CDC) pipelines that stream database changes to various sink systems.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deploy_hypercdc_operator_using_helm"><a class="anchor" href="#_deploy_hypercdc_operator_using_helm"></a>Deploy HyperCDC Operator using Helm</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Helm is the preferred method for installing the operator.
+The operator is available in the <a href="#">HyperCDC Helm Chart Repository</a>.
+You can install the operator to an existing namespace, or to a new namespace.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Enter the following command to create a dedicated namespace:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl create namespace hypercdc</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Add the HyperCDC charts repository and install the operator by entering the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm repo add hypercdc https://charts.hypercdc.io
+helm install my-hypercdc-operator hypercdc/hypercdc-operator --version 3.2.0-final -n hypercdc</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>You can find the available versions of the operator in the <a href="https://charts.hypercdc.io/index.yaml">HyperCDC Helm Chart Repository</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tracking_the_progress_of_the_operator_deployment"><a class="anchor" href="#_tracking_the_progress_of_the_operator_deployment"></a>Tracking the progress of the operator deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can run commands to monitor the progress of the deployment and view the operator log.</p>
+</div>
+<div class="ulist">
+<div class="title">Procedure</div>
+<ul>
+<li>
+<p>To monitor the progress of the deployment, run the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get pod -n hypercdc --watch</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>To monitor the operator log, enter the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl logs deployment/hypercdc-operator -n hypercdc -f</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After the operator is running, it watches for new custom resources and creates a HyperCDC Server instance that is based on those custom resources.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypercdcserver_custom_resource"><a class="anchor" href="#_hypercdcserver_custom_resource"></a>HyperCDCServer custom resource</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You specify the configuration for a HyperCDC Server instance by declaring properties in a <code>HyperCDCServer</code> custom resource.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Basic structure of the HyperCDC Server custom resource</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: hypercdc.io/v1alpha1
+kind: HyperCDCServer
+metadata:
+  name: my-hypercdc-server
+spec:
+  image: String
+  version: String
+  runtime:
+    environment:
+      vars:
+        - name: String
+          value: String
+      from:  # EnvFromSource array
+        - sourceName: String
+          # add other EnvFromSource fields as needed
+    storage:
+      data:
+        type: persistent | ephemeral
+        claimName: String  # required if type is "persistent"
+      external:  # Volume array
+        - name: String
+          # add other Volume fields as needed
+    jmx:
+      enabled: boolean
+      port: int  # defaults to 1099
+    metrics:
+      jmxExporter:
+        enabled: boolean
+      openTelemetry:
+        enabled: boolean
+        collector:
+          endpoint: String
+    templates:
+      container:
+        resources: ResourceRequirements
+        securityContext: SecurityContext
+      pod:
+        metadata:
+          annotations:  # Map&lt;String, String&gt;
+            key: value
+          labels:  # Map&lt;String, String&gt;
+            key: value
+        imagePullSecrets:  # List
+          - name: String
+        affinity: Affinity
+        securityContext: PodSecurityContext
+  quarkus:
+    config:
+      # quarkus properties
+      format:
+        value:
+          type: String
+          config:
+            # format properties
+      key:
+        type: String
+        config:
+          # format properties
+      header:
+        type: String
+        config:
+          # format properties
+  transforms:
+    - type: String
+      predicate: String
+      negate: Boolean
+      config:
+        # transformation properties
+  predicates:
+    name:
+      type: String
+      config:
+        # predicate properties
+  sink:
+    type: String
+    config:
+      # sink properties
+  source:
+    class: String
+    config:
+      # source connector properties</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypercdcserver_specification"><a class="anchor" href="#_hypercdcserver_specification"></a>HyperCDCServer specification</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-hypercdcserver"><a class="anchor" href="#hypercdc-operator-schema-reference-hypercdcserver"></a>HyperCDCServer schema reference</h3>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. HyperCDCServer properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserver-spec"></a><a href="#hypercdc-operator-schema-reference-hypercdcserver-spec"><code>spec</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-hypercdcserverspec"><code>HyperCDCServerSpec</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The specification of HyperCDC Server</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserver-status"></a><a href="#hypercdc-operator-schema-reference-hypercdcserver-status"><code>status</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-hypercdcserverstatus"><code>HyperCDCServerStatus</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The status of the HyperCDC Server instance.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-hypercdcserverstatus"><a class="anchor" href="#hypercdc-operator-schema-reference-hypercdcserverstatus"></a>HyperCDCServerStatus schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-hypercdcserver"><code>HyperCDCServer</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. HyperCDCServerStatus properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverstatus-conditions"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverstatus-conditions"><code>conditions</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-condition"><code>List&lt;Condition&gt;</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>List of status conditions</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverstatus-observedgeneration"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverstatus-observedgeneration"><code>observedGeneration</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Long</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>0</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Latest observed generation</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-condition"><a class="anchor" href="#hypercdc-operator-schema-reference-condition"></a>Condition schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-hypercdcserverstatus"><code>HyperCDCServerStatus</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Condition properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-condition-status"></a><a href="#hypercdc-operator-schema-reference-condition-status"><code>status</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The status of the condition, either True, False or Unknown.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-condition-message"></a><a href="#hypercdc-operator-schema-reference-condition-message"><code>message</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Human-readable message indicating details about the condition’s last transition.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-condition-type"></a><a href="#hypercdc-operator-schema-reference-condition-type"><code>type</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unique identifier of a condition.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-hypercdcserverspec"><a class="anchor" href="#hypercdc-operator-schema-reference-hypercdcserverspec"></a>HyperCDCServerSpec schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-hypercdcserver"><code>HyperCDCServer</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. HyperCDCServerSpec properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverspec-image"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverspec-image"><code>image</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Image used for HyperCDC Server container. This property takes precedence over version.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverspec-version"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverspec-version"><code>version</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>same as operator</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Version of HyperCDC Server to be used.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverspec-sink"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverspec-sink"><code>sink</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-sink"><code>Sink</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Sink configuration.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverspec-source"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverspec-source"><code>source</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-source"><code>Source</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>HyperCDC source connector configuration.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverspec-format"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverspec-format"><code>format</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-format"><code>Format</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Message output format configuration.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverspec-quarkus"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverspec-quarkus"><code>quarkus</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-quarkus"><code>Quarkus</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Quarkus configuration passed to the HyperCDC Server process.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverspec-runtime"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverspec-runtime"><code>runtime</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-runtime"><code>Runtime</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies whether you can modify various aspects of the HyperCDC Server runtime.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverspec-transforms"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverspec-transforms"><code>transforms</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-transformation"><code>List&lt;Transformation&gt;</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Single Message Transformations employed by this instance of HyperCDC Server.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-hypercdcserverspec-predicates"></a><a href="#hypercdc-operator-schema-reference-hypercdcserverspec-predicates"><code>predicates</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-predicate"><code>Map&lt;String, Predicate&gt;</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Predicates employed by this instance of HyperCDC Server.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-sink"><a class="anchor" href="#hypercdc-operator-schema-reference-sink"></a>Sink schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-hypercdcserverspec"><code>HyperCDCServerSpec</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Sink properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-sink-type"></a><a href="#hypercdc-operator-schema-reference-sink-type"><code>type</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Sink type recognized by this HyperCDC Server instance.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-sink-config"></a><a href="#hypercdc-operator-schema-reference-sink-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Sink configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-source"><a class="anchor" href="#hypercdc-operator-schema-reference-source"></a>Source schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-hypercdcserverspec"><code>HyperCDCServerSpec</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Source properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-source-sourceclass"></a><a href="#hypercdc-operator-schema-reference-source-sourceclass"><code>sourceClass</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Fully qualified name of source connector Java class.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-source-offset"></a><a href="#hypercdc-operator-schema-reference-source-offset"><code>offset</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-offset"><code>Offset</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Offset store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-source-schemahistory"></a><a href="#hypercdc-operator-schema-reference-source-schemahistory"><code>schemaHistory</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-schemahistory"><code>SchemaHistory</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Schema history store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-source-config"></a><a href="#hypercdc-operator-schema-reference-source-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Source connector configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-format"><a class="anchor" href="#hypercdc-operator-schema-reference-format"></a>Format schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-hypercdcserverspec"><code>HyperCDCServerSpec</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Format properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-format-key"></a><a href="#hypercdc-operator-schema-reference-format-key"><code>key</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-formattype"><code>FormatType</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Message key format configuration.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-format-value"></a><a href="#hypercdc-operator-schema-reference-format-value"><code>value</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-formattype"><code>FormatType</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Message value format configuration.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-format-header"></a><a href="#hypercdc-operator-schema-reference-format-header"><code>header</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-formattype"><code>FormatType</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Message header format configuration.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-formattype"><a class="anchor" href="#hypercdc-operator-schema-reference-formattype"></a>FormatType schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-format"><code>Format</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. FormatType properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-formattype-type"></a><a href="#hypercdc-operator-schema-reference-formattype-type"><code>type</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>json</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Format type recognized by HyperCDC Server.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-formattype-config"></a><a href="#hypercdc-operator-schema-reference-formattype-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Format configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-quarkus"><a class="anchor" href="#hypercdc-operator-schema-reference-quarkus"></a>Quarkus schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-hypercdcserverspec"><code>HyperCDCServerSpec</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Quarkus properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-quarkus-config"></a><a href="#hypercdc-operator-schema-reference-quarkus-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Quarkus configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-runtime"><a class="anchor" href="#hypercdc-operator-schema-reference-runtime"></a>Runtime schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-hypercdcserverspec"><code>HyperCDCServerSpec</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Runtime properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtime-api"></a><a href="#hypercdc-operator-schema-reference-runtime-api"><code>api</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-runtimeapi"><code>RuntimeApi</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>API configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtime-storage"></a><a href="#hypercdc-operator-schema-reference-runtime-storage"><code>storage</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-runtimestorage"><code>RuntimeStorage</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Storage configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtime-environment"></a><a href="#hypercdc-operator-schema-reference-runtime-environment"><code>environment</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-runtimeenvironment"><code>RuntimeEnvironment</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional environment variables used by this HyperCDC Server instance.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtime-jmx"></a><a href="#hypercdc-operator-schema-reference-runtime-jmx"><code>jmx</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-jmxconfig"><code>JmxConfig</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JMX configuration.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtime-templates"></a><a href="#hypercdc-operator-schema-reference-runtime-templates"><code>templates</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-templates"><code>Templates</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>HyperCDC Server resource templates.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtime-serviceaccount"></a><a href="#hypercdc-operator-schema-reference-runtime-serviceaccount"><code>serviceAccount</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>An existing service account used to run the HyperCDC Server pod</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtime-metrics"></a><a href="#hypercdc-operator-schema-reference-runtime-metrics"><code>metrics</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-metrics"><code>Metrics</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Metrics configuration</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-runtimeapi"><a class="anchor" href="#hypercdc-operator-schema-reference-runtimeapi"></a>RuntimeApi schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-runtime"><code>Runtime</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. RuntimeApi properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtimeapi-enabled"></a><a href="#hypercdc-operator-schema-reference-runtimeapi-enabled"><code>enabled</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>boolean</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether the API should be enabled for this instance of HyperCDC Server</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtimeapi-port"></a><a href="#hypercdc-operator-schema-reference-runtimeapi-port"><code>port</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>8080</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Port number used by the k8s service exposing the API</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-runtimestorage"><a class="anchor" href="#hypercdc-operator-schema-reference-runtimestorage"></a>RuntimeStorage schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-runtime"><code>Runtime</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 12. RuntimeStorage properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtimestorage-data"></a><a href="#hypercdc-operator-schema-reference-runtimestorage-data"><code>data</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-datastorage"><code>DataStorage</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>File storage configuration used by this instance of HyperCDC Server.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtimestorage-external"></a><a href="#hypercdc-operator-schema-reference-runtimestorage-external"><code>external</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#volume-v1-core"><code>List&lt;Volume&gt;</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional volumes mounted to /hypercdc/external</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-runtimeenvironment"><a class="anchor" href="#hypercdc-operator-schema-reference-runtimeenvironment"></a>RuntimeEnvironment schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-runtime"><code>Runtime</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 13. RuntimeEnvironment properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtimeenvironment-vars"></a><a href="#hypercdc-operator-schema-reference-runtimeenvironment-vars"><code>vars</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-containerenvvar"><code>List&lt;ContainerEnvVar&gt;</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Environment variables applied to the container.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-runtimeenvironment-from"></a><a href="#hypercdc-operator-schema-reference-runtimeenvironment-from"><code>from</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#envfromsource-v1-core"><code>List&lt;EnvFromSource&gt;</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional environment variables set from ConfigMaps or Secrets in containers.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-jmxconfig"><a class="anchor" href="#hypercdc-operator-schema-reference-jmxconfig"></a>JmxConfig schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-runtime"><code>Runtime</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 14. JmxConfig properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jmxconfig-enabled"></a><a href="#hypercdc-operator-schema-reference-jmxconfig-enabled"><code>enabled</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>boolean</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether JMX should be enabled for this HyperCDC Server instance.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jmxconfig-port"></a><a href="#hypercdc-operator-schema-reference-jmxconfig-port"><code>port</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>1099</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JMX port.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jmxconfig-authentication"></a><a href="#hypercdc-operator-schema-reference-jmxconfig-authentication"><code>authentication</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-jmxauthentication"><code>JmxAuthentication</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JMX authentication config.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-jmxauthentication"><a class="anchor" href="#hypercdc-operator-schema-reference-jmxauthentication"></a>JmxAuthentication schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-jmxconfig"><code>JmxConfig</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 15. JmxAuthentication properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jmxauthentication-enabled"></a><a href="#hypercdc-operator-schema-reference-jmxauthentication-enabled"><code>enabled</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>boolean</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Whether JMX authentication should be enabled for this HyperCDC Server instance.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jmxauthentication-secret"></a><a href="#hypercdc-operator-schema-reference-jmxauthentication-secret"><code>secret</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Secret providing credential files</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jmxauthentication-accessfile"></a><a href="#hypercdc-operator-schema-reference-jmxauthentication-accessfile"><code>accessFile</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>jmxremote.access</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JMX access file name and secret key</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jmxauthentication-passwordfile"></a><a href="#hypercdc-operator-schema-reference-jmxauthentication-passwordfile"><code>passwordFile</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>jmxremote.password</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JMX password file name and secret key</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-templates"><a class="anchor" href="#hypercdc-operator-schema-reference-templates"></a>Templates schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-runtime"><code>Runtime</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 16. Templates properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-templates-container"></a><a href="#hypercdc-operator-schema-reference-templates-container"><code>container</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-containertemplate"><code>ContainerTemplate</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Container template</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-templates-pod"></a><a href="#hypercdc-operator-schema-reference-templates-pod"><code>pod</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-podtemplate"><code>PodTemplate</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Pod template.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-templates-volumeclaim"></a><a href="#hypercdc-operator-schema-reference-templates-volumeclaim"><code>volumeClaim</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#persistentvolumeclaimspec-v1-core"><code>PersistentVolumeClaimSpec</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>PVC template for data volume if no explicit claim is specified.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-metrics"><a class="anchor" href="#hypercdc-operator-schema-reference-metrics"></a>Metrics schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-runtime"><code>Runtime</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 17. Metrics properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-metrics-jmxexporter"></a><a href="#hypercdc-operator-schema-reference-metrics-jmxexporter"><code>jmxExporter</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-jmxexporter"><code>JmxExporter</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Prometheus JMX exporter configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-metrics-opentelemetry"></a><a href="#hypercdc-operator-schema-reference-metrics-opentelemetry"><code>openTelemetry</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-opentelemetry"><code>OpenTelemetry</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>OpenTelemetry configuration</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-jmxexporter"><a class="anchor" href="#hypercdc-operator-schema-reference-jmxexporter"></a>JmxExporter schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-metrics"><code>Metrics</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 18. JmxExporter properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jmxexporter-enabled"></a><a href="#hypercdc-operator-schema-reference-jmxexporter-enabled"><code>enabled</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>boolean</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Enables JMX Prometheus exporter</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jmxexporter-configfrom"></a><a href="#hypercdc-operator-schema-reference-jmxexporter-configfrom"><code>configFrom</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ConfigMapKeySelector</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Config map key reference which value will be used as configuration file</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-opentelemetry"><a class="anchor" href="#hypercdc-operator-schema-reference-opentelemetry"></a>OpenTelemetry schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-metrics"><code>Metrics</code></a></p>
+</div>
+<div class="paragraph">
+<p>When OpenTelemetry is enabled, the operator automatically configures the HyperCDC Server container with the following environment variables:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>OTEL_ENABLED</code> — Activates the OpenTelemetry Java Agent bundled with HyperCDC Server.</p>
+</li>
+<li>
+<p><code>OTEL_SDK_DISABLED</code> — Set to <code>false</code> to ensure the OpenTelemetry SDK is active.</p>
+</li>
+<li>
+<p><code>OTEL_EXPORTER_OTLP_ENDPOINT</code> — The OTLP collector endpoint (defaults to <code><a href="http://localhost:4318" class="bare">http://localhost:4318</a></code>).</p>
+</li>
+<li>
+<p><code>OTEL_METRICS_EXPORTER</code> — The metrics exporter type (defaults to <code>otlp</code>).</p>
+</li>
+<li>
+<p><code>OTEL_SERVICE_NAME</code> — Set to the name of the HyperCDCServer resource.</p>
+</li>
+<li>
+<p><code>OTEL_RESOURCE_ATTRIBUTES</code> — Includes <code>service.name</code> and <code>hypercdc.connector.type</code> attributes.</p>
+</li>
+<li>
+<p><code>OTEL_JMX_CONFIG</code> — Points to the built-in JMX-to-OpenTelemetry metrics mapping configuration.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can override any of these environment variables by specifying them in <code>spec.runtime.environment.vars</code>.
+User-provided environment variables take precedence over operator-managed defaults.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 19. OpenTelemetry properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-opentelemetry-enabled"></a><a href="#hypercdc-operator-schema-reference-opentelemetry-enabled"><code>enabled</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>boolean</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Enables OpenTelemetry</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-opentelemetry-collector"></a><a href="#hypercdc-operator-schema-reference-opentelemetry-collector"><code>collector</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-otelcollector"><code>OtelCollector</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>OpenTelemetry collector configuration</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-otelcollector"><a class="anchor" href="#hypercdc-operator-schema-reference-otelcollector"></a>OtelCollector schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-opentelemetry"><code>OpenTelemetry</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 20. OpenTelemetry collector properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-otelcollector-endpoint"></a><a href="#hypercdc-operator-schema-reference-otelcollector-endpoint"><code>endpoint</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="http://localhost:4318" class="bare">http://localhost:4318</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>OTLP collector endpoint</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-transformation"><a class="anchor" href="#hypercdc-operator-schema-reference-transformation"></a>Transformation schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-hypercdcserverspec"><code>HyperCDCServerSpec</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 21. Transformation properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-transformation-type"></a><a href="#hypercdc-operator-schema-reference-transformation-type"><code>type</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Fully qualified name of Java class implementing the transformation.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-transformation-config"></a><a href="#hypercdc-operator-schema-reference-transformation-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Transformation specific configuration properties.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-transformation-predicate"></a><a href="#hypercdc-operator-schema-reference-transformation-predicate"><code>predicate</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The name of the predicate to be applied to this transformation.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-transformation-negate"></a><a href="#hypercdc-operator-schema-reference-transformation-negate"><code>negate</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>boolean</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Determines if the result of the applied predicate will be negated.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-predicate"><a class="anchor" href="#hypercdc-operator-schema-reference-predicate"></a>Predicate schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-hypercdcserverspec"><code>HyperCDCServerSpec</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 22. Predicate properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-predicate-type"></a><a href="#hypercdc-operator-schema-reference-predicate-type"><code>type</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Fully qualified name of Java class implementing the predicate.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-predicate-config"></a><a href="#hypercdc-operator-schema-reference-predicate-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Predicate configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-configmapoffsetstore"><a class="anchor" href="#hypercdc-operator-schema-reference-configmapoffsetstore"></a>ConfigMapOffsetStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-offset"><code>Offset</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 23. ConfigMapOffsetStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-configmapoffsetstore-name"></a><a href="#hypercdc-operator-schema-reference-configmapoffsetstore-name"><code>name</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the offset config map</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-configmapoffsetstore-config"></a><a href="#hypercdc-operator-schema-reference-configmapoffsetstore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-containerenvvar"><a class="anchor" href="#hypercdc-operator-schema-reference-containerenvvar"></a>ContainerEnvVar schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-runtimeenvironment"><code>RuntimeEnvironment</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 24. ContainerEnvVar properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-containerenvvar-name"></a><a href="#hypercdc-operator-schema-reference-containerenvvar-name"><code>name</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The environment variable name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-containerenvvar-value"></a><a href="#hypercdc-operator-schema-reference-containerenvvar-value"><code>value</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The environment variable value.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-containertemplate"><a class="anchor" href="#hypercdc-operator-schema-reference-containertemplate"></a>ContainerTemplate schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-templates"><code>Templates</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 25. ContainerTemplate properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-containertemplate-resources"></a><a href="#hypercdc-operator-schema-reference-containertemplate-resources"><code>resources</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#resourcerequirements-v1-core"><code>ResourceRequirements</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>CPU and memory resource requirements.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-containertemplate-securitycontext"></a><a href="#hypercdc-operator-schema-reference-containertemplate-securitycontext"><code>securityContext</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#securitycontext-v1-core"><code>SecurityContext</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Container security context.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-containertemplate-probes"></a><a href="#hypercdc-operator-schema-reference-containertemplate-probes"><code>probes</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-probes"><code>Probes</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Container probes configuration.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-containertemplate-imagepullpolicy"></a><a href="#hypercdc-operator-schema-reference-containertemplate-imagepullpolicy"><code>imagePullPolicy</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Always,IfNotPresent,Never</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy">Image pull policy</a> for the container.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-customstore"><a class="anchor" href="#hypercdc-operator-schema-reference-customstore"></a>CustomStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-offset"><code>Offset</code></a>, <a href="#hypercdc-operator-schema-reference-schemahistory"><code>SchemaHistory</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 26. CustomStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-customstore-type"></a><a href="#hypercdc-operator-schema-reference-customstore-type"><code>type</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Fully qualified name of Java class implementing the store.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-customstore-config"></a><a href="#hypercdc-operator-schema-reference-customstore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-datastorage"><a class="anchor" href="#hypercdc-operator-schema-reference-datastorage"></a>DataStorage schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-runtimestorage"><code>RuntimeStorage</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 27. DataStorage properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-datastorage-type"></a><a href="#hypercdc-operator-schema-reference-datastorage-type"><code>type</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ephemeral,persistent</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>ephemeral</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Storage type.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-datastorage-claimname"></a><a href="#hypercdc-operator-schema-reference-datastorage-claimname"><code>claimName</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of persistent volume claim for persistent storage.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-fileoffsetstore"><a class="anchor" href="#hypercdc-operator-schema-reference-fileoffsetstore"></a>FileOffsetStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-offset"><code>Offset</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 28. FileOffsetStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-fileoffsetstore-filename"></a><a href="#hypercdc-operator-schema-reference-fileoffsetstore-filename"><code>fileName</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the offset file (relative to data root)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-fileoffsetstore-config"></a><a href="#hypercdc-operator-schema-reference-fileoffsetstore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-fileschemahistorystore"><a class="anchor" href="#hypercdc-operator-schema-reference-fileschemahistorystore"></a>FileSchemaHistoryStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-schemahistory"><code>SchemaHistory</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 29. FileSchemaHistoryStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-fileschemahistorystore-filename"></a><a href="#hypercdc-operator-schema-reference-fileschemahistorystore-filename"><code>fileName</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the offset file (relative to data root)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-fileschemahistorystore-config"></a><a href="#hypercdc-operator-schema-reference-fileschemahistorystore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-inmemoryoffsetstore"><a class="anchor" href="#hypercdc-operator-schema-reference-inmemoryoffsetstore"></a>InMemoryOffsetStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-offset"><code>Offset</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 30. InMemoryOffsetStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-inmemoryoffsetstore-config"></a><a href="#hypercdc-operator-schema-reference-inmemoryoffsetstore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-inmemoryschemahistorystore"><a class="anchor" href="#hypercdc-operator-schema-reference-inmemoryschemahistorystore"></a>InMemorySchemaHistoryStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-schemahistory"><code>SchemaHistory</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 31. InMemorySchemaHistoryStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-inmemoryschemahistorystore-config"></a><a href="#hypercdc-operator-schema-reference-inmemoryschemahistorystore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-jdbcoffsetstore"><a class="anchor" href="#hypercdc-operator-schema-reference-jdbcoffsetstore"></a>JdbcOffsetStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-offset"><code>Offset</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 32. JdbcOffsetStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsetstore-table"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsetstore-table"><code>table</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-jdbcoffsettableconfig"><code>JdbcOffsetTableConfig</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The configuration of the offset table</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsetstore-url"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsetstore-url"><code>url</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JDBC connection URL</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsetstore-user"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsetstore-user"><code>user</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Username used to connect to the storage database</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsetstore-password"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsetstore-password"><code>password</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Password used to connect to the storage database</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsetstore-retrydelay"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsetstore-retrydelay"><code>retryDelay</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>long</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Retry delay on connection failure (in milliseconds)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsetstore-maxretries"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsetstore-maxretries"><code>maxRetries</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Maximum number of retries on connection failure</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsetstore-config"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsetstore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-jdbcoffsettableconfig"><a class="anchor" href="#hypercdc-operator-schema-reference-jdbcoffsettableconfig"></a>JdbcOffsetTableConfig schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-jdbcoffsetstore"><code>JdbcOffsetStore</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 33. JdbcOffsetTableConfig properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsettableconfig-name"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsettableconfig-name"><code>name</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The name of the offset table</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsettableconfig-ddl"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsettableconfig-ddl"><code>ddl</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>DDL statement to create the offset table</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsettableconfig-select"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsettableconfig-select"><code>select</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Statement used to select from the offset table</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsettableconfig-insert"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsettableconfig-insert"><code>insert</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Statement used to insert into the offset table</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcoffsettableconfig-delete"></a><a href="#hypercdc-operator-schema-reference-jdbcoffsettableconfig-delete"><code>delete</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Statement used to update the offset table</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-jdbcschemahistorystore"><a class="anchor" href="#hypercdc-operator-schema-reference-jdbcschemahistorystore"></a>JdbcSchemaHistoryStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-schemahistory"><code>SchemaHistory</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 34. JdbcSchemaHistoryStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorystore-table"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorystore-table"><code>table</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-jdbcschemahistorytableconfig"><code>JdbcSchemaHistoryTableConfig</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The configuration of the offset table</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorystore-url"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorystore-url"><code>url</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JDBC connection URL</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorystore-user"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorystore-user"><code>user</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Username used to connect to the storage database</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorystore-password"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorystore-password"><code>password</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Password used to connect to the storage database</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorystore-retrydelay"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorystore-retrydelay"><code>retryDelay</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>long</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Retry delay on connection failure (in milliseconds)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorystore-maxretries"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorystore-maxretries"><code>maxRetries</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Maximum number of retries on connection failure</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorystore-config"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorystore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-jdbcschemahistorytableconfig"><a class="anchor" href="#hypercdc-operator-schema-reference-jdbcschemahistorytableconfig"></a>JdbcSchemaHistoryTableConfig schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-jdbcschemahistorystore"><code>JdbcSchemaHistoryStore</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 35. JdbcSchemaHistoryTableConfig properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorytableconfig-name"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorytableconfig-name"><code>name</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The name of the offset table</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorytableconfig-ddl"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorytableconfig-ddl"><code>ddl</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>DDL statement to create the schema history table</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorytableconfig-select"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorytableconfig-select"><code>select</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Statement used to select from the schema history table</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorytableconfig-insert"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorytableconfig-insert"><code>insert</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Statement used to insert into the schema history table</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-jdbcschemahistorytableconfig-dataexistsselect"></a><a href="#hypercdc-operator-schema-reference-jdbcschemahistorytableconfig-dataexistsselect"><code>dataExistsSelect</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Statement used to check existence of some data in the schema history table</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-kafkaoffsetstore"><a class="anchor" href="#hypercdc-operator-schema-reference-kafkaoffsetstore"></a>KafkaOffsetStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-offset"><code>Offset</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 36. KafkaOffsetStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaoffsetstore-props"></a><a href="#hypercdc-operator-schema-reference-kafkaoffsetstore-props"><code>props</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional Kafka client properties.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaoffsetstore-bootstrapservers"></a><a href="#hypercdc-operator-schema-reference-kafkaoffsetstore-bootstrapservers"><code>bootstrapServers</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A list of host/port pairs that the connector uses for establishing an initial connection to the Kafka cluster</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaoffsetstore-topic"></a><a href="#hypercdc-operator-schema-reference-kafkaoffsetstore-topic"><code>topic</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The name of the Kafka topic where offsets are to be stored</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaoffsetstore-partitions"></a><a href="#hypercdc-operator-schema-reference-kafkaoffsetstore-partitions"><code>partitions</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The number of partitions used when creating the offset storage topic</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaoffsetstore-replicationfactor"></a><a href="#hypercdc-operator-schema-reference-kafkaoffsetstore-replicationfactor"><code>replicationFactor</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Replication factor used when creating the offset storage topic</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaoffsetstore-config"></a><a href="#hypercdc-operator-schema-reference-kafkaoffsetstore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-kafkaschemahistorystore"><a class="anchor" href="#hypercdc-operator-schema-reference-kafkaschemahistorystore"></a>KafkaSchemaHistoryStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-schemahistory"><code>SchemaHistory</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 37. KafkaSchemaHistoryStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaschemahistorystore-bootstrapservers"></a><a href="#hypercdc-operator-schema-reference-kafkaschemahistorystore-bootstrapservers"><code>bootstrapServers</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A list of host/port pairs that the connector uses for establishing an initial connection to the Kafka cluster</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaschemahistorystore-topic"></a><a href="#hypercdc-operator-schema-reference-kafkaschemahistorystore-topic"><code>topic</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The name of the Kafka topic where offsets are to be stored</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaschemahistorystore-partitions"></a><a href="#hypercdc-operator-schema-reference-kafkaschemahistorystore-partitions"><code>partitions</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The number of partitions used when creating the offset storage topic</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaschemahistorystore-replicationfactor"></a><a href="#hypercdc-operator-schema-reference-kafkaschemahistorystore-replicationfactor"><code>replicationFactor</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Replication factor used when creating the offset storage topic</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-kafkaschemahistorystore-config"></a><a href="#hypercdc-operator-schema-reference-kafkaschemahistorystore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-metadatatemplate"><a class="anchor" href="#hypercdc-operator-schema-reference-metadatatemplate"></a>MetadataTemplate schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-podtemplate"><code>PodTemplate</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 38. MetadataTemplate properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-metadatatemplate-labels"></a><a href="#hypercdc-operator-schema-reference-metadatatemplate-labels"><code>labels</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map&lt;String, String&gt;</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Labels added to the Kubernetes resource</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-metadatatemplate-annotations"></a><a href="#hypercdc-operator-schema-reference-metadatatemplate-annotations"><code>annotations</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map&lt;String, String&gt;</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Annotations added to the Kubernetes resource</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-offset"><a class="anchor" href="#hypercdc-operator-schema-reference-offset"></a>Offset schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-source"><code>Source</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 39. Offset properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-offset-file"></a><a href="#hypercdc-operator-schema-reference-offset-file"><code>file</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-fileoffsetstore"><code>FileOffsetStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>File backed offset store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-offset-memory"></a><a href="#hypercdc-operator-schema-reference-offset-memory"><code>memory</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-inmemoryoffsetstore"><code>InMemoryOffsetStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Memory backed offset store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-offset-redis"></a><a href="#hypercdc-operator-schema-reference-offset-redis"><code>redis</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-redisoffsetstore"><code>RedisOffsetStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis backed offset store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-offset-kafka"></a><a href="#hypercdc-operator-schema-reference-offset-kafka"><code>kafka</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-kafkaoffsetstore"><code>KafkaOffsetStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kafka backing store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-offset-jdbc"></a><a href="#hypercdc-operator-schema-reference-offset-jdbc"><code>jdbc</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-jdbcoffsetstore"><code>JdbcOffsetStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JDBC backing store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-offset-configmap"></a><a href="#hypercdc-operator-schema-reference-offset-configmap"><code>configMap</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-configmapoffsetstore"><code>ConfigMapOffsetStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Config map backed offset store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-offset-store"></a><a href="#hypercdc-operator-schema-reference-offset-store"><code>store</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-customstore"><code>CustomStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Arbitrary offset store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-offset-flushms"></a><a href="#hypercdc-operator-schema-reference-offset-flushms"><code>flushMs</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>long</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>60000</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Interval at which to try commiting offsets</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-podtemplate"><a class="anchor" href="#hypercdc-operator-schema-reference-podtemplate"></a>PodTemplate schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-templates"><code>Templates</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 40. PodTemplate properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-podtemplate-metadata"></a><a href="#hypercdc-operator-schema-reference-podtemplate-metadata"><code>metadata</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-metadatatemplate"><code>MetadataTemplate</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Metadata applied to the resource.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-podtemplate-imagepullsecrets"></a><a href="#hypercdc-operator-schema-reference-podtemplate-imagepullsecrets"><code>imagePullSecrets</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#localobjectreference-v1-core"><code>List&lt;LocalObjectReference&gt;</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>List of local references to secrets used for pulling any of the images used by this Pod.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-podtemplate-affinity"></a><a href="#hypercdc-operator-schema-reference-podtemplate-affinity"><code>affinity</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#affinity-v1-core"><code>Affinity</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Pod affinity rules</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-podtemplate-securitycontext"></a><a href="#hypercdc-operator-schema-reference-podtemplate-securitycontext"><code>securityContext</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#podsecuritycontext-v1-core"><code>PodSecurityContext</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Pod-level security attributes and container settings</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-probe"><a class="anchor" href="#hypercdc-operator-schema-reference-probe"></a>Probe schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-probes"><code>Probes</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 41. Probe properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-probe-initialdelayseconds"></a><a href="#hypercdc-operator-schema-reference-probe-initialdelayseconds"><code>initialDelaySeconds</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>5</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Number of seconds after the container has started before probes are initiated.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-probe-periodseconds"></a><a href="#hypercdc-operator-schema-reference-probe-periodseconds"><code>periodSeconds</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>10</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>How often (in seconds) to perform the probe.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-probe-timeoutseconds"></a><a href="#hypercdc-operator-schema-reference-probe-timeoutseconds"><code>timeoutSeconds</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>10</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Number of seconds after which the probe times out.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-probe-failurethreshold"></a><a href="#hypercdc-operator-schema-reference-probe-failurethreshold"><code>failureThreshold</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>int</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>3</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Number of failures in a row before the overall check has failed.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-probes"><a class="anchor" href="#hypercdc-operator-schema-reference-probes"></a>Probes schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-containertemplate"><code>ContainerTemplate</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 42. Probes properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-probes-readiness"></a><a href="#hypercdc-operator-schema-reference-probes-readiness"><code>readiness</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-probe"><code>Probe</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Readiness probe configuration applied to the container.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-probes-liveness"></a><a href="#hypercdc-operator-schema-reference-probes-liveness"><code>liveness</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-probe"><code>Probe</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Liveness probe configuration applied to the container.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-redisoffsetstore"><a class="anchor" href="#hypercdc-operator-schema-reference-redisoffsetstore"></a>RedisOffsetStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-offset"><code>Offset</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 43. RedisOffsetStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisoffsetstore-address"></a><a href="#hypercdc-operator-schema-reference-redisoffsetstore-address"><code>address</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis host:port used to connect</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisoffsetstore-user"></a><a href="#hypercdc-operator-schema-reference-redisoffsetstore-user"><code>user</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis username</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisoffsetstore-password"></a><a href="#hypercdc-operator-schema-reference-redisoffsetstore-password"><code>password</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis password</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisoffsetstore-sslenabled"></a><a href="#hypercdc-operator-schema-reference-redisoffsetstore-sslenabled"><code>sslEnabled</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>boolean</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis username</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisoffsetstore-key"></a><a href="#hypercdc-operator-schema-reference-redisoffsetstore-key"><code>key</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis hash key</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisoffsetstore-wait"></a><a href="#hypercdc-operator-schema-reference-redisoffsetstore-wait"><code>wait</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-redisstorewaitconfig"><code>RedisStoreWaitConfig</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Configures verification of replica writes</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisoffsetstore-config"></a><a href="#hypercdc-operator-schema-reference-redisoffsetstore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-redisschemahistorystore"><a class="anchor" href="#hypercdc-operator-schema-reference-redisschemahistorystore"></a>RedisSchemaHistoryStore schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-schemahistory"><code>SchemaHistory</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 44. RedisSchemaHistoryStore properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisschemahistorystore-address"></a><a href="#hypercdc-operator-schema-reference-redisschemahistorystore-address"><code>address</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis host:port used to connect</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisschemahistorystore-user"></a><a href="#hypercdc-operator-schema-reference-redisschemahistorystore-user"><code>user</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis username</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisschemahistorystore-password"></a><a href="#hypercdc-operator-schema-reference-redisschemahistorystore-password"><code>password</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis password</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisschemahistorystore-sslenabled"></a><a href="#hypercdc-operator-schema-reference-redisschemahistorystore-sslenabled"><code>sslEnabled</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>boolean</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis username</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisschemahistorystore-key"></a><a href="#hypercdc-operator-schema-reference-redisschemahistorystore-key"><code>key</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis hash key</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisschemahistorystore-wait"></a><a href="#hypercdc-operator-schema-reference-redisschemahistorystore-wait"><code>wait</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-redisstorewaitconfig"><code>RedisStoreWaitConfig</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Configures verification of replica writes</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisschemahistorystore-config"></a><a href="#hypercdc-operator-schema-reference-redisschemahistorystore-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-redisstorewaitconfig"><a class="anchor" href="#hypercdc-operator-schema-reference-redisstorewaitconfig"></a>RedisStoreWaitConfig schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-redisoffsetstore"><code>RedisOffsetStore</code></a>, <a href="#hypercdc-operator-schema-reference-redisschemahistorystore"><code>RedisSchemaHistoryStore</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 45. RedisStoreWaitConfig properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisstorewaitconfig-enabled"></a><a href="#hypercdc-operator-schema-reference-redisstorewaitconfig-enabled"><code>enabled</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>boolean</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>In case of Redis with replica, this allows to verify that the data has been written to replica</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisstorewaitconfig-timeoutms"></a><a href="#hypercdc-operator-schema-reference-redisstorewaitconfig-timeoutms"><code>timeoutMs</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>long</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>1000</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Timeout in ms when waiting for replica</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisstorewaitconfig-retry"></a><a href="#hypercdc-operator-schema-reference-redisstorewaitconfig-retry"><code>retry</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>boolean</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>false</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Enables retry on wait for replica</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-redisstorewaitconfig-retrydelayms"></a><a href="#hypercdc-operator-schema-reference-redisstorewaitconfig-retrydelayms"><code>retryDelayMs</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>long</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>1000</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Delay of retry on wait</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="hypercdc-operator-schema-reference-schemahistory"><a class="anchor" href="#hypercdc-operator-schema-reference-schemahistory"></a>SchemaHistory schema reference</h3>
+<div class="paragraph">
+<p>Used in: <a href="#hypercdc-operator-schema-reference-source"><code>Source</code></a></p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 46. SchemaHistory properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-schemahistory-file"></a><a href="#hypercdc-operator-schema-reference-schemahistory-file"><code>file</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-fileschemahistorystore"><code>FileSchemaHistoryStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>File backed schema history store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-schemahistory-memory"></a><a href="#hypercdc-operator-schema-reference-schemahistory-memory"><code>memory</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-inmemoryschemahistorystore"><code>InMemorySchemaHistoryStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Memory backed schema history store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-schemahistory-redis"></a><a href="#hypercdc-operator-schema-reference-schemahistory-redis"><code>redis</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-redisschemahistorystore"><code>RedisSchemaHistoryStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Redis backed schema history store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-schemahistory-kafka"></a><a href="#hypercdc-operator-schema-reference-schemahistory-kafka"><code>kafka</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-kafkaschemahistorystore"><code>KafkaSchemaHistoryStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kafka backed schema history store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-schemahistory-jdbc"></a><a href="#hypercdc-operator-schema-reference-schemahistory-jdbc"><code>jdbc</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-jdbcschemahistorystore"><code>JdbcSchemaHistoryStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JDBC backed schema history store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-schemahistory-store"></a><a href="#hypercdc-operator-schema-reference-schemahistory-store"><code>store</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><a href="#hypercdc-operator-schema-reference-customstore"><code>CustomStore</code></a></strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Arbitrary schema history store configuration</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="hypercdc-operator-schema-reference-schemahistory-config"></a><a href="#hypercdc-operator-schema-reference-schemahistory-config"><code>config</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Map</strong></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Additional common schema history store configuration properties.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_complete_hypercdc_server_configuration_example"><a class="anchor" href="#_complete_hypercdc_server_configuration_example"></a>Complete HyperCDC Server configuration example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following example shows a complete HyperCDC Server custom resource that incorporates properties from the preceding tables.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. Complete HyperCDC server custom resource</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: hypercdc.io/v1alpha1
+kind: HyperCDCServer
+metadata:
+  name: my-hypercdc-server
+spec:
+  version: "3.2.0"
+  source:
+    class: io.hypercdc.connector.mysql.MySqlConnector
+    config:
+      database.hostname: mysql-server
+      database.port: 3306
+      database.user: hypercdc
+      database.password: secret
+      database.server.id: 184054
+      topic.prefix: mysql
+      database.include.list: inventory
+    offset:
+      type: kafka
+      config:
+        bootstrap.servers: kafka:9092
+        topic: hypercdc-offsets
+    schemaHistory:
+      type: kafka
+      config:
+        bootstrap.servers: kafka:9092
+        topic: hypercdc-schema-history
+  sink:
+    type: kafka
+    config:
+      bootstrap.servers: kafka:9092
+  format:
+    key:
+      type: json
+    value:
+      type: json
+      config:
+        schemas.enable: false
+  runtime:
+    jmx:
+      enabled: true
+      port: 1099
+    storage:
+      data:
+        type: persistent
+        claimName: hypercdc-data-pvc
+    metrics:
+      jmxExporter:
+        enabled: true
+      openTelemetry:
+        enabled: true
+        collector:
+          endpoint: http://otel-collector:4318
+  transforms:
+    - type: io.hypercdc.transforms.UnwrapFromEnvelope
+      config:
+        drop.tombstones: false
+      predicate: inventory-filter
+      negate: false
+  predicates:
+    inventory-filter:
+      type: org.apache.kafka.connect.transforms.predicates.TopicNameMatches
+      config:
+        pattern: "mysql.inventory.*"
+  quarkus:
+    config:
+      quarkus.log.level: INFO
+      quarkus.http.port: 8080</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

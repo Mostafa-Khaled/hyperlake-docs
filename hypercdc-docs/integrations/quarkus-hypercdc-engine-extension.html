@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperCDC Extensions for Quarkus — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">HyperCDC Extensions for Quarkus</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="paragraph">
+<p>The following documentation explores how your Quarkus application can integrate HyperCDC.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction"><a class="anchor" href="#_introduction"></a>Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>HyperCDC Extensions for Quarkus</strong> integrates the <strong>HyperCDC Runtime</strong> into <strong>Quarkus</strong> applications, enabling developers to consume <strong>change data capture</strong> (CDC) events from supported databases directly within a lightweight, cloud-native application.</p>
+</div>
+<div class="sect2">
+<h3 id="_when_use_the_extension"><a class="anchor" href="#_when_use_the_extension"></a>When use the extension</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>CDC in Quarkus</strong>: Seamlessly embeds HyperCDC into Quarkus apps, ideal for microservices use cases.</p>
+</li>
+<li>
+<p><strong>Kafka-free Option</strong>: Avoids the need for full Kafka infrastructure when only simple streaming or in-process processing is required</p>
+</li>
+<li>
+<p><strong>Lightweight &amp; Fast</strong>: Leverages native Quarkus' fast startup time and low memory</p>
+</li>
+<li>
+<p><strong>Developer Friendly</strong>: Simplifies setup with Quarkus-native configuration and dependency management</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_features"><a class="anchor" href="#_features"></a>Features</h3>
+<div class="paragraph">
+<p>The Extension supports well-established HyperCDC features and much more! Here a list of new or revisited features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>HyperCDC Capturing Listener</p>
+</li>
+<li>
+<p>HyperCDC Custom Deserializer</p>
+</li>
+<li>
+<p>HyperCDC Lifecycle events</p>
+</li>
+<li>
+<p>HyperCDC Heartbeat events</p>
+</li>
+<li>
+<p>HyperCDC Custom Data Type Converter</p>
+</li>
+<li>
+<p>HyperCDC Notification events</p>
+</li>
+<li>
+<p>HyperCDC Post Processors</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_supported_connectors"><a class="anchor" href="#_supported_connectors"></a>Supported Connectors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following connectors are supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>hypercdc-quarkus-postgres</code> extension for <strong>Postgres</strong> Connector</p>
+</li>
+<li>
+<p><code>hypercdc-quarkus-mongodb</code> extension for <strong>Mongodb</strong> Connector</p>
+</li>
+<li>
+<p><code>hypercdc-quarkus-mysql</code> extension for <strong>MySQL</strong> Connector</p>
+</li>
+<li>
+<p><code>hypercdc-quarkus-mariadb</code> extension for <strong>MariaDB</strong> Connector</p>
+</li>
+<li>
+<p><code>hypercdc-quarkus-sqlserver</code> extension for <strong>MS Sql Server</strong> Connector</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>JDK 21+ installed with <code>JAVA_HOME</code> configured appropriately</p>
+</li>
+<li>
+<p>Apache maven 3.9.9</p>
+</li>
+<li>
+<p>Quarkus version 3.25.0</p>
+</li>
+<li>
+<p>Docker or Podman</p>
+</li>
+<li>
+<p>Optionally Mandrel or GraalVM installed and configured appropriately if you want to build a native executable</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_working_example"><a class="anchor" href="#_working_example"></a>Working Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A fully functional example demonstrating the extension capabilities is available in the <a href="#">hypercdc-example repository</a>. It can serve as a reference for setting up and testing your own Quarkus Application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bootstrap_a_quarkus_project"><a class="anchor" href="#_bootstrap_a_quarkus_project"></a>Bootstrap a Quarkus Project</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section can be skipped if you already have in place a quarkus application.</p>
+</div>
+<div class="paragraph">
+<p>The easiest way to create a new Quarkus Project is to open a terminal and run the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">mvn io.quarkus.platform:quarkus-maven-plugin:3.25.0:create \
+    -DprojectGroupId=org.acme \
+    -DprojectArtifactId=getting-started</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>it generates the following in <code>./getting-started</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the quarkus boilerplate</p>
+</li>
+<li>
+<p>the application configuration</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_add_the_extension_to_the_project"><a class="anchor" href="#_add_the_extension_to_the_project"></a>Add the Extension to the project</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the project, add the HyperCDC extension dependency to your application’s <code>pom.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">    &lt;dependencies&gt;
+        &lt;!-- [...] --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;io.hypercdc.quarkus&lt;/groupId&gt;
+            &lt;artifactId&gt;hypercdc-quarkus-postgres&lt;/artifactId&gt;
+            &lt;version&gt;${version.hypercdc}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;!-- [...] --&gt;
+    &lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuring_hypercdc_connector"><a class="anchor" href="#_configuring_hypercdc_connector"></a>Configuring HyperCDC Connector</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The HyperCDC extension is shipped with a <strong>Connector</strong> that listen CDC events from the datasource but a minimal configuration is mandatory.</p>
+</div>
+<div class="paragraph">
+<p>The Extension use Quarkus (the SmallRye Config API) to provide all mechanisms related with configuration.
+HyperCDC configurations use the prefix <code>quarkus.hypercdc.*</code> and if we will use an application configuration file located in <code>src/main/resources/application.properties</code>, the result for a minimum setup is the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># HyperCDC CDC configuration
+quarkus.hypercdc.offset.storage=org.apache.kafka.connect.storage.MemoryOffsetBackingStore
+quarkus.hypercdc.name=native
+quarkus.hypercdc.topic.prefix=native
+quarkus.hypercdc.plugin.name=pgoutput
+quarkus.hypercdc.snapshot.mode=initial
+
+# datasource configuration
+quarkus.datasource.db-kind=postgresql
+quarkus.datasource.username=&lt;your username&gt;
+quarkus.datasource.password=&lt;your password&gt;
+quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/hibernate_orm_test
+quarkus.datasource.jdbc.max-size=16</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The configuration parameters available are in the <a href="#">HyperCDC documentation</a>.
+Additionally, you must specify the <a href="https://quarkus.io/guides/datasource#configure-a-jdbc-datasource">datasource configuration parameters</a> as required by HyperCDC runtime.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_capturing_events_from_hypercdc"><a class="anchor" href="#_capturing_events_from_hypercdc"></a>Capturing events from HyperCDC</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Continuing from the previous minimal configuration, your Quarkus application can receive CDC event payload directly:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.hypercdc.runtime.CapturingEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.apache.kafka.connect.source.SourceRecord;
+
+import io.hypercdc.runtime.Capturing;
+
+@ApplicationScoped
+public class ProductHandler {
+
+
+    @Capturing
+    public void capture(CapturingEvent&lt;SourceRecord&gt; record) {
+        // process your events
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>CapturingEvent&lt;T&gt;</code> contains information related to the kind of database operation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Capturing
+    public void capture(CapturingEvent&lt;SourceRecord&gt; record) {
+        switch (record) {
+            case Create&lt;SourceRecord&gt; event -&gt; {}
+            case Delete&lt;SourceRecord&gt; event -&gt; {}
+            case Message&lt;SourceRecord&gt; event -&gt; {}
+            case Read&lt;SourceRecord&gt; event -&gt; {}
+            case Truncate&lt;SourceRecord&gt; event -&gt; {}
+            case Update&lt;SourceRecord&gt; event -&gt; {}
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_filtering_change_data_capture_events"><a class="anchor" href="#_filtering_change_data_capture_events"></a>Filtering Change Data Capture Events</h3>
+<div class="sect3">
+<h4 id="_by_destination"><a class="anchor" href="#_by_destination"></a>By destination</h4>
+<div class="paragraph">
+<p>It’s possible to filter events by <code>destination</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Capturing(destination = "native.inventory.products")
+    public void capture(CapturingEvent&lt;SourceRecord&gt; record) {
+        // process your event
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default behavior is that a HyperCDC connector <code>destination</code> is formed from the name of the <code>prefix</code> defined in the configuration with the database name and the name of the table in which the change was made.
+In some cases the <code>destination</code> is redefined using an <a href="#">SMT</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_by_custom_filter_strategy"><a class="anchor" href="#_by_custom_filter_strategy"></a>By custom filter strategy</h4>
+<div class="paragraph">
+<p>For advanced filtering, you can provide a custom <code>CapturingFilterStrategy</code> that receives the full event and decides whether to capture it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
+public class ProductsOnlyFilter implements CapturingFilterStrategy {
+    @Override
+    public boolean shouldCapture(CapturingEvent&lt;SourceRecord, SourceRecord&gt; event) {
+        return "native.inventory.products".equals(event.destination());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then reference it in the annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Capturing(filter = ProductsOnlyFilter.class)
+    public void capture(CapturingEvent&lt;SourceRecord, SourceRecord&gt; event) {
+        // only receives events accepted by the filter
+    }</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>filter</code> attribute is mutually exclusive with <code>destination</code> and <code>engine</code>, validated at build time.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_by_field_changes"><a class="anchor" href="#_by_field_changes"></a>By field changes</h4>
+<div class="paragraph">
+<p>A built-in <code>CapturingFieldsFilterStrategy</code> can filter events based on the state of specific watched fields, where that state depends on the event type:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Create / Read</strong>: captured if any watched field exists in the record schema</p>
+</li>
+<li>
+<p><strong>Update</strong>: captured only if at least one watched field value changed between before and after</p>
+</li>
+<li>
+<p><strong>Delete</strong>: captured if any watched field exists in the before schema</p>
+</li>
+<li>
+<p><strong>Truncate / Message</strong>: not captured (no field-level data)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Extend it and pass the field names to watch:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
+public class PriceChangeFilter extends CapturingFieldsFilterStrategy {
+    public PriceChangeFilter() {
+        super(Set.of("name", "price"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then use it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Capturing(filter = PriceChangeFilter.class)
+    public void capture(CapturingEvent&lt;SourceRecord, SourceRecord&gt; event) {
+        // only receives events where 'name' or 'price' are impacted
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_batch_event_filtering"><a class="anchor" href="#_batch_event_filtering"></a>Batch event filtering</h4>
+<div class="paragraph">
+<p>The filter strategy also works with batch event processing (<code>CapturingEvents&lt;BatchEvent&gt;</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Capturing(filter = PriceChangeFilter.class)
+    public void onBatch(CapturingEvents&lt;BatchEvent&gt; events) {
+        // only receives batch events where at least one record impacts 'name' or 'price'
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For batch events, each record in the batch is individually evaluated by <code>shouldCapture</code> and only matching records are delivered to the filter handler.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fallback_chain"><a class="anchor" href="#_fallback_chain"></a>Fallback chain</h4>
+<div class="paragraph">
+<p>When multiple <code>@Capturing</code> methods are defined, events are dispatched through a fallback chain:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Methods with <code>filter</code> are checked first. The filter’s <code>shouldCapture</code> decides.</p>
+</li>
+<li>
+<p>Methods with a registered deserializer for the destination (single event only).</p>
+</li>
+<li>
+<p>Methods with <code>destination</code> (exact match, then wildcard <code>*</code> fallback).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>First match wins.
+A <code>@Capturing()</code> with no destination acts as a wildcard and catches any event not matched by the previous levels.
+If no wildcard is defined, unmatched events are skipped.</p>
+</div>
+<div class="paragraph">
+<p>The same fallback chain applies to both single event and batch event processing.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deserializer_via_jackson"><a class="anchor" href="#_deserializer_via_jackson"></a>Deserializer via Jackson</h3>
+<div class="paragraph">
+<p>Quarkus has built-in support for JSON serialization and deserialization based on Jackson.
+There is an existing <code>ObjectMapperDeserializer</code> that can be used to deserialize all data objects via Jackson.</p>
+</div>
+<div class="paragraph">
+<p>The corresponding deserializer class needs to be subclassed.
+So, we have to create a <code>ProductDeserializer</code> that extends the <code>ObjectMapperDeserializer</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class ProductDeserializer extends ObjectMapperDeserializer&lt;Product&gt; {
+    public ProductDeserializer() {
+        super(Product.class);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, configure your capture channel to use the Jackson deserializer for a particular destination:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.hypercdc.capturing.products.destination=native.inventory.products
+quarkus.hypercdc.capturing.products.deserializer=com.acme.product.jackson.ProductDeserializer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and use it in your code adding the destination assigned to the deserializer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.hypercdc.runtime.CapturingEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.apache.kafka.connect.source.SourceRecord;
+
+import io.hypercdc.runtime.Capturing;
+
+@ApplicationScoped
+public class ProductHandler {
+
+
+    @Capturing(destination = "native.inventory.products")
+    public void capture(CapturingEvent&lt;Product&gt; record) {
+        // process your events
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or only the deserialized object without <code>CapturingEvent&lt;T&gt;</code>:</p>
+</div>
+<div class="admonitionblock note">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>keep in mind that in such case, you don’t have information related to the database operation</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.hypercdc.runtime.CapturingEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.apache.kafka.connect.source.SourceRecord;
+
+import io.hypercdc.runtime.Capturing;
+
+@ApplicationScoped
+public class ProductHandler {
+
+
+    @Capturing(destination = "native.inventory.products")
+    public void capture(Product product) {
+        // process your events
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lifecycle_events"><a class="anchor" href="#_lifecycle_events"></a>Lifecycle events</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>it’s possible to get information related to the status of hypercdc listening lifecycle events:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.hypercdc.runtime.events.*;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+
+@ApplicationScoped
+public class LifecycleListener {
+
+    public void started(@Observes ConnectorStartedEvent event) {
+        // your logic
+    }
+
+    public void stopped(@Observes ConnectorStoppedEvent connectorStoppedEvent) {
+        // your logic
+    }
+    public void tasksStarted(@Observes TasksStartedEvent tasksStartedEvent) {
+        // your logic
+    }
+    public void tasksStopped(@Observes TasksStoppedEvent tasksStoppedEvent) {
+        // your logic
+    }
+    public void pollingStarted(@Observes PollingStartedEvent pollingStartedEvent) {
+        // your logic
+    }
+    public void pollingStopped(@Observes PollingStoppedEvent pollingStoppedEvent) {
+        // your logic
+    }
+    public void completed(@Observes HyperCDCCompletionEvent hypercdcCompletionEvent) {
+        // your logic
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>the following events are available:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ConnectorStartedEvent</code> is fired when the HyperCDC starts a connector</p>
+</li>
+<li>
+<p><code>ConnectorStoppedEvent</code> is fired when HyperCDC stops a connector</p>
+</li>
+<li>
+<p><code>TasksStartedEvent</code> is fired when a connector task is started</p>
+</li>
+<li>
+<p><code>TasksStoppedEvent</code> is fired when the connector task is stopped</p>
+</li>
+<li>
+<p><code>PollingStartedEvent</code> is fired when the HyperCDC engine begins polling for connector changes</p>
+</li>
+<li>
+<p><code>PollingStoppedEvent</code> is fired when HyperCDC engine stops polling the connector for changes</p>
+</li>
+<li>
+<p><code>HyperCDCCompletionEvent</code> is fired after the HyperCDC engine completes it’s shutdown. It includes all the information about whether the prior execution was successful or if it failed, the reason and error why</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_heartbeat_events"><a class="anchor" href="#_heartbeat_events"></a>Heartbeat events</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>it’s possible to listen heartbeat events in your quarkus application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.hypercdc.runtime.events.HyperCDCHeartbeat;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+
+@ApplicationScoped
+public class HeartbeatListener {
+
+    public void heartbeat(@Observes HyperCDCHeartbeat heartbeat) {
+        //
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>HyperCDCHeartbeat</code> contains information related to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Connector</p>
+</li>
+<li>
+<p>HyperCDC status</p>
+</li>
+<li>
+<p>partition</p>
+</li>
+<li>
+<p>offset</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_notification_events"><a class="anchor" href="#_notification_events"></a>Notification events</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="#">HyperCDC notifications</a> provide events about fine grain status (<code>snapshot</code> and <code>streaming</code>) always available as Jakarta event:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.quarkus.hypercdc.notification.SnapshotEvent;
+import io.quarkus.hypercdc.notification.HyperCDCNotification;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+
+@ApplicationScoped
+public class NotificationListener {
+
+    public void snapshot(@Observes SnapshotEvent event) {
+        //
+    }
+
+    public void notification(@Observes HyperCDCNotification event) {
+        //
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>the following events are available:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>HyperCDCNotification</code></p>
+</li>
+<li>
+<p><code>SnapshotStarted</code></p>
+</li>
+<li>
+<p><code>SnapshotInProgres</code></p>
+</li>
+<li>
+<p><code>SnapshotTableScanCompleted</code></p>
+</li>
+<li>
+<p><code>SnapshotAborted</code></p>
+</li>
+<li>
+<p><code>SnapshotSkipped</code></p>
+</li>
+<li>
+<p><code>SnapshotCompleted</code></p>
+</li>
+<li>
+<p><code>SnapshotPaused</code></p>
+</li>
+<li>
+<p><code>SnapshotResumed</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_data_type_converter"><a class="anchor" href="#_data_type_converter"></a>Data Type Converter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It’s possible to define a <a href="#">HyperCDC Custom Converter</a> in the extension using the <code>@CustomConverter</code> annotation and instantiate a <code>ConverterDefinition</code> that defines the type conversation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.hypercdc.relational.CustomConverterRegistry.ConverterDefinition;
+import io.hypercdc.runtime.CustomConverter;
+import io.hypercdc.spi.converter.ConvertedField;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.apache.kafka.connect.data.SchemaBuilder;
+
+@ApplicationScoped
+public class StringConverter {
+
+    @CustomConverter
+    public ConverterDefinition&lt;SchemaBuilder&gt; bind(ConvertedField field) {
+        return new ConverterDefinition&lt;&gt;(SchemaBuilder.string(), String::valueOf);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>this kind of conversation is applied to all the fields that are in cdc events.
+To apply the conversion only to a subset of fields, it’s possible to enrich the <code>CustomConverter</code> with a <code>FieldFilterStrategy</code> that filters only the interested fields:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @CustomConverter(filter = CustomFieldFilterStrategy.class)
+    public ConverterDefinition&lt;SchemaBuilder&gt; filteredBind(ConvertedField field) {
+        return new ConverterDefinition&lt;&gt;(SchemaBuilder.string(), String::valueOf);
+    }
+
+    @ApplicationScoped
+    public static class CustomFieldFilterStrategy implements FieldFilterStrategy {
+
+        @Override
+        public boolean filter(ConvertedField field) {
+            // your logic
+            return false;
+        }
+
+    }</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_post_processors"><a class="anchor" href="#_post_processors"></a>Post Processors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="#">Post processors</a> apply lightweight, per-message changes earlier in the event flow than SMTs, allowing them to modify messages within HyperCDC’s context.
+This makes them more efficient than transformations. It’s possible to define a post processor in two ways: as configuration parameter or using the annotation <code>@PostProcessing</code>.</p>
+</div>
+<div class="paragraph">
+<p>For configuration, the official documentation outlines the available parameters, such as those for the <a href="https://hypercdc.io/documentation/reference/stable/post-processors/reselect-columns.html"><code>Reselect</code></a> post-processor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.hypercdc.post.processors=reselector
+quarkus.hypercdc.post.processors.reselector.type=io.hypercdc.processors.reselect.ReselectColumnsPostProcessor
+quarkus.hypercdc.post.processors.reselector.reselect.unavailable.values=true
+quarkus.hypercdc.post.processors.reselector.reselect.null.values=true
+quarkus.hypercdc.post.processors.reselector.reselect.use.event.key=false
+quarkus.hypercdc.post.processors.reselector.reselect.error.handling.mode=WARN</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the code, in the extension is available the annotation <code>@PostProcessing</code> that gives access to the <code>key</code> and the <code>Struct</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.hypercdc.runtime.PostProcessing;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.apache.kafka.connect.data.Struct;
+
+@ApplicationScoped
+public class PostProcessorHandler {
+
+    @PostProcessing
+    public void processing(Object key, Struct struct) {
+        // apply your logic
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_devservice_support"><a class="anchor" href="#_devservice_support"></a>DevService Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus automatically provisions unconfigured services in dev and test modes using Dev Services.
+When an extension is included without configuration, Quarkus starts the necessary service (via Testcontainers) and connects it to your app.
+For HyperCDC, it’s necessary <a href="#">a setup</a> that default images of Quarkus doesn’t support.
+The Extension is already equipped with a dev service with an image configured for change data capture but the support is <strong>experimental</strong> and in case of errors or issue you can disable it with the following properties</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.datasource.devservices.enabled=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or override using an official HyperCDC image</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.datasource.devservices.image-name=quay.io/hypercdc/postgres:15</code></pre>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

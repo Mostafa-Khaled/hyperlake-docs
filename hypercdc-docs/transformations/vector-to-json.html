@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vector To Json — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">Vector To Json</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="paragraph">
+<p>HyperCDC maps vector data type columns with specific logical semantic representations of the vector data.
+If you need to remap that representation into something more universal like JSON, HyperCDC provides the Vector to Json single message transformation (SMT).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_use_cases"><a class="anchor" href="#_use_cases"></a>Use cases</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>HyperCDC maps vector data type columns using the follow mappings:</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Database</th>
+<th class="tableblock halign-left valign-top">Column Type</th>
+<th class="tableblock halign-left valign-top">Logical Semantic Type</th>
+<th class="tableblock halign-left valign-top">Kafka Connect Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MySQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vector</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.hypercdc.data.FloatVector</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ARRAY</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vector</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.hypercdc.data.DoubleVector</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ARRAY</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>halfvec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.hypercdc.data.FloatVector</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ARRAY</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sparsevec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.hypercdc.data.SparseVector</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Struct</code></p></td>
+</tr>
+</tbody>
+</table></div>
+<div class="paragraph">
+<div class="title">JDBC sink</div>
+<p>One of the clearer use cases is to use this transformation to deal with consuming vector data types for a target relational database that does not support vector data types.
+For example, you cannot write such data types to relational databases such as Db2, SQL Server, or Oracle prior to 23ai.
+The <code>VectorToJsonConverter</code> transformation provides a useful, yet simple way to address this difference by converting all vector data type fields in the event payload from their respective vector-specific logical semantic representation to JSON.</p>
+</div>
+<div class="paragraph">
+<p>The primary benefit of using JSON is that databases that support a Json data type will store the representation natively.
+For relatinoal databases that do not have a native JSON data type, those will default to use their respective long text equivalent data types.</p>
+</div>
+<div class="paragraph">
+<div class="title">Ease of use</div>
+<p>Another use case involves ease of use.
+The Kafka Connect API is not one that many people are often comfortable working with and being provided the data in a format that is more intuitive simply lowers the complexity.
+Since HyperCDC’s JSON semantic type is <code>io.hypercdc.data.Json</code> and its natively represented in the Kafka event structure as a string value, it’s very easy to quickly parse the JSON details using any JSON library.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples_of_json_by_semantic_type"><a class="anchor" href="#_examples_of_json_by_semantic_type"></a>Examples of JSON by semantic type</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>HyperCDC’s logical semantic types consist either of an array of values or a data structure that not only contains the array of values, but additional attributes that describe the vector’s SQL representation.
+The following illustrates the JSON output based on the HyperCDC logical semantic type.</p>
+</div>
+<div class="listingblock">
+<div class="title">DoubleVector after conversion to JSON</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "values": [1, 2, 3]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">FloatVector after conversion to JSON</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "values": [1, 2, 3]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">SparseVector after conversion to JSON</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "dimensions": 25,
+  "vector": {
+    "1": 10,
+    "5": 25,
+    "10": 100,
+    "25": 10000
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To convert vector data types to JSON, configure the <code>VectorToJsonConverter</code> in the Kafka Connect configuration for the HyperCDC connector.</p>
+</div>
+<div class="paragraph">
+<p>The connector configuration in the following example will convert all PostgreSQL vector logical field types to JSON:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms=vectortojson
+transforms.vectortojson.type=io.hypercdc.transforms.VectorToJsonConverter</code></pre>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

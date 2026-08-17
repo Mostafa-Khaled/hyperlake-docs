@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TimescaleDB Integration — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">TimescaleDB Integration</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="paragraph">
+<p><a href="https://github.com/timescale/timescaledb">TimescaleDB</a> is an open-source database designed to make SQL scalable for time-series data.
+It is based on PostgreSQL database and implemented as an extension of it.</p>
+</div>
+<div class="paragraph">
+<p>The HyperCDC PostgreSQL connector can capture data changes from TimescaleDB.
+The standard <a href="#">PostgreSQL connector</a> reads the raw data from the database.
+You can then use the <code>io.hypercdc.connector.postgresql.transforms.timescaledb.TimescaleDb</code> transformation to process the raw data, perform logical routing, and add relevant metadata.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install TimescaleDB as described in the <a href="https://docs.timescale.com/">TimescaleDB documentation</a>.</p>
+</li>
+<li>
+<p>Install the HyperCDC PostgresSQL connector according to the instructions in the <a href="#">HyperCDC installation guide</a>.</p>
+</li>
+<li>
+<p>Configure TimescaleDB, and deploy the connector.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_it_works"><a class="anchor" href="#_how_it_works"></a>How it works</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>HyperCDC can capture events from the following TimescaleDB functions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Hypertables</p>
+</li>
+<li>
+<p>Continous aggregates</p>
+</li>
+<li>
+<p>Compression</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These three functions are internally dependent.
+Each of the functions are built on the PostgreSQL functionality for storing data in tables.
+HyperCDC supports all three functions to differing degrees.</p>
+</div>
+<div class="paragraph">
+<p>The SMT needs access to TimescaleDB metadata.
+Because the SMT cannot access the database configuration at the connector level, you must explicitly define configuration metadata for the transformation.</p>
+</div>
+<div class="sect2">
+<h3 id="_hypertables"><a class="anchor" href="#_hypertables"></a>Hypertables</h3>
+<div class="paragraph">
+<p>Hypertable is a logical table that is used to store time-series data.
+Data is chunked (partitioned) according to a defined time-bound column.
+TimescaleDB creates one or more physical tables in its internal schema, with each table representing a single chunk.
+By default, the connector captures changes from each chunk table, and streams the changes to the individual topics that correspond to each chunk.
+The Timescaledb transformation reassembles data from the separate topics, and then streams the reassembled data to a single topic.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The transformation has access to TimescaleDB metadata to obtain chunk/hypertable mapping.</p>
+</li>
+<li>
+<p>The transformation reroutes the captured events from their chunk-specific topics to a single logical topic that is named according to the following pattern: <code><em>&lt;prefix&gt;</em>.<em>&lt;hypertable-schema-name&gt;</em>.<em>&lt;hypertable-name&gt;</em></code></p>
+</li>
+<li>
+<p>The transformation adds the following headers to the event:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>__hypercdc_timescaledb_chunk_table</code></dt>
+<dd>
+<p>The name of the physical table that stores the event data.</p>
+</dd>
+<dt class="hdlist1"><code>__hypercdc_timescaledb_chunk_schema</code></dt>
+<dd>
+<p>The name of the schema that the physical table belongs to.</p>
+</dd>
+</dl>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Example: Streaming data from a hypertable</div>
+<p>The following example shows a SQL command for creating a <code>conditions</code> hypertable in the <code>public</code> schema:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">CREATE TABLE conditions (time TIMESTAMPTZ NOT NULL, location TEXT NOT NULL, temperature DOUBLE PRECISION NULL, humidity DOUBLE PRECISION NULL);
+SELECT create_hypertable('conditions', 'time');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The  Timescaledb  SMT routes change events captured in the hypertable to a topic with the name <code>timescaledb.public.conditions</code>.
+The transformation enriches event messages with headers that you define in the configuration.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">__hypercdc_timescaledb_chunk_table: _hyper_1_1_chunk
+__hypercdc_timescaledb_chunk_schema: _timescaledb_internal</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_continuous_aggregates"><a class="anchor" href="#_continuous_aggregates"></a>Continuous aggregates</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Continuous aggregates provides automatic statistical calculations over data that is stored in hypertables.
+The aggregate view is backed by its own hypertable which in turn is backed by a set of PostgreSQL tables.
+The aggregates can be recalculated either automatically or manually.
+After an aggregate is recalculated, the new values are stored in the hypertable, from which they can be captured and streamed.
+Data from the aggregates is streamed to different topics, based on the chunk in which it is stored.
+The Timescaledb transformation reassembles data that was streamed to different topics and routes it to a single topic.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The transformation has access to TimescaleDB metadata to obtain mappings between chunks and hypertables, and between hypertables and aggregates.</p>
+</li>
+<li>
+<p>The transformation reroutes the captured events from their chunk-specific topics to a single logical topic that is named according to the following pattern <code><em>&lt;prefix&gt;</em>.<em>&lt;aggregate-schema-name&gt;</em>.<em>&lt;aggregate-name&gt;</em></code>.</p>
+</li>
+<li>
+<p>The transformation adds the following headers to the event:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>__hypercdc_timescaledb_hypertable_table</code></dt>
+<dd>
+<p>The name of the hypertable that stores the continuous aggregate.</p>
+</dd>
+<dt class="hdlist1"><code>__hypercdc_timescaledb_hypertable_schema</code></dt>
+<dd>
+<p>The name of the schema that the hypertable belongs to.</p>
+</dd>
+<dt class="hdlist1"><code>__hypercdc_timescaledb_chunk_table</code></dt>
+<dd>
+<p>The name of the physical table that stores the continuous aggregate.</p>
+</dd>
+<dt class="hdlist1"><code>__hypercdc_timescaledb_chunk_schema</code></dt>
+<dd>
+<p>The name of the schema that the physical table belongs to.</p>
+</dd>
+</dl>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Example: Streaming data from a continuous aggregate</div>
+<p>The following example shows a SQL command for creating a continuous aggregate <code>conditions_summary</code> in the <code>public</code> schema.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">CREATE MATERIALIZED VIEW conditions_summary WITH (timescaledb.continuous) AS
+  SELECT
+    location,
+    time_bucket(INTERVAL '1 hour', time) AS bucket,
+    AVG(temperature),
+    MAX(temperature),
+    MIN(temperature)
+  FROM conditions
+  GROUP BY location, bucket;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The TimescaleDB SMT routes the change events captured in the aggregate to a topic with the name <code>timescaledb.public.conditions_summary</code>.
+The transformation enriches event messages with headers that you define in the configuration.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">_hypercdc_timescaledb_chunk_table: _hyper_2_2_chunk
+__hypercdc_timescaledb_chunk_schema: _timescaledb_internal
+__hypercdc_timescaledb_hypertable_table: _materialized_hypertable_2
+__hypercdc_timescaledb_hypertable_schema: _timescaledb_internal</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compression"><a class="anchor" href="#_compression"></a>Compression</h3>
+<div class="paragraph">
+<p>The TimescaleDB SMT does not apply any special processing to compression functions.
+Compressed chunks are forwarded unchanged to the next downstream job in the pipeline for further processing as needed.
+Typically, messages with compressed chunks are dropped, and are not processed by subsequent jobs in the pipeline.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_timescaledb_configuration"><a class="anchor" href="#_timescaledb_configuration"></a>TimescaleDB configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>HyperCDC uses replication slots to capture changes from TimescaleDB and PostgreSQL.
+Replication slots Data store data in multiple message formats.
+Typically, it’s best to configure HyperCDC to use the <a href="#">pgoutput</a> decoder, the default decoder for TimescaleDB instances, to read from the slot.</p>
+</div>
+<div class="paragraph">
+<p>To configure the replication slot to support logical decoding, specify the following setting in the <code>postgresql.conf</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># REPLICATION
+wal_level = logical</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You must restart the database server for the setting to take effect.</p>
+</div>
+<div class="paragraph">
+<p>To configure tables for replication, you must create a publication, as shown in the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">CREATE PUBLICATION dbz_publication FOR ALL TABLES WITH (publish = 'insert, update')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can create publications globally, as in the preceding example, or create separate publications for each table.
+Because the TimescaleDB creates tables automatically, as needed, the use of global publications is strongly recommended.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_connector_configuration"><a class="anchor" href="#_connector_configuration"></a>Connector configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Configure the TimescaleDB SMT in the same way that you would configure the PostgreSQL connector.
+To enable the connector to correctly process events from TimescaleDB, add the following options to the connector configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">    "transforms": "timescaledb",
+    "transforms.timescaledb.type": "io.hypercdc.connector.postgresql.transforms.timescaledb.TimescaleDb",
+    "transforms.timescaledb.database.hostname": "timescaledb",
+    "transforms.timescaledb.database.port": "...",
+    "transforms.timescaledb.database.user": "...",
+    "transforms.timescaledb.database.password": "...",
+    "transforms.timescaledb.database.dbname": "..."</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_connector_configuration_example"><a class="anchor" href="#_connector_configuration_example"></a>Connector configuration example</h3>
+<div class="paragraph">
+<p>The following example shows the configuration for setting up a PostgreSQL connector to connect to a TimescaleDB server with the logical name <code>dbserver1</code> on port 5432 at 192.168.99.100.
+Typically, you configure the HyperCDC PostgreSQL connector in a JSON file by setting the configuration properties available for the connector.</p>
+</div>
+<div class="paragraph">
+<p>You can choose to produce events for a subset of the schemas and tables in a database.
+Optionally, you can ignore, mask, or truncate columns that contain sensitive data, that exceed a specified size, or that you do not need.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "timescaledb-connector",
+  "config": {
+    "connector.class": "io.hypercdc.connector.postgresql.PostgresConnector",
+    "database.hostname": "192.168.99.100",
+    "database.port": "5432",
+    "database.user": "postgres",
+    "database.password": "postgres",
+    "database.dbname" : "postgres",
+    "topic.prefix": "dbserver1",
+    "plugin.name": "pgoutput",
+    "schema.include.list": "_timescaledb_internal",
+    "transforms": "timescaledb",
+    "transforms.timescaledb.type": "io.hypercdc.connector.postgresql.transforms.timescaledb.TimescaleDb",
+    "transforms.timescaledb.database.hostname": "timescaledb",
+    "transforms.timescaledb.database.port": "5432",
+    "transforms.timescaledb.database.user": "postgres",
+    "transforms.timescaledb.database.password": "postgres",
+    "transforms.timescaledb.database.dbname": "postgres"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following list describes the purpose of the lines in the preceding example:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>"name": "timescaledb-connector",</code></dt>
+<dd>
+<p>The name of the connector when registered with a Kafka Connect service.</p>
+</dd>
+<dt class="hdlist1"><code>"connector.class": "io.hypercdc.connector.postgresql.PostgresConnector",</code></dt>
+<dd>
+<p>The name of this PostgreSQL connector class.</p>
+</dd>
+<dt class="hdlist1"><code>"database.hostname": "192.168.99.100",</code></dt>
+<dd>
+<p>The address of the TimescaleDB server.</p>
+</dd>
+<dt class="hdlist1"><code>"database.port": "5432",</code></dt>
+<dd>
+<p>The port number of the TimescaleDB server.</p>
+</dd>
+<dt class="hdlist1"><code>"database.user": "postgres",</code></dt>
+<dd>
+<p>The name of the TimescaleDB user.</p>
+</dd>
+<dt class="hdlist1"><code>"database.password": "postgres",</code></dt>
+<dd>
+<p>The password for the TimescaleDB.</p>
+</dd>
+<dt class="hdlist1"><code>"database.dbname" : "postgres",</code></dt>
+<dd>
+<p>The name of the TimescaleDB database to connect to.</p>
+</dd>
+<dt class="hdlist1"><code>"topic.prefix": "dbserver1",</code></dt>
+<dd>
+<p>The topic prefix for the TimescaleDB server or cluster.
+This prefix forms a namespace, and is used in the names of all Kafka topics to which the connector writes, the Kafka Connect schema names, and the namespaces of the corresponding Avro schema, when the Avro converter is used.</p>
+</dd>
+<dt class="hdlist1"><code>"plugin.name": "pgoutput",</code></dt>
+<dd>
+<p>Indicates use of the <code>pgoutput</code> logical decoding plug-in.</p>
+</dd>
+<dt class="hdlist1"><code>"schema.include.list": "_timescaledb_internal",</code></dt>
+<dd>
+<p>A list of all schemas that contain TimescaleDB physical tables.</p>
+</dd>
+<dt class="hdlist1"><code>"transforms": "timescaledb",</code></dt>
+<dd>
+<p>Enables the SMT to process raw TimescaleDB events.</p>
+</dd>
+<dt class="hdlist1"><code>"transforms.timescaledb.type": "io.hypercdc.connector.postgresql.transforms.timescaledb.TimescaleDb",</code></dt>
+<dd>
+<p>Enables the SMT to process raw TimescaleDB events.</p>
+</dd>
+<dt class="hdlist1"><code>"transforms.timescaledb.database.hostname": "timescaledb",</code></dt>
+<dd>
+<p>This line and the lines that follow provide the SMT with TimescaleDB connection information, including the hostname, port number, database user, database password, and database name.
+These values must match the values in the preceding <code>database.hostname</code>, <code>database.port</code>, <code>database.user</code>, <code>database.password</code>, and <code>database.dbname</code> fields.
+The</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_options"><a class="anchor" href="#_configuration_options"></a>Configuration options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following table lists the configuration options that you can set for the TimescaleDB integration SMT.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. TimescaleDB integration SMT (<code>TimescaleDB</code>) configuration options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Property</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Description</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="timescaledb-property-database-hostname"></a><a href="#timescaledb-property-database-hostname"><code>database.hostname</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>IP address or hostname of the TimescaleDB database server.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="timescaledb-property-database-port"></a><a href="#timescaledb-property-database-port"><code>database.port</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>5432</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Integer port number of the TimescaleDB database server.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="timescaledb-property-database-user"></a><a href="#timescaledb-property-database-user"><code>database.user</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the TimescaleDB database user for connecting to the TimescaleDB database server.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="timescaledb-property-database-password"></a><a href="#timescaledb-property-database-password"><code>database.password</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Password to use when connecting to the TimescaleDB database server.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="timescaledb-property-database-dbname"></a><a href="#timescaledb-property-database-dbname"><code>database.dbname</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The name of the TimescaleDB database from which to stream changes.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="timescaledb-property-schema-list"></a><a href="#timescaledb-property-schema-list"><code>schema.list</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>_timescaledb_internal</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Comma-separated list of schema names that contain TimescaleDB raw (internal) data tables.
+The SMT processes only those changes that originate in one of the schemas in the list.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="timescaledb-property-target-topic-prefix"></a><a href="#timescaledb-property-target-topic-prefix"><code>target.topic.prefix</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>timescaledb</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The namespace (prefix) of topics to which TimescaleDB events are routed.
+The SMT routes messages into topics named <code>_&lt;prefix&gt;_._&lt;schema&gt;_._&lt;hypertable|aggregate&gt;_</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

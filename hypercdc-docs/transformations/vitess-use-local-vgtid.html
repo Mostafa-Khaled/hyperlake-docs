@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vitess Use Local VGTID — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">Vitess Use Local VGTID</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="paragraph">
+<p>The <code>UseLocalVgtid</code> SMT converts the value of the VGTID in the event record from a list of VGTIDs for several shards to the VGTID for the single shard that received the change for this event.
+This transformation is designed for use only with the HyperCDC connector for Vitess.</p>
+</div>
+<div class="paragraph">
+<p>The SMT extracts the <code>shard</code> field in the <code>source</code> block of the transaction boundary event record to determine the shard that received the change.
+The SMT then sets that value of the VGTID in the event record to the value of the VGTID for the specified shard.
+Other VGTID values are removed from the event record.
+The following example shows how to add the SMT to the connector configuration so that it converts lists of the VGTIDs for multiple shards to the value of a single local VGTID.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="example-vitess-use-local-vgtid.adoc"><a class="anchor" href="#example-vitess-use-local-vgtid.adoc"></a>Example: Configuring the <code>UseLocalVgtid</code> SMT</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">"connector.class": "io.hypercdc.connector.vitess.VitessConnector",
+...
+"transforms": "useLocalVgtid",
+"transforms.useLocalVgtid.type": "io.hypercdc.connector.vitess.transforms.UseLocalVgtid",
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example shows the value of a record before and after the transformation is applied.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Effect of applying the <code>UseLocalVgtid</code> SMT</div>
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Value before the SMT processes the record</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "source": {
+        "version": "2.6.2.Final",
+        "connector": "vitess",
+        "name": "my_sharded_connector",
+        "ts_ms": 1559033904000,
+        "ts_us": 1559033904000000,
+        "ts_ns": 1559033904000000000,
+        "snapshot": "false",
+        "db": "",
+        "sequence": null,
+        "keyspace": "commerce",
+        "table": "customers",
+        "shard": "-80",
+        "vgtid": "[{\"keyspace\":\"commerce\",\"shard\":\"80-\",\"gtid\":\"MariaDB/0-54610504-47\"},{\"keyspace\":\"commerce\",\"shard\":\"-80\",\"gtid\":\"MariaDB/0-1592148-45\"}]"
+    },
+}</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Value after the SMT processes the record</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "source": {
+        "version": "2.6.2.Final",
+        "connector": "vitess",
+        "name": "my_sharded_connector",
+        "ts_ms": 1559033904000,
+        "ts_us": 1559033904000000,
+        "ts_ns": 1559033904000000000,
+        "snapshot": "false",
+        "db": "",
+        "sequence": null,
+        "keyspace": "commerce",
+        "table": "customers",
+        "shard": "-80",
+        "vgtid": "[{\"keyspace\":\"commerce\",\"shard\":\"-80\",\"gtid\":\"MariaDB/0-1592148-45\"}]"
+    },
+}</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

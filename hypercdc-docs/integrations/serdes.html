@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperCDC Event Deserialization — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">HyperCDC Event Deserialization</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="admonitionblock note">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This feature is currently in incubating state, i.e. exact semantics, configuration options etc. may change in future revisions, based on the feedback we receive. Please let us know if you encounter any problems while using these SerDes.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="paragraph">
+<p>HyperCDC generates data change events in the form of a complex message structure.
+This message is later on serialized by the configured Kafka Connect converter and it is the responsibility of the consumer to deserialize it into a logical message.
+For this purpose, Kafka uses the so-called <a href="https://kafka.apache.org/documentation/streams/developer-guide/datatypes.html">SerDes</a>.</p>
+</div>
+<div class="paragraph">
+<p>HyperCDC provides SerDes (<code>io.hypercdc.serde.HyperCDCSerdes</code>) to simplify the deserialization for the consumer either being it Kafka Streams pipeline or plain Kafka consumer.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_json_serde"><a class="anchor" href="#_json_serde"></a>JSON SerDe</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JSON SerDe deserializes JSON encoded change events and transforms it into a Java class.
+Internally this is achieved using <a href="https://github.com/FasterXML/jackson-databind/wiki">Jackson Databind</a>.</p>
+</div>
+<div class="paragraph">
+<p>The consumer creates a serde instance using</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">final Serde&lt;MyType&gt; serde = HyperCDCSerdes.payloadJson(MyType.class);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The consumer will then receive the logical Java type <code>MyType</code> whose fields are initiated from the JSON message.
+This applies to both for keys and values.
+It is also possible to use plain Java types like <code>Integer</code>, for example when the key consists of a single <code>INT</code> field.</p>
+</div>
+<div class="paragraph">
+<p>When the JSON converter is used by Kafka Connect then it generally provides two modes of operations - with or without schema.
+If the schema is used then the message looks like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "schema": {...},
+    "payload": {
+    	"op": "u",
+    	"source": {
+    		...
+    	},
+    	"ts_ms" : "...",
+    	"ts_us" : "...",
+    	"ts_ns" : "...",
+    	"before" : {
+    		"field1" : "oldvalue1",
+    		"field2" : "oldvalue2"
+    	},
+    	"after" : {
+    		"field1" : "newvalue1",
+    		"field2" : "newvalue2"
+    	}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Whereas without schema, the structure look more like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+	"op": "u",
+	"source": {
+		...
+	},
+	"ts_ms" : "...",
+	"ts_us" : "...",
+	"ts_ns" : "...",
+	"before" : {
+		"field1" : "oldvalue1",
+		"field2" : "oldvalue2"
+	},
+	"after" : {
+		"field1" : "newvalue1",
+		"field2" : "newvalue2"
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The deserializer behaviour is driven by the <code>from.field</code> configuration option and follows these rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>if a message contains a schema, then use <code>payload</code> only</p>
+</li>
+<li>
+<p>if the key is deserialized, then map key field(s) into the target class</p>
+</li>
+<li>
+<p>if the value is deserialized and contains the HyperCDC event envelope then:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>if <code>from.field</code> is not set, then deserialize the complete envelope into the target type</p>
+</li>
+<li>
+<p>otherwise deserialize and map only content of the field configured into the target type, thus effectively flatting the message</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>if the value is deserialized and contains already a flattened message (i.e. when using the SMT for <a href="../transformations/event-flattening.html" class="xref page">Event Flattening</a>) then map the flattened record into the target logical type</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="serdes-configuration_options"><a class="anchor" href="#serdes-configuration_options"></a>Configuration options</h3>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Property</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Description</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#serdes-from-field"><code>from.field</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>N/A</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Empty if a message with full envelope should be deserialized, <code>before</code>/<code>after</code> if only data values before or after the change are required.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="#serdes-unknown-properties-ignored"><code>unknown.properties.ignored</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Determines when an unknown property is encountered whether it should be silently ignored or if a runtime exception should be thrown.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

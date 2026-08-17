@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vitess Replace Field Value — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">Vitess Replace Field Value</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="paragraph">
+<p>The <code>ReplaceFieldValue</code> SMT replaces the value of a specified field from the event record.
+When the connector is configured to provide transaction metadata, use this SMT to redact the <code>transaction.id</code> field to avoid storing a duplicate entry of the VGTID, or use for both <code>transaction.id</code> and <code>source.vgtid</code> to avoid storing any large VGTIDs.
+This transformation is designed for use only with the HyperCDC connector for Vitess.</p>
+</div>
+<div class="paragraph">
+<p>The SMT uses the <code>field_names</code> configuration option to specify a comma-separated list of paths that identify the fields that will have their values replaced.
+The SMT uses the <code>field_value</code> configuration option to specify the replacement value for the fields. Defaults to the empty string.</p>
+</div>
+<div class="paragraph">
+<p>The SMT replaces the value of each field that you specify.
+The following example shows how to add the SMT to the connector configuration so that it replaces the values of specific fields from the change event records that the connector emits.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="example-vitess-replace-field-value.adoc"><a class="anchor" href="#example-vitess-replace-field-value.adoc"></a>Example: Configuring the <code>ReplaceFieldValue</code> SMT</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">"connector.class": "io.hypercdc.connector.vitess.VitessConnector",
+...
+"transforms": "replaceFieldValue",
+"transforms.replaceFieldValue.type": "io.hypercdc.connector.vitess.transforms.ReplaceFieldValue",
+"transforms.replaceFieldValue.field_names": "transaction.id",
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example shows the value of a change event record before and after the transformation is applied.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Effect of applying the <code>ReplaceFieldValue</code> SMT</div>
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Value before the SMT processes the record</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "before": {...}
+    "after": {...}
+    "source": {...}
+    "transaction": {
+        "id": "[{\"keyspace\":\"test_unsharded_keyspace\",\"shard\":\"0\",\"gtid\":\"MySQL56/e03ece6c-4c04-11ec-8e20-0242ac110004:1-68\"}]",
+        "total_order": 1,
+        "data_collection_order": 1
+      }
+}</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Value after the SMT processes the record</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "before": {...}
+    "after": {...}
+    "source": {...}
+    "transaction": {
+        "id": "",
+        "total_order": 1,
+        "data_collection_order": 1
+      }
+}</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="vitess-replace-field-value-options"><a class="anchor" href="#vitess-replace-field-value-options"></a>Configuration options for the <code>ReplaceFieldValue</code> SMT</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following table lists the configuration options that you can use with the <code>ReplaceFieldValue</code> SMT.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. ReplaceFieldValue SMT configuration options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Property</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Description</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Type</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Valid Values</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Importance</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="replace-field-value-field-names"></a><a href="#replace-field-value-field-names"><code>fields_names</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A comma-separated list that specifies the paths of the fields to replace values for the event record, for example, <code>transaction.id</code>).</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>List</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Non-empty list</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>High</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="replace-field-value-field_value"></a><a href="#replace-field-value-field_value"><code>field_value</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The value that each replace field is set to, for example.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>List</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>"" (Empty string)</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>String value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Medium</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperCDC Architecture — HyperCDC</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">HyperCDC Architecture</h1>
+        <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Most commonly, you deploy HyperCDC by means of Apache <a href="https://kafka.apache.org/documentation/#connect">Kafka Connect</a>.
+Kafka Connect is a framework and runtime for implementing and operating:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Source connectors such as HyperCDC that send records into Kafka</p>
+</li>
+<li>
+<p>Sink connectors that propagate records from Kafka topics to other systems</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following image shows the architecture of a change data capture pipeline based on HyperCDC:</p>
+</div>
+<figure class="visual-placeholder" id="fig-architecture-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-architecture-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">HyperCDC Architecture</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <a href="visuals-catalog.html#fig-architecture-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure>
+<div class="paragraph">
+<p>As shown in the image, the HyperCDC connectors for MySQL and PostgresSQL are deployed to capture changes to these two types of databases. Each HyperCDC connector establishes a connection to its source database:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The MySQL connector uses a client library for accessing the <code>binlog</code>.</p>
+</li>
+<li>
+<p>The PostgreSQL connector reads from a logical replication stream.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Kafka Connect operates as a separate service besides the Kafka broker.</p>
+</div>
+<div class="paragraph">
+<p>By default, changes from one database table are written to a Kafka topic whose name corresponds to the table name.
+If needed, you can adjust the destination topic name by configuring HyperCDC’s <a href="transformations/topic-routing.html#topic-routing" class="xref page">topic routing transformation</a>. For example, you can:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Route records to a topic whose name is different from the table’s name</p>
+</li>
+<li>
+<p>Stream change event records for multiple tables into a single topic</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After change event records are in Apache Kafka, different connectors in the Kafka Connect ecosystem can stream the records to other systems and databases such as Elasticsearch, data warehouses and analytics systems, or caches such as Infinispan.
+Depending on the chosen sink connector, you might need to configure the HyperCDC <a href="transformations/event-flattening.html#new-record-state-extraction" class="xref page">new record state extraction</a> transformation.
+This Kafka Connect SMT propagates the <code>after</code> structure from a HyperCDC change event to the sink connector.
+The modified change event record replaces the original, more verbose record that is propagated by default.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypercdc_server"><a class="anchor" href="#_hypercdc_server"></a>HyperCDC Server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Another way to deploy HyperCDC is by using the <a href="operations/hypercdc-server.html" class="xref page">HyperCDC server</a>.
+The HyperCDC server is a configurable, ready-to-use application that streams change events from a source database to a variety of messaging infrastructures.
+The following image shows the architecture of a change data capture pipeline that uses the HyperCDC Server:</p>
+</div>
+<figure class="visual-placeholder" id="fig-architecture-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-architecture-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">HyperCDC Architecture</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <a href="visuals-catalog.html#fig-architecture-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure>
+<div class="paragraph">
+<p>You can configure HyperCDC server to use one of the HyperCDC source connectors to capture changes from a source database.
+Change events can be serialized to different formats like JSON or Apache Avro and then will be sent to one of a variety of messaging infrastructures such as
+Amazon Kinesis, Google Cloud Pub/Sub, or Apache Pulsar.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypercdc_engine"><a class="anchor" href="#_hypercdc_engine"></a>HyperCDC Engine</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Yet an alternative way for using the HyperCDC connectors is the <a href="development/engine.html" class="xref page">HyperCDC engine</a>.
+In this case, HyperCDC will not be run via Kafka Connect, but as a library embedded into your custom Java applications.
+This can be useful for either consuming change events within your application itself,
+without the needed for deploying complete Kafka and Kafka Connect clusters,
+or for streaming changes to alternative messaging brokers such as Amazon Kinesis.
+You can find <a href="#">an example</a> for the latter in the examples repository.</p>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

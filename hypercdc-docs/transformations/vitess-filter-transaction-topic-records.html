@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vitess Filter Transaction Topic Records — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">Vitess Filter Transaction Topic Records</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="paragraph">
+<p>When the Vitess connector is configured to provide transaction metadata, use the <code>FilterTransactionTopicRecords</code> SMT to prevent the connector from sending transaction boundary events to transaction topics.
+This transformation is designed for use only with the HyperCDC connector for Vitess.</p>
+</div>
+<div class="paragraph">
+<p>To filter events, the SMT checks the key and value schemas of each record match and compares them to the values returned by <code>TransactionStructMaker</code>.
+The following example shows how to add the <code>FilterTransactionTopicRecords</code> SMT to the connector configuration to remove all transaction boundary event records that the connector emits, and prevent them from being saved to the transaction topic.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="example-vitess-filter-transaction-topic-records"><a class="anchor" href="#example-vitess-filter-transaction-topic-records"></a>Example: Configuring the <code>FilterTransactionTopicRecords</code> SMT to filter out all transaction boundary event records</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">"connector.class": "io.hypercdc.connector.vitess.VitessConnector",
+...
+"transforms": "filterTransactionTopicRecords",
+"transforms.filterTransactionTopicRecords.type": "io.hypercdc.connector.vitess.transforms.FilterTransactionTopicRecords",
+...</code></pre>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

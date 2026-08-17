@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reselect columns — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">Reselect columns</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To improve performance and reduce storage overhead, databases can use external storage for certain columns.
+This type of storage is used for columns that store large amounts of data, such as the PostgreSQL TOAST (The Oversized-Attribute Storage Technique), Oracle Large Object (LOB), or the Oracle Exadata Extended String data types.
+To reduce I/O overhead and increase query speed, when data changes in a table row, the database retrieves only the columns that contain new values, ignoring data in externally stored columns that remain unchanged.
+As a result, the value of the externally stored column is not recorded in the database log, and HyperCDC subsequently omits the column when it emits the event record.
+Downstream consumers that receive event records that omit required values can experience processing errors.</p>
+</div>
+<div class="paragraph">
+<p>If a value for an externally stored column is not present in the database log entry for an event, when HyperCDC emits a record for the event, it replaces the missing value with an <code>unavailable.value.placeholder</code> sentinel value.
+These sentinel values are inserted into appropriately typed fields, for example, a byte array for bytes, a string for strings, or a key-value map for maps.</p>
+</div>
+<div class="paragraph">
+<p>To retrieve data for columns that were not available in the initial query, you can apply the HyperCDC reselect columns post processor (<code>ReselectColumnsPostProcessor</code>).
+You can configure the post processor to reselect one or more columns from a table.
+After you configure the post processor, it monitors events that the connector emits for the column names that you designate for reselection.
+When it detects an event with the specified columns, the post processor re-queries the source tables to retrieve data for the specified columns, and fetches their current state.</p>
+</div>
+<div class="paragraph">
+<p>You can configure the post processor to reselect the following column types:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>null</code> columns.</p>
+</li>
+<li>
+<p>Columns that contain the <code>unavailable.value.placeholder</code> sentinel value.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can use the <code>ReselectColumnsPostProcessor</code> post processor only with HyperCDC source connectors.
+The post processor is not designed to work with the HyperCDC JDBC sink connector.
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="keyless-tables"><a class="anchor" href="#keyless-tables"></a>Keyless tables</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The reselect columns post processor generates a reselect query that returns the row to be modified.
+To construct the <code>WHERE</code> clause for the query, by default, the post processor uses a relational table model that is based on the table’s primary key columns or on the unique index that is defined for the table.</p>
+</div>
+<div class="paragraph">
+<p>For keyless tables, the <code>SELECT</code> query that <code>ReselectColumnsPostProcessor</code> submits might return multiple rows, in which case HyperCDC always uses only the first row.
+You cannot prioritize the order of the returned rows.
+To enable the post processor to return a consistently usable result for a keyless table, it’s best to designate a custom key that can identify a unique row.
+The custom key must be capable of uniquely identify records in the source table based on a combination of columns.</p>
+</div>
+<div class="paragraph">
+<p>To define such a custom message key, use the <code>message.key.columns</code> property in the connector configuration.
+After you define a custom key, set the <a href="#reselect-columns-post-processor-property-reselect-use-event-key"><code>reselect.use.event.key</code></a> configuration property to <code>true</code>.
+Setting this option enables the post processor to use the specified event key fields as selection criteria in lieu of a primary key column.
+Be sure to test the configuration to ensure that the reselection query provides the expected results.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration-example"><a class="anchor" href="#configuration-example"></a>Configuration example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Configuring a post processor is similar to configuring a <a href="../development/converters.html#developing-hypercdc-custom-data-type-converters" class="xref page">custom converter</a> or <a href="../transformations/index.html#applying-transformations-to-modify-messages-exchanged-with-kafka" class="xref page">single message transformation (SMT)</a>.
+To enable the connector to use the <code>ReselectColumnsPostProcessor</code>, add the following entries to the connector configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">  "post.processors" : "reselector",
+  "post.processors.reselector.type" : "io.hypercdc.processors.reselect.ReselectColumnsPostProcessor",
+  "post.processors.reselector.reselect.columns.include.list" : "<em>&lt;schema&gt;</em>.<em>&lt;table&gt;</em>:<em>&lt;column&gt;</em>,<em>&lt;schema&gt;</em>.<em>&lt;table&gt;</em>:<em>&lt;column&gt;</em>",
+  "post.processors.reselector.reselect.unavailable.values" : "true",
+  "post.processors.reselector.reselect.null.values" : "true",
+  "post.processors.reselector.reselect.use.event.key" : "false",
+  "post.processors.reselector.reselect.error.handling.mode" : "WARN"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See the <a href="#post-processor-configuration-options">configuration options</a> for the full list of available configuration properties.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="post-processor-configuration-options"><a class="anchor" href="#post-processor-configuration-options"></a>Configuration options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following table lists the configuration options that you can set for the Reselect Columns post-processor.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Reselect columns post processor configuration options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Property</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Description</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="reselect-columns-post-processor-property-post-processors"></a><a href="#reselect-columns-post-processor-property-post-processors"><code>post.processors.reselect.columns.post.processors</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Comma-separated list of post processors to enable.
+Post processors run in the order that you list them.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="reselect-columns-post-processor-property-post-processors-reselector-type"></a> <a href="#reselect-columns-post-processor-property-post-processors-reselector-type"><code>`post.processors.reselector.type</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The fully-qualified class type name for the specified post processor.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="reselect-columns-post-processor-property-reselect-columns-include-list"></a><a href="#reselect-columns-post-processor-property-reselect-columns-include-list"><code>post.processors.reselect.columns.include.list</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Comma-separated list of column names to reselect from the source database.
+If the values for the specified columns are not present in the change event, the post processor requeries the source table to retrieve the values.
+Use the following format to specify column names:</p>
+</div>
+<div class="paragraph">
+<p><code><em>&lt;schema&gt;</em>.<em>&lt;table&gt;</em>:<em>&lt;column&gt;</em></code></p>
+</div>
+<div class="paragraph">
+<p>Do not set this property if you set the <code>post.processors.reselect.columns.exclude.list</code> property.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="reselect-columns-post-processor-property-reselect-columns-exclude-list"></a><a href="#reselect-columns-post-processor-property-reselect-columns-exclude-list"><code>post.processors.reselect.columns.exclude.list</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Comma-separated list of column names in the source database to exclude from reselection.
+Use the following format to specify column names:</p>
+</div>
+<div class="paragraph">
+<p><code><em>&lt;schema&gt;</em>.<em>&lt;table&gt;</em>:<em>&lt;column&gt;</em></code></p>
+</div>
+<div class="paragraph">
+<p>Do not set this property if you set the <code>post.processors.reselect.columns.include.list</code> property.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="reselect-columns-post-processor-property-reselect-unavailable-values"></a><a href="#reselect-columns-post-processor-property-reselect-unavailable-values"><code>post.processors.reselect.unavailable.values</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>true</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies whether the post processor reselects a column that matches the <code>post.processors.reselect.columns.include.list</code> filter if the column value is provided by the connector’s <code>unavailable.value.placeholder</code> property.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="reselect-columns-post-processor-property-reselect-null-values"></a><a href="#reselect-columns-post-processor-property-reselect-null-values"><code>post.processors.reselect.null.values</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>true</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies whether the post processor reselects a column that matches the <code>post.processors.reselect.columns.include.list</code> filter if the column value is <code>null</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="reselect-columns-post-processor-property-reselect-use-event-key"></a><a href="#reselect-columns-post-processor-property-reselect-use-event-key"><code>post.processors.reselect.use.event.key</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies whether the post processor reselects based on the event’s key field names or uses the relational table’s primary key column names.</p>
+</div>
+<div class="paragraph">
+<p>By default, the reselection query is based on the relational table’s primary key columns or unique key index.
+For tables that do not have a primary key, set this property to <code>true</code>, and configure the <code>message.key.columns</code> property in the connector configuration to specify a custom key for the connector to use when it creates events.
+The post processor then uses the specified key field names as the primary key in the SQL reselection query.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="reselect-columns-post-processor-property-reselect-error-handling-mode"></a><a href="#reselect-columns-post-processor-property-reselect-error-handling-mode"><code>post.processors.reselect.error.handling.mode</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>WARN</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies how the reselect post processor reacts to certain conditions.</p>
+</div>
+<div class="paragraph">
+<p>By default, the post-processor logs a warning message when the row cannot be found or if there is a database selection error.</p>
+</div>
+<div class="paragraph">
+<p>When set to <code>FAIL</code>, the connector will stop processing changes if the row no longer exists at the time of reselection or if there is a database failure when reselecting the row.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

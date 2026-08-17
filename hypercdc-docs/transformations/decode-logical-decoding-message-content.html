@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Decode Logical Decoding Message Content — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">Decode Logical Decoding Message Content</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="paragraph">
+<p>The <code>DecodeLogicalDecodingMessageContent</code> SMT converts the binary content of a PostgreSQL logical decoding message to a structured form.</p>
+</div>
+<div class="paragraph">
+<p>When the HyperCDC PostgreSQL connector captures logical decoding messages, it emits <a href="../connectors/postgresql.html#postgresql-message-events" class="xref page"><em>message</em> event records</a> to Kafka.
+By default, the <code>content</code> field in these message records contain encoded binary data.
+To facilitate processing of PostgreSQL event messages by other Kafka consumers, you can use the <code>DecodeLogicalDecodingMessageContent</code> SMT to decode the binary content of the original message, and convert it into a more consumable format.</p>
+</div>
+<div class="paragraph">
+<p>You also use the SMT in conjunction with other SMTs, such as the <a href="#">HyperCDC Outbox Event Router</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="example-decode-logical-decoding-message-content"><a class="anchor" href="#example-decode-logical-decoding-message-content"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To enable a HyperCDC PostgreSQL connector to decode the binary content in message events, add the <code>DecodeLogicalDecodingMessageContent</code> SMT to the Kafka Connect configuration for the connector, as shown in the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">"connector.class": "io.hypercdc.connector.postgresql.PostgresConnector",
+...
+"transforms": "decodeLogicalDecodingMessageContent",
+"transforms.decodeLogicalDecodingMessageContent.type": "io.hypercdc.connector.postgresql.transforms.DecodeLogicalDecodingMessageContent",
+"key.converter": "org.apache.kafka.connect.json.JsonConverter",
+"key.converter.schemas.enable": false,
+"value.converter": "org.apache.kafka.connect.json.JsonConverter",
+"value.converter.schemas.enable": "false",
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example shows the <code>key</code> and <code>value</code> of an event record before and after the transformation is applied.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Effect of applying the <code>DecodeLogicalDecodingMessageContent</code> SMT</div>
+<div class="content">
+<div class="dlist">
+<div class="title">Before processing</div>
+<dl>
+<dt class="hdlist1">Event key before the SMT processes the record</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+	"prefix": "test-prefix"
+}</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Event value before the SMT processes the record</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+	"op": "m",
+	"ts_ms": 1723115240065,
+	"source": {
+		"version": "3.0.0-SNAPSHOT",
+		"connector": "postgresql",
+		"name": "connector-name",
+		"ts_ms": 1723115239782,
+		"snapshot": "false",
+		"db": "source-db",
+		"sequence": "[\"26997744\",\"26997904\"]",
+		"ts_us": 1723115239782690,
+		"ts_ns": 1723115239782690000,
+		"schema": "",
+		"table": "",
+		"txId": 756,
+		"lsn": 26997904,
+		"xmin": null
+	},
+	"message": {
+		"prefix": "test-prefix",
+		"content": "eyJpZCI6IDEsICJpdGVtIjogIkRlYmV6aXVtIGluIEFjdGlvbiIsICJzdGF0dXMiOiAiRU5URVJFRCIsICJxdWFudGl0eSI6IDIsICJ0b3RhbFByaWNlIjogMzkuOTh9"
+	}
+}</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<div class="title">After processing</div>
+<dl>
+<dt class="hdlist1">Event key after the SMT processes the record</dt>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">null</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Event value after the SMT processes the record</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+	"op": "c",
+	"ts_ms": 1723115415729,
+	"source": {
+		"version": "3.0.0-SNAPSHOT",
+		"connector": "postgresql",
+		"name": "connector-name",
+		"ts_ms": 1723115415640,
+		"snapshot": "false",
+		"db": "source-db",
+		"sequence": "[\"26717416\",\"26717576\"]",
+		"ts_us": 1723115415640161,
+		"ts_ns": 1723115415640161000,
+		"schema": "",
+		"table": "",
+		"txId": 745,
+		"lsn": 26717576,
+		"xmin": null
+	},
+	"after": {
+		"id": 1,
+		"item": "HyperCDC in Action",
+		"status": "ENTERED",
+		"quantity": 2,
+		"totalPrice": 39.98
+	}
+}</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>In the preceding example, the SMT applies the following changes to the original event record:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Removes the key that contained the <code>prefix</code> field in the original logical decoding message (<code>"prefix": "test-prefix"</code>).</p>
+</li>
+<li>
+<p>Converts the value of the <code>op</code> field from <code>m</code> (message) to <code>c</code> (create), effectively changing the event type from <code>message</code> to <code>INSERT</code>.</p>
+</li>
+<li>
+<p>Replaces the <code>message</code> field with an <code>after</code> field that contains the decoded content of a logical decoding message.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After the SMT applies these changes, the record can be more easily processed by downstream consumers or by other SMTs, such as the HyperCDC Outbox Event Router.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="decode-logical-decoding-message-content-configuration-options"><a class="anchor" href="#decode-logical-decoding-message-content-configuration-options"></a>Configuration options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following table lists the configuration options that you can use with the <code>DecodeLogicalDecodingMessageContent</code> SMT.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. <code>DecodeLogicalDecodingMessageContent</code> SMT configuration options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Property</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Type</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Description</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="decode-logical-decoding-message-content-fields-null-include"></a><a href="#decode-logical-decoding-message-content-fields-null-include"><code>fields.null.include</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>boolean</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies how the decoding process handles fields that have <code>null</code> values in the source message.
+By default, the transformation removes fields that have <code>null</code> values.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

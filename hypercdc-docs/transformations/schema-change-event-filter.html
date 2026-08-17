@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SchemaChangeEventFilter — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">SchemaChangeEventFilter</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="paragraph">
+<p>Use the <code>SchemaChangeEventFilter</code> single message transformation (SMT) to filter schema change events that the connector captures from a table and sends to Kafka.
+After you enable the SMT, the connector synchronizes only the unfiltered DDL events to Kafka, giving you control over which DDL operations are exposed to consuming applications.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-change-event-filter-configuration"><a class="anchor" href="#schema-change-event-filter-configuration"></a>Schema change event filter configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To use the transformation, add the <code>SchemaChangeEventFilter</code> to the connector configuration, and specify the types of events that you want to remove.
+The following excerpt from a connector configuration shows how you would add the transformation to the connector and set it to remove <code>DROP</code> and <code>TRUNCATE</code> events from the DDL messages that the connector captures.</p>
+</div>
+<div id="example-configuration-schema-change-event-filter" class="listingblock">
+<div class="title">Schema change event filter configuration to remove <code>DROP</code> and <code>TRUNCATE</code> events</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms=filterTableDropAndTruncateEvent
+transforms.filterTableDropAndTruncateEvent.type=io.hypercdc.transforms.SchemaChangeEventFilter
+transforms.filterTableDropAndTruncateEvent.schema.change.event.exclude.list=DROP,TRUNCATE</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about configuring the transformation, see the <a href="#schema-change-event-filter-configuration-options">schema change event filter configuration options</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-change-event-filter-effect-of-applying-the-schemachangeeventfilter-smt"><a class="anchor" href="#schema-change-event-filter-effect-of-applying-the-schemachangeeventfilter-smt"></a>Effect of applying the <code>SchemaChangeEventFilter</code> SMT</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After you configure the SMT for a connector, whenever the connector captures  schema change events that match the <a href="#schema-change-event-exclude-list">configured types</a>, it resets the values for those events to <code>null</code>.
+The connector does not send events with the resulting <code>null</code> values to Kafka.</p>
+</div>
+<div class="paragraph">
+<p>The following examples shows a <a href="#schema-change-event-filter-example-before-processing">schema change event record before it is processed</a> by the SMT, followed by the <a href="#schema-change-event-filter-example-after-processing">output after the SMT filters the event</a>.</p>
+</div>
+<div id="schema-change-event-filter-example-before-processing" class="exampleblock">
+<div class="title">Example 1. Schema change event record before it is processed by the <code>SchemaChangeEventFilter</code> transformation</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "schema":{
+        "type":"struct",
+        "fields":[
+            {
+                "type":"int64",
+                "optional":false,
+                "field":"ts_ms"
+            },
+            {
+                "type":"string",
+                "optional":true,
+                "field":"databaseName"
+            },
+            {
+                "type":"string",
+                "optional":true,
+                "field":"schemaName"
+            },
+            {
+                "type":"string",
+                "optional":true,
+                "field":"ddl"
+            },
+            {
+                "type":"array",
+                "items":{
+                    "type":"struct",
+                    "fields":[
+                        {
+                            "type":"string",
+                            "optional":false,
+                            "field":"type"
+                        },
+                        {
+                            "type":"string",
+                            "optional":false,
+                            "field":"id"
+                        }
+                    ],
+                    "optional":false,
+                    "name":"io.hypercdc.connector.schema.Change"
+                },
+                "optional":false,
+                "field":"tableChanges"
+            }
+        ],
+        "optional":false,
+        "name":"filter.SchemaChangeValue"
+    },
+    "payload":{
+        "ts_ms":1691035505397,
+        "databaseName":"test",
+        "schemaName":"test_schema",
+        "ddl":"",
+        "tableChanges":[
+            {
+                "type":"DROP",
+                "id":"test.table"
+            }
+        ]
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Based on the earlier <a href="#example-configuration-schema-change-event-filter">configuration example</a>, after the SMT processes the <a href="#schema-change-event-filter-example-before-processing">original schema change event</a>, it resets the values for the <code>DROP</code> event to <code>null</code>, as shown in the following example:</p>
+</div>
+<div id="schema-change-event-filter-example-after-processing" class="exampleblock">
+<div class="title">Example 2. Schema change event record after processing by the SMT</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">null</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="schema-change-event-filter-configuration-options"><a class="anchor" href="#schema-change-event-filter-configuration-options"></a>Configuration options</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following table lists the configuration options that you can use with the <code>SchemaChangeEventFilter</code> SMT.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. SchemaChangeEventFilter SMT configuration options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Property</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Description</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Type</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Valid values</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="schema-change-event-exclude-list"></a><a href="#schema-change-event-exclude-list"><code>schema.change.event.exclude.list</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A comma-separated list of schema change events to filter.
+Specify one or more of the following options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CREATE</code></p>
+</li>
+<li>
+<p><code>ALTER</code></p>
+</li>
+<li>
+<p><code>DROP</code></p>
+</li>
+<li>
+<p><code>TRUNCATE</code></p>
+</li>
+<li>
+<p><code>DATABASE</code></p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>String</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Non-empty string</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

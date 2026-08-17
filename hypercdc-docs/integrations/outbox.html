@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Outbox Quarkus Extension — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">Outbox Quarkus Extension</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This extension is inspired by the <a href="../transformations/outbox-event-router.html" class="xref page">Outbox Event Router</a> single message transformation (SMT).
+As discussed in the blog post <a href="#">Reliable Microservices Data Exchange with the Outbox Pattern</a>, microservices often need to exchange information with one another and an excellent way to deal with that is using the Outbox pattern combined with HyperCDC’s Outbox Event Router SMT.</p>
+</div>
+<div class="paragraph">
+<p>The following image shows the overall architecture of this pattern:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><figure class="visual-placeholder" id="fig-integrations-outbox-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-integrations-outbox-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Outbox Pattern</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <a href="../visuals-catalog.html#fig-integrations-outbox-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span></p>
+</div>
+<div class="paragraph">
+<p>The Outbox extension’s goal is to provide a <a href="https://quarkus.io/">Quarkus</a> application with a reusable, highly configurable component that facilitates the use of the Outbox pattern paired with HyperCDC’s CDC connector pipeline to reliably and asynchronously share data with any consumer of said data.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_getting_started"><a class="anchor" href="#_getting_started"></a>Getting Started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to start using the HyperCDC Outbox Quarkus extension, the extension needs to be added as a part of the Quarkus application as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;io.hypercdc&lt;/groupId&gt;
+  &lt;artifactId&gt;hypercdc-quarkus-outbox&lt;/artifactId&gt;
+  &lt;version&gt;3.6.1.Final&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The extension provides the application with the <code>io.hypercdc.outbox.quarkus.ExportedEvent</code> interface.
+It’s expected that an application class will implement this interface and that the event will be emitted using the <code>javax.enterprise.event.Event</code> class.</p>
+</div>
+<div class="admonitionblock note">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>ExportedEvent</code> interface is parameterized to allow the application to designate the Java types used by several attributes emitted by the event.
+It’s important that for a given Quarkus application, <strong>all</strong> implementations of the <code>ExportedEvent</code> interface must use the same parameter types or a build failure will be thrown since all events will use the same underlying database table.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following example illustrates an implementation of the <code>ExportedEvent</code> interface representing an order that has been created:</p>
+</div>
+<div class="listingblock">
+<div class="title">OrderCreatedEvent.java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class OrderCreatedEvent implements ExportedEvent&lt;String, JsonNode&gt; {
+
+    private static final String TYPE = "Order";
+    private static final String EVENT_TYPE = "OrderCreated";
+
+    private final long orderId;
+    private final JsonNode jsonNode;
+    private final Instant timestamp;
+
+    public OrderCreatedEvent(Instant createdAt, Order order) {
+        this.orderId = order.getId();
+        this.timestamp = createdAt;
+        this.jsonNode = convertToJson(order);
+    }
+
+    @Override
+    public String getAggregateId() {
+        return String.valueOf(orderId);
+    }
+
+    @Override
+    public String getAggregateType() {
+        return TYPE;
+    }
+
+    @Override
+    public JsonNode getPayload() {
+        return jsonNode;
+    }
+
+    @Override
+    public String getType() {
+        return EVENT_TYPE;
+    }
+
+    @Override
+    public Instant getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public Map&lt;String, Object&gt; getAdditionalFieldValues() {
+        // no additional fields
+        return Collections.emptyMap();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example illustrates an <code>OrderService</code> that emits the <code>OrderCreatedEvent</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">OrderService.java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
+public class OrderService {
+
+    @Inject
+    OrderRepository orderRepository;
+
+    @Inject
+    Event&lt;ExportedEvent&lt;?, ?&gt;&gt; event;
+
+    @Transactional
+    public Order addOrder(Order order) {
+        order = orderRepository.save(order);
+        event.fire(new OrderCreatedEvent(Instant.now(), order));
+        return order;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the application code fires the event by calling <code>Event#fire()</code>, the Outbox extension will be notified that the event occurred and persists the contents of the event into an outbox event table within the scope of the current transaction.
+The HyperCDC CDC connector in conjunction with the Outbox Event Router will be monitoring this table and will be responsible for relaying that data using CDC events.</p>
+</div>
+<div class="paragraph">
+<p>To see a full end-to-end demo, the <a href="#">Outbox</a> example illustrates two Quarkus microservice applications using the outbox pattern to share data between them when orders are placed or cancelled.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reactive-outbox"><a class="anchor" href="#reactive-outbox"></a>Reactive Variant</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If your application uses reactive datasources, or Hibernate Reactive, you must use a slightly different configuration to add the extension to your application.</p>
+</div>
+<div class="paragraph">
+<p>For example, use the following configuration to  import the reactive variant of the extension:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;io.hypercdc&lt;/groupId&gt;
+  &lt;artifactId&gt;hypercdc-quarkus-outbox-reactive&lt;/artifactId&gt;
+  &lt;version&gt;3.6.1.Final&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The reactive extension provides the application with the same <code>io.hypercdc.outbox.quarkus.ExportedEvent</code> interface as the non-reactive variant, but it also provides the <code>HyperCDCOutboxHandler</code> class.
+Injecting the <code>HyperCDCOutboxHandler</code> bean into an application provides a method for quickly persisting an <code>ExportedEvent</code> to the outbox table.
+The following example shows an invocation that uses the same <code>ExportedEvent</code> as in the earlier example:</p>
+</div>
+<div class="listingblock">
+<div class="title">OrderService.java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ApplicationScoped
+public class OrderService {
+
+    @Inject
+    HyperCDCOutboxHandler hypercdcOutboxHandler;
+
+    @Inject
+    OrderRepository orderRepository;
+
+    @Inject
+    Event&lt;ExportedEvent&lt;?, ?&gt;&gt; event;
+
+    @ReactiveTransactional
+    public Uni&lt;Order&gt; addOrder(Order order) {
+        return orderRepository.persistAndFlush(order)
+        .call(hypercdcOutboxHandler.persistToOutbox(new OrderCreatedEvent(Instant.now(), order)));
+
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>persistToOutbox</code> method returns a Uni; therefore, it must be observed by a subscriber ito receive the result.
+For more information about using the Mutiny library to build reactive applications, see the <a href="https://quarkus.io/guides/mutiny-primer">Quarkus Mutiny primer</a>.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-field-mappings"><a class="anchor" href="#additional-field-mappings"></a>Additional Field mappings</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The HyperCDC Outbox SMT can be configured to read additional fields and emit those field values either as event headers, or as part of the event value.</p>
+</div>
+<div class="paragraph">
+<p>In order to pass additional field mappings to be saved by the Quarkus Outbox extension,
+the configuration property <code>quarkus.hypercdc-outbox.additional-fields</code> must be specified in the <code>application.properties</code>.
+This configuration property is a comma-separated list of additional field definitions that will be added to the Outbox entity mapping and passed by the application’s implementation of the <code>ExportedEvent</code> interface.</p>
+</div>
+<div class="paragraph">
+<p>Each entry in this comma-separated list must follow this format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">&lt;field-name&gt;:&lt;field-java-type&gt;[:&lt;field-column-definition&gt;[:&lt;field-jpa-attribute-converter&gt;]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The pattern indicates that the field’s name and java-type are required while the column definition and JPA attribute converter are optional.
+However, please note that if you wish to specify a JPA attribute converter then the column definition must be specified.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how to define an additional field called <code>customer_name</code> that is represented in Java as a <code>String</code> and which should be stored in the outbox table as a <code>VARCHAR(100)</code> column.
+This example also shows a JPA Attribute converter defined that forces the storage of the string to upper-case.</p>
+</div>
+<div class="listingblock">
+<div class="title">application.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">quarkus.hypercdc-outbox.additional-fields=customer_name:string:varchar(100):example.UpperCase</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the field(s) are configured in the application’s <code>.properties</code> file, the application’s code needs to provide the corresponding values through its exported events.
+In order to do this, the application class that extends the <code>ExportedEvent</code> needs to override the method called <code>getAdditionalFieldValues()</code> and return a <code>Map</code> of the additional field names and values.</p>
+</div>
+<div class="paragraph">
+<p>In the following example, we show how to specify the <code>customer_name</code> field with a value of <code>Acme Goods</code>.
+Using our <code>OrderCreatedEvent</code> from the example section above, we’ve extended the event:</p>
+</div>
+<div class="listingblock">
+<div class="title">OrderCreatedEvent.java</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class OrderCreatedEvent implements ExportedEvent&lt;String, JsonNode&gt; {
+    ...
+    @Override
+    public Map&lt;String, Object&gt; getAdditionalFieldValues() {
+        return Collections.singletonMap("customer_name", "Acme Goods");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Additional field mappings do allow specifying a JPA attribute converter per field.</p>
+</div>
+<div class="paragraph">
+<p>In this example, we defined <code>example.UpperCase</code> that will convert any supplied string-value to upper-case prior to insertion.
+A JPA attribute converter allows decoupling this type of behavior from the call site, allowing reuse of a common behavior.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+<div class="paragraph">
+<p>With the configuration in the application’s <code>.properties</code> file and updating of <code>OrderCreateedEvent</code> to provide these additional fields and values,
+the HyperCDC Outbox SMT now can access these additional field values and place them in the emitted event.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Outbox extension can be configured by setting options in the Quarkus <code>application.properties</code> file.
+The extension works out-of-the-box with a default configuration, but this configuration may not be ideal for every situation.</p>
+</div>
+<div class="sect2">
+<h3 id="_build_time_configuration_options"><a class="anchor" href="#_build_time_configuration_options"></a>Build time configuration options</h3>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Configuration property</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>Type</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">Default</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-table-name"></a><a href="#quarkus-hypercdc-outbox-table-name"><code>quarkus.hypercdc-outbox.table-name</code></a></dt>
+<dd>
+<p>The table name to be used when creating the outbox table.</p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">OutboxEvent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-id-name"></a><a href="#quarkus-hypercdc-outbox-id-name"><code>quarkus.hypercdc-outbox.id.name</code></a></dt>
+<dd>
+<p>The column name for the event id column.<br>
+for example, <code>uuid</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>id</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-id-column-definition"></a><a href="#quarkus-hypercdc-outbox-id-column-definition"><code>quarkus.hypercdc-outbox.id.column-definition</code></a></dt>
+<dd>
+<p>The database-specific column definition for the event id column.<br>
+for example, <code>uuid not null</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>UUID NOT NULL</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-aggregate-id-name"></a><a href="#quarkus-hypercdc-outbox-aggregate-id-name"><code>quarkus.hypercdc-outbox.aggregate-id.name</code></a></dt>
+<dd>
+<p>The column name for the event key column.</p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>aggregateid</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-aggregate-id-column-definition"></a><a href="#quarkus-hypercdc-outbox-aggregate-id-column-definition"><code>quarkus.hypercdc-outbox.aggregate-id.column-definition</code></a></dt>
+<dd>
+<p>The database-specific column definition for the aggregate id.<br>
+for example, <code>varchar(50) not null</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>VARCHAR(255) NOT NULL</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-aggregate-id-converter"></a><a href="#quarkus-hypercdc-outbox-aggregate-id-converter"><code>quarkus.hypercdc-outbox.aggregate-id.converter</code></a></dt>
+<dd>
+<p>The JPA AttributeConverter for the event key column.<br>
+for example, <code>com.company.TheAttributeConverter</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-aggregate-type-name"></a><a href="#quarkus-hypercdc-outbox-aggregate-type-name"><code>quarkus.hypercdc-outbox.aggregate-type.name</code></a></dt>
+<dd>
+<p>The column name for the event aggregate type column.</p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>aggregatetype</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-aggregate-type-column-definition"></a><a href="#quarkus-hypercdc-outbox-aggregate-type-column-definition"><code>quarkus.hypercdc-outbox.aggregate-type.column-definition</code></a></dt>
+<dd>
+<p>The database-specific column definition for the aggregate type.<br>
+for example, <code>varchar(15) not null</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>VARCHAR(255) NOT NULL</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-aggregate-type-converter"></a><a href="#quarkus-hypercdc-outbox-aggregate-type-converter"><code>quarkus.hypercdc-outbox.aggregate-type.converter</code></a></dt>
+<dd>
+<p>The JPA AttributeConverter for the event aggregate type column.<br>
+for example, <code>com.company.TheAttributeConverter</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-type-name"></a><a href="#quarkus-hypercdc-outbox-type-name"><code>quarkus.hypercdc-outbox.type.name</code></a></dt>
+<dd>
+<p>The column name for the event type column.</p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>type</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-type-column-definition"></a><a href="#quarkus-hypercdc-outbox-type-column-definition"><code>quarkus.hypercdc-outbox.type.column-definition</code></a></dt>
+<dd>
+<p>The database-specific column definition for the event type.<br>
+for example, <code>varchar(50) not null</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>VARCHAR(255) NOT NULL</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-type-converter"></a><a href="#quarkus-hypercdc-outbox-type-converter"><code>quarkus.hypercdc-outbox.type.converter</code></a></dt>
+<dd>
+<p>The JPA AttributeConverter for the event type column.<br>
+for example, <code>com.company.TheAttributeConverter</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-timestamp-name"></a><a href="#quarkus-hypercdc-outbox-timestamp-name"><code>quarkus.hypercdc-outbox.timestamp.name</code></a></dt>
+<dd>
+<p>The column name for the event timestamp column.</p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>timestamp</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-timestamp-column-definition"></a><a href="#quarkus-hypercdc-outbox-timestamp-column-definition"><code>quarkus.hypercdc-outbox.timestamp.column-definition</code></a></dt>
+<dd>
+<p>The database-specific column definition for the event timestamp.<br>
+for example, <code>timestamp not null</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>TIMESTAMP NOT NULL</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-timestamp-converter"></a><a href="#quarkus-hypercdc-outbox-timestamp-converter"><code>quarkus.hypercdc-outbox.timestamp.converter</code></a></dt>
+<dd>
+<p>The JPA AttributeConverter for the event timestamp column.<br>
+for example, <code>com.company.TheAttributeConverter</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-payload-name"></a><a href="#quarkus-hypercdc-outbox-payload-name"><code>quarkus.hypercdc-outbox.payload.name</code></a></dt>
+<dd>
+<p>The column name for the event payload column.</p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>payload</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-payload-column-definition"></a><a href="#quarkus-hypercdc-outbox-payload-column-definition"><code>quarkus.hypercdc-outbox.payload.column-definition</code></a></dt>
+<dd>
+<p>The database-specific column definition for the event payload.<br>
+for example, <code>text not null</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>VARCHAR(8000)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-payload-converter"></a><a href="#quarkus-hypercdc-outbox-payload-converter"><code>quarkus.hypercdc-outbox.payload.converter</code></a></dt>
+<dd>
+<p>The JPA AttributeConverter for the event payload column.<br>
+for example, <code>com.company.TheAttributeConverter</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-payload-type"></a><a href="#quarkus-hypercdc-outbox-payload-type"><code>quarkus.hypercdc-outbox.payload.type</code></a></dt>
+<dd>
+<p>A fully-qualified class name of a Hibernate <a href="https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#basic-custom-type">user type</a> implementation.<br>
+for example, <code>io.company.types.JsonNodeBinaryType</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-tracing-span-name"></a><a href="#quarkus-hypercdc-outbox-tracing-span-name"><code>quarkus.hypercdc-outbox.tracing-span.name</code></a></dt>
+<dd>
+<p>The column name for the tracing span context column.</p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>tracingspancontext</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-tracing-span-column-definition"></a><a href="#quarkus-hypercdc-outbox-tracing-span-column-definition"><code>quarkus.hypercdc-outbox.tracingspancontext.column-definition</code></a></dt>
+<dd>
+<p>The database-specific column definition for the tracing span context column.<br>
+for example, <code>text not null</code></p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock"><code>VARCHAR(256)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-additional-fields"></a><a href="#quarkus-hypercdc-outbox-additional-fields"><code>quarkus.hypercdc-outbox.additional-fields</code></a></dt>
+<dd>
+<p>A comma-separated list of additional field mappings that will be persisted in the outbox table.<br>
+<br>
+See <a href="#additional-field-mappings">additional field mappings</a> for details on format and usage.</p>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>string</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"></td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonitionblock note">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The build time configuration defaults will work with the Outbox Event Router SMT out of the box.
+When not using the default values, be sure that the SMT configuration matches.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_runtime_configuration_options"><a class="anchor" href="#_runtime_configuration_options"></a>Runtime configuration options</h3>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Configuration property</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>Type</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">Default</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="dlist">
+<dl>
+<dt class="hdlist1"><a id="quarkus-hypercdc-outbox-remove-after-insert"></a><a href="#quarkus-hypercdc-outbox-remove-after-insert"><code>quarkus.hypercdc-outbox.remove-after-insert</code></a></dt>
+<dd>
+<p>Whether the outbox entry is removed after having been inserted.<br></p>
+<div class="paragraph">
+<p><em>The removal of the entry does not impact the HyperCDC connector from being able to emit CDC events.
+This is used as a way to keep the table’s underlying storage from growing over time.</em></p>
+</div>
+</dd>
+</dl>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>boolean</p>
+</div></div></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">true</p></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="_distributed_tracing"><a class="anchor" href="#_distributed_tracing"></a>Distributed tracing</h3>
+<div class="paragraph">
+<p>The extension has support for the distributed tracing.
+See <a href="#">tracing documentation</a> for more details.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

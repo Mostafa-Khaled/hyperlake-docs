@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Docling Transformation — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">Docling Transformation</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="paragraph">
+<p>One important task in preparing content for use with large language models and AI applications is document parsing and transformation.
+Documents often exist in various formats such as PDF, DOCX, HTML, or other formats that are not easily consumable by LLMs or downstream processing systems.
+Converting these documents into clean and unified, structured text representations is essential for effective content analysis and information extraction.</p>
+</div>
+<div class="paragraph">
+<p>HyperCDC offers a built-in feature to transform document fields into clean and unified, structured text with unified format using <a href="https://docling-project.github.io/docling/">Docling</a>, a powerful document understanding framework.
+Docling can parse various document formats and convert them to structured output formats such as HTML, Markdown, or plain text, making the content more accessible for LLMs and other AI applications.</p>
+</div>
+<div class="paragraph">
+<p>HyperCDC can use a <a href="https://kafka.apache.org/documentation/#connect_transforms">single message transformation</a> (SMT) to perform Docling transformations.
+The transformation connects to a Docling Serve API that processes the documents and returns the structured output.</p>
+</div>
+<div class="admonitionblock important">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Docling transformation requires Java 21 or higher.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_behavior"><a class="anchor" href="#_behavior"></a>Behavior</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Docling transformation takes as input a specific field in the original event record that contains either document content or a URL to a document.
+The SMT sends this input to the configured Docling Serve API for transformation.
+The resulting structured document is then appended to the record or can replace the entire record.
+The original source field is preserved when using the append mode.</p>
+</div>
+<div class="paragraph">
+<p>The source field must be a string field.
+When using the <code>text</code> input source mode, the field should contain the document content directly.
+When using the <code>link</code> input source mode, the field should contain a URL to the document.</p>
+</div>
+<div class="paragraph">
+<p>The Docling field in the resulting record is a structured object with the following schema:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>type</code>: The output format type (html, markdown, or text)</p>
+</li>
+<li>
+<p><code>content</code>: The transformed document content</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The schema type of the Docling field in the record is <code>io.hypercdc.ai.docling.DoclingDocument</code>.</p>
+</div>
+<div class="paragraph">
+<p>Both source field and Docling field specifications support nested structures, such as <code>after.document</code> or <code>after.document_parsed</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To configure a connector to use the Docling transformation, add the following lines to your connector configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms=docling
+transforms.docling.type=io.hypercdc.ai.docling.FieldToDocling</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You must specify the source field, Docling Serve URL, input source type, and input format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms.docling.field.source=after.document
+transforms.docling.serve.url=http://localhost:5001
+transforms.docling.input.source=text
+transforms.docling.input.format=pdf</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optionally, you can specify the destination field for the Docling output.
+If not specified, the record value will contain only the Docling document itself:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms.docling.field.docling=after.document_parsed</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also configure the output format and image inclusion:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms.docling.output.format=markdown
+transforms.docling.include.images=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example shows a complete configuration for transforming PDF documents to Markdown:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms=docling
+transforms.docling.type=io.hypercdc.ai.docling.FieldToDocling
+transforms.docling.field.source=after.document
+transforms.docling.field.docling=after.document_parsed
+transforms.docling.serve.url=http://localhost:5001
+transforms.docling.input.source=text
+transforms.docling.input.format=pdf
+transforms.docling.output.format=markdown
+transforms.docling.include.images=true</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuration_options"><a class="anchor" href="#_configuration_options"></a>Configuration options</h3>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Descriptions of Docling SMT configuration options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="docling-source-field"></a><a href="#docling-source-field"><code>field.source</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies the field in the source record to use as input for Docling transformation.
+The data type of the specified field must be <code>string</code>.
+When <code>input.source</code> is set to <code>text</code>, this field should contain the document content.
+When <code>input.source</code> is set to <code>link</code>, this field should contain a URL to the document.
+Supports nested fields (e.g., <code>after.document</code>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="docling-docling-field"></a><a href="#docling-docling-field"><code>field.docling</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies the name of the field that the SMT adds to the record to contain the Docling document.
+If no value is specified, the resulting record contains only the Docling document value.
+Supports nested fields (e.g., <code>after.document_parsed</code>), but the nested structure has to exists (e.g. in case of <code>after.document_parsed.markdown</code>, <code>after.document_parsed</code> has to exists).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="docling-serve-url"></a><a href="#docling-serve-url"><code>serve.url</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>URL of the Docling Serve API server, including protocol and port (e.g., <code><a href="http://localhost:5001" class="bare">http://localhost:5001</a></code> or <code><a href="https://docling.example.com" class="bare">https://docling.example.com</a></code>).
+Only HTTP and HTTPS protocols are allowed for security reasons.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="docling-input-source"></a><a href="#docling-input-source"><code>input.source</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>text</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies how Docling should interpret the source field.
+Valid values:<br>
+<code>text</code> - The source field contains the document content directly.<br>
+<code>link</code> - The source field contains a URL to the document.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="docling-input-format"></a><a href="#docling-input-format"><code>input.format</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Format of the input document.
+Must match one of the formats supported by the Docling server.
+Common formats include: <code>pdf</code>, <code>docx</code>, <code>pptx</code>, <code>html</code>, <code>asciidoc</code>, <code>md</code> (Markdown), <code>xlsx</code>, and others.
+Refer to the <a href="https://docling-project.github.io/docling/">Docling documentation</a> for the complete list of supported formats.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="docling-include-images"></a><a href="#docling-include-images"><code>include.images</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>true</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies whether images should be included in the resulting document.
+When set to <code>true</code>, images from the source document are preserved in the output.
+When set to <code>false</code>, images are omitted from the transformation result.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="docling-output-format"></a><a href="#docling-output-format"><code>output.format</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>text</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Format of the output document produced by Docling.
+Valid values:<br>
+<code>html</code> - Structured HTML output.<br>
+<code>markdown</code> - Markdown-formatted output.<br>
+<code>text</code> - Plain text output.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="docling-simple-schema-lookup"></a><a href="#docling-simple-schema-lookup"><code>simple.schema.lookup</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Performance optimization for schema caching.
+When set to <code>true</code>, schemas are cached by name rather than by full schema structure.
+Only enable this option when you are certain that schema evolution is not happening during the HyperCDC connector’s execution.
+This can improve performance in stable schema environments.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_docling_serve_api"><a class="anchor" href="#_docling_serve_api"></a>Docling Serve API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Docling transformation requires a running Docling Serve API instance.
+Docling Serve is a service that provides Docling’s document understanding capabilities through a REST API.</p>
+</div>
+<div class="paragraph">
+<p>To set up a Docling Serve instance, refer to the <a href="https://docling-project.github.io/docling/">Docling project documentation</a>.</p>
+</div>
+<div class="admonitionblock note">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For security reasons, the <code>serve.url</code> configuration option only accepts HTTP and HTTPS URLs.
+File paths, FTP URLs, or other protocol schemes are not permitted.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_input_source_modes"><a class="anchor" href="#_input_source_modes"></a>Input Source Modes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Docling transformation supports two input source modes:</p>
+</div>
+<div class="sect2">
+<h3 id="_text_mode"><a class="anchor" href="#_text_mode"></a>Text Mode</h3>
+<div class="paragraph">
+<p>When <code>input.source</code> is set to <code>text</code>, the source field should contain the document content directly.
+This mode is suitable when:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The document content is already stored in the database</p>
+</li>
+<li>
+<p>You want to transform small documents or text snippets</p>
+</li>
+<li>
+<p>The document is generated dynamically</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In text mode, the content is base64-encoded internally before being sent to the Docling Serve API.</p>
+</div>
+<div class="paragraph">
+<p>Example configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms.docling.input.source=text
+transforms.docling.field.source=after.pdf_content</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_link_mode"><a class="anchor" href="#_link_mode"></a>Link Mode</h3>
+<div class="paragraph">
+<p>When <code>input.source</code> is set to <code>link</code>, the source field should contain a URL to the document.
+This mode is suitable when:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Documents are stored externally (e.g., S3, HTTP servers)</p>
+</li>
+<li>
+<p>You want to avoid storing large documents in the database</p>
+</li>
+<li>
+<p>Documents are already accessible via HTTP/HTTPS</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In link mode, the URL is validated to ensure it uses HTTP or HTTPS protocol for security reasons.</p>
+</div>
+<div class="paragraph">
+<p>Example configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms.docling.input.source=link
+transforms.docling.field.source=after.document_url</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_output_formats"><a class="anchor" href="#_output_formats"></a>Output Formats</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Docling supports three output formats, each suited for different use cases:</p>
+</div>
+<div class="sect2">
+<h3 id="_plain_text"><a class="anchor" href="#_plain_text"></a>Plain Text</h3>
+<div class="paragraph">
+<p>The <code>text</code> output format produces clean, plain text without any formatting or structure markers.
+This is the default format and is suitable for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Simple text analysis</p>
+</li>
+<li>
+<p>Feeding content to LLMs that don’t require structure</p>
+</li>
+<li>
+<p>Minimizing output size</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_markdown"><a class="anchor" href="#_markdown"></a>Markdown</h3>
+<div class="paragraph">
+<p>The <code>markdown</code> output format produces Markdown-formatted text that preserves document structure.
+This format is suitable for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Preserving headings, lists, and basic formatting</p>
+</li>
+<li>
+<p>Human-readable output</p>
+</li>
+<li>
+<p>LLMs that benefit from structured markup</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_html"><a class="anchor" href="#_html"></a>HTML</h3>
+<div class="paragraph">
+<p>The <code>html</code> output format produces structured HTML that preserves the document’s visual structure.
+This format is suitable for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Preserving complex document layouts</p>
+</li>
+<li>
+<p>Web-based rendering</p>
+</li>
+<li>
+<p>Applications that require detailed structure information</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_use_cases"><a class="anchor" href="#_example_use_cases"></a>Example Use Cases</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_processing_pdf_documents_from_database"><a class="anchor" href="#_processing_pdf_documents_from_database"></a>Processing PDF Documents from Database</h3>
+<div class="paragraph">
+<p>Transform PDF documents stored in a PostgreSQL database:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms=docling
+transforms.docling.type=io.hypercdc.ai.docling.FieldToDocling
+transforms.docling.field.source=after.pdf_content
+transforms.docling.field.docling=after.text_content
+transforms.docling.serve.url=http://docling:5001
+transforms.docling.input.source=text
+transforms.docling.input.format=pdf
+transforms.docling.output.format=text</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_processing_documents_from_urls"><a class="anchor" href="#_processing_documents_from_urls"></a>Processing Documents from URLs</h3>
+<div class="paragraph">
+<p>Transform documents referenced by URLs in a database:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms=docling
+transforms.docling.type=io.hypercdc.ai.docling.FieldToDocling
+transforms.docling.field.source=after.document_url
+transforms.docling.field.docling=after.document_content
+transforms.docling.serve.url=https://docling.example.com
+transforms.docling.input.source=link
+transforms.docling.input.format=pdf
+transforms.docling.output.format=markdown
+transforms.docling.include.images=false</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_replacing_records_with_parsed_content"><a class="anchor" href="#_replacing_records_with_parsed_content"></a>Replacing Records with Parsed Content</h3>
+<div class="paragraph">
+<p>Create a new stream containing only the parsed document content:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms=docling
+transforms.docling.type=io.hypercdc.ai.docling.FieldToDocling
+transforms.docling.field.source=after.document
+transforms.docling.serve.url=http://docling:5001
+transforms.docling.input.source=text
+transforms.docling.input.format=docx
+transforms.docling.output.format=html
+# Note: field.docling is not specified, so the record contains only the Docling document</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

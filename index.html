@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HyperLake — Documentation</title>
+  <title>HyperLake Documentation</title>
   <meta name="description" content="Reference documentation for all HyperLake platform products.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg:      #ffffff;
@@ -15,7 +15,9 @@
       --border:  #e4e4e0;
       --text:    #1a1a18;
       --muted:   #5c5c56;
-      --faint:   #9a9a92;
+      --faint:   #8a8a82;
+      --accent:  #a04a00;
+      --accent-cdc: #e11d48;
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -25,7 +27,7 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
       font-size: 15px;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
@@ -33,18 +35,30 @@
 
     a { color: inherit; text-decoration: none; }
 
-    /* ── Topbar ── */
+    
     .topbar {
-      height: 50px;
+      height: 52px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       padding: 0 40px;
       border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+
+    .topbar-left, .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .wordmark {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text);
       letter-spacing: .01em;
     }
@@ -52,29 +66,43 @@
     .wordmark span { color: var(--faint); font-weight: 400; margin-left: 5px; }
 
     .version {
-      margin-left: 10px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
+      font-size: 11px;
       color: var(--faint);
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 4px;
     }
 
-    /* ── Page ── */
+    .topbar-link {
+      font-size: 13px;
+      color: var(--muted);
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: color .12s, background .12s;
+    }
+    .topbar-link:hover {
+      color: var(--text);
+      background: var(--surface);
+    }
+
+    
     .page {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
-      padding: 0 40px;
+      padding: 0 40px 96px;
     }
 
-    /* ── Header ── */
+    
     .hero {
-      padding: 60px 0 44px;
+      padding: 60px 0 40px;
       border-bottom: 1px solid var(--border);
       margin-bottom: 48px;
     }
 
     .hero h1 {
       font-family: 'Lora', Georgia, serif;
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 600;
       letter-spacing: -.02em;
       line-height: 1.2;
@@ -84,20 +112,20 @@
 
     .hero p {
       margin: 0;
-      font-size: 14.5px;
+      font-size: 15px;
       color: var(--muted);
       line-height: 1.65;
-      max-width: 480px;
+      max-width: 580px;
     }
 
-    /* ── Section ── */
+    
     .section {
       margin-bottom: 48px;
     }
 
     .section-title {
       font-size: 11px;
-      font-weight: 500;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: .09em;
       color: var(--faint);
@@ -106,68 +134,70 @@
       border-bottom: 1px solid var(--border);
     }
 
-    /* ── Product rows ── */
+    
     .product {
       display: grid;
       grid-template-columns: 160px 1fr;
       gap: 0 24px;
-      padding: 18px 0;
+      padding: 22px 0;
       border-bottom: 1px solid var(--border);
       align-items: start;
     }
 
-    .product-left { }
-
     .product-name {
-      font-size: 14.5px;
-      font-weight: 500;
+      font-size: 15px;
+      font-weight: 600;
       color: var(--text);
       display: block;
       margin-bottom: 2px;
       transition: color .12s;
     }
 
-    .product:hover .product-name { color: #000; text-decoration: underline; }
+    .product-name:hover { color: var(--accent); text-decoration: underline; }
 
     .product-origin {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
+      font-size: 11px;
       color: var(--faint);
       letter-spacing: .02em;
     }
 
-    .product-right { }
-
     .product-desc {
-      font-size: 13.5px;
+      font-size: 14px;
       color: var(--muted);
       line-height: 1.55;
-      margin: 0 0 10px;
+      margin: 0 0 12px;
     }
 
     .product-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 0;
+      align-items: center;
+      gap: 4px 0;
     }
 
     .product-link {
-      font-size: 12px;
-      color: var(--faint);
+      font-size: 12.5px;
+      color: var(--muted);
       transition: color .1s;
     }
 
-    .product-link:hover { color: var(--text); text-decoration: underline; }
+    .product-link:hover { color: var(--accent); text-decoration: underline; }
 
     .product-link + .product-link::before {
       content: '·';
-      margin: 0 7px;
+      margin: 0 8px;
       color: var(--border);
     }
 
-    /* ── Footer ── */
+    .product-link--featured {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    
     footer {
-      margin-top: 16px;
+      margin-top: 24px;
       padding: 28px 0 56px;
       display: flex;
       justify-content: space-between;
@@ -182,155 +212,175 @@
 <body>
 
   <header class="topbar">
-    <span class="wordmark">HyperLake <span>Documentation</span></span>
-    <span class="version">v0.0.1</span>
+    <div class="topbar-left">
+      <a class="wordmark" href="index.html">HyperLake <span>Documentation</span></a>
+      <span class="version">v0.0.1</span>
+    </div>
+    <div class="topbar-right">
+      <a class="topbar-link" href="hypercdc-docs/index.html">HyperCDC Docs (76p) &rarr;</a>
+    </div>
   </header>
 
   <main class="page">
 
     <div class="hero">
       <h1>Platform Reference</h1>
-      <p>Reference documentation for all HyperLake platform products — built on industry-standard open-source tooling, rebranded for the HyperLake ecosystem.</p>
+      <p>Single source of truth for all HyperLake platform documentation — change data capture, event streaming, batch processing, and metadata governance.</p>
     </div>
 
-    <!-- Governance -->
-    <div class="section">
-      <p class="section-title">Governance</p>
-
-      <a href="hypergovern.html" class="product">
-        <div class="product-left">
-          <span class="product-name">HyperGovern</span>
-          <span class="product-origin">OpenMetadata</span>
-        </div>
-        <div class="product-right">
-          <p class="product-desc">Metadata cataloging, ownership assignment, data lineage tracking, business glossary management, and quality monitoring.</p>
-          <div class="product-links">
-            <span class="product-link">Quick Start</span>
-            <span class="product-link">Connectors</span>
-            <span class="product-link">Data Lineage</span>
-            <span class="product-link">Glossary</span>
-            <span class="product-link">REST API</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="hypercare.html" class="product">
-        <div class="product-left">
-          <span class="product-name">HyperCare</span>
-          <span class="product-origin">Support Agent</span>
-        </div>
-        <div class="product-right">
-          <p class="product-desc">Internal support ticketing and service management for platform operations and incident handling.</p>
-          <div class="product-links">
-            <span class="product-link">Getting Started</span>
-            <span class="product-link">Ticketing Workflow</span>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <!-- Ingestion & Integration -->
+    
     <div class="section">
       <p class="section-title">Ingestion &amp; Integration</p>
 
-      <a href="hyperstream.html" class="product">
+      
+      <div class="product">
         <div class="product-left">
-          <span class="product-name">HyperStream</span>
+          <a href="hypercdc-docs/index.html" class="product-name" style="color:var(--accent-cdc);">HyperCDC</a>
+          <span class="product-origin">Change Data Capture</span>
+        </div>
+        <div class="product-right">
+          <p class="product-desc">Enterprise row-level change data capture from operational databases (Postgres, MySQL, Mongo, Oracle, SQL Server, Db2, Cassandra), publishing replayable change events.</p>
+          <div class="product-links">
+            <a href="hypercdc-docs/tutorials.html" class="product-link">Tutorials</a>
+            <a href="hypercdc-docs/connectors/postgresql.html" class="product-link">PostgreSQL</a>
+            <a href="hypercdc-docs/connectors/mysql.html" class="product-link">MySQL</a>
+            <a href="hypercdc-docs/connectors/mongodb.html" class="product-link">MongoDB</a>
+            <a href="hypercdc-docs/connectors/oracle.html" class="product-link">Oracle</a>
+            <a href="hypercdc-docs/visuals-catalog.html" class="product-link">Visuals Catalog</a>
+            <a href="hypercdc-docs/index.html" class="product-link product-link--featured" style="color:var(--accent-cdc);">Open Documentation (76 pages) &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="product">
+        <div class="product-left">
+          <a href="hyperstream.html" class="product-name">HyperStream</a>
           <span class="product-origin">Apache Kafka</span>
         </div>
         <div class="product-right">
           <p class="product-desc">Durable, distributed event log for publishing, storing, and consuming real-time record streams across services and data pipelines.</p>
           <div class="product-links">
-            <span class="product-link">Quick Start</span>
-            <span class="product-link">Topics &amp; Partitions</span>
-            <span class="product-link">Producers</span>
-            <span class="product-link">Consumers</span>
-            <span class="product-link">Streams API</span>
+            <a href="hyperstream.html#quickstart" class="product-link">Quick Start</a>
+            <a href="hyperstream.html#topics-partitions" class="product-link">Topics &amp; Partitions</a>
+            <a href="hyperstream.html#producers" class="product-link">Producers</a>
+            <a href="hyperstream.html#consumers" class="product-link">Consumers</a>
+            <a href="hyperstream.html#streams-api" class="product-link">Streams API</a>
+            <a href="hyperstream.html" class="product-link product-link--featured">Documentation &rarr;</a>
           </div>
         </div>
-      </a>
+      </div>
 
-      <a href="hypercdc.html" class="product">
+      
+      <div class="product">
         <div class="product-left">
-          <span class="product-name">HyperCDC</span>
-          <span class="product-origin">Debezium</span>
-        </div>
-        <div class="product-right">
-          <p class="product-desc">Row-level change data capture from operational databases, publishing inserts, updates, and deletes as ordered, replayable events.</p>
-          <div class="product-links">
-            <span class="product-link">Quick Start</span>
-            <span class="product-link">PostgreSQL</span>
-            <span class="product-link">MySQL</span>
-            <span class="product-link">Consume Events</span>
-            <span class="product-link">Monitoring</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="hypersync.html" class="product">
-        <div class="product-left">
-          <span class="product-name">HyperSync</span>
+          <a href="hypersync.html" class="product-name">HyperSync</a>
           <span class="product-origin">Apache NiFi</span>
         </div>
         <div class="product-right">
           <p class="product-desc">Visual data routing and flow automation engine — configurable directed graphs of data routing, transformation, and system mediation.</p>
           <div class="product-links">
-            <span class="product-link">Quick Start</span>
-            <span class="product-link">FlowFiles</span>
-            <span class="product-link">Processors</span>
-            <span class="product-link">Provenance</span>
-            <span class="product-link">Clustering</span>
+            <a href="hypersync.html#quickstart" class="product-link">Quick Start</a>
+            <a href="hypersync.html#flowfiles" class="product-link">FlowFiles</a>
+            <a href="hypersync.html#processors" class="product-link">Processors</a>
+            <a href="hypersync.html#provenance" class="product-link">Provenance</a>
+            <a href="hypersync.html#clustering" class="product-link">Clustering</a>
+            <a href="hypersync.html" class="product-link product-link--featured">Documentation &rarr;</a>
           </div>
         </div>
-      </a>
+      </div>
     </div>
 
-    <!-- Processing -->
+    
     <div class="section">
       <p class="section-title">Processing</p>
 
-      <a href="hyperbatch.html" class="product">
+      
+      <div class="product">
         <div class="product-left">
-          <span class="product-name">HyperBatch</span>
+          <a href="hyperbatch.html" class="product-name">HyperBatch</a>
           <span class="product-origin">Apache Spark</span>
         </div>
         <div class="product-right">
           <p class="product-desc">Distributed execution engine for batch workloads, SQL, DataFrames, structured streaming, and machine learning pipelines.</p>
           <div class="product-links">
-            <span class="product-link">Quick Start</span>
-            <span class="product-link">SQL &amp; DataFrames</span>
-            <span class="product-link">Streaming</span>
-            <span class="product-link">MLlib</span>
-            <span class="product-link">Kubernetes</span>
+            <a href="hyperbatch.html#quick-start" class="product-link">Quick Start</a>
+            <a href="hyperbatch.html#sql-dataframes" class="product-link">SQL &amp; DataFrames</a>
+            <a href="hyperbatch.html#structured-streaming" class="product-link">Streaming</a>
+            <a href="hyperbatch.html#mllib" class="product-link">MLlib</a>
+            <a href="hyperbatch.html#cluster-deployment" class="product-link">Deployment</a>
+            <a href="hyperbatch.html" class="product-link product-link--featured">Documentation &rarr;</a>
           </div>
         </div>
-      </a>
+      </div>
     </div>
 
-    <!-- Consumption -->
+    
     <div class="section">
-      <p class="section-title">Consumption</p>
+      <p class="section-title">Governance &amp; Operations</p>
 
-      <a href="hypermdm.html" class="product">
+      
+      <div class="product">
         <div class="product-left">
-          <span class="product-name">HyperMDM</span>
+          <a href="hypergovern.html" class="product-name">HyperGovern</a>
+          <span class="product-origin">OpenMetadata</span>
+        </div>
+        <div class="product-right">
+          <p class="product-desc">Metadata cataloging, ownership assignment, data lineage tracking, business glossary management, and quality monitoring.</p>
+          <div class="product-links">
+            <a href="hypergovern.html#quickstart" class="product-link">Quick Start</a>
+            <a href="hypergovern.html#connectors" class="product-link">Connectors</a>
+            <a href="hypergovern.html#lineage" class="product-link">Data Lineage</a>
+            <a href="hypergovern.html#glossary" class="product-link">Glossary</a>
+            <a href="hypergovern.html#api" class="product-link">REST API</a>
+            <a href="hypergovern.html" class="product-link product-link--featured">Documentation &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="product">
+        <div class="product-left">
+          <a href="hypercare.html" class="product-name">HyperCare</a>
+          <span class="product-origin">Support Agent</span>
+        </div>
+        <div class="product-right">
+          <p class="product-desc">Internal support ticketing and service management for platform operations and incident handling.</p>
+          <div class="product-links">
+            <a href="hypercare.html#getting-started" class="product-link">Getting Started</a>
+            <a href="hypercare.html#workflows" class="product-link">Ticketing Workflow</a>
+            <a href="hypercare.html" class="product-link product-link--featured">Documentation &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="section">
+      <p class="section-title">Consumption &amp; MDM</p>
+
+      
+      <div class="product">
+        <div class="product-left">
+          <a href="hypermdm.html" class="product-name">HyperMDM</a>
           <span class="product-origin">PimCore</span>
         </div>
         <div class="product-right">
           <p class="product-desc">Master data management and product information platform for modeling, governing, and distributing authoritative business data across channels.</p>
           <div class="product-links">
-            <span class="product-link">Quick Start</span>
-            <span class="product-link">Data Classes</span>
-            <span class="product-link">GraphQL</span>
-            <span class="product-link">Workflows</span>
-            <span class="product-link">REST API</span>
+            <a href="hypermdm.html#quickstart" class="product-link">Quick Start</a>
+            <a href="hypermdm.html#data-classes" class="product-link">Data Classes</a>
+            <a href="hypermdm.html#graphql-api" class="product-link">GraphQL</a>
+            <a href="hypermdm.html#workflows" class="product-link">Workflows</a>
+            <a href="hypermdm.html#rest-api" class="product-link">REST API</a>
+            <a href="hypermdm.html" class="product-link product-link--featured">Documentation &rarr;</a>
           </div>
         </div>
-      </a>
+      </div>
     </div>
 
     <footer>
-      <span>HyperLake Platform</span>
+      <span>HyperLake Platform Documentation</span>
       <span>v0.0.1</span>
     </footer>
 

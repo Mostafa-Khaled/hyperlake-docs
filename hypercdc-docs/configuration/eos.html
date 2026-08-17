@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exactly once delivery — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">Exactly once delivery</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>HyperCDC provides at-least-once delivery guarantees.
+This means that no changes are missed; however, in some cases, a record may be delivered more than once.
+In certain scenarios, these duplicate records might be problematic, and exactly-once semantics may be required.</p>
+</div>
+<div class="paragraph">
+<p>Exactly-once delivery ensures that every change is delivered and appears in the change stream no more than once.
+This is a significantly stricter requirement than at-least-once delivery.</p>
+</div>
+<div class="paragraph">
+<p>Currently, HyperCDC does not implement an internal deduplication layer to enforce exactly-once semantics.
+However, when HyperCDC is deployed as a source connector in the Kafka Connect framework, it can take advantage of Kafka Connect’s support for exactly-once delivery.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_kafka_connect_exactly_once_support_for_source_connector"><a class="anchor" href="#_kafka_connect_exactly_once_support_for_source_connector"></a>Kafka Connect exactly-once support for source connector</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Kafka Connect introduced support for exactly-once delivery for source connectors in <a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-618%3A+Exactly-Once+Support+for+Source+Connectors">KIP-618</a>.
+This functionality builds upon Kafka’s transaction support and the exactly-once delivery mechanism introduced in <a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging">KIP-98</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_known_issues_and_considerations"><a class="anchor" href="#_known_issues_and_considerations"></a>Known issues and considerations</h3>
+<div class="paragraph">
+<p>Although exactly-once delivery has been available in Kafka and Kafka Connect for some time, it remains unclear whether the implementation is fully correct or if there are edge cases where exactly-once semantics might be violated.</p>
+</div>
+<div class="paragraph">
+<p>To date, no comprehensive study has analyzed the correctness of transaction and exactly-once implementations in recent Kafka releases.
+However, two <a href="https://jepsen.io">Jepsen</a> reports, one for <a href="https://jepsen.io/analyses/redpanda-21.10.1">Redpanda</a> and another for <a href="https://jepsen.io/analyses/bufstream-0.1.0">Bufstream</a>, highlight potential issues with the Kafka protocol and its implementations.
+These reports raise concerns about correctness, particularly in the Bufstream case.</p>
+</div>
+<div class="paragraph">
+<p>As a result, several related issues in Apache Kafka remain open:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/KAFKA-17734">KAFKA-17734</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/KAFKA-17754">KAFKA-17754</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/KAFKA-17582">KAFKA-17582</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Because Kafka Connect exactly-once delivery relies on Kafka transactions, it’s reasonable to assume that these issues might also affect Kafka Connect’s exactly-once guarantees.</p>
+</div>
+<div class="admonitionblock warning">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>While there is no in-depth study which would analyse correctness of Kafka Connect exactly-once delivery, there are known issues in Kafka transaction protocol which may have impact also on the correctness of Kafka Connect exactly-once delivery.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hypercdc_connectors_supporting_exactly_once_delivery"><a class="anchor" href="#_hypercdc_connectors_supporting_exactly_once_delivery"></a>HyperCDC Connectors supporting exactly-once delivery</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following HyperCDC source connectors support participation in Kafka Connect’s exactly-once delivery:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>MariaDB</p>
+</li>
+<li>
+<p>MongoDB</p>
+</li>
+<li>
+<p>MySQL</p>
+</li>
+<li>
+<p>Oracle</p>
+</li>
+<li>
+<p>PostgreSQL</p>
+</li>
+<li>
+<p>SQL Server</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="paragraph">
+<p>Kafka must be running in distributed mode, and the Kafka Connect version must support exactly-once delivery (version 3.3.0 or higher).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuration_of_the_kafka_workers"><a class="anchor" href="#_configuration_of_the_kafka_workers"></a>Configuration of the Kafka workers</h3>
+<div class="paragraph">
+<p>All Kafka Connect workers must have exactly-once delivery enabled by setting the following property in the worker configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">exactly.once.source.support=enabled</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more details (e.g., ACL configuration), refer to the official <a href="https://kafka.apache.org/documentation.html#connect_exactlyoncesource">Kafka documentation</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_source_connector_configuration"><a class="anchor" href="#_source_connector_configuration"></a>Source connector configuration</h3>
+<div class="paragraph">
+<p>To enable exactly-once delivery for a specific source connector, add the following setting to the connector configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">exactly.once.support=required</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An additional setting, <code>transaction.boundary</code>, must be set to <code>poll</code> for all HyperCDC source connectors.
+However, since <code>poll</code> is the default value, this setting does not need to be explicitly included in the configuration unless being overridden.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Embeddings Transformation — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">Embeddings Transformation</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+<div class="paragraph">
+<p>One important task that must be performed to prepare content for use in large language models, or for natural language processing in general, is to convert text to a numeric representation, also known as text vectorization.
+One way to implement this conversion is through so-called <em>text embeddings</em>, a process in which text is converted to high-dimensional numerical vectors.
+Representing text as a vector enables computers to perform semantic similarity searches and other advanced operations.</p>
+</div>
+<div class="paragraph">
+<p>HyperCDC offers a built-in feature to transform specified text fields into numerical embeddings vectors, and to add the resulting embeddings to the event record.
+Embedding inference is performed according to the embeddings model served by the configured provider.
+HyperCDC offers several embeddings model providers.</p>
+</div>
+<div class="paragraph">
+<p>HyperCDC can use a <a href="https://kafka.apache.org/documentation/#connect_transforms">single message transformation</a> (SMT) to generate embeddings.
+To interact with different embeddings providers, this Embeddings transformation uses the <a href="https://docs.langchain4j.dev/">langchain4j</a> framework.</p>
+</div>
+<div class="admonitionblock important">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Embeddings transformation requires Java 21 or higher.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_behavior"><a class="anchor" href="#_behavior"></a>Behavior</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Embeddings transformation takes as input specific fields in the original event record, and passes the text content of those fields to the configured embedding model for inference.
+That is, the SMT creates embeddings from the text contained in the specified fields.
+The resulting embeddings are appended to the record.
+The original source field is also preserved in the record.</p>
+</div>
+<div class="paragraph">
+<p>The source field must be a string field.
+The value of an embedding field is a vector of floating-point 32-bit numbers.
+The size of the vector depends on the selected model.
+To provide the internal representation of an embedding, HyperCDC uses the <a href="#">FloatVector</a> data type.
+The schema type of the embedding field in the record is <code>io.hypercdc.data.FloatVector</code>.</p>
+</div>
+<div class="paragraph">
+<p>Both source field and embedding field specifications support nested structures, such as, <code>after.product_description_embedding</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To configure a connector to use the embeddings transformation, add the following lines to your connector configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms=embeddings,
+transforms.embeddings.type=io.hypercdc.ai.embeddings.FieldToEmbedding</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You must specify at least one field to use as the input for the embedding.
+Destination field where the embedding will be placed is not mandatory.
+If it’s not specified, message value will contain only the embedding itself.
+However, it’s recommended to specify the embedding destination field, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms.embeddings.field.source=after.product
+transforms.embeddings.field.embedding=after.product_embedding</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, you must place the model provider JAR file in the connector class path, and configure the provider.
+For example, for the Ollama provider, add <code>hypercdc-ai-embeddings-ollama-$VERSION.jar</code> to your connector class path, and add the Ollama URL and model name to the connector configuration, as shown in the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms.embeddings.ollama.url=http://localhost:11434
+transforms.embeddings.ollama.model.name=all-minilm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example shows what the full configuration for an Ollama provider might look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">transforms=embeddings,
+transforms.embeddings.type=io.hypercdc.ai.embeddings.FieldToEmbedding
+transforms.embeddings.field.source=after.product
+transforms.embeddings.field.embedding=after.product_embedding
+transforms.embeddings.ollama.url=http://localhost:11434
+transforms.embeddings.ollama.model.name=all-minilm</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_general_configuration_options"><a class="anchor" href="#_general_configuration_options"></a>General configuration options</h3>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Descriptions of embedding SMT configuration options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-source-field"></a><a href="#embeddings-source-field"><code>embeddings.field.source</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies the field in the source record to use as an input for the embeddings.
+The data type of the specified field must be <code>string</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-embedding-field"></a><a href="#embeddings-embedding-field"><code>embeddings.field.embedding</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies the name of the field that the SMT adds to the record to contain the text embedding.
+If no value is specified, the resulting record contains only the embedding value.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_model_provider_configuration"><a class="anchor" href="#_model_provider_configuration"></a>Model provider configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_hugging_face"><a class="anchor" href="#_hugging_face"></a>Hugging Face</h3>
+<div class="paragraph">
+<p>Embeddings provided by models available via <a href="https://huggingface.co//">Hugging Face</a>.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Configuration options for Hugging Face embeddings</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-huggingface-access-token"></a><a href="#embeddings-huggingface-access-token"><code>embeddings.huggingface.access.token</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Hugging Face access token.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-huggingface-model-name"></a><a href="#embeddings-huggingface-model-name"><code>embeddings.huggingface.model.name</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the embedding model.
+Use the REST API to retrieve the list of available models.
+Specify the provider in the REST call, for example, <a href="https://huggingface.co/api/models?inference_provider=hf-inference">Hugging Face inference provider</a>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-huggingface-baseurl"></a><a href="#embeddings-huggingface-baseurl"><code>embeddings.huggingface.baseUrl</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="https://api-inference.huggingface.co/" class="bare">https://api-inference.huggingface.co/</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The base Hugging Face inference API URL.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-huggingface-operation-timeout-ms"></a><a href="#embeddings-huggingface-operation-timeout-ms"><code>embeddings.huggingface.operation.timeout.ms</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>15000 (15 seconds)</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Maximum amount of time in milliseconds to wait for the embeddings reply.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonitionblock note">
+<div class="table-container"><table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Hugging Face started to support different <a href="https://huggingface.co/blog/inference-providers">embedding inference providers</a>, including <a href="https://huggingface.co/docs/inference-providers/en/index">external providers</a>.
+However, the LangChain4j framework does not yet support external providers.
+As a result, the only inference provider currently available for use with the HyperCDC is the Hugging Face provider.</p>
+</div>
+</td>
+</tr>
+</tbody></table></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ollama"><a class="anchor" href="#_ollama"></a>Ollama</h3>
+<div class="paragraph">
+<p>Supports any model provided by <a href="https://ollama.com/">Ollama</a> server.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Ollama embeddings configuration options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-ollama-url"></a><a href="#embeddings-ollama-url"><code>embeddings.ollama.url</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>URL of the Ollama server, including port number, for example, <code><a href="http://localhost:11434" class="bare">http://localhost:11434</a></code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-ollama-model-name"></a><a href="#embeddings-ollama-model-name"><code>embeddings.ollama.model.name</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the embedding model.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-ollama-operation-timeout-ms"></a><a href="#embeddings-ollama-operation-timeout-ms"><code>embeddings.ollama.operation.timeout.ms</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>15000 (15 seconds)</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Maximum amount of time in milliseconds to wait for the embeddings reply.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="sect2">
+<h3 id="_onnx_minilm"><a class="anchor" href="#_onnx_minilm"></a>ONNX MiniLM</h3>
+<div class="paragraph">
+<p>Provides the <a href="https://docs.langchain4j.dev/integrations/embedding-models/in-process">ONNX in-process</a> <code>all-minilm-l6-v2</code> model, which is included directly in the jar file.
+No other configuration besides the general one is needed.</p>
+</div>
+<div class="paragraph">
+<p>This model is especially suited to prototyping and testing, because it does not depend on any external infrastructure or remote requests.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_voyage_ai"><a class="anchor" href="#_voyage_ai"></a>Voyage AI</h3>
+<div class="paragraph">
+<p>Embeddings provided by <a href="https://www.voyageai.com/">Voyage AI</a> models.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Voyage AI embeddings configuration options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-voyageai-access-token"></a><a href="#embeddings-voyageai-access-token"><code>embeddings.voyageai.access.token</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The Voyage AI access token.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-voyageai-model-name"></a><a href="#embeddings-voyageai-model-name"><code>embeddings.voyageai.model.name</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the embedding model.
+The list of Voyage AI models can be found in the <a href="https://docs.voyageai.com/docs/embeddings">Voyage AI Text Embeddings documentation</a>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-voyageai-baseurl"></a><a href="#embeddings-voyageai-baseurl"><code>embeddings.voyageai.baseUrl</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="https://api.voyageai.com/v1/" class="bare">https://api.voyageai.com/v1/</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Base Voyage AI API server.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="embeddings-voyageai-operation-timeout-ms"></a><a href="#embeddings-voyageai-operation-timeout-ms"><code>embeddings.voyageai.operation.timeout.ms</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>15000 (15 seconds)</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Maximum amount of time in milliseconds to wait for the embeddings reply.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>

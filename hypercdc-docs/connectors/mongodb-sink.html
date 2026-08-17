@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperCDC sink connector for MongoDB — HyperCDC</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperCDC</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<main role="main" class="main">
+
+<div class="article-grid">
+<div class="article-cell1">
+<article class="doc">
+        
+                <h1 class="page">HyperCDC sink connector for MongoDB</h1>
+        <div id="preamble">
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="mongodb-sink-overview"><a class="anchor" href="#mongodb-sink-overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The HyperCDC MongoDB sink connector captures change event records from Apache Kafka topics and then transforms the records into MongoDB documents that it writes to collections in a specified MongoDB sink database.
+For applications that require high scalability and fast data retrieval, propagating change data to a cluster-based MongoDB environment, which uses such features as sharding and replica sets to optimize read operations, can significantly improve retrieval performance.
+The connector can process only change events that originate from a HyperCDC relational database connector.</p>
+</div>
+<div class="paragraph">
+<p>For information about the MongoDB versions that are compatible with this connector, see the <a href="#">HyperCDC release overview</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mongodb-sink-architecture"><a class="anchor" href="#mongodb-sink-architecture"></a>Architecture and how it works</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use the HyperCDC MongoDB sink connector to stream change data capture (CDC) event records from Kafka topics to a MongoDB sink database.
+The connector subscribes to Kafka topics that are populated with event messages produced by HyperCDC relational database source connectors.
+Each event message describes a database operation (insert, update, or delete) in a structured format that captures the details of the event.
+The connector transforms incoming change event records into MongoDB document format, and then writes the resulting documents into the target MongoDB collection.</p>
+</div>
+<div class="paragraph">
+<p>After it receives an event, the connector parses the event payload and determines which MongoDB collection to send it to.
+Depending on the event type that is specified in the event payload, the connector then performs one of the following operations in the target collection:</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Event type in payload</th>
+<th class="tableblock halign-left valign-top">Resulting operation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">INSERT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create document</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UPDATE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modify document with the specified identifier.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove document with the specified identifier.</p></td>
+</tr>
+</tbody>
+</table></div>
+<div class="paragraph">
+<p>The connector uses the MongoDB Java driver to interact with the MongoDB database.</p>
+</div>
+<div class="paragraph">
+<p>The mapping between topics and MongoDB collections is derived from the connector configuration.
+The document key serves as a unique identifier for the document, ensuring that updates, inserts, and deletions are propagated to the correct MongoDB document and collection, and that operations are applied in the correct order.</p>
+</div>
+<div class="paragraph">
+<p>Through this process of mapping event messages to MongoDB documents, the connector is able to mirror the state of tables in your relational database to collections in a MongoDB database.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mongodb-sink-limitations"><a class="anchor" href="#mongodb-sink-limitations"></a>Limitations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The HyperCDC MongoDB sink connector has the following limitations:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Relational database / RDBMS source connectors only</dt>
+<dd>
+<p>The MongoDB sink connector can consume only change events that originate from the HyperCDC connectors for the following relational databases:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>MariaDB</p>
+</li>
+<li>
+<p>MySQL</p>
+</li>
+<li>
+<p>Oracle</p>
+</li>
+<li>
+<p>PostgreSQL</p>
+</li>
+<li>
+<p>SQL Server</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The connector cannot process change event messages from any other HyperCDC connectors, including the HyperCDC MongoDB source connector.</p>
+</div>
+</dd>
+<dt class="hdlist1">Schema evolution</dt>
+<dd>
+<p>Although the connector can process basic schema changes, advanced schema evolution scenarios might require manual intervention or specific configuration.
+Because MongoDB is schemaless, it has only a limited ability to handle schema evolution.</p>
+</dd>
+<dt class="hdlist1">Transaction Support</dt>
+<dd>
+<p>The connector processes individual change events in chronological order, based on the order in which operations are committed in the source system.
+Although MongoDB supports transactions, the HyperCDC MongoDB connector does not provide transactional guarantees across multiple CDC events or across multiple documents within a single sink task.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="quick-start"><a class="anchor" href="#quick-start"></a>Quick Start (using Kafka Connect)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deploy a basic instance of the MongoDB sink connector for testing.</p>
+</div>
+<div class="paragraph">
+<div class="title">Prerequisites</div>
+<p>The following components are available and running in your environment:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Kafka cluster</p>
+</li>
+<li>
+<p>Kafka Connect</p>
+</li>
+<li>
+<p>A MongoDB instance.</p>
+</li>
+<li>
+<p>HyperCDC relational database connector</p>
+</li>
+<li>
+<p>HyperCDC MongoDB connector</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Configure and start a HyperCDC source connector, for example, a HyperCDC PostgreSQL Connector, to stream changes from a relational database to Kafka.</p>
+</li>
+<li>
+<p>Configure and start the HyperCDC MongoDB sink connector to consume events that the source connector emits to Kafka, and send them to a MongoDB sink database.</p>
+<div class="paragraph">
+<p>The following example provides a minimal configuration for a HyperCDC MongoDB sink connector.
+Replace the placeholders in the example with the actual values for your environment.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+  "name": "mongodb-sink-connector",
+  "config": {
+    "connector.class": "io.hypercdc.connector.mongodb.sink.MongoDbSinkConnector",
+    "topics.regex": "server1\.inventory\..*",
+    "mongodb.connection.string": "mongodb://localhost:27017",
+    "sink.database": "hypercdc"
+  }
+}</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mongodb-sink-configuration"><a class="anchor" href="#mongodb-sink-configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The MongoDB sink connector accepts a variety of configuration options, as described in following tables.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Required Kafka Connect sink connector configuration properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>connector.class</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must be set to <code>io.hypercdc.connector.mongodb.sink.MongoDbSinkConnector</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>tasks.max</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>1</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Maximum number of tasks.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>topics</code> or <code>topics.regex</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>List of Kafka topics to consume from.
+If you set this value to <code>topics.regex</code>, the connector consumes from all topics that match the regular expression.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Required MongoDB connection properties</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="mongodb-sink-property-connection-string"></a><a href="#mongodb-sink-property-connection-string"><code>mongodb.connection.string</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>MongoDB connection string (URI) that the sink uses to connect to MongoDB.
+This URI follows the standard MongoDB connection string format.</p>
+</div>
+<div class="paragraph">
+<p>Example: <code>mongodb://localhost:27017/?replicaSet=my-replica-set</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="mongodb-sink-property-sink-database"></a><a href="#mongodb-sink-property-sink-database"><code>sink.database</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No default value</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the target MongoDB database.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Sink behavior configuration</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="mongodb-sink-property-collection-naming-strategy"></a><a href="#mongodb-sink-property-collection-naming-strategy"><code>collection.naming.strategy</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>io.hypercdc.sink.naming.DefaultCollectionNamingStrategy</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies the strategy that the connector uses to derive the name of the target MongoDB collection from the name of the Kafka topic.</p>
+</div>
+<div class="paragraph">
+<p>Specify one of the following values:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>io.hypercdc.sink.naming.DefaultCollectionNamingStrategy</code></dt>
+<dd>
+<p>The connector takes the table name directly from the topic name, replacing dot (period) characters in the name of the source topic with underscores.</p>
+</dd>
+<dt class="hdlist1">Custom implementation</dt>
+<dd>
+<p>You can provide your own <code>CollectionNameStrategy</code> implementation.</p>
+</dd>
+</dl>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="mongodb-sink-property-collection-name-format"></a><a href="#mongodb-sink-property-collection-name-format"><code>collection.name.format</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>${topic}</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Template for deriving the target collection name from the Kafka topic name.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="mongodb-sink-property-column-naming-strategy"></a><a href="#mongodb-sink-property-column-naming-strategy"><code>column.naming.strategy</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>io.hypercdc.sink.naming.DefaultColumnNamingStrategy</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Specifies the strategy that the connector uses to name columns in the target collection.</p>
+</div>
+<div class="paragraph">
+<p>Specify one of the following values:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>io.hypercdc.sink.naming.DefaultColumnNamingStrategy</code></dt>
+<dd>
+<p>Use the original field name as the column name.</p>
+</dd>
+<dt class="hdlist1">Custom implementation</dt>
+<dd>
+<p>Specify a custom <code>CollectionNameStrategy</code> implementation.</p>
+</dd>
+</dl>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Common sink options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="mongodb-sink-property-field-include-list"></a><a href="#mongodb-sink-property-field-include-list"><code>field.include.list</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em>empty string</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>An optional, comma-separated list of field names that match the fully-qualified names of fields to include from the change event value.
+Fully-qualified names for fields are of the form <code><em>fieldName</em></code> or <code><em>topicName</em>:<em>fieldName</em></code>.</p>
+</div>
+<div class="paragraph">
+<p>If you include this property in the configuration, do not set the <code>field.exclude.list</code> property.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="mongodb-sink-property-field-exclude-list"></a><a href="#mongodb-sink-property-field-exclude-list"><code>field.exclude.list</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em>empty string</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>An optional, comma-separated list of field names that match the fully-qualified names of fields to exclude from the change event value.
+Fully-qualified names for fields are of the form <code><em>fieldName</em></code> or <code><em>topicName</em>:<em>fieldName</em></code>.</p>
+</div>
+<div class="paragraph">
+<p>If you include this property in the configuration, do not set the <code>field.include.list</code> property.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="mongodb-sink-property-batch-size"></a><a href="#mongodb-sink-property-batch-size"><code>batch.size</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>2048</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Maximum number of records to write in a single batch.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mongodb-sink-examples"><a class="anchor" href="#mongodb-sink-examples"></a>Example configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following example shows how you might configure the connector to read change events from three specific topics from the <code>dbserver1.inventory</code> database to modify a collection in the MongoDB sink database named <code>hypercdc</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "name": "mongodb-sink-connector",
+    "config": {
+        "connector.class": "io.hypercdc.connector.mongodb.sink.MongoDbSinkConnector",
+        "topics": "dbserver1.inventory.customers,dbserver1.inventory.orders,dbserver1.inventory.products",
+        "mongodb.connection.string": "mongodb://localhost:27017",
+        "sink.database": "hypercdc"
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mongodb-sink-monitoring"><a class="anchor" href="#mongodb-sink-monitoring"></a>Monitoring</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This release of the connector does not expose any metrics.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mongodb-sink-key-field-mapping"><a class="anchor" href="#mongodb-sink-key-field-mapping"></a>Key field mapping</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When the connector processes events, it maps data to specific fields in the target MongoDB document.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Keys from HyperCDC change events, such as Kafka message keys, are mapped to the MongoDB <code>_id</code> field by default.</p>
+</li>
+<li>
+<p>Values are mapped into MongoDB documents.</p>
+</li>
+<li>
+<p>Updates and deletes are resolved based on the key field mapping.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following example shows an event key in a Kafka topic:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "userId": 1,
+    "orderId": 1
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Based on the mapping logic, the preceding key is mapped to the <code>_id</code> field in a MongoDB document, as showin in the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "_id": {
+        "userId": 1,
+        "orderId": 1
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="mongodb-sink-cloudevents"><a class="anchor" href="#mongodb-sink-cloudevents"></a>Using CloudEvents with HyperCDC MongoDB Sink Connector</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The HyperCDC MongoDB sink connector can consume records serialized as CloudEvents.
+HyperCDC can emit change events in CloudEvents format, so that the event payload is encapsulated in a standardized envelope.</p>
+</div>
+<div class="paragraph">
+<p>When you enable CloudEvents on the source connector, the MongoDB sink connector parses the CloudEvents envelope.</p>
+</div>
+<div class="paragraph">
+<p>The actual HyperCDC event payload is extracted from the data section.</p>
+</div>
+<div class="paragraph">
+<p>The event is then applied to the target MongoDB collection, following the standard insert, update, or delete semantics.</p>
+</div>
+<div class="paragraph">
+<p>This process makes it possible to integrate HyperCDC with broader event-driven systems while still persisting the resulting events in MongoDB.</p>
+</div>
+<div class="table-container"><table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. CloudEvents sink options</caption>
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a id="mongodb-sink-property-cloud-events"></a><a href="#mongodb-sink-property-cloud-events"><code>cloud.events.schema.name.pattern</code></a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>.*CloudEvents\.Envelope$</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Regular expression pattern to identify CloudEvents messages by matching the schema name with this pattern.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</article>
+</div>
+<div class="article-cell2">
+</div>
+</div>
+
+<div id="toc-rightbar"></div>    
+</main>
+</div>
+</body>
+</html>
