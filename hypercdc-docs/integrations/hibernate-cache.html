@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,31 +28,25 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">Hibernate Second-Level Cache Invalidation</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">Hibernate Second-Level Cache Invalidation</h1>
         <div id="preamble">
 <div class="sectionbody">
 
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>This feature is currently in incubating state, i.e. exact semantics, configuration options, and extensibility points may change in future revisions based on feedback.
 Please share your experiences when using this extension.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -150,21 +152,19 @@ The extension, which is based on the <a href="quarkus-hypercdc-engine-extension.
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The preceding example shows the <code>pom.xml</code> updates required to use the extension with a PostgreSQL database.
 For other databases, replace references to the JDBC driver (<code>quarkus-jdbc-postgresql</code>) and HyperCDC connector extension (<code>hypercdc-quarkus-postgres</code>) to specify the corresponding artifacts for your database.
 For example, if you use a MySQL database, replace those entries with <code>quarkus-jdbc-mysql</code> and <code>hypercdc-quarkus-mysql</code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -229,20 +229,18 @@ The extension only needs to process changes that occur while the application is 
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>You can override automatically configured defaults by changing the values of  <code>quarkus.hypercdc.*</code> properties, or by implementing a <code>HyperCDCConfigurationEnhancer</code>.
 See <a href="#overriding-configuration">Overriding Configuration</a> for details.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -311,22 +309,20 @@ This is a safe approach, because it does not load entities through dynamic fetch
 <p>When a region is evicted, Hibernate ORM reloads all entities of that type from the database on subsequent access.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Region-level eviction is appropriate for most deployments.
 In some cases you might want to specify a custom eviction strategy to provide more control over which entities to evict.
 For example, you might want the application to evict only a single entity, based on the value of the primary key.
 For information about how to implement a custom <code>HyperCDCEvictionStrategy</code>, see <a href="#custom-eviction-strategy">Custom Eviction Strategy</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -553,22 +549,20 @@ The original configuration is passed as an argument.</td>
 </ol>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Cache invalidation applies <strong>eventual consistency</strong> semantics.
 After a transaction is committed in the database, there is a short interval before the change event is processed.
 After the event is processed, the cache is invalidated.
 In most cases, this delay is insignificant (typically sub-second).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -603,14 +597,8 @@ This can be mitigated by configuring persistent schema history storage.</p>
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

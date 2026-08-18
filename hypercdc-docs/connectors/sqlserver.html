@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,29 +28,23 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC connector for SQL Server</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC connector for SQL Server</h1>
         <div id="preamble">
 <div class="sectionbody">
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
-<p>Want to help us further hone and improve it? <a href="#">Learn how</a>.</p>
+<p>Want to help us further hone and improve it? <a href="/docs/contribute/">Learn how</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 
 <div class="paragraph">
 <p>The HyperCDC SQL Server connector captures row-level changes that occur in the schemas of a SQL Server database.</p>
@@ -89,19 +91,17 @@ As the connector reads changes and produces events, it periodically records the 
 If the connector stops for any reason (including communication failures, network problems, or crashes), after a restart the connector resumes reading the SQL Server <em>CDC</em> tables from the last point that it read.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Offsets are committed periodically.
 They are not committed at the time that a change event occurs.
 As a result, following an outage, duplicate events might be generated.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Fault tolerance also applies to snapshots.
 That is, if the connector stops during a snapshot, the connector begins a new snapshot when it restarts.</p>
@@ -151,21 +151,19 @@ The level of the lock is determined by the <a href="#sqlserver-property-snapshot
 The connector persists this information in its internal database schema history topic.
 The schema history provides information about the structure that is in effect when a change event occurs.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>By default, the connector captures the schema of every table in the database that is in capture mode, including tables that are not configured for capture.
 If tables are not configured for capture, the initial snapshot captures only their structure; it does not capture any table data.
 For more information about why snapshots persist schema information for tables that you did not include in the initial snapshot, see <a href="#understanding-why-initial-snapshots-capture-the-schema-history-for-all-tables">Understanding why initial snapshots capture the schema for all tables</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Release the locks obtained in Step 3, if necessary.
@@ -413,20 +411,18 @@ For information about capturing data from a new table that has undergone structu
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
 For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Removing offsets should be performed only by advanced users who have experience in manipulating internal Kafka Connect data.
 This operation is potentially destructive, and should be performed only as a last resort.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Apply the following changes to the connector configuration:</p>
@@ -436,19 +432,17 @@ This operation is potentially destructive, and should be performed only as a las
 <p>(Optional) Set the value of <a href="#sqlserver-property-database-history-store-only-captured-tables-ddl"><code>schema.history.internal.store.only.captured.tables.ddl</code></a> to <code>false</code>.
 This setting causes the snapshot to capture the schema for all tables, and guarantees that, in the future, the connector can reconstruct the schema history for all tables.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Snapshots that capture the schema for all tables require more time to complete.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Add the tables that you want the connector to capture to <a href="#sqlserver-property-table-include-list"><code>table.include.list</code></a>.</p>
@@ -558,20 +552,18 @@ You can then initiate an incremental snapshot to enable the connector to synchro
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
 For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Removing offsets should be performed only by advanced users who have experience in manipulating internal Kafka Connect data.
 This operation is potentially destructive, and should be performed only as a last resort.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Set values for properties in the connector configuration as described in the following steps:</p>
@@ -616,20 +608,18 @@ After the snapshot completes, you can optionally trigger an incremental snapshot
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
 For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Removing offsets should be performed only by advanced users who have experience in manipulating internal Kafka Connect data.
 This operation is potentially destructive, and should be performed only as a last resort.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Edit the <a href="#sqlserver-property-table-include-list"><code>table.include.list</code></a> to add the tables that you want to capture.</p>
@@ -797,12 +787,11 @@ After the snapshot completes, the connector resumes streaming.</p>
 <div class="sect2">
 <h3 id="sqlserver-incremental-snapshots"><a class="anchor" href="#sqlserver-incremental-snapshots"></a>Incremental snapshots</h3>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="title">SQL Server collations</div>
 <div class="paragraph">
 <p>Each SQL Server server or database is configured to use a specific <a href="https://learn.microsoft.com/en-us/sql/relational-databases/collations/collation-and-unicode-support?view=sql-server-ver16#Collation_Defn">collation</a>, which determines how character data is stored, sorted, compared, and displayed.
@@ -814,10 +803,9 @@ To protect against lost data during an ad hoc snapshot, set the value of the <co
 <div class="paragraph">
 <p>For more information about using the <code>sendStringParametersAsUnicode</code> property, see the <a href="https://learn.microsoft.com/en-us/sql/connect/jdbc/setting-the-connection-properties?view=sql-server-ver16">SQL Server connection properties documentation</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>To provide flexibility in managing snapshots, HyperCDC includes a supplementary snapshot mechanism, known as <em>incremental snapshotting</em>.
 Incremental snapshots rely on the HyperCDC mechanism for <a href="../configuration/signalling.html#sending-signals-to-a-hypercdc-connector" class="xref page">sending signals to a HyperCDC connector</a>.
@@ -893,12 +881,11 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 <p>The connector repeats the process for each snapshot chunk.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To enable HyperCDC to perform incremental snapshots, you must grant the connector permission to write to the signaling table.</p>
 </div>
@@ -906,10 +893,9 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 <p>Write permission is unnecessary only for connectors that can be configured to perform read-only incrementals snapshots
 (<a href="#mariadb-read-only-incremental-snapshots">MariaDB</a>, <a href="#mysql-read-only-incremental-snapshots">MySQL</a>, or <a href="#postgresql-read-only-incremental-snapshots">PostgreSQL</a>).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Currently, you can use either of the following methods to initiate an incremental snapshot:</p>
 </div>
@@ -924,19 +910,17 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 </ul>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC connector for SQL Server does not support schema changes while an incremental snapshot is running.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect3">
 <h4 id="sqlserver-triggering-an-incremental-snapshot"><a class="anchor" href="#sqlserver-triggering-an-incremental-snapshot"></a>Triggering an incremental snapshot</h4>
 <div class="paragraph">
@@ -962,20 +946,18 @@ The <code>data-collections</code> array for an incremental snapshot signal has n
 If the <code>data-collections</code> array is empty, HyperCDC interprets the empty array to mean that no action is required, and it does not perform a snapshot.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the name of a table that you want to include in a snapshot contains a dot (<code>.</code>), a space, or some other non-alphanumeric character, you must escape the table name in double quotes.
 For example, to include a table that exists in the <code><strong>public</strong></code> schema in the <code><strong>db1</strong></code> database, and that has the name <code><strong>My.Table</strong></code>, use the following format: <code><strong>"db1.public.\"My.Table\""</strong></code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -1156,12 +1138,11 @@ VALUES ('ad-hoc-1',
 </div>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Physical row identifiers can change under certain circumstances, which may affect snapshot consistency.
 Oracle <code>ROWID</code> can change during table reorganization operations such as <code>ALTER TABLE MOVE</code>, partition maintenance, or <code>SHRINK SPACE</code> operations.</p>
@@ -1169,10 +1150,9 @@ Oracle <code>ROWID</code> can change during table reorganization operations such
 <div class="paragraph">
 <p>To ensure data consistency, when an incremental snapshot that uses a physical row identifier is in progress, do not perform table maintenance operations, such as table moves, partition management, or shrink operations.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="sqlserver-incremental-snapshots-additional-conditions"><a class="anchor" href="#sqlserver-incremental-snapshots-additional-conditions"></a>Running an ad hoc incremental snapshots with <code>additional-conditions</code></h4>
@@ -1865,12 +1845,11 @@ This sorting order ensures that the changes are replayed by HyperCDC in the same
 If the SQL Server Agent is not running, an ERROR is written in the log: "No maximum LSN recorded in the database; SQL Server Agent is not running".</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The SQL Server Agent running status query requires <code>VIEW SERVER STATE</code> server permission.
 If you don’t want to grant this permission to the configured user, you can choose to configure your own query through the <code>database.sqlserver.agent.status.query</code> property.
@@ -1879,10 +1858,9 @@ here <a href="https://dba.stackexchange.com/questions/62230/what-minimum-permiss
 or here <a href="https://sqlquantumleap.com/2018/02/15/safely-and-easily-use-high-level-permissions-without-granting-them-to-anyone-server-level/">Safely and Easily Use High-Level Permissions Without Granting Them to Anyone: Server-level</a>.
 The configuration of the query property would look like: <code>database.sqlserver.agent.status.query=SELECT [#db].func_is_sql_server_agent_running()</code> - you need to use <code>[#db]</code> as placeholder for the database name.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="_limitations"><a class="anchor" href="#_limitations"></a>Limitations</h3>
@@ -2058,35 +2036,31 @@ Because the structured representation presents data in JSON or Avro format, cons
 </dl>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When the connector is configured to capture a table, it stores the history of the table’s schema changes not only in the schema change topic, but also in an internal database schema history topic.
 The internal database schema history topic is for connector use only and it is not intended for direct use by consuming applications.
 Ensure that applications that require notifications about schema changes consume that information only from the schema change topic.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The format of the messages that a connector emits to its schema change topic is in an incubating state and can change without notice.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>HyperCDC emits a message to the schema change topic when the following events occur:</p>
 </div>
@@ -2377,22 +2351,20 @@ It has the structure described by the previous <code>schema</code> field and it 
 For more information, see <a href="#sqlserver-topic-names">topic names</a>.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The SQL Server connector ensures that all Kafka Connect schema names adhere to the <a href="http://avro.apache.org/docs/current/spec.html#names">Avro schema name format</a>. This means that the logical server name must start with a Latin letter or an underscore, that is, a-z, A-Z, or _. Each remaining character in the logical server name and each character in the database and table names must be a Latin letter, a digit, or an underscore, that is, a-z, A-Z, 0-9, or \_. If there is an invalid character it is replaced with an underscore character.</p>
 </div>
 <div class="paragraph">
 <p>This can lead to unexpected conflicts if the logical server name, a database name, or a table name contains invalid characters, and the only characters that distinguish names from one another are invalid and thus replaced with underscores.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect3">
 <h4 id="sqlserver-change-event-keys"><a class="anchor" href="#sqlserver-change-event-keys"></a>Change event keys</h4>
 <div class="paragraph">
@@ -2488,36 +2460,32 @@ In this example, the key contains a single <code>id</code> field whose value is 
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When HyperCDC emits a change event record, it sets the message key for each record to the name of the primary key or unique key column of the source table.
 HyperCDC must be able to read these columns to function properly.
 If you set the <a href="#sqlserver-property-column-include-list"><code>column.include.list</code></a> or <a href="#sqlserver-property-column-exclude-list"><code>column.exclude.list</code></a> properties in the connector configuration,
 be sure that your settings permit the connector to capture the required primary key or unique key columns.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the table does not have a primary or unique key, then the change event’s key is null. This makes sense since the rows in a table without a primary or unique key constraint cannot be uniquely identified.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="sqlserver-change-event-values"><a class="anchor" href="#sqlserver-change-event-values"></a>Change event values</h4>
@@ -2711,7 +2679,7 @@ be sure that your settings permit the connector to capture the required primary 
       "id": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="6903060107470d060c290c11080419050c47061b0e">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="81ebeee9efafe5eee4c1e4f9e0ecf1ede4afeef3e6">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -2871,13 +2839,13 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
       "id": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="6e04010600400a010b2e0b160f031e020b40011c09">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aac0c5c2c484cec5cfeacfd2cbc7dac6cf84c5d8cd">[email&nbsp;protected]</a>"
     },
     "after": {
       "id": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="6709081502170b1e27021f060a170b0249081500">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="016f6e7364716d78416479606c716d642f6e7366">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -2911,13 +2879,13 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
 <dd>
 <p>An optional field that specifies the state of the row before the event occurred.
 In an <em>update</em> event value, the <code>before</code> field contains a field for each table column and the value that was in that column before the database commit.
-In this example, the <code>email</code> value is <code><a href="#" class="__cf_email__" data-cfemail="650f0a0d0b4b010a0025001d04081509004b0a1702">[email&nbsp;protected]</a></code>.</p>
+In this example, the <code>email</code> value is <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d5bfbabdbbfbb1bab095b0adb4b8a5b9b0fbbaa7b2">[email&nbsp;protected]</a></code>.</p>
 </dd>
 <dt class="hdlist1"><code>after</code></dt>
 <dd>
 <p>An optional field that specifies the state of the row after the event occurred.
 You can compare the <code>before</code> and <code>after</code> structures to determine what the update to this row was.
-In the example, the <code>email</code> value is now <code><a href="#" class="__cf_email__" data-cfemail="e58b8a978095899ca5809d8488958980cb8a9782">[email&nbsp;protected]</a></code>.</p>
+In the example, the <code>email</code> value is now <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1f71706d7a6f73665f7a677e726f737a31706d78">[email&nbsp;protected]</a></code>.</p>
 </dd>
 <dt class="hdlist1"><code>source</code></dt>
 <dd>
@@ -2977,19 +2945,17 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Updating the columns for a row’s primary/unique key changes the value of the row’s key. When a key changes, HyperCDC outputs <em>three</em> events: a <em>delete</em> event and a <a href="#sqlserver-tombstone-events">tombstone event</a> with the old key for the row, followed by a <em>create</em> event with the new key for the row.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect4">
 <h5 id="sqlserver-delete-events"><a class="anchor" href="#sqlserver-delete-events"></a><em>delete</em> events</h5>
@@ -3006,7 +2972,7 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
       "id": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="7f11100d1a0f13063f1a071e120f131a51100d18">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5a3435283f2a36231a3f223b372a363f7435283d">[email&nbsp;protected]</a>"
     },
     "after": null,
     "source": {
@@ -3112,21 +3078,19 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
 <p>HyperCDC can generate events that represent transaction boundaries and that enrich data change event messages.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="title">Limits on when HyperCDC receives transaction metadata</div>
 <div class="paragraph">
 <p>HyperCDC registers and receives metadata only for transactions that occur after you deploy the connector.
 Metadata for transactions that occur before you deploy the connector is not available.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Database transactions are represented by a statement block that is enclosed between the <code>BEGIN</code> and <code>END</code> keywords.
 HyperCDC generates transaction boundary events for the <code>BEGIN</code> and <code>END</code> delimiters in every transaction.
@@ -3158,22 +3122,20 @@ If the data source does not provide HyperCDC with the event time, then the field
 </dl>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When the HyperCDC SQL Server connector captures changes from an Always On read-only replica, it does not reliably emit an <code>END</code> transaction marker immediately after a transaction completes.
 In other configurations, the connector can query <a href="https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/change-data-capture-sys-dm-cdc-log-scan-sessions">sys.dm_cdc_log_scan_sessions</a> to confirm that the most recent log scan session has concluded, but this dynamic management view (DMV) is not available for Always On read-only replicas.
 When HyperCDC captures changes from an Always On read-only replica, the connector emits a transaction <code>END</code> event only after it detects the arrival of the first event from a subsequent transaction in the change tables.
 This behavior can cause HyperCDC to delay delivery of the <code>END</code> markers in environments with low or infrequent traffic.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The following example shows a typical transaction boundary message:</p>
 </div>
@@ -3637,12 +3599,11 @@ Passing the default value helps though with satisfying the compatibility rules w
 </tbody>
 </table></div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Because nanoseconds since the Unix epoch are stored in a signed <code>INT64</code>, the representable range of <code>io.hypercdc.time.NanoTimestamp</code> is approximately <strong><code>1677-09-21T00:12:43Z</code> to <code>2262-04-11T23:47:16Z</code></strong>.
 Values outside this range — for example a <code>9999-12-31</code> end-of-time sentinel stored in a <code>DATETIME2(7)</code> column — cannot be represented and cause the connector to throw an <code>IllegalArgumentException</code> from the value converter.
@@ -3651,10 +3612,9 @@ The exception is routed through the standard <code>event.processing.failure.hand
 <div class="paragraph">
 <p>If a column may legitimately contain values outside the representable range, declare it as <code>DATETIME2(0 - 6)</code> so that HyperCDC emits <code>Timestamp</code> (millisecond) or <code>MicroTimestamp</code> (microsecond) instead, or set <code>time.precision.mode=isostring</code> to capture the value as an ISO 8601 string.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>When the <code>time.precision.mode</code> configuration property is set to <code>connect</code>, then the connector will use the predefined Kafka Connect logical types. This may be useful when consumers only know about the built-in Kafka Connect logical types and are unable to handle variable-precision time values. On the other hand, since SQL Server supports tenth of microsecond precision, the events generated by a connector with the <code>connect</code> time precision mode will <strong>result in a loss of precision</strong> when the database column has a <em>fractional second precision</em> value greater than 3:</p>
 </div>
@@ -4079,19 +4039,17 @@ If SSL is not enabled for a SQL Server database, or if you want to connect to th
 </div>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 Do not enable automatic trust of server certificates in production environments.
 If you disable validation, the connector skips certificate chain and host name validation, which can leave connections vulnerable to man‑in‑the‑middle attacks.
 Use an explicit trust configuration only as a convenience in testing and development environments
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 </ul>
 </div>
@@ -4118,17 +4076,15 @@ System stored procedures can be run by using SQL Server Management Studio, or by
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 The SQL Server CDC feature processes changes that occur in user-created tables only. You cannot enable CDC on the SQL Server <code>master</code> database.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
@@ -4308,7 +4264,7 @@ If the result is empty, verify that the user has privileges to access both the c
 <h3 id="sqlserver-on-azure"><a class="anchor" href="#sqlserver-on-azure"></a>SQL Server on Azure</h3>
 <div class="paragraph">
 <p>The HyperCDC SQL Server connector can be used with SQL Server on Azure.
-Refer to <a href="https://learn.microsoft.com/en-us/samples/azure-samples/azure-sql-db-change-stream-hypercdc/azure-sql%2D%2Dsql-server-change-stream-with-hypercdc/">this example</a> for configuring CDC for SQL Server on Azure and using it with HyperCDC.</p>
+Refer to <a href="https://learn.microsoft.com/en-us/samples/azure-samples/azure-sql-db-change-stream-debezium/azure-sql%2D%2Dsql-server-change-stream-with-debezium/">this example</a> for configuring CDC for SQL Server on Azure and using it with HyperCDC.</p>
 </div>
 </div>
 <div class="sect2">
@@ -4369,19 +4325,17 @@ If you notice performance problems, there are SQL Server capture agent settings 
 If you experience performance issues while running the capture job agent, adjust capture jobs settings to reduce CPU load by running the <a href="https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sys-sp-cdc-change-job-transact-sql?view=latest"><code>sys.sp_cdc_change_job</code></a> stored procedure and supplying new values.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Specific guidance about how to configure SQL Server capture job agent parameters is beyond the scope of this documentation.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The following parameters are the most significant for modifying capture agent behavior for use with the HyperCDC SQL Server connector:</p>
 </div>
@@ -4474,7 +4428,7 @@ If the <code>continuous</code> parameter is set to <code>1</code>, the job pause
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Download the HyperCDC <a href="https://repo1.maven.org/maven2/io/hypercdc/hypercdc-connector-sqlserver/3.6.1.Final/hypercdc-connector-sqlserver-3.6.1.Final-plugin.tar.gz">SQL Server connector plug-in archive</a></p>
+<p>Download the HyperCDC <a href="https://repo1.maven.org/maven2/io/debezium/debezium-connector-sqlserver/3.6.1.Final/debezium-connector-sqlserver-3.6.1.Final-plugin.tar.gz">SQL Server connector plug-in archive</a></p>
 </li>
 <li>
 <p>Extract the files into your Kafka Connect environment.</p>
@@ -4491,25 +4445,23 @@ If the <code>continuous</code> parameter is set to <code>1</code>, the job pause
 </ol>
 </div>
 <div class="paragraph">
-<p>If you are working with immutable containers, see <a href="https://quay.io/organization/hypercdc">HyperCDC’s container images</a> for Apache Kafka and Kafka Connect.
+<p>If you are working with immutable containers, see <a href="https://quay.io/organization/debezium">HyperCDC’s container images</a> for Apache Kafka and Kafka Connect.
 You can pull the official <a href="https://hub.docker.com/_/microsoft-mssql-server">container images for Microsoft SQL Server on Linux</a> from Docker Hub.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC container images that you obtain from <code>quay.io</code> do not undergo rigorous testing or security analysis, and are provided for testing and evaluation purposes only.
 These images are not intended for use in production environments.
 To mitigate risk in production deployments, deploy only containers that are actively maintained by trusted vendors, and thoroughly tested for potential vulnerabilities.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>You can also <a href="../operations/openshift.html" class="xref page">run HyperCDC on Kubernetes and OpenShift</a>.</p>
 </div>
@@ -4857,21 +4809,19 @@ The prefix should be unique across all other connectors, since it is used as the
 Only alphanumeric characters, hyphens, dots and underscores must be used in the database server logical name.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Do not change the value of this property.
 If you change the name value, after a restart, instead of continuing to emit events to the original topics, the connector emits subsequent events to topics whose names are based on the new value.
 The connector is also unable to recover its database schema history topic.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -4957,20 +4907,18 @@ If you include this property in the configuration, do not also set the <code>tab
 Fully-qualified names for columns are of the form <em>schemaName</em>.<em>tableName</em>.<em>columnName</em>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Each change event record that HyperCDC emits for a table includes an event key that contains fields for each column in the table’s primary key or unique key.
 To ensure that event keys are generated correctly, if you set this property, be sure to explicitly list the primary key columns of any captured tables.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>To match the name of a column, HyperCDC applies the regular expression that you specify as an <em>anchored</em> regular expression.
 That is, the specified expression is matched against the entire name string of the column; it does not match substrings that might be present in a column name.
@@ -5460,17 +5408,15 @@ After the snapshot completes, the connector begins to stream event records for s
 After a restart, the connector runs a snapshot that rebuilds the topic from the source tables.
 You can also set the property to periodically prune a database schema history topic that experiences unexpected growth.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 Do not use this mode to perform a snapshot if schema changes were committed to the database after the last connector shutdown.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1"><code>when_needed</code></dt>
 <dd>
@@ -5818,12 +5764,11 @@ As a result, after a connector restart, because the offset value is stale, the c
 Because the offset values in Kafka remain current, fewer change events must be re-sent after a connector restarts.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Heartbeats are only emitted during polling cycles.
 That is, in a HyperCDC environment, the actual interval between sending heartbeat messages is jointly controlled by the settings of the <code>heartbeat.interval.ms</code> and <a href="#sqlserver-property-poll-interval-ms"><code>poll.interval.ms</code></a> properties.
@@ -5831,10 +5776,9 @@ The actual frequency for sending heartbeat messages is based on the lower of the
 To prevent delays in sending heartbeat messages, reducing their effectiveness, set this property to a value that is greater than or equal to the value of <code>poll.interval.ms</code>.
 For example, if you set <code>poll.interval.ms</code> to <code>100</code>, set <code>heartbeat.interval.ms</code> to <code>5000</code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -5903,17 +5847,15 @@ When set to <code>true</code>, the connector collects the following statistics:<
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Currently only <code>MilliSecondsBehindSource</code> metric supports collecting quantiles.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The statistics are computed using a probabilistic data structure (DDSketch) that provides approximate quantile values with 1% relative accuracy.
 When set to <code>false</code>, the connector does not collect quantiles, and the quantile JMX metrics return <code>null</code> values.
@@ -6001,19 +5943,17 @@ This list identifies the tables for which you want to specify custom snapshot qu
 <p><code>"snapshot.select.statement.overrides": "mydb.inventory.products,mydb.customers.orders"</code></p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 If the fully qualified database, schema, or table name contains special characters, such as spaces, square brackets (<code>[</code> or <code>]</code>), or period characters (<code>.</code>),
 enclose the string in double quotes to prevent the connector from interpreting the special characters as delimiters.
 Double quotes around table names are optional if the fully qualified table name does not include spaces or special characters.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1">Secondary properties</dt>
 <dd>
@@ -6026,19 +5966,17 @@ The <code>SELECT</code> statement determines which rows from the table to includ
 <p><code>snapshot.select.statement.overrides.mydb.customers.orders</code></p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If a table is listed in the main property, but its corresponding secondary property is missing, the connector logs a warning and uses the default snapshot behavior for that table.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1">Example configuration</dt>
 <dd>
@@ -6154,12 +6092,11 @@ The collection name is case-sensitive.</p>
 If you configure only a single signal table for a multi-task connector, signals might not be processed correctly for all databases.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Support for using multiple signaling tables with the HyperCDC SQL Server connector is a Technology Preview feature.
 Technology Preview features are not supported with Red&nbsp;Hat production service level agreements (SLAs) and might not be functionally complete.
@@ -6167,10 +6104,9 @@ Red&nbsp;Hat does not recommend using them in production.
 These features provide early access to upcoming product features, enabling customers to test functionality and provide feedback during the development process.
 For more information about the support scope of Red&nbsp;Hat Technology Preview features, see <a href="https://access.redhat.com/support/offerings/techpreview/">Technology Preview Features Support Scope</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -6413,12 +6349,11 @@ To enable parallel initial snapshots, set the property to a value greater than 1
 In a parallel initial snapshot, the connector processes multiple tables concurrently.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When you enable parallel initial snapshots, the threads that perform each table snapshot can require varying times to complete their work.
 If a snapshot for one table requires significantly more time to complete than the snapshots for other tables, threads that have completed their work sit idle.
@@ -6428,10 +6363,9 @@ After the snapshot completes, the connector is unable to close the connection, r
 <div class="paragraph">
 <p>If you experience this problem, revert the value of <code>snapshot.max.threads</code> to <code>1</code>, and retry the snapshot.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -6493,19 +6427,17 @@ To customize the way that the connector masks configuration key values, set this
 A string of asterisks replaces the original values, for example,  <code>********</code>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The pattern that you specify for the <code>custom.sanitize.pattern</code> property overrides the default HyperCDC masking pattern; the specified value does not extend or augment the default pattern.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -6913,21 +6845,19 @@ schema.history.internal.consumer.ssl.key.password=test1234</code></pre>
 <p>The name of the Kafka topic that the connector monitors for ad hoc signals.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If <a href="../configuration/topic-auto-create-config.html#topic-auto-create-config" class="xref page">automatic topic creation</a> is disabled, you must manually create the required signaling topic.
 A signaling topic is required to preserve signal ordering.
 The signaling topic must have a single partition.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -7058,67 +6988,59 @@ As a HyperCDC user, you must coordinate tasks with the SQL Server database opera
 <p>There are advantages and disadvantages to using each type of procedure.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Whether you use the online or offline update method, you must complete the entire schema update process before you apply subsequent schema updates on the same source table.
 The best practice is to execute all DDLs in a single batch so the procedure can be run only once.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Some schema changes are not supported on source tables that have CDC enabled.
 For example, if CDC is enabled on a table, SQL Server does not allow you to change the schema of the table if you renamed one of its columns or changed the column type.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>After you change a column in a source table from <code>NULL</code> to <code>NOT NULL</code> or vice versa, the SQL Server connector cannot correctly capture the changed information until after you create a new capture instance.
 If you do not create a new capture table after a change to the column designation, change event records that the connector emits do not correctly indicate whether the column is optional.
 That is, columns that were previously defined as optional (or <code>NULL</code>) continue to be, despite now being defined as <code>NOT NULL</code>.
 Similarly, columns that had been defined as required (<code>NOT NULL</code>), retain that designation, although they are now defined as <code>NULL</code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>After you rename a table using <code>sp_rename</code> function, it will continue to emit changes under the old source table name until the connector is restarted.
 Upon restart of the connector, it will emit changes under the new source table name.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="offline-schema-updates"><a class="anchor" href="#offline-schema-updates"></a>Offline schema updates</h3>
 <div class="paragraph">
@@ -7249,7 +7171,7 @@ GO</code></pre>
 <p>Insert new data into the <code>customers</code> table by running the following query:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">INSERT INTO customers(first_name,last_name,email,phone_number) VALUES ('John','Doe','<a href="#" class="__cf_email__" data-cfemail="9ff5f0f7f1b1fbf0fadffae7fef2eff3fab1fcf0f2">[email&nbsp;protected]</a>', '+1-555-123456');
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">INSERT INTO customers(first_name,last_name,email,phone_number) VALUES ('John','Doe','<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a00050204440e050f2a0f120b071a060f44090507">[email&nbsp;protected]</a>', '+1-555-123456');
 GO</code></pre>
 </div>
 </div>
@@ -7280,7 +7202,7 @@ connect_1    | 2019-01-17 10:11:33,719 INFO   ||  Migrating schema to ChangeTabl
       "id": 1005,
       "first_name": "John",
       "last_name": "Doe",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="81ebeee9efafe5eee4c1e4f9e0ecf1ede4afe2eeec">[email&nbsp;protected]</a>",
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a0cacfc8ce8ec4cfc5e0c5d8c1cdd0ccc58ec3cfcd">[email&nbsp;protected]</a>",
       "phone_number": "+1-555-123456"
     },</code></pre>
 </div>
@@ -8188,14 +8110,8 @@ Available when <a href="#sqlserver-property-statistics-metrics-enabled"><code>st
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

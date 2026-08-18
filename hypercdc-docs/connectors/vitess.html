@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC connector for Vitess</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC connector for Vitess</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -97,19 +101,17 @@ configuration property</a> to specify a comma-separated list of table patterns. 
 all tables are copied during the snapshot phase.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Automatic retry of a failed snapshot is expected to be available in a future release.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="vitess-streaming-changes"><a class="anchor" href="#vitess-streaming-changes"></a>Streaming changes</h3>
@@ -179,21 +181,19 @@ all tables are copied during the snapshot phase.</p>
 <p>HyperCDC can generate events that represent transaction boundaries and that enrich data change event messages.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="title">Limits on when HyperCDC receives transaction metadata</div>
 <div class="paragraph">
 <p>HyperCDC registers and receives metadata only for transactions that occur after you deploy the connector.
 Metadata for transactions that occur before you deploy the connector is not available.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>HyperCDC generates transaction boundary events for the <code>BEGIN</code> and <code>END</code> delimiters in every transaction.
 Transaction boundary events contain the following fields:</p>
@@ -564,50 +564,44 @@ It is possible to override the table’s primary key by setting the <a href="#vi
 <p>By default behavior is that the connector streams change event records to <a href="#vitess-topic-names">topics with names that are the same as the event’s originating table</a>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Starting with Kafka 0.10, Kafka can optionally record the event key and value with the <a href="https://kafka.apache.org/documentation.html#upgrade_10_performance_impact"><em>timestamp</em></a> at which the message was created (recorded by the producer) or written to the log by Kafka.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The Vitess connector ensures that all Kafka Connect schema names adhere to the <a href="http://avro.apache.org/docs/current/spec.html#names">Avro schema name format</a>. This means that the logical server name must start with a Latin letter or an underscore, that is, a-z, A-Z, or _. Each remaining character in the logical server name and each character in the schema and table names must be a Latin letter, a digit, or an underscore, that is, a-z, A-Z, 0-9, or \_. If there is an invalid character it is replaced with an underscore character.</p>
 </div>
 <div class="paragraph">
 <p>This can lead to unexpected conflicts if the logical server name, a schema name, or a table name contains invalid characters, and the only characters that distinguish names from one another are invalid and thus replaced with underscores.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The connector doesn’t allow to name columns with the <code>@</code> prefix at the moment. For example, <code>age</code> is a valid column name, and <code>@age</code> is not. The reason is that Vitess vstreamer has a bug that would send events with anonymized column names (e.g. column name <code>age</code> is anonymized to <code>@1</code>). There’s no easy way to differentiate between a legit column name with the <code>@</code> prefix, and the Vitess bug. See more discussion <a href="https://vitess.slack.com/archives/C0PQY0PTK/p1606817216038500">here</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="vitess-change-events-key"><a class="anchor" href="#vitess-change-events-key"></a>Change event keys</h3>
 <div class="paragraph">
@@ -714,33 +708,29 @@ It is possible to override the table’s primary key by setting the <a href="#vi
 </tbody>
 </table></div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Although the <code>column.exclude.list</code> and <code>column.include.list</code> connector configuration properties allow you to capture only a subset of table columns, all columns in a primary or unique key are always included in the event’s key.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the table does not have a primary, then the change event’s key is null. The rows in a table without a primary key constraint cannot be uniquely identified.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="vitess-change-events-value"><a class="anchor" href="#vitess-change-events-value"></a>Change event values</h3>
@@ -941,7 +931,7 @@ It is possible to override the table’s primary key by setting the <a href="#vi
             "id": 1,
             "first_name": "Anne",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="f89996969d93b8969799968b8f9d8ad6978a9f">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="80e1eeeee5ebc0eeefe1eef3f7e5f2aeeff2e7">[email&nbsp;protected]</a>"
         },
         "source": { <i class="conum" data-value="8"></i><b>(8)</b>
             "version": "3.6.1.Final",
@@ -1107,13 +1097,13 @@ In the <code>source</code> object, <code>ts_ms</code> indicates the time that th
             "id": 1,
             "first_name": "Anne",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="3b5a55555e507b55545a55484c5e491554495c">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="90f1fefef5fbd0fefff1fee3e7f5e2beffe2f7">[email&nbsp;protected]</a>"
         },
         "after": { <i class="conum" data-value="2"></i><b>(2)</b>
             "id": 1,
             "first_name": "Anne Marie",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="badbd4d4dfd1fad4d5dbd4c9cddfc894d5c8dd">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6d0c030308062d03020c031e1a081f43021f0a">[email&nbsp;protected]</a>"
         },
         "source": { <i class="conum" data-value="3"></i><b>(3)</b>
             "version": "3.6.1.Final",
@@ -1212,19 +1202,17 @@ In the <code>source</code> object, <code>ts_ms</code> indicates the time that th
 </tbody>
 </table></div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Updating the columns for a row’s primary key changes the value of the row’s key. When a key changes, HyperCDC outputs <em>three</em> events: a <code>DELETE</code> event and a <a href="#vitess-tombstone-events">tombstone event</a> with the old key for the row, followed by an event with the new key for the row. Details are in the next section.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="vitess-primary-key-updates"><a class="anchor" href="#vitess-primary-key-updates"></a>Primary key updates</h3>
@@ -1257,7 +1245,7 @@ as a primary key change. For a primary key change, in place of an <code>UPDATE</
             "id": 1,
             "first_name": "Anne Marie",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="b7d6d9d9d2dcf7d9d8d6d9c4c0d2c599d8c5d0">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="46272828232d06282927283531233468293421">[email&nbsp;protected]</a>"
         },
         "after": null, <i class="conum" data-value="2"></i><b>(2)</b>
         "source": { <i class="conum" data-value="3"></i><b>(3)</b>
@@ -2036,29 +2024,27 @@ MySQL converts <code>TIMESTAMP</code> values to UTC when they are written.</p>
 <h2 id="vitess-deploying-a-connector"><a class="anchor" href="#vitess-deploying-a-connector"></a>Deployment</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>With <a href="http://kafka.apache.org/">Kafka</a> and <a href="https://kafka.apache.org/documentation.html#connect">Kafka Connect</a> installed, the remaining tasks to deploy a HyperCDC Vitess connector are to download the <a href="https://repo1.maven.org/maven2/io/hypercdc/hypercdc-connector-vitess/3.6.1.Final/hypercdc-connector-vitess-3.6.1.Final-plugin.tar.gz">connector’s plug-in archive</a>, extract the JAR files into your Kafka Connect environment, and add the directory with the JAR files to <a href="https://kafka.apache.org/documentation/#connectconfigs">Kafka Connect’s <code>plugin.path</code></a>.
+<p>With <a href="http://kafka.apache.org/">Kafka</a> and <a href="https://kafka.apache.org/documentation.html#connect">Kafka Connect</a> installed, the remaining tasks to deploy a HyperCDC Vitess connector are to download the <a href="https://repo1.maven.org/maven2/io/debezium/debezium-connector-vitess/3.6.1.Final/debezium-connector-vitess-3.6.1.Final-plugin.tar.gz">connector’s plug-in archive</a>, extract the JAR files into your Kafka Connect environment, and add the directory with the JAR files to <a href="https://kafka.apache.org/documentation/#connectconfigs">Kafka Connect’s <code>plugin.path</code></a>.
 You then need to restart your Kafka Connect process to pick up the new JAR files.</p>
 </div>
 <div class="paragraph">
-<p>If you are working with immutable containers, see <a href="https://quay.io/organization/hypercdc">HyperCDC’s container images</a> for Kafka and Kafka Connect with the Vitess connector already installed and ready to run.
+<p>If you are working with immutable containers, see <a href="https://quay.io/organization/debezium">HyperCDC’s container images</a> for Kafka and Kafka Connect with the Vitess connector already installed and ready to run.
 You can also <a href="../operations/openshift.html" class="xref page">run HyperCDC on Kubernetes and OpenShift</a>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC container images that you obtain from <code>quay.io</code> do not undergo rigorous testing or security analysis, and are provided for testing and evaluation purposes only.
 These images are not intended for use in production environments.
 To mitigate risk in production deployments, deploy only containers that are actively maintained by trusted vendors, and thoroughly tested for potential vulnerabilities.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="vitess-example-configuration"><a class="anchor" href="#vitess-example-configuration"></a>Connector configuration example</h3>
 <div class="paragraph">
@@ -2685,20 +2671,18 @@ The prefix should be unique across all other connectors, since it is used as a t
 <p>+</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Do not change the value of this property.
 If you change the name value, after a restart, instead of continuing to emit events to the original topics, the connector emits subsequent events to topics whose names are based on the new value.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -3187,17 +3171,15 @@ When set to <code>true</code>, the connector collects the following statistics:<
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Currently only <code>MilliSecondsBehindSource</code> metric supports collecting quantiles.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The statistics are computed using a probabilistic data structure (DDSketch) that provides approximate quantile values with 1% relative accuracy.
 When set to <code>false</code>, the connector does not collect quantiles, and the quantile JMX metrics return <code>null</code> values.
@@ -3428,19 +3410,17 @@ To customize the way that the connector masks configuration key values, set this
 A string of asterisks replaces the original values, for example,  <code>********</code>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The pattern that you specify for the <code>custom.sanitize.pattern</code> property overrides the default HyperCDC masking pattern; the specified value does not extend or augment the default pattern.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -3628,14 +3608,8 @@ E.g. <code>"3"</code> will be emitted as the value instead of <code>"L"</code> i
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

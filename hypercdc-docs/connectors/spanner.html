@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC connector for Cloud Spanner</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC connector for Cloud Spanner</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -220,19 +224,17 @@
 <p>The default behavior is that the connector streams change event records to <a href="#spanner-topic-names">topics with names that are the same as the event’s originating table</a>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Starting with Kafka 0.10, Kafka can optionally record the event key and value with the <a href="https://kafka.apache.org/documentation.html#upgrade_10_performance_impact"><em>timestamp</em></a> at which the message was created (recorded by the producer) or written to the log by Kafka.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="spanner-change-events-key"><a class="anchor" href="#spanner-change-events-key"></a>Change event keys</h3>
 <div class="paragraph">
@@ -567,7 +569,7 @@ PRIMARY KEY (id);</code></pre>
             "id": 1,
             "first_name": "Anne",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="a2c3ccccc7c9e2cccdc3ccd1d5c7d08ccdd0c5">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fd9c93939896bd93929c938e8a988fd3928f9a">[email&nbsp;protected]</a>"
         },
         "source": { <i class="conum" data-value="8"></i><b>(8)</b>
             "version": "3.6.1.Final",
@@ -783,13 +785,13 @@ In the <code>source</code> object, <code>ts_ms</code> indicates the time that th
             "id": 1,
             "first_name": "Anne",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="9efff0f0fbf5def0f1fff0ede9fbecb0f1ecf9">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a6c7c8c8c3cde6c8c9c7c8d5d1c3d488c9d4c1">[email&nbsp;protected]</a>"
         },
         "after": { <i class="conum" data-value="2"></i><b>(2)</b>
             "id": 1,
             "first_name": "Anne Marie",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="781916161d1338161719160b0f1d0a56170a1f">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d0b1bebeb5bb90bebfb1bea3a7b5a2febfa2b7">[email&nbsp;protected]</a>"
         },
         "source": { <i class="conum" data-value="3"></i><b>(3)</b>
             "version": "3.6.1.Final",
@@ -959,7 +961,7 @@ In the <code>source</code> object, <code>ts_ms</code> indicates the time that th
             "id": 1,
             "first_name": "Anne Marie",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="64050a0a010f240a0b050a171301164a0b1603">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="680906060d0328060709061b1f0d1a46071a0f">[email&nbsp;protected]</a>"
         },
         "after": null, <i class="conum" data-value="2"></i><b>(2)</b>
         "source": { <i class="conum" data-value="3"></i><b>(3)</b>
@@ -1257,29 +1259,27 @@ In the <code>source</code> object, <code>ts_ms</code> indicates the time that th
 <h2 id="spanner-deploying-a-connector"><a class="anchor" href="#spanner-deploying-a-connector"></a>Deployment</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>With <a href="http://kafka.apache.org/">Kafka</a> and <a href="https://kafka.apache.org/documentation.html#connect">Kafka Connect</a> installed, the remaining tasks to deploy a HyperCDC Spanner connector are to download the <a href="https://repo1.maven.org/maven2/io/hypercdc/hypercdc-connector-spanner/3.6.1.Final/hypercdc-connector-spanner-3.6.1.Final-plugin.tar.gz">connector’s plug-in archive</a>, extract the JAR files into your Kafka Connect environment, and add the directory with the JAR files to <a href="https://kafka.apache.org/documentation/#connectconfigs">Kafka Connect’s <code>plugin.path</code></a>.
+<p>With <a href="http://kafka.apache.org/">Kafka</a> and <a href="https://kafka.apache.org/documentation.html#connect">Kafka Connect</a> installed, the remaining tasks to deploy a HyperCDC Spanner connector are to download the <a href="https://repo1.maven.org/maven2/io/debezium/debezium-connector-spanner/3.6.1.Final/debezium-connector-spanner-3.6.1.Final-plugin.tar.gz">connector’s plug-in archive</a>, extract the JAR files into your Kafka Connect environment, and add the directory with the JAR files to <a href="https://kafka.apache.org/documentation/#connectconfigs">Kafka Connect’s <code>plugin.path</code></a>.
 You then need to restart your Kafka Connect process to pick up the new JAR files.</p>
 </div>
 <div class="paragraph">
-<p>If you are working with immutable containers, see <a href="https://quay.io/organization/hypercdc">HyperCDC’s container images</a> for Kafka and Kafka Connect with the Spanner connector already installed and ready to run.
+<p>If you are working with immutable containers, see <a href="https://quay.io/organization/debezium">HyperCDC’s container images</a> for Kafka and Kafka Connect with the Spanner connector already installed and ready to run.
 You can also <a href="../operations/openshift.html" class="xref page">run HyperCDC on Kubernetes and OpenShift</a>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC container images that you obtain from <code>quay.io</code> do not undergo rigorous testing or security analysis, and are provided for testing and evaluation purposes only.
 These images are not intended for use in production environments.
 To mitigate risk in production deployments, deploy only containers that are actively maintained by trusted vendors, and thoroughly tested for potential vulnerabilities.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="spanner-example-configuration"><a class="anchor" href="#spanner-example-configuration"></a>Connector configuration example</h3>
 <div class="paragraph">
@@ -2241,19 +2241,17 @@ To customize the way that the connector masks configuration key values, set this
 A string of asterisks replaces the original values, for example,  <code>********</code>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The pattern that you specify for the <code>custom.sanitize.pattern</code> property overrides the default HyperCDC masking pattern; the specified value does not extend or augment the default pattern.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -2417,7 +2415,7 @@ After the next failure, the connector stops, and user intervention is required t
 <p>The connector does not support streaming <a href="#">snapshot events</a>.</p>
 </li>
 <li>
-<p>If watermarking is enabled in the connector, you cannot configure <a href="https://hypercdc.io/documentation/reference/stable/transformations/topic-routing.html">HyperCDC topic
+<p>If watermarking is enabled in the connector, you cannot configure <a href="https://debezium.io/documentation/reference/stable/transformations/topic-routing.html">HyperCDC topic
 routing transformations</a>.</p>
 </li>
 <li>
@@ -2427,14 +2425,8 @@ routing transformations</a>.</p>
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

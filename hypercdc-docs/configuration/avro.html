@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">Avro Serialization</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">Avro Serialization</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -127,35 +131,31 @@ Kafka consumer applications that you write to consume change event records can u
 <p>To use the Apicurio Registry with HyperCDC, add Apicurio Registry converters and their dependencies to the Kafka Connect container image that you are using for running a HyperCDC connector.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The Apicurio Registry project also provides a JSON converter.
 This converter combines the advantage of less verbose messages with human-readable JSON.
 Messages do not contain the schema information themselves, but only a schema ID.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To use converters provided by Apicurio Registry you need to provide <code>apicurio.registry.url</code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="overview-of-deploying-a-hypercdc-connector-that-uses-avro-serialization"><a class="anchor" href="#overview-of-deploying-a-hypercdc-connector-that-uses-avro-serialization"></a>Apicurio Registry deployment overview</h3>
@@ -168,7 +168,7 @@ Messages do not contain the schema information themselves, but only a schema ID.
 <p>Deploy an <a href="https://github.com/Apicurio/apicurio-registry">Apicurio API and Schema Registry</a> instance.</p>
 </li>
 <li>
-<p>Install the Avro converter from the <a href="https://repo1.maven.org/maven2/io/apicurio/apicurio-registry-distro-connect-converter/3.2.5/apicurio-registry-distro-connect-converter-3.2.5.tar.gz">installation package</a> into a plug-in directory. If you are using the <a href="https://quay.io/repository/hypercdc/connect">HyperCDC Connect container image</a>, it’s not necessary to install the package. For more information, see  <a href="#deploying-with-hypercdc-containers">Deploying Apicurio Registry with HyperCDC containers</a>.</p>
+<p>Install the Avro converter from the <a href="https://repo1.maven.org/maven2/io/apicurio/apicurio-registry-distro-connect-converter/3.2.5/apicurio-registry-distro-connect-converter-3.2.5.tar.gz">installation package</a> into a plug-in directory. If you are using the <a href="https://quay.io/repository/debezium/connect">HyperCDC Connect container image</a>, it’s not necessary to install the package. For more information, see  <a href="#deploying-with-hypercdc-containers">Deploying Apicurio Registry with HyperCDC containers</a>.</p>
 </li>
 <li>
 <p>Configure a HyperCDC connector instance to use Avro serialization by setting configuration properties as follows:</p>
@@ -505,7 +505,7 @@ Setting <code>field.name.adjustment.mode</code> to <code>avro</code> allows seri
 <h2 id="_getting_more_information"><a class="anchor" href="#_getting_more_information"></a>Getting More Information</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="#">This post</a> from the HyperCDC blog
+<p><a href="/blog/2016/09/19/Serializing-Debezium-events-with-Avro/">This post</a> from the HyperCDC blog
 describes the concepts of serializers, converters, and other components, and discusses the advantages of using Avro.
 Some Kafka Connect converter details have slightly changed since that post was written.</p>
 </div>
@@ -515,14 +515,8 @@ see <a href="#">MySQL and the Avro message format</a>.</p>
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

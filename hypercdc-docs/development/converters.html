@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,30 +28,24 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">Custom Converters</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">Custom Converters</h1>
         <div id="preamble">
 <div class="sectionbody">
 
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>This feature is currently in incubating state, i.e. exact semantics, configuration options etc. may change in future revisions, based on the feedback we receive. Please let us know if you encounter any problems while using this extension.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -75,20 +77,18 @@ The registry associates each converter with the columns or fields for it to proc
 Whenever HyperCDC processes a new change event, it invokes the configured converter to convert the columns or fields for which it is registered.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The instructions that follow apply to HyperCDC relational database source connectors only.
 You cannot use this information to create a custom converter for the HyperCDC MongoDB connector, or for the HyperCDC JDBC sink connector.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -290,20 +290,18 @@ These compile dependencies must be included in your project’s <code>pom.xml</c
 To use a custom converter with a connector, you deploy the converter JAR file alongside the connector file, and then configure the connector to use the converter.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Custom converters are designed to modify messages emitted by HyperCDC relational database source connectors.
 You cannot configure either the HyperCDC MongoDB connector, or the HyperCDC JDBC sink connector to use a custom converter.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="deploying-a-hypercdc-custom-converter"><a class="anchor" href="#deploying-a-hypercdc-custom-converter"></a>Deploying a custom converter</h3>
 <div class="ulist">
@@ -327,17 +325,15 @@ To use a converter with a connector, add the converter JAR file to the connector
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 To use a converter with multiple connectors, you must place a copy of the converter JAR file in each connector subdirectory.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="configuring-a-connectors-to-use-a-custom-converter"><a class="anchor" href="#configuring-a-connectors-to-use-a-custom-converter"></a>Configuring a connector to use a custom converter</h3>
@@ -409,14 +405,8 @@ For example, to add a property for the preceding <code>isbn</code> converter to 
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

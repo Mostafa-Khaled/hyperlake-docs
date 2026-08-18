@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,31 +28,25 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC Server</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC Server</h1>
         <div id="preamble">
 <div class="sectionbody">
 
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Please let us know if you encounter any problems while using this feature.
 Also please reach out if you have requirements for specific sinks to be supported by HyperCDC Server or even would be interested in contributing the required implementation.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>HyperCDC provides a ready-to-use application that streams change events from a source database to messaging infrastructure like Amazon Kinesis, Google Cloud Pub/Sub, Apache Pulsar, Redis (Stream), or NATS JetStream.
 For streaming change events to Apache Kafka, it is recommended to deploy the HyperCDC connectors via Kafka Connect.</p>
@@ -60,7 +62,7 @@ For streaming change events to Apache Kafka, it is recommended to deploy the Hyp
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://repo1.maven.org/maven2/io/hypercdc/hypercdc-server-dist/3.6.1.Final/hypercdc-server-dist-3.6.1.Final.tar.gz">HyperCDC Server distribution</a></p>
+<p><a href="https://repo1.maven.org/maven2/io/debezium/debezium-server-dist/3.6.1.Final/debezium-server-dist-3.6.1.Final.tar.gz">HyperCDC Server distribution</a></p>
 </li>
 </ul>
 </div>
@@ -86,20 +88,18 @@ For streaming change events to Apache Kafka, it is recommended to deploy the Hyp
 <p>The server is started using <code>run.sh</code> script, dependencies are stored in the <code>lib</code> directory, and the directory <code>config</code> contains configuration files.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>In case of using the Oracle connector you will have to add to the <code>lib</code> directory the ORACLE JDBC driver (if using XStream also the XStream API files),
 explained here: <a href="../connectors/oracle.html#obtaining-oracle-jdbc-driver-and-xstreams-api-files" class="xref page">Obtaining the Oracle JDBC driver and XStream API files</a></p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -110,12 +110,11 @@ explained here: <a href="../connectors/oracle.html#obtaining-oracle-jdbc-driver-
 This means that the application can be configured from disparate sources like configuration files, environment variables, system properties etc.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Configuration properties that contain the <code>$</code> character are normally interpreted by Quarkus for property expansion.
 If a property value includes a <code>$</code> character as a prefix, such as <code>${my.property}</code>, the Microprofile configuration parser determines that the value is a <a href="https://quarkus.io/guides/config-reference#property-expressions">property expression</a> and attempts to expand it.</p>
@@ -124,10 +123,9 @@ If a property value includes a <code>$</code> character as a prefix, such as <co
 <p>To prevent the parser from attempting to expand values that use this syntax, escape the <code>$</code> prefix with a second <code>$</code> character; that is, provide the value as <code>$${my.property}</code>.
 The value of the property is then passed to HyperCDC as <code>${my.property}</code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The main configuration file is <em>config/application.properties</em>.
 There are multiple sections configured:</p>
@@ -2932,19 +2930,17 @@ hypercdc.source.schema.history.internal.redis.cluster.enabled=true</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 If you configure HyperCDC to use Redis Cluster mode,
 ensure that your Redis Cluster is properly configured and accessible.
 The HyperCDC Server instance must be able to communicate with the cluster nodes.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect3">
@@ -3118,20 +3114,18 @@ By default the same name is used.</p>
 You can specify entries that contain wildcards, such as <code>test.inventory.*</code></p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To capture both schema change events and data change events, you must specify both the topic prefix and a wildcard pattern.
 For example, if your <code>hypercdc.source.topic.prefix</code> is <code>myapp</code>, configure subjects as <code>myapp,myapp.&gt;</code> or <code>myapp,myapp.<strong>.</strong></code></p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Data change events are published to table-specific subjects (for example, <code>myapp.database.table</code>)
 The value <code>myapp.&gt;</code> matches any number of subject levels; similarly <code>myapp.<strong>.</strong></code> matches exactly two levels after the prefix.</p>
@@ -3281,19 +3275,17 @@ By default the same name is used.</p>
 HyperCDC Server can publish change events to Apache Fluss, supporting both primary key tables for upsert/delete operations and log tables for append-only streaming.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Apache Fluss requires connectors to be configured with schemas enabled. Schemaless change events are not supported.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col>
@@ -4664,35 +4656,31 @@ For the full list of available properties, including connection, runtime, and di
 </tbody>
 </table></div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The JDBC sink requires the appropriate JDBC driver for the target database to be available on the classpath.
 The HyperCDC Server distribution does not include any JDBC drivers for target databases, so you must add the driver for your destination database manually to the <code>lib/</code> directory.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Although the JDBC sink reuses the HyperCDC JDBC sink connector, HyperCDC Server does not currently provide the same delivery guarantees that are available when running the connector in other runtimes such as Kafka Connect.
 In particular, features that depend on the runtime for offset management, exactly-once semantics, or automatic error handling and retries may behave differently or may not be available.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="listingblock">
 <div class="title">Example JDBC sink configuration</div>
 <div class="content">
@@ -4739,26 +4727,24 @@ This allows for direct replication of a Database (Change Data Capture events) to
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="ulist">
 <ul>
 <li>
 <p>It is recommended to use <code>ExtractNewRecordState</code> transformation (event flattening). Key features like <code>upsert</code> mode and automatic primary key detection depend on the flattened event structure produced by this SMT. Without it, the connector can only operate in a more limited append-only mode.</p>
 </li>
 <li>
-<p>The HyperCDC Server sink for Apache Iceberg is a community-maintained, open-source project. Please note that it is maintained in a separate repository, which you can find here: <a href="https://github.com/memiiso/hypercdc-server-iceberg">HyperCDC Server Iceberg GitHub</a></p>
+<p>The HyperCDC Server sink for Apache Iceberg is a community-maintained, open-source project. Please note that it is maintained in a separate repository, which you can find here: <a href="https://github.com/memiiso/debezium-server-iceberg">HyperCDC Server Iceberg GitHub</a></p>
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col>
@@ -5120,7 +5106,7 @@ The execution path must pass the messages into the target system and regularly c
 Typical examples are fine tuning of the target client setup, the destination naming etc.</p>
 </div>
 <div class="paragraph">
-<p>See an example of a custom <a href="#">topic naming policy</a> implementation for further details.</p>
+<p>See an example of a custom <a href="https://github.com/debezium/debezium-examples/tree/main/debezium-server-name-mapper">topic naming policy</a> implementation for further details.</p>
 </div>
 </div>
 </div>
@@ -5188,14 +5174,8 @@ RANGE_TOMBSTONE "r" -&gt; TRUNCATE "t"</code></pre>
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

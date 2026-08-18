@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC Connector for Cassandra</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC Connector for Cassandra</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -63,26 +67,23 @@ This includes snapshots: if the snapshot was not completed when the connector is
 We’ll talk later about how the connector behaves <a href="#cassandra-when-things-go-wrong">when things go wrong</a>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Cassandra is different from the other HyperCDC connectors since it is not implemented on top of the Kafka Connect framework. Instead it is a single JVM process that is intended to reside on each Cassandra node and publishes events to Kafka via a Kafka producer.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The following features are currently not supported by the Cassandra connector. Changes resulted from any of these features are ignored:</p>
 </div>
@@ -111,10 +112,9 @@ We’ll talk later about how the connector behaves <a href="#cassandra-when-thin
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -194,21 +194,19 @@ This implies if one node goes down during the snapshot, the snapshot would not b
 You can adjust the consistency level of the snapshot to a lower consistency level in order to increase availability, provided that you understand the tradeoff with consistency.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>In Cassandra 3.X, it is not possible to read strictly from the local Cassandra node.
 Starting in Cassandra 4.0, a <code>NODE_LOCAL</code> consistency level will be added.
 This will allow the Cassandra connector to read from the node it resides in only (which would be consistent with the way commit logs are processed).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Unlike relational databases, there is no read lock applied during a snapshot, so writes to Cassandra are not blocked during that snapshot.
 If the queried data has been modified by another client during the snapshot, those changes may be reflected in the snapshot result set.</p>
@@ -409,19 +407,17 @@ Consider an <code>inventory</code> database with a <code>customers</code> table 
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Although the <code>field.exclude.list</code> configuration property allows you to remove columns from the event values, all columns in a primary key are always included in the event’s key.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="cassandra-change-events-value"><a class="anchor" href="#cassandra-change-events-value"></a>Change event’s value</h4>
@@ -466,20 +462,18 @@ The structure will be described by the <code>cassandra-cluster-1.inventory.custo
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Because Cassandra does not perform a read-before-write, the Cassandra commit log does not record the value of a row before a change is applied.
 As a result, Cassandra change event records do not include a <code>before</code> field.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The following is a JSON representation of a value schema for a <em>create</em> event for our <code>customers</code> table:</p>
 </div>
@@ -697,7 +691,7 @@ VALUES (
   now(),
   "Anne",
   "Kretchmar",
-  "<a href="#" class="__cf_email__" data-cfemail="f89996969d93b8969799968b8f9d8ad6978a9f">[email&nbsp;protected]</a>"
+  "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8feee1e1eae4cfe1e0eee1fcf8eafda1e0fde8">[email&nbsp;protected]</a>"
 );</code></pre>
 </div>
 </div>
@@ -733,7 +727,7 @@ VALUES (
     "set": true
   },
   "email": {
-    "value": "<a href="#" class="__cf_email__" data-cfemail="2b4a45454e406b45444a45585c4e590544594c">[email&nbsp;protected]</a>",
+    "value": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a6c7c8c8c3cde6c8c9c7c8d5d1c3d488c9d4c1">[email&nbsp;protected]</a>",
     "deletion_ts": null,
     "set": true
   }
@@ -760,7 +754,7 @@ VALUES (
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">UPDATE customers
-SET email = "<a href="#" class="__cf_email__" data-cfemail="72131c1c17192d1c1705321c1d131c010517005c1d0015">[email&nbsp;protected]</a>"
+SET email = "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fb9a95959e90a4959e8cbb95949a95888c9e89d594899c">[email&nbsp;protected]</a>"
 WHERE id = 1001 AND registration_date = 1562202942545</code></pre>
 </div>
 </div>
@@ -788,7 +782,7 @@ WHERE id = 1001 AND registration_date = 1562202942545</code></pre>
   "first_name": null,
   "last_name": null,
   "email": {
-    "value": "<a href="#" class="__cf_email__" data-cfemail="e4858a8a818fbb8a8193a48a8b858a97938196ca8b9683">[email&nbsp;protected]</a>",
+    "value": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="52333c3c37390d3c3725123c3d333c212537207c3d2035">[email&nbsp;protected]</a>",
     "deletion_ts": null,
     "set": true
   }
@@ -818,7 +812,7 @@ WHERE id = 1001 AND registration_date = 1562202942545</code></pre>
 <p>The <code>op</code> field value is now <code>u</code>, signifying that this row changed because of an update.</p>
 </li>
 <li>
-<p>The <code>after</code> field now has the updated state of the row, and here we can see that the email value is now <code><a href="#" class="__cf_email__" data-cfemail="04656a6a616f5b6a6173446a6b656a777361762a6b7663">[email&nbsp;protected]</a></code>.
+<p>The <code>after</code> field now has the updated state of the row, and here we can see that the email value is now <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b8d9d6d6ddd3e7d6ddcff8d6d7d9d6cbcfddca96d7cadf">[email&nbsp;protected]</a></code>.
 Notice that <code>first_name</code> and <code>last_name</code> are null, this is because these fields did not change during this update.
 However, <code>id</code> and <code>registration_date</code> are still included, because these are the primary keys of this table.</p>
 </li>
@@ -2208,21 +2202,19 @@ By default, truncate operations are skipped (not emitted by this connector).</p>
 <br></p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Do not change the value of this property.
 If you change the name value, after a restart, instead of continuing to emit events to the original topics, the connector emits subsequent events to topics whose names are based on the new value.
 The connector is also unable to recover its database schema history topic.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -2394,19 +2386,17 @@ To customize the way that the connector masks configuration key values, set this
 A string of asterisks replaces the original values, for example,  <code>********</code>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The pattern that you specify for the <code>custom.sanitize.pattern</code> property overrides the default HyperCDC masking pattern; the specified value does not extend or augment the default pattern.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -2489,21 +2479,19 @@ cipherSuites=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The cipherSuites field is not mandatory, it simply allows you to add one (or more) ciphers that are not present.
 The default value of trustStore.type and keyStore.type is JKS.
 The default value of keyManager.algorithm and trustManager.algorithm is SunX509.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The connector also supports pass-through configuration properties that are used when creating the Kafka producer.
 Specifically, all connector configuration properties that begin with the <code>kafka.producer.</code> prefix are used (without the prefix) when creating the Kafka producer that writes events to Kafka.</p>
@@ -2544,14 +2532,8 @@ com.blueapron.connect.protobuf.ProtobufConverter</code></pre>
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

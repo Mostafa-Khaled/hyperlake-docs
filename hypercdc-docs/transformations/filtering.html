@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">Message Filtering</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">Message Filtering</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -139,7 +143,7 @@ To ensure that scripting expressions can be run only by authorized users, be sur
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Download the <a href="https://repo1.maven.org/maven2/io/hypercdc/hypercdc-scripting/3.6.1.Final/hypercdc-scripting-3.6.1.Final.tar.gz">scripting SMT archive</a></p>
+<p>Download the <a href="https://repo1.maven.org/maven2/io/debezium/debezium-scripting/3.6.1.Final/debezium-scripting-3.6.1.Final.tar.gz">scripting SMT archive</a></p>
 </li>
 <li>
 <p>Extract the contents of the archive into the HyperCDC plug-in directories of your Kafka Connect environment.</p>
@@ -399,12 +403,11 @@ the following expression removes all messages, except for update records that ha
 <p>Other languages use different methods to express the same condition.</p>
 </div>
 <div class="admonitionblock tip">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">TIP</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC MongoDB connector emits the <code>after</code> and <code>patch</code> fields as serialized JSON documents rather than as structures.
 To use the filter SMT with the MongoDB connector, you must first unwind the array fields in the JSON into separate documents.
@@ -414,10 +417,9 @@ You can do this by applying the <a href="mongodb-event-flattening.html#new-recor
 <p>You could also take the approach of using a JSON parser within an expression to generate separate output documents for each array item.
 For example, if you use Groovy as the expression language, add the <code>groovy-json</code> artifact to the classpath, and then add an expression such as <code>(new groovy.json.JsonSlurper()).parseText(value.after).last_name == 'Kretchmar'</code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <div class="title">Javascript</div>
 <p>If you use JavaScript as the expression language, you can call the <code>Struct#get()</code> method to specify the filtering condition, as in the following example:</p>
@@ -548,14 +550,8 @@ It should be either <code>wasm.chicory</code> or <code>wasm.chicory-interpreter<
 </table></div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

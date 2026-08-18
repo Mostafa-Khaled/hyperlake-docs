@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC connector for MongoDB</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC connector for MongoDB</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -183,20 +187,18 @@ The connector will work if the standalone server is converted to a replica set w
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>MongoDB does not recommend running a standalone server in production.
 For more information, see the <a href="https://docs.mongodb.com/manual/core/replica-set-architectures/">MongoDB documentation</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="required-user-permissions"><a class="anchor" href="#required-user-permissions"></a>Required user permissions</h3>
@@ -335,21 +337,19 @@ The source information also includes a flag that denotes that the event was prod
 If the connector is stopped before the tasks' snapshots are completed, upon restart the connector begins the snapshot again.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Try to avoid task reassignment and reconfiguration while the connector performs snapshots of any replica sets.
 The connector generates log messages to report on the progress of the snapshot.
 To provide for the greatest control, run a separate Kafka Connect cluster for each connector.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="table-container"><table id="mongodb-connector-snapshot-mode-options" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Settings for <code>snapshot.mode</code> connector configuration property</caption>
 <colgroup>
@@ -623,12 +623,11 @@ HyperCDC emits these remaining <code>READ</code> events to the collection’s Ka
 <p>The connector repeats the process for each snapshot chunk.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To enable HyperCDC to perform incremental snapshots, you must grant the connector permission to write to the signaling collection.</p>
 </div>
@@ -636,10 +635,9 @@ HyperCDC emits these remaining <code>READ</code> events to the collection’s Ka
 <p>Write permission is unnecessary only for connectors that can be configured to perform read-only incrementals snapshots
 (<a href="#mariadb-read-only-incremental-snapshots">MariaDB</a>, <a href="#mysql-read-only-incremental-snapshots">MySQL</a>, or <a href="#postgresql-read-only-incremental-snapshots">PostgreSQL</a>).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Currently, you can use either of the following methods to initiate an incremental snapshot:</p>
 </div>
@@ -654,12 +652,11 @@ HyperCDC emits these remaining <code>READ</code> events to the collection’s Ka
 </ul>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Incremental snapshots require that the primary key for each table is stably ordered.
 Because <code>String</code> fields can include special characters, and are subject to different encodings, string-based primary keys do not lend themselves to sorting in a consistent and predictable order.
@@ -668,10 +665,9 @@ When performing incremental snapshots, it’s best to set the primary key to a d
 <div class="paragraph">
 <p>For more information about BSON string types in MongoDB, see the <a href="https://www.mongodb.com/docs/manual/reference/bson-types/#string/">MongoDB documentation</a>).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <div class="title">Incremental snapshots for sharded clusters</div>
 <p>To use incremental snapshots with sharded MongoDB clusters, you must set <a href="#mongodb-property-incremental-snapshot-chunk-size"><code>incremental.snapshot.chunk.size</code></a> to a value that is high enough to compensate for the <a href="https://www.mongodb.com/docs/manual/administration/change-streams-production-recommendations/#sharded-clusters">increased complexity</a> of change stream pipelines.</p>
@@ -700,20 +696,18 @@ Currently, the only valid options for snapshots operations are <code>incremental
 If the <code>data-collections</code> array is empty, HyperCDC detects that no action is required and does not perform a snapshot.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the name of a collection that you want to include in a snapshot contains a dot (<code>.</code>) in the name of the database or table, to add the collection to the <code>data-collections</code> array, you must escape each part of the name in double quotes.
 For example, to include a data collection that exists in the <code><strong>public</strong></code> database, and that has the name <code><strong>My.Collection</strong></code>, use the following format: <code><strong>"public"."My.Collection"</strong></code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -1382,21 +1376,19 @@ The interval at which the offset is recorded is governed by <a href="https://kaf
 If the connector’s tasks terminate unexpectedly, however, then the tasks may have processed and generated events after it last records the offset but before the last offset is recorded; upon restart, the connector begins at the last <em>recorded</em> offset, possibly generating some the same events that were previously generated just prior to the crash.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When all components in a Kafka pipeline operate nominally, Kafka consumers receive every message <strong><em>exactly once</em></strong>.
 However, when things go wrong, Kafka can only guarantee that consumers receive every message <strong><em>at least once</em></strong>.
 To avoid unexpected results, consumers must be able to handle duplicate messages.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>As described in <a href="#read-preference">read preferences</a>, the connector streams changes from the replica set member that is specified by the <code>readPreference</code> parameter in the MongoDB connection string.
 By default, the connector captures from the primary node, which result in capture operations with the lowest latency.
@@ -1418,22 +1410,20 @@ To enable the use of pre-images in MongoDB, you must set the <code>changeStreamP
 To enable the HyperCDC MongoDB to include pre-images in change events, set the <code>capture.mode</code> for the connector to one of the <code>*_with_pre_image</code> options.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="title">Size limits on MongoDB change stream events</div>
 <div class="paragraph">
 <p>The size of a MongoDB change stream event is limited to 16 megabytes.
 The use of pre-images thus increases the likelihood of exceeding this threshold, which can lead to failures.
 For information about how to avoid exceeding the change stream limit, see the <a href="https://www.mongodb.com/docs/manual/changeStreams/#change-streams-with-document-pre—​and-post-images/">MongoDB documentation</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="mongodb-topic-names"><a class="anchor" href="#mongodb-topic-names"></a>Topic names</h3>
@@ -1489,21 +1479,19 @@ This ensures that all events for a specific document are always totally ordered.
 <p>HyperCDC can generate events that represents transaction metadata boundaries and enrich change data event messages.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="title">Limits on when HyperCDC receives transaction metadata</div>
 <div class="paragraph">
 <p>HyperCDC registers and receives metadata only for transactions that occur after you deploy the connector.
 Metadata for transactions that occur before you deploy the connector is not available.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>For every transaction <code>BEGIN</code> and <code>END</code>, HyperCDC generates an event that contains the following fields:</p>
 </div>
@@ -1587,7 +1575,7 @@ This field provides information about every event in the form of a composite of 
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "after": "{\"_id\" : {\"$numberLong\" : \"1004\"},\"first_name\" : \"Anne\",\"last_name\" : \"Kretchmar\",\"email\" : \"<a href="#" class="__cf_email__" data-cfemail="92f3fcfcf7f9d2fcfdf3fce1e5f7e0bcfde0f5">[email&nbsp;protected]</a>\"}",
+  "after": "{\"_id\" : {\"$numberLong\" : \"1004\"},\"first_name\" : \"Anne\",\"last_name\" : \"Kretchmar\",\"email\" : \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f0919e9e959bb09e9f919e83879582de9f8297">[email&nbsp;protected]</a>\"}",
   "source": {
 ...
   },
@@ -1677,22 +1665,20 @@ This field provides information about every event in the form of a composite of 
 <p>By default, the connector streams change event records to topics with names that are the same as the event’s originating collection. See <a href="#mongodb-topic-names">topic names</a>.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The MongoDB connector ensures that all Kafka Connect schema names adhere to the <a href="http://avro.apache.org/docs/current/spec.html#names">Avro schema name format</a>. This means that the logical server name must start with a Latin letter or an underscore, that is, a-z, A-Z, or _. Each remaining character in the logical server name and each character in the database and collection names must be a Latin letter, a digit, or an underscore, that is, a-z, A-Z, 0-9, or \_. If there is an invalid character it is replaced with an underscore character.</p>
 </div>
 <div class="paragraph">
 <p>This can lead to unexpected conflicts if the logical server name, a database name, or a collection name contains invalid characters, and the only characters that distinguish names from one another are invalid and thus replaced with underscores.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="mongodb-change-events-key"><a class="anchor" href="#mongodb-change-events-key"></a>Change event keys</h3>
 <div class="paragraph">
@@ -1709,7 +1695,7 @@ The value of this field is the document’s identifier represented as a string t
   "_id": 1004,
   "first_name": "Anne",
   "last_name": "Kretchmar",
-  "email": "<a href="#" class="__cf_email__" data-cfemail="45242b2b202e052b2a242b363220376b2a3722">[email&nbsp;protected]</a>"
+  "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f5949b9b909eb59b9a949b86829087db9a8792">[email&nbsp;protected]</a>"
 }</code></pre>
 </div>
 </div>
@@ -1865,7 +1851,7 @@ In the preceding example, the <code>name</code> field includes the following val
   "_id": 1004,
   "first_name": "Anne",
   "last_name": "Kretchmar",
-  "email": "<a href="#" class="__cf_email__" data-cfemail="c7a6a9a9a2ac87a9a8a6a9b4b0a2b5e9a8b5a0">[email&nbsp;protected]</a>"
+  "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f0e01010a042f01000e011c180a1d41001d08">[email&nbsp;protected]</a>"
 }</code></pre>
 </div>
 </div>
@@ -2008,7 +1994,7 @@ In the preceding example, the <code>name</code> field includes the following val
       "name": "dbserver1.inventory.customers.Envelope" <i class="conum" data-value="4"></i><b>(4)</b>
       },
     "payload": { <i class="conum" data-value="5"></i><b>(5)</b>
-      "after": "{\"_id\" : {\"$numberLong\" : \"1004\"},\"first_name\" : \"Anne\",\"last_name\" : \"Kretchmar\",\"email\" : \"<a href="#" class="__cf_email__" data-cfemail="accdc2c2c9c7ecc2c3cdc2dfdbc9de82c3decb">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="6"></i><b>(6)</b>
+      "after": "{\"_id\" : {\"$numberLong\" : \"1004\"},\"first_name\" : \"Anne\",\"last_name\" : \"Kretchmar\",\"email\" : \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="61000f0f040a210f0e000f121604134f0e1306">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="6"></i><b>(6)</b>
       "source": { <i class="conum" data-value="7"></i><b>(7)</b>
         "version": "3.6.1.Final",
         "connector": "mongodb",
@@ -2221,8 +2207,8 @@ There is a new structured field <code>updateDescription</code> with a few additi
       "ts_ms": 1465491461815, <i class="conum" data-value="2"></i><b>(2)</b>
       "ts_us": 1465491461815698, <i class="conum" data-value="2"></i><b>(2)</b>
       "ts_ns": 1465491461815698142, <i class="conum" data-value="2"></i><b>(2)</b>
-      "before":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"unknown\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="#" class="__cf_email__" data-cfemail="8dece3e3e8e6cde3e2ece3fefae8ffa3e2ffea">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="3"></i><b>(3)</b>
-      "after":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"Anne Marie\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="#" class="__cf_email__" data-cfemail="05646b6b606e456b6a646b767260772b6a7762">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="4"></i><b>(4)</b>
+      "before":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"unknown\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92f3fcfcf7f9d2fcfdf3fce1e5f7e0bcfde0f5">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="3"></i><b>(3)</b>
+      "after":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"Anne Marie\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="86e7e8e8e3edc6e8e9e7e8f5f1e3f4a8e9f4e1">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="4"></i><b>(4)</b>
       "updateDescription": {
         "removedFields": null,
         "updatedFields": "{\"first_name\": \"Anne Marie\"}", <i class="conum" data-value="5"></i><b>(5)</b>
@@ -2339,12 +2325,11 @@ The time is based on the system clock in the JVM running the Kafka Connect task.
 </tbody>
 </table></div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <code>after</code> value in the event should be handled as the at-point-of-time value of the document.
 The value is not calculated dynamically but is obtained from the collection.
@@ -2353,10 +2338,9 @@ It is thus possible if multiple updates are closely following one after the othe
 <div class="paragraph">
 <p>If your application depends on gradual change evolution then you should rely on <code>updateDescription</code> only.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect2">
@@ -2373,7 +2357,7 @@ It is thus possible if multiple updates are closely following one after the othe
       "ts_ms": 1465495462115, <i class="conum" data-value="2"></i><b>(2)</b>
       "ts_us": 1465495462115748, <i class="conum" data-value="2"></i><b>(2)</b>
       "ts_ns": 1465495462115748263, <i class="conum" data-value="2"></i><b>(2)</b>
-      "before":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"Anne Marie\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="#" class="__cf_email__" data-cfemail="cfaea1a1aaa48fa1a0aea1bcb8aabde1a0bda8">[email&nbsp;protected]</a>\"}",<i class="conum" data-value="3"></i><b>(3)</b>
+      "before":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"Anne Marie\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="15747b7b707e557b7a747b666270673b7a6772">[email&nbsp;protected]</a>\"}",<i class="conum" data-value="3"></i><b>(3)</b>
       "source": { <i class="conum" data-value="4"></i><b>(4)</b>
         "version": "3.6.1.Final",
         "connector": "mongodb",
@@ -2577,7 +2561,7 @@ If HyperCDC were to fail during this time, its last oplog position is likely to 
 <ol class="arabic">
 <li>
 <p>Download the
-<a href="https://repo1.maven.org/maven2/io/hypercdc/hypercdc-connector-mongodb/3.6.1.Final/hypercdc-connector-mongodb-3.6.1.Final-plugin.tar.gz">connector’s plug-in archive</a>,</p>
+<a href="https://repo1.maven.org/maven2/io/debezium/debezium-connector-mongodb/3.6.1.Final/debezium-connector-mongodb-3.6.1.Final-plugin.tar.gz">connector’s plug-in archive</a>,</p>
 </li>
 <li>
 <p>Extract the JAR files into your Kafka Connect environment.</p>
@@ -2591,24 +2575,22 @@ If HyperCDC were to fail during this time, its last oplog position is likely to 
 </ol>
 </div>
 <div class="paragraph">
-<p>If you are working with immutable containers, see <a href="https://quay.io/organization/hypercdc">HyperCDC’s container images</a> for Apache Kafka and Kafka Connect with the MongoDB connector already installed and ready to run.</p>
+<p>If you are working with immutable containers, see <a href="https://quay.io/organization/debezium">HyperCDC’s container images</a> for Apache Kafka and Kafka Connect with the MongoDB connector already installed and ready to run.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC container images that you obtain from <code>quay.io</code> do not undergo rigorous testing or security analysis, and are provided for testing and evaluation purposes only.
 These images are not intended for use in production environments.
 To mitigate risk in production deployments, deploy only containers that are actively maintained by trusted vendors, and thoroughly tested for potential vulnerabilities.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>You can also <a href="../operations/openshift.html" class="xref page">run HyperCDC on Kubernetes and OpenShift</a>.</p>
 </div>
@@ -2790,20 +2772,18 @@ Many properties have default values. Information about the properties is organiz
 <p>Set this property to <code>true</code> to enable the connector to invalidate and <a href="#mongodb-offset-consolidation">consolidate</a> shard-specific offsets that were recorded by earlier connector versions.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>This property permits you to modify the current default behavior.
 The property is subject to removal in a future release if the default behavior changes to permit the connector to automatically invalidate and consolidate offsets that are recorded by earlier connector versions.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -2857,20 +2837,18 @@ Use only alphanumeric characters, hyphens, dots and underscores to form the name
 <p>The logical name should be unique across all other connectors, because the name is used as the prefix in naming the Kafka topics that receive records from this connector.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Do not change the value of this property.
 If you change the name value, after a restart, instead of continuing to emit events to the original topics, the connector emits subsequent events to topics whose names are based on the new value.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -3118,22 +3096,20 @@ Messages do not include a <code>before</code> field that represents the state of
 The event message returns the full state of the document in the <code>after</code> field.
 Set <a href="#mongodb-property-capture-mode-full-update-type">capture.mode.full.update.type</a> to specify how the connector fetches full documents from the database.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>In some situations, when <code>capture.mode</code> is configured to return full documents, the <code>updateDescription</code> and <code>after</code> fields of the update event message might report inconsistent values.
 Such discrepancies can result after multiple updates are applied to a document in rapid succession.
 The connector requests the full document from the MongoDB database only after it receives the update described in the event’s <code>updateDescription</code> field.
 If a later update modifies the source document before the connector can retrieve it from the database, the connector receives the document that is modified by this later update.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1"><code>change_streams_update_full_with_pre_image</code></dt>
 <dd>
@@ -3159,12 +3135,11 @@ Set <a href="#mongodb-property-capture-mode-full-update-type">capture.mode.full.
 Set the value to be a long representation of the BSON timestamp.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The ability to set the <code>capture.start.op.time`</code> property to override the normal offset-based behavior and begin streaming from a specific timestamp is a Technology Preview feature.
 Technology Preview features are not supported with Red&nbsp;Hat production service level agreements (SLAs) and might not be functionally complete.
@@ -3174,10 +3149,9 @@ These features provide early access to upcoming product features, enabling custo
 <div class="paragraph">
 <p>For more information about the support scope of Red&nbsp;Hat Technology Preview features, see <a href="https://access.redhat.com/support/offerings/techpreview/">Technology Preview Features Support Scope</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -3200,53 +3174,47 @@ Set this property to one of the following values:</p>
 <dd>
 <p>Opens a change stream cursor for a single database to watch for changes to all of its non-system collections.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To support <a href="../configuration/signalling.html" class="xref page">HyperCDC signaling</a>, if you set <code>capture.scope</code> to <code>database</code>, the <a href="#mongodb-property-signal-data-collection">signaling data collection</a> must reside in a database that is specified by the <a href="#mongodb-property-capture-target"><code>capture.target</code></a> property.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1"><code>collection</code></dt>
 <dd>
 <p>Opens a change stream cursor for a single collection to watch for changes to that collection.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>This feature is currently in an incubating state.
 The exact semantics, configuration options, and so forth are subject to change, based on the feedback that we receive.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Setting the value of the <code>capture.scope</code> property to <code>collection</code> prevents the connector from using the default <code>source</code> <a href="../configuration/signalling.html" class="xref page">signaling</a> channel.
 Because the <code>source</code> channel must be enabled to permit connectors to process incremental snapshot signals — even for signals are sent over the Kafka, JMX, or File channels — the connector cannot perform incremental snapshots when <code>capture-scope</code> is set to <code>collection</code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div></div></td>
@@ -3428,12 +3396,11 @@ Pre- and post-images for an operation are available only if the required configu
 </dl>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the lookup process fails to retrieve a document, it cannot populate the full document to the <code>after</code> state in the event payload.
 In such a situation, the connector emits an event message that contains a <code>null</code> value in the <code>after</code> field.</p>
@@ -3442,10 +3409,9 @@ In such a situation, the connector emits an event message that contains a <code>
 <p>Failed lookups can occur because a delete operation removed the document immediately after it was created, or because a change to the sharding key results in the document being moved to a different location.
 Sharding key changes can result when you modify any of the properties that make up the key.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><code>post_image</code></dt>
@@ -4293,19 +4259,17 @@ To customize the way that the connector masks configuration key values, set this
 A string of asterisks replaces the original values, for example,  <code>********</code>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The pattern that you specify for the <code>custom.sanitize.pattern</code> property overrides the default HyperCDC masking pattern; the specified value does not extend or augment the default pattern.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -4453,17 +4417,15 @@ When set to <code>true</code>, the connector collects the following statistics:<
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Currently only <code>MilliSecondsBehindSource</code> metric supports collecting quantiles.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The statistics are computed using a probabilistic data structure (DDSketch) that provides approximate quantile values with 1% relative accuracy.
 When set to <code>false</code>, the connector does not collect quantiles, and the quantile JMX metrics return <code>null</code> values.
@@ -4509,21 +4471,19 @@ For more information, see <a href="#mongodb-streaming-metrics">Streaming metrics
 <p>The name of the Kafka topic that the connector monitors for ad hoc signals.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If <a href="../configuration/topic-auto-create-config.html#topic-auto-create-config" class="xref page">automatic topic creation</a> is disabled, you must manually create the required signaling topic.
 A signaling topic is required to preserve signal ordering.
 The signaling topic must have a single partition.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -5626,22 +5586,20 @@ However, the MongoDB connectors will resume from the last offset <em>recorded</e
 The number of duplicate events depends on the offset flush period and the volume of data changes just before the crash.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Because there is a chance that some events may be duplicated during a recovery from failure, consumers should always anticipate some events may be duplicated. HyperCDC changes are idempotent, so a sequence of events always results in the same state.</p>
 </div>
 <div class="paragraph">
 <p>HyperCDC also includes with each change event message the source-specific information about the origin of the event, including the MongoDB event’s unique transaction identifier (<code>h</code>) and timestamp (<code>sec</code> and <code>ord</code>). Consumers can keep track of other of these values to know whether it has already seen a particular event.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="hypercdc-mongodb-kafka-process-becomes-unavailable"><a class="anchor" href="#hypercdc-mongodb-kafka-process-becomes-unavailable"></a>Kafka becomes unavailable</h3>
@@ -5683,14 +5641,8 @@ As a result, the secondary node that is elected as the new primary node might be
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

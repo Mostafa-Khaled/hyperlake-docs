@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC connector for MySQL</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC connector for MySQL</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -225,28 +229,25 @@ Because the structured representation presents data in JSON or Avro format, cons
 </dl>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For a table that is in capture mode, the connector not only stores the history of schema changes in the schema change topic, but also in an internal database schema history topic.
 The internal database schema history topic is for connector use only, and it is not intended for direct use by consuming applications.
 Ensure that applications that require notifications about schema changes consume that information only from the schema change topic.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Never partition the database schema history topic.
 For the database schema history topic to function correctly, it must maintain a consistent, global order of the event records that the connector emits to it.</p>
@@ -264,24 +265,21 @@ For the database schema history topic to function correctly, it must maintain a 
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The format of the messages that a connector emits to its schema change topic is in an incubating state and is subject to change without notice.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <div class="title">Example: Message emitted to the MySQL connector schema change topic</div>
 <p>The following example shows a typical schema change message in JSON format.
@@ -569,20 +567,18 @@ The connector retains the global read lock while it reads the binlog position, a
 <p>Start a transaction with <a href="https://dev.mysql.com/doc/refman/8.2/en/innodb-consistent-read.html">repeatable read semantics</a> to ensure that all subsequent reads within the transaction are done against the <em>consistent snapshot</em>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The use of these isolation semantics can slow the progress of the snapshot.
 If the snapshot takes too long to complete, consider using a different isolation configuration, or skip the initial snapshot and run an <a href="#hypercdc-mysql-incremental-snapshots">incremental snapshot</a> instead.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -603,12 +599,11 @@ The schema history provides information about the structure that is in effect wh
 <br></p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>By default, the connector captures the schema of every table in the database, including tables that are not configured for capture.
 If tables are not configured for capture, the initial snapshot captures only their structure; it does not capture any table data.</p>
@@ -616,10 +611,9 @@ If tables are not configured for capture, the initial snapshot captures only the
 <div class="paragraph">
 <p>For more information about why snapshots persist schema information for tables that you did not include in the initial snapshot, see <a href="#understanding-why-initial-snapshots-capture-the-schema-history-for-all-tables">Understanding why initial snapshots capture the schema for all tables</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -755,12 +749,11 @@ The schema history provides information about the structure that is in effect wh
 <br></p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>By default, the connector captures the schema of every table in the database, including tables that are not configured for capture.
 If tables are not configured for capture, the initial snapshot captures only their structure; it does not capture any table data.</p>
@@ -768,10 +761,9 @@ If tables are not configured for capture, the initial snapshot captures only the
 <div class="paragraph">
 <p>For more information about why snapshots persist schema information for tables that you did not include in the initial snapshot, see <a href="#understanding-why-initial-snapshots-capture-the-schema-history-for-all-tables">Understanding why initial snapshots capture the schema for all tables</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
@@ -1111,20 +1103,18 @@ You can then initiate an incremental snapshot to enable the connector to synchro
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
 For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Removing offsets should be performed only by advanced users who have experience in manipulating internal Kafka Connect data.
 This operation is potentially destructive, and should be performed only as a last resort.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Set values for properties in the connector configuration as described in the following steps:</p>
@@ -1169,20 +1159,18 @@ After the snapshot completes, you can optionally trigger an incremental snapshot
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
 For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Removing offsets should be performed only by advanced users who have experience in manipulating internal Kafka Connect data.
 This operation is potentially destructive, and should be performed only as a last resort.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Edit the <a href="#mysql-property-table-include-list"><code>table.include.list</code></a> to add the tables that you want to capture.</p>
@@ -1424,12 +1412,11 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 <p>The connector repeats the process for each snapshot chunk.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To enable HyperCDC to perform incremental snapshots, you must grant the connector permission to write to the signaling table.</p>
 </div>
@@ -1437,10 +1424,9 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 <p>Write permission is unnecessary only for connectors that can be configured to perform read-only incrementals snapshots
 (<a href="#mariadb-read-only-incremental-snapshots">MariaDB</a>, <a href="#mysql-read-only-incremental-snapshots">MySQL</a>, or <a href="#postgresql-read-only-incremental-snapshots">PostgreSQL</a>).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Currently, you can use either of the following methods to initiate an incremental snapshot:</p>
 </div>
@@ -1479,20 +1465,18 @@ The <code>data-collections</code> array for an incremental snapshot signal has n
 If the <code>data-collections</code> array is empty, HyperCDC interprets the empty array to mean that no action is required, and it does not perform a snapshot.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the name of a table that you want to include in a snapshot contains a dot (<code>.</code>), a space, or some other non-alphanumeric character, you must escape the table name in double quotes.
 For example, to include a table that exists in the <code><strong>db1</strong></code> database, and that has the name <code><strong>My.Table</strong></code>, use the following format: <code><strong>"db1.\"My.Table\""</strong></code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -1673,12 +1657,11 @@ VALUES ('ad-hoc-1',
 </div>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Physical row identifiers can change under certain circumstances, which may affect snapshot consistency.
 Oracle <code>ROWID</code> can change during table reorganization operations such as <code>ALTER TABLE MOVE</code>, partition maintenance, or <code>SHRINK SPACE</code> operations.</p>
@@ -1686,10 +1669,9 @@ Oracle <code>ROWID</code> can change during table reorganization operations such
 <div class="paragraph">
 <p>To ensure data consistency, when an incremental snapshot that uses a physical row identifier is in progress, do not perform table maintenance operations, such as table moves, partition management, or shrink operations.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="mysql-incremental-snapshots-additional-conditions"><a class="anchor" href="#mysql-incremental-snapshots-additional-conditions"></a>Running an ad hoc incremental snapshots with <code>additional-conditions</code></h4>
@@ -2388,12 +2370,11 @@ As a result of this delay, after the snapshot completes, the connector might emi
 You can send a HyperCDC <code>set-binlog-position</code> signal at run time to dynamically specify where the MySQL connector begins reading from the database binlog (binary log).</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Depending on the position that you specify in the <code>set-binlog-position</code> signal, the connector either excludes events from the log, or sends duplicate events.</p>
 </div>
@@ -2404,10 +2385,9 @@ The connector does not capture or stream changes in the skipped range.</p>
 <div class="paragraph">
 <p>On the other hand, if the signal directs the connector to resume reading from a point earlier than the current position, the connector replays log entries that it previously sent, emitting duplicate events to the destination topic.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>You might want to reset the connector’s binlog position under the following circumstances:</p>
 </div>
@@ -2621,21 +2601,19 @@ For more information about using the logical topic routing SMT to customize topi
 <p>HyperCDC can generate events that represent transaction boundaries and that enrich data change event messages.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="title">Limits on when HyperCDC receives transaction metadata</div>
 <div class="paragraph">
 <p>HyperCDC registers and receives metadata only for transactions that occur after you deploy the connector.
 Metadata for transactions that occur before you deploy the connector is not available.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>HyperCDC generates transaction boundary events for the <code>BEGIN</code> and <code>END</code> delimiters in every transaction.
 Transaction boundary events contain the following fields:</p>
@@ -2825,22 +2803,20 @@ The payload structure reflects the structure of the preceding event value <code>
 For more information, see <a href="#mysql-topic-names">topic names</a>.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The MySQL connector ensures that all Kafka Connect schema names adhere to the <a href="http://avro.apache.org/docs/current/spec.html#names">Avro schema name format</a>. This means that the logical server name must start with a Latin letter or an underscore, that is, a-z, A-Z, or _. Each remaining character in the logical server name and each character in the database and table names must be a Latin letter, a digit, or an underscore, that is, a-z, A-Z, 0-9, or _. If there is an invalid character it is replaced with an underscore character.</p>
 </div>
 <div class="paragraph">
 <p>This can lead to unexpected conflicts if the logical server name, a database name, or a table name contains invalid characters, and the only characters that distinguish names from one another are invalid and thus replaced with underscores.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="mysql-change-event-keys"><a class="anchor" href="#mysql-change-event-keys"></a>Change event keys</h3>
 <div class="paragraph">
@@ -3185,7 +3161,7 @@ In the preceding example, the <code>payload</code> contains a single field, <cod
       "id": 1004,
       "first_name": "Anne",
       "last_name": "Kretchmar",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="15747b7b707e557b7a747b666270673b7a6772">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3d5c535358567d53525c534e4a584f13524f5a">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -3203,7 +3179,7 @@ In the preceding example, the <code>payload</code> contains a single field, <cod
       "pos": 154,
       "row": 0,
       "thread": 7,
-      "query": "INSERT INTO customers (first_name, last_name, email) VALUES ('Anne', 'Kretchmar', '<a href="#" class="__cf_email__" data-cfemail="284946464d4368464749465b5f4d5a06475a4f">[email&nbsp;protected]</a>')"
+      "query": "INSERT INTO customers (first_name, last_name, email) VALUES ('Anne', 'Kretchmar', '<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="12737c7c7779527c7d737c616577603c7d6075">[email&nbsp;protected]</a>')"
     }
   }
 }</code></pre>
@@ -3401,13 +3377,13 @@ The source metadata provides the following information:</p>
       "id": 1004,
       "first_name": "Anne",
       "last_name": "Kretchmar",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="0a6b64646f614a64656b64797d6f782465786d">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ef8e81818a84af81808e819c988a9dc1809d88">[email&nbsp;protected]</a>"
     },
     "after": {
       "id": 1004,
       "first_name": "Anne Marie",
       "last_name": "Kretchmar",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="e7868989828ca78988868994908295c9889580">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="44252a2a212f042a2b252a373321366a2b3623">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -3531,12 +3507,11 @@ By comparing the value of <code>payload.source.ts_ms</code> with the value of <c
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Updating the columns for a row’s primary or unique key changes the value of the row’s key.
 After a key changes, HyperCDC generates the following three events:</p>
@@ -3557,10 +3532,9 @@ After a key changes, HyperCDC generates the following three events:</p>
 <div class="paragraph">
 <p>For more information, see <a href="#mysql-primary-key-updates">Primary key updates</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="mysql-primary-key-updates"><a class="anchor" href="#mysql-primary-key-updates"></a>Primary key updates</h3>
@@ -3593,7 +3567,7 @@ as a primary key change. For a primary key change, in place of an <code>UPDATE</
       "id": 1004,
       "first_name": "Anne Marie",
       "last_name": "Kretchmar",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="395857575c5279575658574a4e5c4b17564b5e">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ceafa0a0aba58ea0a1afa0bdb9abbce0a1bca9">[email&nbsp;protected]</a>"
     },
     "after": null,
     "source": {
@@ -3858,22 +3832,20 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
 <p>If a single <code>TRUNCATE</code> statement applies to multiple tables, the connector emits one <em>truncate</em> change event record for each truncated table.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>A <em>truncate</em> event represents a change that is made to an entire table and it has no message key.
 As a result, for topics with multiple partitions, there is no ordering guarantee for the change events (<em>create</em>, <em>update</em>, and so forth), or <em>truncate</em> events that pertain to a table.
 For example, if a consumer reads events for a table from multiple partitions, it might receive an <em>update</em> event for a table from one partition after it receives a <em>truncate</em> event that deletes all of the data in the table from another partition.
 Ordering is guaranteed only for topics that use a single partition.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>If you do not want the connector to capture <em>truncate</em> events, use the <a href="#mysql-property-skipped-operations"><code>skipped.operations</code></a> option to filter them out.</p>
 </div>
@@ -4510,12 +4482,11 @@ Because the values are represented as strings, this mode preserves the fractiona
 </dl>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <code>time.precision.mode</code> connector property also accepts the values <code>microseconds</code> and <code>nanoseconds</code>, although these modes are not currently illustrated in the mapping tables above.
 MySQL <code>DATETIME</code> and <code>TIME</code> columns are limited to microsecond precision (<code>DATETIME(0 - 6)</code>, <code>TIME(0 - 6)</code>), so <code>nanoseconds</code> does not provide additional precision beyond what <code>microseconds</code> already offers.
@@ -4524,10 +4495,9 @@ Values outside this range — for example a <code>9999-12-31</code> end-of-time 
 The exception is routed through the standard <code>event.processing.failure.handling.mode</code> configuration, so operators can choose <code>fail</code> (the default), <code>warn</code>, or <code>skip</code>.
 Use <code>time.precision.mode=microseconds</code> (or <code>isostring</code>) to avoid the limitation.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="mysql-decimal-types"><a class="anchor" href="#mysql-decimal-types"></a>Decimal types</h3>
@@ -4964,21 +4934,19 @@ zero-date.selector=.*</code></pre>
 Row-level emission therefore has no false positives: a real <code>1970-01-01 00:00:00 UTC</code> row continues to emit <code>0</code> (epoch days / millis) as it does without the converter, while zero-date rows emit the configured fallback (or <code>null</code>).</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The converter applies the user-configured fallback to the Kafka Connect schema’s <code>defaultValue</code> slot at schema-build time, regardless of the column’s DDL default.
 This relies on <code>TableSchemaBuilder</code> invoking the registered converter lambda exactly once during schema build for the purpose of resolving the column’s default.
 This is an internal contract rather than a published SPI guarantee.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </div>
@@ -5027,17 +4995,15 @@ This MySQL user must have appropriate permissions on all databases for which the
 <p>For a description of the required permissions, see <a href="#permissions-explained-mysql-connector">Descriptions of user permissions</a>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 If using a hosted option such as Amazon RDS or Amazon Aurora that does not allow a global read lock, table-level locks are used to create the <em>consistent snapshot</em>. In this case, you need to also grant <code>LOCK TABLES</code> permissions to the user that you create. See <a href="#mysql-snapshots">snapshots</a> for more details.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Finalize the user’s permissions:</p>
@@ -5542,7 +5508,7 @@ To enable the connector to consume <strong>UPDATE</strong> events, this variable
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Download the HyperCDC <a href="https://repo1.maven.org/maven2/io/hypercdc/hypercdc-connector-mysql/3.6.1.Final/hypercdc-connector-mysql-3.6.1.Final-plugin.tar.gz">MySQL connector plug-in</a>.</p>
+<p>Download the HyperCDC <a href="https://repo1.maven.org/maven2/io/debezium/debezium-connector-mysql/3.6.1.Final/debezium-connector-mysql-3.6.1.Final-plugin.tar.gz">MySQL connector plug-in</a>.</p>
 </li>
 <li>
 <p>Extract the files into your Kafka Connect environment.</p>
@@ -5559,24 +5525,22 @@ To enable the connector to consume <strong>UPDATE</strong> events, this variable
 </ol>
 </div>
 <div class="paragraph">
-<p>If you are working with immutable containers, see <a href="https://quay.io/organization/hypercdc">HyperCDC’s container images</a> for Apache Kafka MySQL and Kafka Connect with the MySQL connector already installed and ready to run.</p>
+<p>If you are working with immutable containers, see <a href="https://quay.io/organization/debezium">HyperCDC’s container images</a> for Apache Kafka MySQL and Kafka Connect with the MySQL connector already installed and ready to run.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC container images that you obtain from <code>quay.io</code> do not undergo rigorous testing or security analysis, and are provided for testing and evaluation purposes only.
 These images are not intended for use in production environments.
 To mitigate risk in production deployments, deploy only containers that are actively maintained by trusted vendors, and thoroughly tested for potential vulnerabilities.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>You can also <a href="../operations/openshift.html" class="xref page">run HyperCDC on Kubernetes and OpenShift</a>.</p>
 </div>
@@ -6346,22 +6310,20 @@ This option is easy to consume, but can result in the loss of semantic informati
 <dd>
 <p>Specifies how the connector reacts after an exception occurs during deserialization of binlog events.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>This option is deprecated.</p>
 </div>
 <div class="paragraph">
 <p>Use the <a href="#mysql-property-event-processing-failure-handling-mode"><code>event.processing.failure.handling.mode</code></a> property instead.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>This property accepts the following options:</p>
 </div>
@@ -6417,19 +6379,17 @@ This option is easy to consume, but can result in the loss of semantic informati
 <dd>
 <p>Replaces underscore characters or characters that cannot be used in Avro names with corresponding unicode, such as <code>_uxxxx</code>.<br></p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The underscore character (<code>_</code>) represents an escape sequence, similar to a backslash in Java</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>For more information, see: <a href="../configuration/avro.html#avro-naming" class="xref page">Avro naming</a>.</p>
 </div>
@@ -6533,17 +6493,15 @@ When set to <code>true</code>, the connector starts from the stored binlog file 
 <dd>
 <p>Boolean value that specifies whether the change event that the connector emits includes the SQL query that generated the change.</p>
 <div class="admonitionblock caution">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">CAUTION</span>
+      </div>
+      <div class="admonition-body">
+        
 Setting this property to <code>true</code> might expose information about tables or fields that you explicitly excluded or masked via other settings.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>To enable this property, the database property <code>binlog_annotate_row_events</code> must be set to <code>ON</code>.</p>
 </div>
@@ -6595,18 +6553,16 @@ This mechanism for recording schema changes is independent of the connector’s 
 <dd>
 <p>Boolean value that specifies whether the connector parses and publishes table and column comments on metadata objects.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 When you set this option to <code>true</code>, the schema comments that the connector includes can add a significant amount of string data to each schema object.
 Increasing the number and size of logical schema objects increases the amount of memory that the connector uses.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -6759,17 +6715,15 @@ This property is required by all Kafka Connect connectors.</p>
 <dd>
 <p>Replaces underscore characters or characters that cannot be used in Avro names with corresponding unicode, such as <code>_uxxxx.</code></p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <code>_</code> is an escape sequence, similar to a backslash in Java
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -6970,21 +6924,19 @@ After a source record is deleted, the connector can emit a tombstone event (the 
 Because the topic prefix is used to name all of the Kafka topics that receive events that this connector emits, it’s important that the topic prefix is unique across all connectors.
 Values must contain only alphanumeric characters, hyphens, dots, and underscores.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>After you set this property, do not change its value.
 If you change the value, after the connector restarts, instead of continuing to emit events to the original topics, the connector emits subsequent events to topics whose names are based on the new value.
 The connector is also unable to recover its database schema history topic.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -7023,19 +6975,17 @@ The size of the binlog buffer defines the maximum number of changes in the trans
 If the size of the transaction is larger than the buffer then HyperCDC must rewind and re-read the events that have not fit into the buffer while streaming.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 This feature is incubating.
 Feedback is encouraged.
 It is expected that this feature is not completely polished.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -7061,18 +7011,16 @@ A value of <code>0</code> means that the connector uses the MySQL server default
 Increase this value to prevent unexpected disconnects during binlog streaming.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 This value is set at the session level on the binlog streaming connection using <code>SET net_read_timeout=&lt;value&gt;</code>.
 It does not affect the global server setting.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -7098,18 +7046,16 @@ A value of <code>0</code> means that the connector uses the MySQL server default
 Increase this value to prevent unexpected disconnects during streaming of large transactions.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 This value is set at the session level on the binlog streaming connection using <code>SET net_write_timeout=&lt;value&gt;</code>.
 It does not affect the global server setting.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -7247,19 +7193,17 @@ A string of asterisks replaces the original values, for example,  <code>********
 </dl>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The pattern that you specify for the <code>custom.sanitize.pattern</code> property overrides the default HyperCDC masking pattern; the specified value does not extend or augment the default pattern.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div id="mysql-property-database-initial-statements" class="dlist">
 <dl>
 <dt class="hdlist1"><a href="#mysql-property-database-initial-statements"><code>database.initial.statements</code></a></dt>
@@ -8083,21 +8027,19 @@ If you are starting multiple connectors in a cluster, this property is useful fo
 <p>By default, during a snapshot, the connector reads table content in batches of rows.
 Set this property to specify the maximum number of rows in a batch.</p>
 <div class="admonitionblock caution">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">CAUTION</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To maintain connector performance, it’s best to preserve the unset default of this property.
 This default configuration enables MySQL to stream the result set to HyperCDC one row at a time.
 By contrast, if you set this property, performance problems can result, because HyperCDC attempts to fetch the entire result set into memory at once.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -8243,17 +8185,15 @@ This behavior differs from tables that are defined by the InnoDB engine, which a
 To enable parallel initial snapshots, set the property to a value greater than 1.
 In a parallel initial snapshot, the connector processes multiple tables concurrently.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Parallel initial snapshots is an incubating feature.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -8276,17 +8216,15 @@ Parallel initial snapshots is an incubating feature.
 When set to <code>false</code> (the default), the connector will chunk the contents of the source table across all parallel initial snapshot threads for maximum performance.
 When set to <code>true</code>, the connector will process each table per thread.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Parallel initial snapshots is an incubating feature.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -8347,19 +8285,17 @@ Set this option if you do not need the topics to contain a consistent snapshot o
 After a restart, the connector runs a snapshot that rebuilds the topic from the source tables.
 You can also set the property to periodically prune a database schema history topic that experiences unexpected growth.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Do not use this mode to perform a snapshot if schema changes were committed to the database after the last connector shutdown.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1"><code>when_needed</code></dt>
 <dd>
@@ -8597,19 +8533,17 @@ This list identifies the tables for which you want to specify custom snapshot qu
 <p><code>"snapshot.select.statement.overrides": "inventory.products,customers.orders"</code></p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 If the fully qualified schema or table name contains special characters, such as spaces, square brackets (<code>[</code> or <code>]</code>), or period characters (<code>.</code>),
 enclose the string in double quotes to prevent the connector from interpreting the special characters as delimiters.
 Double quotes around table names are optional if the fully qualified table name does not include spaces or special characters.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1">Secondary properties</dt>
 <dd>
@@ -8624,19 +8558,17 @@ Double quotes around table names are optional if the fully qualified table name 
 <p><code>snapshot.select.statement.overrides.customers.orders</code></p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If a table is listed in the main property but its corresponding secondary property is missing, the connector logs a warning and uses the default snapshot behavior for that table.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1">Example configuration</dt>
 <dd>
@@ -8767,17 +8699,15 @@ Double quotes around table names are optional if the fully qualified table name 
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Currently only <code>MilliSecondsBehindSource</code> metric supports collecting quantiles.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The statistics are computed using a probabilistic data structure (DDSketch) that provides approximate quantile values with 1% relative accuracy.</p>
 </div>
@@ -9308,21 +9238,19 @@ schema.history.internal.consumer.ssl.key.password=test1234</code></pre>
 <p>The name of the Kafka topic that the connector monitors for ad hoc signals.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If <a href="../configuration/topic-auto-create-config.html#topic-auto-create-config" class="xref page">automatic topic creation</a> is disabled, you must manually create the required signaling topic.
 A signaling topic is required to preserve signal ordering.
 The signaling topic must have a single partition.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -10482,14 +10410,8 @@ If the snapshot is disabled, the connector fails with an error.</p>
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

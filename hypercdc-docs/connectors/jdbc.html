@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC connector for JDBC</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC connector for JDBC</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -98,20 +102,18 @@ If you run the HyperCDC JDBC sink connector, it’s not necessary to deploy the 
 When a delete event is consumed by the sink connector, no part of the event’s payload is consulted.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC JDBC sink connector is not designed to read from schema change topics.
 If your source connector is configured to capture schema changes, in the JDBC connector configuration, set the <a href="#jdbc-property-connection-topics"><code>topics</code></a> or <a href="#jdbc-property-connection-topics-regex"><code>topics.regex</code></a> properties so that the connector does not consume from schema change topics.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="jdbc-at-least-once-delivery"><a class="anchor" href="#jdbc-at-least-once-delivery"></a>At-least-once delivery</h3>
@@ -225,12 +227,11 @@ To use a subset of fields in the primary key, set the <a href="#jdbc-property-pr
 </tbody>
 </table></div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Some database dialects might throw an exception if you set the <code>primary.key.mode</code> to <code>kafka</code> and set <code>schema.evolution</code> to <code>basic</code>.
 This exception occurs when a dialect maps a <code>STRING</code> data type mapping to a variable length string data type such as <code>TEXT</code> or <code>CLOB</code>, and the dialect does not allow primary key columns to have unbounded lengths.
@@ -246,31 +247,28 @@ To avoid this problem, apply the following settings in your environment:</p>
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If a column maps to a data type that isn’t permitted as a primary key for your target database, an explicit list of columns will be necessary in <code>primary.key.fields</code> excluding such columns.
 Consult your specific database vendor’s documentation for what data types are and are not permissible.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="jdbc-delete-mode"><a class="anchor" href="#jdbc-delete-mode"></a>Delete mode</h3>
 <div class="paragraph">
-<p>The HyperCDC JDBC sink connector can delete rows in the destination database when a <code>DELETE</code> or <em>tombstone</em> event is consumed.
-By default, the JDBC sink connector does not enable delete mode.</p>
+<p>By default, when the connector consumes <code>DELETE</code> or tombstone events, it does not delete the corresponding row in the sink database.
+You might want the connector to remove rows when you need to maintain data parity between the source and sink databases, so that deletions in the source are also reflected in the sink.</p>
 </div>
 <div class="paragraph">
 <p>If you want to the connector to remove rows, you must explicitly set <code>delete.enabled=true</code> in the connector configuration.
@@ -281,7 +279,8 @@ The preceding configuration is necessary, because deletes are executed based on 
 <div class="sect2">
 <h3 id="jdbc-idempotent-writes"><a class="anchor" href="#jdbc-idempotent-writes"></a>Idempotent writes</h3>
 <div class="paragraph">
-<p>The HyperCDC JDBC sink connector can perform idempotent writes, enabling it to replay the same records repeatedly and not change the final database state.</p>
+<p>In an at-least-once delivery pipeline, the connector can receive the same event more than once after a restart or rebalance.
+Configure the connector to use <code>upsert</code> mode so that data written to the sink database is idempotent, and replaying an event always produces the same final row state.</p>
 </div>
 <div class="paragraph">
 <p>To enable the connector to perform idempotent writes, you must be explicitly set the <code>insert.mode</code> for the connector to <code>upsert</code>.
@@ -333,7 +332,8 @@ The following table shows the <code>upsert</code> DML syntax for the database di
 <div class="sect2">
 <h3 id="jdbc-schema-evolution"><a class="anchor" href="#jdbc-schema-evolution"></a>Schema evolution</h3>
 <div class="paragraph">
-<p>You can use the following schema evolution modes with the HyperCDC JDBC sink connector:</p>
+<p>The <code>schema.evolution</code> property controls whether the connector automatically creates or alters destination tables when event schemas change.
+The following table describes the available modes, from no evolution (<code>none</code>) through startup validation (<code>validate-only</code>) to automatic table creation and column addition (<code>basic</code>).</p>
 </div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -381,12 +381,11 @@ To adjust nullability settings or default values, you can introduce a custom sin
 For more information, see <a href="#jdbc-field-types">JDBC field types</a>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When you introduce new fields to the event structure of tables that already exist in the destination database, you must define the new fields as optional, or the fields must have a default value specified in the database schema.
 If you want a field to be removed from the destination table, use one of the following options:</p>
@@ -407,10 +406,9 @@ If you want a field to be removed from the destination table, use one of the fol
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="jdbc-quoting-case-sensitivity"><a class="anchor" href="#jdbc-quoting-case-sensitivity"></a>Quoting and case sensitivity</h3>
@@ -432,6 +430,10 @@ Enabling quoting results in the same behavior when the connector creates column 
 </div>
 <div class="sect2">
 <h3 id="jdbc-connection-idle-timeouts"><a class="anchor" href="#jdbc-connection-idle-timeouts"></a>Connection Idle Timeouts</h3>
+<div class="paragraph">
+<p>Connections held idle in the pool can time out if they remain inactive beyond the database’s configured threshold, causing subsequent write operations to fail.
+Set the <code>hibernate.agroal.idleValidation</code> property to enable periodic validation of pooled connections and prevent idle timeout errors.</p>
+</div>
 <div class="paragraph">
 <p>The JDBC sink connector for HyperCDC leverages a connection pool to enhance performance.
 Connection pools are engineered to establish an initial set of connections, maintain a specified number of connections, and efficiently allocate connections to the application as required.
@@ -596,6 +598,9 @@ The actual final column type varies with for each database type.</p>
 </div>
 <div class="sect2">
 <h3 id="jdbc-kafka-connect-primitive-mappings"><a class="anchor" href="#jdbc-kafka-connect-primitive-mappings"></a>Kafka Connect primitive data type mappings</h3>
+<div class="paragraph">
+<p>The following table maps each Kafka Connect primitive type to its corresponding JDBC SQL type, which the HyperCDC JDBC sink connector uses when creating or altering columns in the destination database.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Mappings between Kafka Connect primitive data types and column data types</caption>
 <colgroup>
@@ -648,25 +653,26 @@ The actual final column type varies with for each database type.</p>
 </tbody>
 </table></div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The connector does not support <code>BOOLEAN</code> data in Oracle 23.
 If you configure the JDBC connector to use an Oracle 23 database as the sink target, you cannot rely on schema evolution to automatically create a field that uses the Oracle 23 <code>BOOLEAN</code> data type.
 The connector maps <code>BOOLEAN</code> data to <code>BIT</code> data types, which are universal across Oracle versions.
 As a workaround, if you need a BOOLEAN data type for an Oracle 23 sink, add the field manually to the target table.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="jdbc-kafka-connect-logical-mappings"><a class="anchor" href="#jdbc-kafka-connect-logical-mappings"></a>Kafka Connect logical data type mappings</h3>
+<div class="paragraph">
+<p>The following table maps each Kafka Connect logical type to its corresponding JDBC SQL type, which the HyperCDC JDBC sink connector uses when writing structured data such as dates, times, and decimals to the destination database.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Mappings between Kafka Connect logical data types and column data types</caption>
 <colgroup>
@@ -701,6 +707,9 @@ As a workaround, if you need a BOOLEAN data type for an Oracle 23 sink, add the 
 </div>
 <div class="sect2">
 <h3 id="jdbc-hypercdc-logical-mappings"><a class="anchor" href="#jdbc-hypercdc-logical-mappings"></a>HyperCDC logical data type mappings</h3>
+<div class="paragraph">
+<p>The following table maps HyperCDC logical types to their corresponding JDBC SQL types, which the connector uses when writing HyperCDC change event fields — such as timestamps, durations, and variable-scale decimals — to the destination database.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. Mappings between HyperCDC logical types and column data types</caption>
 <colgroup>
@@ -757,22 +766,23 @@ As a workaround, if you need a BOOLEAN data type for an Oracle 23 sink, add the 
 </tbody>
 </table></div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the database does not support time or timestamps with time zones, the mapping resolves to its equivalent without timezones.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="jdbc-hypercdc-logical-mappings-dialect-specific"><a class="anchor" href="#jdbc-hypercdc-logical-mappings-dialect-specific"></a>HyperCDC dialect-specific data type mappings</h3>
+<div class="paragraph">
+<p>The following table maps HyperCDC logical types to dialect-specific column types for each supported database, which you can use to understand how the connector resolves fields such as JSON, geospatial data, and bit strings when targeting a specific database dialect.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. Mappings between HyperCDC dialect-specific logical types and column data types</caption>
 <colgroup>
@@ -1008,19 +1018,17 @@ Sink databases must meet the following requirements to support direct mapping of
 </tbody>
 </table></div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If there is not a direct mapping between one of the vector logical types and your target relational database’s column types, you can use the <code>VectorToJsonConverter</code> to convert the vector logical type to JSON so that it can be written to any target relational database.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="hypercdc-jdbc-sink-column-and-data-type-propagation"><a class="anchor" href="#hypercdc-jdbc-sink-column-and-data-type-propagation"></a>Column and data type propagation</h3>
@@ -1077,22 +1085,20 @@ For example, for a MySQL sink target, the JDBC connector defaults to converting 
 Thus, rather than using the default mapping, the HyperCDC JDBC sink connector uses the given parameter values to refine the mapping, and creates a column in the sink database with the type <code>TINYINT(1)</code>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Typically, the effect of using column or data type propagation is most significant when the source and sink databases are of the same type.
 Because the source and sink database share the same underlying schema structure, it’s easier to map data types between them without having to apply complex transformations or interpretations.
 We are continually looking at ways to improve this mapping across heterogeneous databases and the current type system allows us to continue to refine these mappings based on feedback.
 If you find a mapping could be improved, please let us know.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </div>
@@ -1292,7 +1298,7 @@ After you apply the SMT to an event that includes a field with the name <code>ID
 <h2 id="jdbc-deployment"><a class="anchor" href="#jdbc-deployment"></a>Deployment</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To deploy a HyperCDC JDBC connector, you install the HyperCDC JDBC connector archive, configure the connector, and start the connector by adding its configuration to Kafka Connect.</p>
+<p>To deploy the HyperCDC JDBC sink connector, install the connector archive in your Kafka Connect environment, configure the connector properties, and register the connector with Kafka Connect.</p>
 </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
@@ -1312,7 +1318,7 @@ After you apply the SMT to an event that includes a field with the name <code>ID
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Download the HyperCDC <a href="https://repo1.maven.org/maven2/io/hypercdc/hypercdc-connector-jdbc/3.6.1.Final/hypercdc-connector-jdbc-3.6.1.Final-plugin.tar.gz">JDBC connector plug-in archive</a>.</p>
+<p>Download the HyperCDC <a href="https://repo1.maven.org/maven2/io/debezium/debezium-connector-jdbc/3.6.1.Final/debezium-connector-jdbc-3.6.1.Final-plugin.tar.gz">JDBC connector plug-in archive</a>.</p>
 </li>
 <li>
 <p>Extract the files into your Kafka Connect environment.</p>
@@ -1320,20 +1326,18 @@ After you apply the SMT to an event that includes a field with the name <code>ID
 <li>
 <p>Optionally download the JDBC driver from Maven Central and extract the downloaded driver file to the directory that contains the JDBC sink connector JAR file.</p>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Drivers for Oracle and Db2 are not included with the JDBC sink connector.
 You must download the drivers and install them manually.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Add the directory with the JAR files to <a href="https://kafka.apache.org/documentation/#connectconfigs">Kafka Connect’s <code>plugin.path</code></a>. Make sure that the path where you install the JDBC sink connector is part of the <a href="https://kafka.apache.org/documentation/#connectconfigs">Kafka Connect <code>plugin.path</code></a>.</p>
@@ -1480,6 +1484,9 @@ Information about the properties is organized as follows:</p>
 </div>
 <div class="sect2">
 <h3 id="jdbc-connector-properties-kafka-consumer"><a class="anchor" href="#jdbc-connector-properties-kafka-consumer"></a>JDBC connector Kafka consumer properties</h3>
+<div class="paragraph">
+<p>The following table describes the Kafka consumer properties that control how the HyperCDC JDBC sink connector identifies itself to Kafka Connect and specifies the topics it consumes.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col>
@@ -1560,6 +1567,9 @@ Do not use this property in combination with the <a href="#jdbc-property-connect
 </div>
 <div class="sect2">
 <h3 id="jdbc-connector-properties-connection"><a class="anchor" href="#jdbc-connector-properties-connection"></a>JDBC connector connection properties</h3>
+<div class="paragraph">
+<p>The following table describes the properties that control how the HyperCDC JDBC sink connector connects to and authenticates with the destination database, including connection pool settings.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col>
@@ -1665,12 +1675,11 @@ Do not use this property in combination with the <a href="#jdbc-property-connect
 <p>When enabled (<code>true</code>), the connector treats connection issues (such as socket closures or timeouts) as retriable, allowing it to retry processing instead of failing the task. This reduces downtime and improves resilience against temporary disruptions.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Setting this option to <code>true</code> can reduce downtime.
 However, in master-replica environments with asynchronous replication, it may lead to data loss if retries occur before all changes are fully replicated.</p>
@@ -1678,16 +1687,18 @@ However, in master-replica environments with asynchronous replication, it may le
 <div class="paragraph">
 <p>Use with caution where strong data consistency is required.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="sect2">
 <h3 id="jdbc-connector-properties-runtime"><a class="anchor" href="#jdbc-connector-properties-runtime"></a>JDBC connector runtime properties</h3>
+<div class="paragraph">
+<p>The following table describes the runtime properties that control how the HyperCDC JDBC sink connector processes events and writes data to the destination database, including insert mode, primary key resolution, schema evolution, and batching behavior.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col>
@@ -1736,12 +1747,11 @@ Use of this option requires that you set the <a href="#jdbc-property-primary-key
 <p>Specifies whether the connector processes <code>TRUNCATE</code> events and truncates the corresponding tables from the database.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Although support for <code>TRUNCATE</code> statements has been available in Db2 since <a href="https://www.ibm.com/support/pages/apar/JR37942/">version 9.7</a>,
 currently, the JDBC connector is unable to process standard <code>TRUNCATE</code> events that the Db2 connector emits.</p>
@@ -1756,10 +1766,9 @@ For example:</p>
 <div class="paragraph">
 <p>The user account that submits the preceding query requires <code>ALTER</code> privileges on the table to be truncated.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -1972,20 +1981,18 @@ When the default setting (<code>false</code>) is in effect, an <code>INSERT</cod
 <p>Specifies how many records to attempt to batch together into the destination table.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Note that if you set <code><em>consumer.max.poll.records</em></code> in the Connect worker properties to a value lower than <code><em>batch.size</em></code>, batch processing will be caped by <code><em>consumer.max.poll.records</em></code> and the desired <code><em>batch.size</em></code> won’t be reached.
 You can also configure the connector’s underlying consumer’s <code><em>max.poll.records</em></code> using <code><em>consumer.override.max.poll.records</em></code> in the connector configuration.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -2071,26 +2078,27 @@ If the number of retries exceeds the retry value, the sink connector enters a <e
 <p>Specifies the number of milliseconds that the connector waits to retry a flush operation that failed.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When you set both the <code>flush.retry.delay.ms</code> and <a href="#jdbc-property-flush-max-retries"><code>flush.max.retries</code></a> properties, it can affect the behavior of the Kafka <a href="https://kafka.apache.org/documentation/#consumerconfigs_max.poll.interval.ms">max.poll.interval.ms</a> property.
 To prevent the connector from rebalancing, set the total retry time (flush.retry.delay.ms * flush.max.retries) to a value that is less than the value of <code>max.poll.interval.ms</code> (default is 5 minutes).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="sect2">
 <h3 id="jdbc-connector-properties-extendable"><a class="anchor" href="#jdbc-connector-properties-extendable"></a>JDBC connector extendable properties</h3>
+<div class="paragraph">
+<p>The following table describes the properties that allow you to customize the naming strategies the HyperCDC JDBC sink connector uses to resolve destination table names and column names from incoming event data.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col>
@@ -2163,6 +2171,9 @@ For example, to assist Hibernate in resolving the type and version of the target
 <div class="sect1">
 <h2 id="jdbc-faq"><a class="anchor" href="#jdbc-faq"></a>Frequently asked questions</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The following questions and answers address common decisions and scenarios when you configure and operate the HyperCDC JDBC sink connector, including event transformation requirements, schema evolution limitations, data type mapping, and table naming options.</p>
+</div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><strong>Is the</strong> <code>ExtractNewRecordState</code> <strong>single message transformation required?</strong></dt>
@@ -2202,14 +2213,8 @@ Quoting behavior is dialect-specific, and varies among different types of databa
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

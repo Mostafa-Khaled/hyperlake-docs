@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC Connector for Oracle</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC Connector for Oracle</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -133,27 +137,24 @@ As a result, the HyperCDC Oracle connector cannot retrieve the entire history of
 To enable the connector to establish a baseline for the current state of the database, the first time that the connector starts, it performs an initial <em>consistent snapshot</em> of the database.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the time needed to complete the initial snapshot exceeds the <code>UNDO_RETENTION</code> time that is set for the database (fifteen minutes, by default), an ORA-01555 exception can occur.
 For more information about the error, and about the steps that you can take to recover from it, see the <a href="#what-causes-ora-01555-and-how-to-handle-it">Frequently asked questions</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>During a table’s snapshot, it’s possible for Oracle to raise an ORA-01466 exception.
 This happens when a user modifies the schema of the table or adds, changes, or drops an index or related object associated with the table being snapshot.
@@ -163,10 +164,9 @@ In the event this happens, the connector will stop and the initial snapshot will
 <p>To remediate the problem, you can configure the <a href="#oracle-property-snapshot-database-errors-max-retries"><code>snapshot.database.errors.max.retries</code></a> property with a value greater than <code>0</code> so that the specific table’s snapshot will restart.
 While the entire snapshot will not start from the beginning when retrying, the specific table in question will be re-read from the beginning and the table’s topic will contain duplicate snapshot events.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect3">
 <h4 id="default-workflow-for-performing-an-initial-snapshot"><a class="anchor" href="#default-workflow-for-performing-an-initial-snapshot"></a>Default workflow that the Oracle connector uses to perform an initial snapshot</h4>
 <div class="paragraph">
@@ -192,17 +192,15 @@ If you want the connector to capture data only from specific tables you can dire
 <li>
 <p>Obtain a <code>ROW SHARE MODE</code> lock on each of the captured tables to prevent structural changes from occurring during creation of the snapshot.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 HyperCDC holds the locks for only a short time.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Read the current system change number (SCN) position from the server’s redo log.</p>
@@ -212,21 +210,19 @@ HyperCDC holds the locks for only a short time.
 The connector persists schema information in its internal database schema history topic.
 The schema history provides information about the structure that is in effect when a change event occurs.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>By default, the connector captures the schema of every table in the database that is in capture mode, including tables that are not configured for capture.
 If tables are not configured for capture, the initial snapshot captures only their structure; it does not capture any table data.
 For more information about why snapshots persist schema information for tables that you did not include in the initial snapshot, see <a href="#understanding-why-initial-snapshots-capture-the-schema-history-for-all-tables">Understanding why initial snapshots capture the schema for all tables</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Release the locks obtained in Step 3.
@@ -342,17 +338,15 @@ After a restart, the connector runs a snapshot that rebuilds the topic from the 
 You can also set the property to periodically prune a database schema history topic that experiences unexpected growth.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 Do not use this mode to perform a snapshot if schema changes were committed to the database after the last connector shutdown.
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -570,20 +564,18 @@ You can then initiate an incremental snapshot to enable the connector to synchro
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
 For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Removing offsets should be performed only by advanced users who have experience in manipulating internal Kafka Connect data.
 This operation is potentially destructive, and should be performed only as a last resort.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Set values for properties in the connector configuration as described in the following steps:</p>
@@ -628,20 +620,18 @@ After the snapshot completes, you can optionally trigger an incremental snapshot
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
 For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Removing offsets should be performed only by advanced users who have experience in manipulating internal Kafka Connect data.
 This operation is potentially destructive, and should be performed only as a last resort.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Edit the <a href="#oracle-property-table-include-list"><code>table.include.list</code></a> to add the tables that you want to capture.</p>
@@ -883,12 +873,11 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 <p>The connector repeats the process for each snapshot chunk.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To enable HyperCDC to perform incremental snapshots, you must grant the connector permission to write to the signaling table.</p>
 </div>
@@ -896,10 +885,9 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 <p>Write permission is unnecessary only for connectors that can be configured to perform read-only incrementals snapshots
 (<a href="#mariadb-read-only-incremental-snapshots">MariaDB</a>, <a href="#mysql-read-only-incremental-snapshots">MySQL</a>, or <a href="#postgresql-read-only-incremental-snapshots">PostgreSQL</a>).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Currently, you can use either of the following methods to initiate an incremental snapshot:</p>
 </div>
@@ -914,19 +902,17 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 </ul>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC connector for Oracle does not support schema changes while an incremental snapshot is running.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect3">
 <h4 id="oracle-triggering-an-incremental-snapshot"><a class="anchor" href="#oracle-triggering-an-incremental-snapshot"></a>Triggering an incremental snapshot</h4>
 <div class="paragraph">
@@ -952,20 +938,18 @@ The <code>data-collections</code> array for an incremental snapshot signal has n
 If the <code>data-collections</code> array is empty, HyperCDC interprets the empty array to mean that no action is required, and it does not perform a snapshot.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the name of a table that you want to include in a snapshot contains a dot (<code>.</code>), a space, or some other non-alphanumeric character, you must escape the table name in double quotes.
 For example, to include a table that exists in the <code><strong>public</strong></code> schema in the <code><strong>db1</strong></code> database, and that has the name <code><strong>My.Table</strong></code>, use the following format: <code><strong>"db1.public.\"My.Table\""</strong></code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -1146,12 +1130,11 @@ VALUES ('ad-hoc-1',
 </div>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Physical row identifiers can change under certain circumstances, which may affect snapshot consistency.
 Oracle <code>ROWID</code> can change during table reorganization operations such as <code>ALTER TABLE MOVE</code>, partition maintenance, or <code>SHRINK SPACE</code> operations.</p>
@@ -1159,10 +1142,9 @@ Oracle <code>ROWID</code> can change during table reorganization operations such
 <div class="paragraph">
 <p>To ensure data consistency, when an incremental snapshot that uses a physical row identifier is in progress, do not perform table maintenance operations, such as table moves, partition management, or shrink operations.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="oracle-incremental-snapshots-additional-conditions"><a class="anchor" href="#oracle-incremental-snapshots-additional-conditions"></a>Running an ad hoc incremental snapshots with <code>additional-conditions</code></h4>
@@ -1820,7 +1802,7 @@ If the connector restarts after the last known offset is removed from the redo l
 <div class="title">Prerequisites</div>
 <ul>
 <li>
-<p>The connector is configured to use one of the available <a href="#">HyperCDC signaling channels</a>.</p>
+<p>The connector is configured to use one of the available <a href="configuration/signalling.adoc#sending-signals-to-a-debezium-connector">HyperCDC signaling channels</a>.</p>
 </li>
 <li>
 <p>You have access to the connector log file and can identify the ID of the transaction that you want to drop.</p>
@@ -1828,35 +1810,31 @@ If the connector restarts after the last known offset is removed from the redo l
 </ul>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>After you drop a transaction, the connector abandons uncommitted changes for that transaction and does not emit change events for them.
 Use the <code>drop-transaction</code> signal only when you are certain that the transaction should not be processed.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>As an alternative to manually dropping transactions, you can configure the <a href="#oracle-property-log-mining-window-max-ms"><code>log.mining.window.max.ms</code></a> property to automatically advance the mining window when a long-running transaction exceeds a specified duration.
 Unlike the <code>drop-transaction</code> signal, this approach continues to track the transaction and buffer its events, while preventing the mining window from growing indefinitely.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Procedure</div>
 <ul>
@@ -1930,12 +1908,11 @@ fulfillment.inventory.products</pre>
 <p>The connector applies similar naming conventions to label its internal database schema history topics, <a href="#oracle-schema-change-topic">schema change topics</a>, and <a href="#oracle-transaction-metadata">transaction metadata topics</a>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Oracle is case-insensitive for schema and table names by default, storing them in uppercase when created unless quoted.
 As a result, the HyperCDC Oracle connector generates Kafka topic names that contain uppercase characters, for example <code>fulfillment.INVENTORY.CUSTOMERS</code>.
@@ -1958,10 +1935,9 @@ Ensure that the task is authorized to create topics or that the topic exists and
 transforms.LowerCaseTopicName.type=com.github.jcustenborder.kafka.connect.transform.common.LowerCaseTopic</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>If the default topic name do not meet your requirements, you can configure custom topic names.
 To configure custom topic names, you specify regular expressions in the logical topic routing SMT.
@@ -2009,19 +1985,17 @@ The connector writes schema change events to a Kafka topic named <code><em>&lt;s
 <p>HyperCDC emits a new message to the schema change topic whenever it streams data from a new table, or when the structure of the table is altered.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Following a change in table structure, you must follow (the <a href="#surrogate-schema-evolution">schema evolution procedure</a>).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Messages that the connector sends to the schema change topic contain a payload, and, optionally, also contain the schema of the change event message.</p>
 </div>
@@ -2097,12 +2071,11 @@ Because the structured representation presents data in JSON or Avro format, cons
 </dl>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>By default, the connector uses the <code>ALL_TABLES</code> database view to identify the table names to store in the schema history topic.
 Within that view, the connector can access data only from tables that are available to the user account through which it connects to the database.</p>
@@ -2121,33 +2094,29 @@ Use one of the following methods to alter the set of tables that the topic store
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When the connector is configured to capture a table, it stores the history of the table’s schema changes not only in the schema change topic, but also in an internal database schema history topic.
 The internal database schema history topic is for connector use only and it is not intended for direct use by consuming applications.
 Ensure that applications that require notifications about schema changes consume that information only from the schema change topic.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Never partition the database schema history topic.
 For the database schema history topic to function correctly, it must maintain a consistent, global order of the event records that the connector emits to it.</p>
@@ -2165,24 +2134,21 @@ For the database schema history topic to function correctly, it must maintain a 
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The schema change topic message format is in an incubating state and might change without notice.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <div class="title">Example: Message emitted to the Oracle connector schema change topic</div>
 <p>The following example shows a typical schema change message in JSON format.
@@ -2407,21 +2373,19 @@ In the following example, the <code>payload</code> field contains the <code>data
 <p>HyperCDC can generate events that represent transaction metadata boundaries and that enrich data change event messages.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="title">Limits on when HyperCDC receives transaction metadata</div>
 <div class="paragraph">
 <p>HyperCDC registers and receives metadata only for transactions that occur after you deploy the connector.
 Metadata for transactions that occur before you deploy the connector is not available.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Database transactions are represented by a statement block that is enclosed between the <code>BEGIN</code> and <code>END</code> keywords.
 HyperCDC generates transaction boundary events for the <code>BEGIN</code> and <code>END</code> delimiters in every transaction.
@@ -2553,20 +2517,18 @@ However, before you choose a log mining strategy, it’s important to consider t
 <div class="sect3">
 <h4 id="_writing_the_data_dictionary_to_redo_logs"><a class="anchor" href="#_writing_the_data_dictionary_to_redo_logs"></a>Writing the data dictionary to redo logs</h4>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <code>redo_log_catalog</code> mining strategy is deprecated, and is scheduled for removal in a future HyperCDC release.
 Consider migrating to the <code>hybrid</code> strategy, which provides equivalent schema tracking reliability with better performance and lower overhead.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The <code>redo_log_catalog</code> mining strategy instructs the database to flush a copy of the data dictionary to the redo logs immediately after each redo log switch.
 This is the most reliable strategy for tracking schema changes that are interwoven with data changes, because Oracle LogMiner has a way to interpolate between the starting and ending data dictionary states across a series of change vectors.</p>
@@ -2578,19 +2540,17 @@ Flushing the logs after each switch can quickly consume valuable space in the ar
 If you intend to use this mode, coordinate with your database administrators to ensure that the database is configured appropriately.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you configure the connector to use the <code>redo_log_catalog</code> mode, do not use multiple HyperCDC Oracle connectors to capture changes from the same logical database.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="_using_the_online_catalog_directly"><a class="anchor" href="#_using_the_online_catalog_directly"></a>Using the online catalog directly</h4>
@@ -2638,20 +2598,18 @@ If the connector detects that Oracle LogMiner could not reconstruct the SQL, the
 The connector reports a failure only if both Oracle LogMiner and the connector are unable to reconstruct the SQL.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>You cannot use the <code>hybrid</code> mining strategy if the <a href="#oracle-property-lob-enabled"><code>lob.enabled</code></a> property is set to <code>true</code>.
 If you require streaming <code>CLOB</code>, <code>BLOB</code>, or <code>XML</code> data, only the <code>online_catalog</code> or <code>redo_log_catalog</code> (deprecated) strategies can be used.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect2">
@@ -2665,12 +2623,11 @@ A <code>PUBLIC</code> redo thread is available for use by any instance, while a 
 Because private redo threads are not shared across instances, their changes are not visible to other nodes and cannot be reliably consumed by a change data capture process.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Do not change a redo thread from <code>PUBLIC</code> to <code>PRIVATE</code> or from <code>PRIVATE</code> to <code>PUBLIC</code> while a connector is deployed.
 Transitioning a thread from <code>PUBLIC</code> to <code>PRIVATE</code> can result in data loss, because the connector will begin skipping events from that thread.
@@ -2679,10 +2636,9 @@ Transitioning a thread from <code>PRIVATE</code> to <code>PUBLIC</code> can lead
 <div class="paragraph">
 <p>If a redo thread transition is required, a re-snapshot of data may be required to avoid data loss and to remain consistent.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="oracle-logminer-query-modes"><a class="anchor" href="#oracle-logminer-query-modes"></a>Query Modes</h3>
@@ -2794,12 +2750,11 @@ All caches should be configured this way to avoid loss of transaction events acr
 Additionally, the location where the cache is kept is defined by the <code>path</code> attribute and this should be a shared location accessible all possible runtime environments.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC Infinispan buffer implementation requires that you configure a set of distinct cache configurations, each identified by a HyperCDC-defined cache name.
 You must configure caches for the following identifiers: <code>transactions</code>, <code>events</code>, <code>processed-transactions</code>, <code>rollbacks</code>, and <code>schema-changes</code>.</p>
@@ -2812,24 +2767,21 @@ For example, the property <code>log.mining.buffer.infinispan.cache.transactions<
 <p>The XML <code>name</code> attribute in each cache configuration must match the required HyperCDC cache identifier exactly.
 Aside from the cache name, depending on your performance requirements, you can either configure all caches to use the same configuration, or adjust the configuration of each cache independently.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When supplying XML configuration as a JSON connector property value, line breaks must be omitted or replaced with a <code>\n</code> character.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Another example, the following illustrates the same cache configured with an Infinispan cluster:</p>
 </div>
@@ -2857,12 +2809,11 @@ Secondly, the cache is defined to use the <code>application/x-protostream</code>
 And lastly, no <code>path</code> attribute is necessary on the file store definition since the Infinispan cluster will handle this automatically.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The Infinispan buffer type is considered incubating; the cache formats may change between versions and may require a re-snapshot.
 The migration notes will indicate whether this is needed.</p>
@@ -2871,10 +2822,9 @@ The migration notes will indicate whether this is needed.</p>
 <p>Additionally, when removing a HyperCDC Oracle connector that uses the Infinispan buffer, the persisted cache files are not removed from disk automatically.
 If the same buffer location will be used by a new connector deployment, the files should be removed manually before deploying the new connector.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect4">
 <h5 id="_infinispan_hotrod_client_integration"><a class="anchor" href="#_infinispan_hotrod_client_integration"></a>Infinispan Hotrod client integration</h5>
 <div class="paragraph">
@@ -2962,19 +2912,17 @@ At regular intervals, the heartbeat action query causes the connector to insert 
 HyperCDC detects the table changes and emits change events for them, ensuring that offsets remain synchronized, even in pluggable databases that process changes infrequently.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For the connector to use the <code>heartbeat.action.query</code> with tables that are not owned by the <a href="#creating-users-for-the-connector">connector user account</a>, you must grant the connector user permission to run the necessary <code>INSERT</code> or <code>UPDATE</code> queries on those tables.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </div>
@@ -2987,12 +2935,11 @@ The structures of the key and value depend on the table from which the change ev
 For information about how HyperCDC constructs topic names, see <a href="#oracle-topic-names">Topic names</a>.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC Oracle connector ensures that all Kafka Connect <em>schema names</em> are <a href="http://avro.apache.org/docs/current/spec.html#names">valid Avro schema names</a>.
 This means that the logical server name must start with alphabetic characters or an underscore ([a-z,A-Z,_]),
@@ -3002,10 +2949,9 @@ The connector automatically replaces invalid characters with an underscore chara
 <div class="paragraph">
 <p>Unexpected naming conflicts can result when the only distinguishing characters between multiple logical server names, schema names, or table names are not valid characters, and those characters are replaced with underscores.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>HyperCDC and Kafka Connect are designed around <em>continuous streams of event messages</em>.
 However, the structure of these events might change over time, which can be difficult for topic consumers to handle.
@@ -3014,20 +2960,18 @@ Every message key and value has two parts: a <em>schema</em> and <em>payload</em
 The schema describes the structure of the payload, while the payload contains the actual data.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The connector can capture both DDL and DML changes that result from user-initiated or application-level operations.
 It can also capture DML changes that originate from <code>SYS</code> or <code>SYSTEM</code> accounts.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="oracle-change-event-keys"><a class="anchor" href="#oracle-change-event-keys"></a>Change event keys</h3>
 <div class="paragraph">
@@ -3260,34 +3204,30 @@ The connector reports the timestamp value with differing precision in the follow
 <li>
 <p>The ROWID associated with the row</p>
 <div class="admonitionblock tip">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">TIP</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <code>commit_scn</code> field is optional and describes the SCN of the transaction commit that the change event participates within.
 This field is only present when using the LogMiner connection adapter.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock tip">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">TIP</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <code>user_name</code> field is only populated when using the LogMiner connection adapter.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 </ul>
 </div>
@@ -3498,7 +3438,7 @@ This field is only present when using the LogMiner connection adapter.</p>
             "ID": 1004,
             "FIRST_NAME": "Anne",
             "LAST_NAME": "Kretchmar",
-            "EMAIL": "<a href="#" class="__cf_email__" data-cfemail="d0b1bebeb5bb90bebfb1bea3a7b5a2febfa2b7">[email&nbsp;protected]</a>"
+            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ccada2a2a9a78ca2a3ada2bfbba9bee2a3beab">[email&nbsp;protected]</a>"
         },
         "source": {
             "version": "3.6.1.Final",
@@ -3544,40 +3484,36 @@ This field is only present when using the LogMiner connection adapter.</p>
 </ul>
 </div>
 <div class="admonitionblock tip">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">TIP</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The names of the schemas for the <code>before</code> and <code>after</code> fields are of the form <code><em>&lt;logicalName&gt;</em>.<em>&lt;schemaName&gt;</em>.<em>&lt;tableName&gt;</em>.Value</code>, and thus are entirely independent from the schemas for all other tables.
 As a result, when you use the <a href="../configuration/avro.html#avro-serialization" class="xref page">Avro converter</a>, the Avro schemas for tables in each logical source have their own evolution and history.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The <code>payload</code> portion of this event’s <em>value</em>, provides information about the event.
 It describes that a row was created (<code>op=c</code>), and shows that the <code>after</code> field value contains the values that were inserted into the <code>ID</code>, <code>FIRST_NAME</code>, <code>LAST_NAME</code>, and <code>EMAIL</code> columns of the row.</p>
 </div>
 <div class="admonitionblock tip">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">TIP</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>By default, the JSON representations of events are much larger than the rows that they describe.
 The larger size is due to the JSON representation including both the schema and payload portions of a message.
 You can use the <a href="../configuration/avro.html#avro-serialization" class="xref page">Avro Converter</a> to decrease the size of messages that the connector writes to Kafka topics.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="oracle-update-events"><a class="anchor" href="#oracle-update-events"></a><em>update</em> events</h3>
@@ -3593,13 +3529,13 @@ You can use the <a href="../configuration/avro.html#avro-serialization" class="x
             "ID": 1004,
             "FIRST_NAME": "Anne",
             "LAST_NAME": "Kretchmar",
-            "EMAIL": "<a href="#" class="__cf_email__" data-cfemail="88e9e6e6ede3c8e6e7e9e6fbffedfaa6e7faef">[email&nbsp;protected]</a>"
+            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92f3fcfcf7f9d2fcfdf3fce1e5f7e0bcfde0f5">[email&nbsp;protected]</a>"
         },
         "after": {
             "ID": 1004,
             "FIRST_NAME": "Anne",
             "LAST_NAME": "Kretchmar",
-            "EMAIL": "<a href="#" class="__cf_email__" data-cfemail="6a0b04040f2a0f120b071a060f44090507">[email&nbsp;protected]</a>"
+            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="84e5eaeae1c4e1fce5e9f4e8e1aae7ebe9">[email&nbsp;protected]</a>"
         },
         "source": {
             "version": "3.6.1.Final",
@@ -3640,7 +3576,7 @@ You can use the <a href="../configuration/avro.html#avro-serialization" class="x
 <p>The <code>before</code> field shows the former state of the row with the values that were present before the <code>update</code> database commit.</p>
 </li>
 <li>
-<p>The <code>after</code> field shows the updated state of the row, with the <code>EMAIL</code> value now set to <code><a href="#" class="__cf_email__" data-cfemail="c7a6a9a9a287a2bfa6aab7aba2e9a4a8aa">[email&nbsp;protected]</a></code>.</p>
+<p>The <code>after</code> field shows the updated state of the row, with the <code>EMAIL</code> value now set to <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="96f7f8f8f3d6f3eef7fbe6faf3b8f5f9fb">[email&nbsp;protected]</a></code>.</p>
 </li>
 <li>
 <p>The structure of the <code>source</code> field includes the same fields as before, but the values are different, because the connector captured the event from a different position in the redo log.</p>
@@ -3658,12 +3594,11 @@ It also gives us insight into when this event occurred in relation to other even
 Did it occur before, after, or as part of the same commit as another event?</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When the columns for a row’s primary/unique key are updated, the value of the row’s key changes.
 As a result, HyperCDC emits <em>three</em> events after such an update:</p>
@@ -3681,10 +3616,9 @@ As a result, HyperCDC emits <em>three</em> events after such an update:</p>
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="oracle-delete-events"><a class="anchor" href="#oracle-delete-events"></a><em>delete</em> events</h3>
@@ -3701,7 +3635,7 @@ The <code>schema</code> portion of the <em>delete</em> event is identical to the
             "ID": 1004,
             "FIRST_NAME": "Anne",
             "LAST_NAME": "Kretchmar",
-            "EMAIL": "<a href="#" class="__cf_email__" data-cfemail="04656a6a6144617c65697468612a676b69">[email&nbsp;protected]</a>"
+            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5b3a35353e1b3e233a362b373e75383436">[email&nbsp;protected]</a>"
         },
         "after": null,
         "source": {
@@ -3875,22 +3809,20 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
 <p>If a single <code>TRUNCATE</code> operation affects multiple tables, the connector emits one <em>truncate</em> change event record for each truncated table.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>A <em>truncate</em> event represents a change that is made to an entire table and it has no message key.
 As a result, for topics with multiple partitions, there is no ordering guarantee for the change events (<em>create</em>, <em>update</em>, and so forth), or <em>truncate</em> events that pertain to a table.
 For example, if a consumer reads events for a table from multiple partitions, it might receive an <em>update</em> event for a table from one partition after it receives a <em>truncate</em> event that deletes all of the data in the table from another partition.
 Ordering is guaranteed only for topics that use a single partition.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>If you do not want the connector to capture <em>truncate</em> events, use the <a href="#oracle-property-skipped-operations"><code>skipped.operations</code></a> option to filter them out.</p>
 </div>
@@ -4189,12 +4121,11 @@ The connector continues to process other columns and tables that are configured 
 </tbody>
 </table></div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Oracle only supplies column values for <code>CLOB</code>, <code>NCLOB</code>, and <code>BLOB</code> data types if they’re explicitly set or changed in a SQL statement.
 As a result, change events never contain the value of an unchanged <code>CLOB</code>, <code>NCLOB</code>, or <code>BLOB</code> column.
@@ -4204,10 +4135,9 @@ Instead, they contain placeholders as defined by the connector property, <code>u
 <p>If the value of a <code>CLOB</code>, <code>NCLOB</code>, or <code>BLOB</code> column is updated, the new value is placed in the <code>after</code> element of the corresponding update change event.
 The <code>before</code> element contains the unavailable value placeholder.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="oracle-numeric-types"><a class="anchor" href="#oracle-numeric-types"></a>Numeric types</h3>
@@ -4215,22 +4145,20 @@ The <code>before</code> element contains the unavailable value placeholder.</p>
 <p>The following table describes how the HyperCDC Oracle connector maps numeric types.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>You can modify the way that the connector maps the Oracle <code>DECIMAL</code>, <code>NUMBER</code>, <code>NUMERIC</code>, and <code>REAL</code> data types by changing the value of the connector’s <a href="#oracle-property-decimal-handling-mode"><code>decimal.handling.mode</code></a> configuration property.
 When the property is set to its default value of <code>precise</code>, the connector maps these Oracle data types to the Kafka Connect <code>org.apache.kafka.connect.data.Decimal</code> logical type, as indicated in the table.
 When the value of the property is set to <code>double</code> or <code>string</code>, the connector uses alternate mappings for some Oracle data types.
 For more information, see the <em>Semantic type and Notes</em> column in the following table.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 7. Mappings for Oracle numeric data types</caption>
 <colgroup>
@@ -4657,12 +4585,11 @@ boolean.selector=.*MYTABLE.FLAG,.*.IS_ARCHIVED</code></pre>
 </tbody>
 </table></div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Because nanoseconds since the Unix epoch are stored in a signed <code>INT64</code>, the representable range of <code>io.hypercdc.time.NanoTimestamp</code> is approximately <strong><code>1677-09-21T00:12:43Z</code> to <code>2262-04-11T23:47:16Z</code></strong>.
 Values outside this range — for example a <code>9999-12-31</code> end-of-time sentinel stored in a <code>TIMESTAMP(7 - 9)</code> column — cannot be represented and cause the connector to throw an <code>IllegalArgumentException</code> from the value converter.
@@ -4671,10 +4598,9 @@ The exception is routed through the standard <code>event.processing.failure.hand
 <div class="paragraph">
 <p>If a column may legitimately contain values outside the representable range, declare it with <code>TIMESTAMP(0 - 6)</code> so that HyperCDC emits <code>Timestamp</code> (millisecond) or <code>MicroTimestamp</code> (microsecond) instead, or set <code>time.precision.mode=isostring</code> to capture the value as an ISO 8601 string.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>When the <code>time.precision.mode</code> configuration property is set to <code>connect</code>, then the connector uses the predefined Kafka Connect logical types.
 This can be useful when consumers only know about the built-in Kafka Connect logical types and are unable to handle variable-precision time values.
@@ -4923,21 +4849,19 @@ Because Oracle <code>DATE</code> and <code>TIMESTAMP</code> values include a tim
 <div class="sect2">
 <h3 id="oracle-xml-types"><a class="anchor" href="#oracle-xml-types"></a>XML types</h3>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Support for <code>XMLTYPE</code> is currently in an incubating state.
 Depending on the feedback that we receive, the exact semantics, configuration options, and so forth might change in future revisions.
 Please let us know if you encounter any problems while using these data types.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The following table describes how the connector maps XMLTYPE data types.</p>
 </div>
@@ -5023,7 +4947,7 @@ The default value type will be numeric except if the column is a <code>TIMESTAMP
 <div class="paragraph">
 <p>By default, the HyperCDC Oracle connector provides several <code>CustomConverter</code> implementations specific to Oracle data types.
 These custom converters provide alternative mappings for specific data types based on the connector configuration.
-To add a <code>CustomConverter</code> to the connector, follow the instructions in the <a href="#">Custom Converters documentation</a>.</p>
+To add a <code>CustomConverter</code> to the connector, follow the instructions in the <a href="../development/converters.adoc">Custom Converters documentation</a>.</p>
 </div>
 <div class="paragraph">
 <p>The HyperCDC Oracle connector provides the following custom converters:</p>
@@ -5373,42 +5297,37 @@ For example, if the <code>DEST_NAME</code> is <code>LOG_ARCHIVE_DEST_3</code> fo
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Do not set the value of <code>archive.destination.name</code> to the path that the database uses for the archive logs.
 Set the property to the name of an archive log destination in the <code>DEST_NAME</code> column for a row in the <code>V$ARCHIVE_DEST_STATUS</code> table that satisfies your archive log retention policy.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If your Oracle environment includes multiple destinations that satisfy that criteria, and you fail to specify the preferred destination, the HyperCDC Oracle connector selects the destination path at random.
 Because the retention policy that is configured for each destination might differ, this can lead to errors if the connector selects a path from which the requested log data was deleted.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock tip">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">TIP</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When using the HyperCDC Oracle connector in an environment where the standby uses a different archive destination name than the primary instance, the <code>archive.destination.name</code> property can include a comma-separated list of destination names.
 The values should be ordered by preference as the HyperCDC connector will use the destinations to collect logs, and the order to define the log precedence.
@@ -5422,10 +5341,9 @@ When a failover occurs and the standby becomes the primary, HyperCDC will priori
 <p>If the archive destination is the same for both the primary and standby instances, using a single destination name value is sufficient.
 In fact, the property is only required if either instance has more than one archive destination that is both <code>LOCAL</code> and <code>VALID</code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="creating-users-for-the-connector"><a class="anchor" href="#creating-users-for-the-connector"></a>Creating a user account for the connector</h3>
@@ -5450,20 +5368,18 @@ set of <code>SELECT ON V_$</code> grants, which provide access to dynamic perfor
 These grants are required for the connector to function.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To prevent data loss, if you restrict the scope of the <code>SELECT</code> and <code>FLASHBACK</code> grants, be sure that the modified scope is compatible with the settings in the connector’s <code>include</code> configuration.
 The privileges that you set for the account must permit reading from all of the tables that you want the connector to capture.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div id="oracle-create-users-logminer" class="exampleblock">
 <div class="title">Example 3. Creating the connector’s LogMiner user</div>
 <div class="content">
@@ -5688,19 +5604,17 @@ To enable the connector to capture from the new primary, edit the database hostn
 <div class="sect3">
 <h4 id="configuring-the-hypercdc-oracle-connector-to-capture-events-from-a-physical-standby"><a class="anchor" href="#configuring-the-hypercdc-oracle-connector-to-capture-events-from-a-physical-standby"></a>Configuring the HyperCDC Oracle connector to capture events from a physical standby</h4>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The ability to use the connector with a physical standby is in an incubating state and can change without notice.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The HyperCDC Oracle connector can stream changes directly from a physical standby database while using the primary for snapshots and metadata queries.
 This reduces the load on the primary by offloading LogMiner operations to the standby.</p>
@@ -5777,19 +5691,17 @@ However, a logical stand-by database typically permits read-only access, prevent
 You can modify the connector configuration to enable the connector to capture events from a logical standby, or the DBA can create a new writable tablespace in which the connector can store the flush table.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The ability to use the connector with a logical standby is in an incubating state and can change without notice.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Procedure</div>
 <ul>
@@ -5817,20 +5729,18 @@ The default, <code>STANDARD</code>, means the lengths for these data types align
 When configured as <code>EXTENDED</code>, these columns now allow up to 32767 bytes of data to be stored.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>While a database administrator can change the <code>max_string_size</code> from <code>STANDARD</code> to <code>EXTENDED</code>, the opposite isn’t allowed.
 Once the database is updated to <code>EXTENDED</code> string support, that cannot be undone.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>For the HyperCDC Oracle connector, when the database parameter <code>max_string_size</code> is <code>EXTENDED</code>, the <code>lob.enabled</code> connector configuration option should be set to <code>true</code> to capture changes made to <code>VARCHAR2</code> and <code>NVARCHAR2</code> fields that have string lengths that exceed 4000 bytes or <code>RAW</code> fields with more than 2000 bytes.</p>
 </div>
@@ -5843,12 +5753,11 @@ This implicit conversion means that Oracle internally treats the string data as 
 And because these operation types very closely resemble <code>CLOB</code> operations, the redo log entries must be mined in the same way as any other LOB type, which is why <code>lob.enabled</code> must be set to <code>true</code> to capture changes from the redo logs regardless of the string data’s byte length.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When Oracle is configured to use EXTENDED string sizes, LogMiner sometimes fails to escape single quote characters (<code>'</code>) when it reconstructs the SQL for an extended string field.
 This problem can occur if the byte length of the extended string field does not exceed the legacy maximum length.
@@ -5864,10 +5773,9 @@ As a result, values in these fields can be truncated, resulting in invalid SQL s
 <p>Note that the use of this internal setting is not currently a supported feature.
 For more information, see <a href="https://issues.redhat.com/browse/DBZ-8034">DBZ-8034</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </div>
@@ -5892,7 +5800,7 @@ For more information, see <a href="https://issues.redhat.com/browse/DBZ-8034">DB
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Download the HyperCDC <a href="https://repo1.maven.org/maven2/io/hypercdc/hypercdc-connector-oracle/3.6.1.Final/hypercdc-connector-oracle-3.6.1.Final-plugin.tar.gz">Oracle connector plug-in archive</a>.</p>
+<p>Download the HyperCDC <a href="https://repo1.maven.org/maven2/io/debezium/debezium-connector-oracle/3.6.1.Final/debezium-connector-oracle-3.6.1.Final-plugin.tar.gz">Oracle connector plug-in archive</a>.</p>
 </li>
 <li>
 <p>Extract the files into your Kafka Connect environment.</p>
@@ -6006,12 +5914,11 @@ This topic is for internal use only and should not be used by consumers.</p>
 However, in more complex Oracle deployments, or in deployments that use Transparent Network Substrate (TNS) names, you can use an alternative method, which specifies the JDBC URL for the connection.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>In some Oracle environments, the Oracle listener service name may differ from the database name specified in <a href="#oracle-property-database-dbname"><code>database.dbname</code></a>.
 When using <a href="#oracle-property-database-hostname"><code>database.hostname</code></a> and <a href="#oracle-property-database-port"><code>database.port</code></a>, the HyperCDC Oracle connector constructs the JDBC URL using the provided <a href="#oracle-property-database-dbname"><code>database.dbname</code></a> as the service name.
@@ -6028,10 +5935,9 @@ Service &lt;database.dbname&gt; is not registered with the listener at host &lt;
 <p>This exception can be avoided by specifying the <a href="#oracle-property-database-url"><code>database.url</code></a> configuration property with a full JDBC connection string that includes the service name.
 An example of a connection string is shown below.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The following JSON example shows the same configuration as in the preceding example, except that it uses a JDBC URL to connect to the database.</p>
 </div>
@@ -6148,20 +6054,18 @@ Database clients connect to each PDB as if it were a standard, non-CDB database.
 </div>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When you configure a HyperCDC Oracle connector for use with an Oracle CDB, you must specify a value for the property <code>database.pdb.name</code>, which names the PDB that you want the connector to capture changes from.
 For non-CDB installation, do <strong>not</strong> specify the <code>database.pdb.name</code> property.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="listingblock">
 <div class="title">Example: HyperCDC Oracle connector configuration for non-CDB deployments</div>
 <div class="content">
@@ -6234,21 +6138,19 @@ The HyperCDC for Oracle connector relies on the Oracle JDBC driver’s built-in 
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For HyperCDC to use TLS encryption to communicate with Oracle, requires a TCPS connection with the server.
 To establish a TCPS connection, you must configure the connector to use the <code>database.url</code> property, and not the <code>database.host</code> property.
 Unlike the <code>database.host</code> property, the <code>database.url</code> property permits you to define an Oracle TNS (Transparent Network Substrate) connection string that explicitly requires use of the <code>TCPS</code> protocol.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 </ul>
 </div>
@@ -6293,20 +6195,18 @@ For an example of a TNS connection string, see the sample mTLS configuration tha
 </div>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Be sure that you set the correct host, port, and service identifier (sid) in the <code>database.url</code>.
 Additionally, be sure that the directory in the <code>driver.oracle.net.wallet_location</code> is readable.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </div>
@@ -6540,21 +6440,19 @@ Specify a topic prefix that is unique among all connectors in your HyperCDC envi
 The following characters are valid: alphanumeric characters, hyphens, dots, and underscores.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Do not change the value of this property.
 If you change the name value, after a restart, instead of continuing to emit events to the original topics, the connector emits subsequent events to topics whose names are based on the new value.
 The connector is also unable to recover its database schema history topic.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -6879,19 +6777,17 @@ This list identifies the tables for which you want to specify custom snapshot qu
 <p><code>"snapshot.select.statement.overrides": "ORCLPDB1.inventory.products,ORCLPDB1.customers.orders"</code></p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 If the fully qualified database, schema, or table name contains special characters, such as spaces, square brackets (<code>[</code> or <code>]</code>), or period characters (<code>.</code>),
 enclose the string in double quotes to prevent the connector from interpreting the special characters as delimiters.
 Double quotes around table names are optional if the fully qualified table name does not include spaces or special characters.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1">Secondary properties</dt>
 <dd>
@@ -6904,19 +6800,17 @@ The <code>SELECT</code> statement determines which rows from the table to includ
 <p><code>snapshot.select.statement.overrides.ORCLPDB1.customers.orders</code></p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If a table is listed in the main property, but its corresponding secondary property is missing, the connector logs a warning and uses the default snapshot behavior for that table.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1">Example configuration</dt>
 <dd>
@@ -7600,17 +7494,15 @@ When set to <code>true</code>, the connector collects the following statistics:<
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Currently only the <code>MilliSecondsBehindSource</code> metric supports collecting quantiles.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The statistics are computed using a probabilistic data structure (DDSketch) that provides approximate quantile values with 1% relative accuracy.
 When set to <code>false</code>, the connector does not collect quantiles, and the quantile JMX metrics return <code>null</code> values.
@@ -8268,22 +8160,20 @@ When set to <code>0</code> (default), the feature is disabled and the lower boun
 <p>By advancing the session bounds, the connector can reduce the mining session window size, improving query performance without abandoning the transaction.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Setting this value may increase the risk of edge cases involving missed commits or unsupported transactions.</p>
 </div>
 <div class="paragraph">
 <p>Carefully evaluate the risk of these edge cases occurring in your environment relative to the performance benefits of preventing mining window growth.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -8697,12 +8587,11 @@ To enable parallel initial snapshots, set the property to a value greater than 1
 In a parallel initial snapshot, the connector processes multiple tables concurrently.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When you enable parallel initial snapshots, the threads that perform each table snapshot can require varying times to complete their work.
 If a snapshot for one table requires significantly more time to complete than the snapshots for other tables, threads that have completed their work sit idle.
@@ -8712,10 +8601,9 @@ After the snapshot completes, the connector is unable to close the connection, r
 <div class="paragraph">
 <p>If you experience this problem, revert the value of <code>snapshot.max.threads</code> to <code>1</code>, and retry the snapshot.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -8790,19 +8678,17 @@ To customize the way that the connector masks configuration key values, set this
 A string of asterisks replaces the original values, for example,  <code>********</code>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The pattern that you specify for the <code>custom.sanitize.pattern</code> property overrides the default HyperCDC masking pattern; the specified value does not extend or augment the default pattern.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -9175,21 +9061,19 @@ schema.history.internal.consumer.ssl.key.password=test1234</code></pre>
 <p>The name of the Kafka topic that the connector monitors for ad hoc signals.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If <a href="../configuration/topic-auto-create-config.html#topic-auto-create-config" class="xref page">automatic topic creation</a> is disabled, you must manually create the required signaling topic.
 A signaling topic is required to preserve signal ordering.
 The signaling topic must have a single partition.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -10890,7 +10774,7 @@ If the DDL parser encounters an incompatible statement, if needed, the connector
 </div>
 <div class="paragraph">
 <p>By default, the connector stops when it encounters a DDL statement that it cannot parse.
-You can use HyperCDC <a href="#">signaling</a> to trigger the update of the database schema from such DDL statements.</p>
+You can use HyperCDC <a href="/documentation/reference/configuration/signalling">signaling</a> to trigger the update of the database schema from such DDL statements.</p>
 </div>
 <div class="paragraph">
 <p>The type of the schema update action is <code>schema-changes</code>.
@@ -11106,20 +10990,18 @@ After the connector’s commit SCN advances beyond the DDL change, to prevent un
 <h2 id="oracle-openlogreplicator-support"><a class="anchor" href="#oracle-openlogreplicator-support"></a>OpenLogReplicator support</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The OpenLogReplicator ingestion adapter is currently in incubating state, i.e. exact semantics, configuration options etc. may change in future revisions, based on the feedback we receive.
 Please let us know if you encounter any problems.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The HyperCDC Oracle connector by default ingests changes using native Oracle LogMiner.
 However, the connector can be toggled to use OpenLogReplicator, an open-source and free third-party application that reads Oracle changes directly from the redo and archive logs with low impact on the database.
@@ -11205,20 +11087,18 @@ The following example shows a command that you might use to enable minimal suppl
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>HyperCDC for Oracle can work with a higher degree of supplemental logging at the database level, if that is already configured for other purposes.
 But if you do not require higher fidelity logging to support other applications, you can reduce database-level logging to the minimum level.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>For each captured table, you must explicitly configure a higher fidelity supplemental logging, called <code>(ALL) COLUMNS</code>.
 The <code>(ALL) COLUMNS</code> logging level guarantees that Oracle captures the state of a column regardless of whether the column changed when a redo entry is written to the redo log.
@@ -11238,20 +11118,18 @@ Enabling the higher logging level enables HyperCDC for Oracle to generate change
 </div>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Whenever new tables are added to the HyperCDC Oracle’s connector configuration, you must configure supplemental logging for each table.
 If a table that is configured for capture is not correctly configured for supplemental logging, after the connector begins streaming, it returns a warning message.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="_creating_connector_users"><a class="anchor" href="#_creating_connector_users"></a>Creating connector users</h3>
@@ -11704,19 +11582,17 @@ exit;</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When you set up an XStream Outbound Server to capture changes from a pluggable database, specify the pluggable database name as value for the <code>source_container_name</code> parameter.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="listingblock">
 <div class="title">Configure the XStream user account to connect to the XStream Outbound Server</div>
 <div class="content">
@@ -11731,20 +11607,18 @@ exit;</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>A single XStream Outbound server cannot be shared by multiple HyperCDC Oracle connectors.
 Each connector requires a unique XStream Outbound connector to be configured.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="selecting-the-xstream-adapter"><a class="anchor" href="#selecting-the-xstream-adapter"></a>Configuring the XStream adapter</h3>
@@ -12314,20 +12188,18 @@ Enabling <code>ENABLE=broken</code> in the TNS descriptor also enables TCP keepa
 </div>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>A pluggable database (PDB) name must not be used.
 The XStream outbound server is a container root database (<code>CDB$ROOT</code>) service, and connecting with a pluggable database name will result in an <code>ORA-26701: Streams process does not exist</code> exception.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </dd>
@@ -12335,14 +12207,8 @@ The XStream outbound server is a container root database (<code>CDB$ROOT</code>)
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

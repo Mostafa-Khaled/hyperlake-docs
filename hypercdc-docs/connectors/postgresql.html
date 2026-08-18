@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC connector for PostgreSQL</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC connector for PostgreSQL</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -104,12 +108,11 @@ This includes snapshots.
 If the connector stops during a snapshot, the connector begins a new snapshot when it restarts.</p>
 </div>
 <div id="postgresql-limitations" class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The connector relies on and reflects the PostgreSQL logical decoding feature, which has the following limitations:</p>
 </div>
@@ -134,25 +137,22 @@ For example, a HyperCDCEngine consumer receives a notification of a row that was
 <div class="paragraph">
 <p><a href="#postgresql-when-things-go-wrong">Behavior when things go wrong</a> describes how the connector responds if there is a problem.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>HyperCDC currently supports databases with UTF-8 character encoding only.
 With a single byte character encoding, it is not possible to correctly process strings that contain extended ASCII code characters.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -526,12 +526,11 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 <p>The connector repeats the process for each snapshot chunk.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To enable HyperCDC to perform incremental snapshots, you must grant the connector permission to write to the signaling table.</p>
 </div>
@@ -539,10 +538,9 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 <p>Write permission is unnecessary only for connectors that can be configured to perform read-only incrementals snapshots
 (<a href="#mariadb-read-only-incremental-snapshots">MariaDB</a>, <a href="#mysql-read-only-incremental-snapshots">MySQL</a>, or <a href="#postgresql-read-only-incremental-snapshots">PostgreSQL</a>).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Currently, you can use either of the following methods to initiate an incremental snapshot:</p>
 </div>
@@ -557,20 +555,18 @@ HyperCDC emits these remaining <code>READ</code> events to the table’s Kafka t
 </ul>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC connector for PostgreSQL does not support schema changes while an incremental snapshot is running.
 If a schema change is performed <em>before</em> the incremental snapshot start but <em>after</em> sending the signal then passthrough config option <code>database.autosave</code> is set to <code>conservative</code> to correctly process the schema change.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect3">
 <h4 id="postgresql-triggering-an-incremental-snapshot"><a class="anchor" href="#postgresql-triggering-an-incremental-snapshot"></a>Triggering an incremental snapshot</h4>
 <div class="paragraph">
@@ -596,20 +592,18 @@ The <code>data-collections</code> array for an incremental snapshot signal has n
 If the <code>data-collections</code> array is empty, HyperCDC interprets the empty array to mean that no action is required, and it does not perform a snapshot.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the name of a table that you want to include in a snapshot contains a dot (<code>.</code>), a space, or some other non-alphanumeric character, you must escape the table name in double quotes.
 For example, to include a table that exists in the <code><strong>public</strong></code> schema and that has the name <code><strong>My.Table</strong></code>, use the following format: <code><strong>"public.\"My.Table\""</strong></code>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -790,12 +784,11 @@ VALUES ('ad-hoc-1',
 </div>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Physical row identifiers can change under certain circumstances, which may affect snapshot consistency.
 Oracle <code>ROWID</code> can change during table reorganization operations such as <code>ALTER TABLE MOVE</code>, partition maintenance, or <code>SHRINK SPACE</code> operations.</p>
@@ -803,10 +796,9 @@ Oracle <code>ROWID</code> can change during table reorganization operations such
 <div class="paragraph">
 <p>To ensure data consistency, when an incremental snapshot that uses a physical row identifier is in progress, do not perform table maintenance operations, such as table moves, partition management, or shrink operations.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="postgresql-incremental-snapshots-additional-conditions"><a class="anchor" href="#postgresql-incremental-snapshots-additional-conditions"></a>Running an ad hoc incremental snapshots with <code>additional-conditions</code></h4>
@@ -1495,12 +1487,11 @@ When Kafka Connect restarts, it reads the last recorded offset for each connecto
 When the connector restarts, it sends a request to the PostgreSQL server to send the events starting just after that position.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The PostgreSQL connector retrieves schema information as part of the events sent by the logical decoding plug-in.
 However, the connector does not retrieve information about which columns compose the primary key.
@@ -1531,10 +1522,9 @@ To prevent this inconsistency, update primary key structures as follows:</p>
 </li>
 </ol>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="postgresql-pgoutput"><a class="anchor" href="#postgresql-pgoutput"></a>PostgreSQL 10+ logical decoding support (<code>pgoutput</code>)</h3>
@@ -1631,21 +1621,19 @@ For more information about using the logical topic routing SMT to customize topi
 <p>HyperCDC can generate events that represent transaction boundaries and that enrich data change event messages.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="title">Limits on when HyperCDC receives transaction metadata</div>
 <div class="paragraph">
 <p>HyperCDC registers and receives metadata only for transactions that occur after you deploy the connector.
 Metadata for transactions that occur before you deploy the connector is not available.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>For every transaction <code>BEGIN</code> and <code>END</code>, HyperCDC generates an event that contains the following fields:</p>
 </div>
@@ -1834,26 +1822,23 @@ It has the structure described by the previous <code>schema</code> field and it 
 <p>By default behavior is that the connector streams change event records to <a href="#postgresql-topic-names">topics with names that are the same as the event’s originating table</a>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Starting with Kafka 0.10, Kafka can optionally record the event key and value with the <a href="https://kafka.apache.org/documentation.html#upgrade_10_performance_impact"><em>timestamp</em></a> at which the message was created (recorded by the producer) or written to the log by Kafka.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The PostgreSQL connector ensures that all Kafka Connect schema names adhere to the <a href="http://avro.apache.org/docs/current/spec.html#names">Avro schema name format</a>.
 This means that the logical server name must start with a Latin letter or an underscore, that is, a-z, A-Z, or _.
@@ -1863,10 +1848,9 @@ If there is an invalid character it is replaced with an underscore character.</p
 <div class="paragraph">
 <p>This can lead to unexpected conflicts if the logical server name, a schema name, or a table name contains invalid characters, and the only characters that distinguish names from one another are invalid and thus replaced with underscores.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="postgresql-change-events-key"><a class="anchor" href="#postgresql-change-events-key"></a>Change event keys</h3>
 <div class="paragraph">
@@ -1963,34 +1947,30 @@ In this example, the key, contains a single <code>id</code> field whose value is
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Although the <code>column.exclude.list</code> and <code>column.include.list</code> connector configuration properties allow you to capture only a subset of table columns, all columns in a primary or unique key are always included in the event’s key.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the table does not have a primary or unique key, then the change event’s key is null.
 The rows in a table without a primary or unique key constraint cannot be uniquely identified.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="postgresql-change-events-value"><a class="anchor" href="#postgresql-change-events-value"></a>Change event values</h3>
@@ -2222,7 +2202,7 @@ Typically, a table without a primary key is used for appending messages to the e
             "id": 1,
             "first_name": "Anne",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="b7d6d9d9d2dcf7d9d8d6d9c4c0d2c599d8c5d0">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a3c2cdcdc6c8e3cdccc2cdd0d4c6d18dccd1c4">[email&nbsp;protected]</a>"
         },
         "source": {
             "version": "3.6.1.Final",
@@ -2295,19 +2275,17 @@ However, by using the <a href="../configuration/avro.html#avro-serialization" cl
 <p>An optional field that specifies the state of the row before the event occurred.
 When the <code>op</code> field is <code>c</code> for create, as it is in this example, the <code>before</code> field is <code>null</code> since this change event is for new content.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Whether or not this field is available is dependent on the <a href="#postgresql-replica-identity"><code>REPLICA IDENTITY</code></a> setting for each table.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1"><code>after</code></dt>
 <dd>
@@ -2419,7 +2397,7 @@ Here is an example of a change event value in an event that the connector genera
             "id": 1,
             "first_name": "Anne Marie",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="e6878888838da68889878895918394c8899481">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="14757a7a717f547a7b757a676371663a7b6673">[email&nbsp;protected]</a>"
         },
         "source": {
             "version": "3.6.1.Final",
@@ -2513,21 +2491,19 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Updates to the columns that represent the primary or unique key for a row changes the value of the row’s key.
 When a key changes, HyperCDC outputs <em>three</em> events: a <code>DELETE</code> event and a <a href="#postgresql-tombstone-events">tombstone event</a> with the old key for the row, followed by an event with the new key for the row.
 For more information, see <a href="#postgresql-primary-key-updates">Primary key updates</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="postgresql-primary-key-updates"><a class="anchor" href="#postgresql-primary-key-updates"></a>Primary key updates</h3>
@@ -2662,20 +2638,18 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
 <p>A <em>delete</em> change event record provides a consumer with the information it needs to process the removal of this row.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For a consumer to be able to process a <em>delete</em> event generated for a table that does not have a primary key, set the table’s <code>REPLICA IDENTITY</code> to <code>FULL</code>.
 When a table does not have a primary key and the table’s <code>REPLICA IDENTITY</code> is set to <code>DEFAULT</code> or <code>NOTHING</code>, a <em>delete</em> event has no <code>before</code> field.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>PostgreSQL connector events are designed to work with <a href="https://kafka.apache.org/documentation#compaction">Kafka log compaction</a>.
 Log compaction enables removal of some older messages as long as at least the most recent message for every key is kept.
@@ -2780,22 +2754,20 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
 <p>If a single <code>TRUNCATE</code> operation affects multiple tables, the connector emits one <em>truncate</em> change event record for each truncated table.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>A <em>truncate</em> event represents a change that is made to an entire table and it has no message key.
 As a result, for topics with multiple partitions, there is no ordering guarantee for the change events (<em>create</em>, <em>update</em>, and so forth), or <em>truncate</em> events that pertain to a table.
 For example, if a consumer reads events for a table from multiple partitions, it might receive an <em>update</em> event for a table from one partition after it receives a <em>truncate</em> event that deletes all of the data in the table from another partition.
 Ordering is guaranteed only for topics that use a single partition.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>If you do not want the connector to capture <em>truncate</em> events, use the <a href="#postgresql-property-skipped-operations"><code>skipped.operations</code></a> option to filter them out.</p>
 </div>
@@ -2803,19 +2775,17 @@ Ordering is guaranteed only for topics that use a single partition.</p>
 <div class="sect2">
 <h3 id="postgresql-message-events"><a class="anchor" href="#postgresql-message-events"></a><em>message</em> events</h3>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>This event type is only supported through the <code>pgoutput</code> plugin on Postgres 14+ (<a href="https://www.postgresql.org/docs/14/protocol-logicalrep-message-formats.html">Postgres Documentation</a>)</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>A  <em>message</em> event signals that a generic logical decoding message has been inserted directly into the WAL typically with the <code>pg_logical_emit_message</code> function.
 The message key is a <code>Struct</code> with a single field named <code>prefix</code> in this case, carrying the prefix specified when inserting the message.
@@ -3919,12 +3889,11 @@ When <code>time.precision.mode</code> is set to <code>nanoseconds</code>, these 
 </tbody>
 </table></div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Because nanoseconds since the Unix epoch are stored in a signed <code>INT64</code>, the representable range of <code>time.precision.mode=nanoseconds</code> is approximately <strong><code>1677-09-21T00:12:43Z</code> to <code>2262-04-11T23:47:16Z</code></strong>.
 Values outside this range — for example the common <code>9999-12-31</code> end-of-time sentinel — cannot be represented and cause the connector to throw an <code>IllegalArgumentException</code> from the value converter.
@@ -3933,10 +3902,9 @@ The exception is routed through the standard <code>event.processing.failure.hand
 <div class="paragraph">
 <p>If the source schema may contain values outside the representable range, use <code>time.precision.mode=microseconds</code> (covers approximately ±290000 years) or <code>time.precision.mode=isostring</code> instead.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="postgresql-timestamp-type"><a class="anchor" href="#postgresql-timestamp-type"></a>TIMESTAMP type</h3>
@@ -4236,12 +4204,11 @@ When the <code>hstore.handling.mode</code> property is set to <code>map</code>, 
 When such column types are used, HyperCDC exposes the column’s representation based on the full type hierarchy.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Capturing changes in columns that use PostgreSQL domain types requires special consideration.
 When a column is defined to contain a domain type that extends one of the default database types and the domain type defines a custom length or scale, the generated schema inherits that defined length or scale.</p>
@@ -4249,10 +4216,9 @@ When a column is defined to contain a domain type that extends one of the defaul
 <div class="paragraph">
 <p>When a column is defined to contain a domain type that extends another domain type that defines a custom length or scale, the generated schema does <strong>not</strong> inherit the defined length or scale because that information is not available in the PostgreSQL driver’s column metadata.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="postgresql-network-address-types"><a class="anchor" href="#postgresql-network-address-types"></a>Network address types</h3>
@@ -4631,12 +4597,11 @@ These values include:</p>
 For example, <code>CURRENT_TIMESTAMP(6)</code> is supported with parentheses, but <code>CURRENT_TIMESTAMP</code> is not.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Support for the propagation of default values exists primarily to allow for safe schema evolution when using the PostgreSQL connector with a schema registry which enforces compatibility between schema versions.
 Due to this primary concern, as well as the refresh behaviours of the different plug-ins, the default value present in the Kafka schema is not guaranteed to always be in-sync with the default value in the database schema.</p>
@@ -4658,10 +4623,9 @@ This may occur if the connector is behind and a refresh occurs, or on connector 
 <p>This behaviour may be unexpected, but it is still safe.
 Only the schema definition is affected, while the real values present in the message will remain consistent with what was written to the source database.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </div>
@@ -4756,19 +4720,17 @@ Consequently, it is important to closely monitor replication slots to avoid:</p>
 <p>For more information, see the <a href="https://www.postgresql.org/docs/current/warm-standby.html#STREAMING-REPLICATION-SLOTS">PostgreSQL documentation for replication slots</a>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Familiarity with the mechanics and <a href="https://www.postgresql.org/docs/current/static/wal-configuration.html">configuration of the PostgreSQL write-ahead log</a> is helpful for using the HyperCDC PostgreSQL connector.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect3">
 <h4 id="postgresql-automatic-replication-slot-creation"><a class="anchor" href="#postgresql-automatic-replication-slot-creation"></a>Automatic replication slot creation</h4>
 <div class="paragraph">
@@ -4833,18 +4795,16 @@ Use this option if automatic slot creation is not available due to insufficient 
 <p>Replace <code>slot_name</code> with the value of the connector’s <code>slot.name</code> property.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 If you deploy multiple HyperCDC PostgreSQL connectors, you must assign a unique slot name to each connector.
 Configure the <a href="#postgresql-property-slot-name"><code>slot.name</code></a> property with a distinct value for each connector instance.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 </ol>
 </div>
@@ -4947,38 +4907,34 @@ The <code>pgoutput</code> plugin is available.
 You will have to create a replication user and provide correct privileges.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>While using the <code>pgoutput</code> plug-in, it is recommended that you configure <code>filtered</code> as the <a href="#postgresql-publication-autocreate-mode"><code>publication.autocreate.mode</code></a>.
 If you use <code>all_tables</code>, which is the default value for <code>publication.autocreate.mode</code>, and the publication is not found, the connector tries to create one by using <code>CREATE PUBLICATION &lt;publication_name&gt; FOR ALL TABLES;</code>, but this fails due to lack of permissions.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="installing-postgresql-output-plugin"><a class="anchor" href="#installing-postgresql-output-plugin"></a>Installing the logical decoding output plug-in</h3>
 <div class="admonitionblock tip">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">TIP</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For more detailed instructions about setting up and testing logical decoding plug-ins, see <a href="../postgres-plugins.html" class="xref page">Logical Decoding Output Plug-in Installation for PostgreSQL</a> .</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>As of PostgreSQL 9.4, the only way to read changes to the write-ahead-log is to install a logical decoding output plug-in.
 Plug-ins are written in C, compiled, and installed on the machine that runs the PostgreSQL server.
@@ -4991,23 +4947,21 @@ For more details on using Protobuf via the <code>decoderbufs</code> plug-in, see
 </div>
 <div class="paragraph">
 <p>For simplicity, HyperCDC also provides a container image based on the upstream PostgreSQL server image, on top of which it compiles and installs the plug-ins.
-You can <a href="https://github.com/hypercdc/container-images/tree/main/postgres/13">use this image</a> as an example of the detailed steps required for the installation.</p>
+You can <a href="https://github.com/debezium/container-images/tree/main/postgres/13">use this image</a> as an example of the detailed steps required for the installation.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC logical decoding plug-ins have been installed and tested on only Linux machines.
 For Windows and other operating systems, different installation steps might be required.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="postgresql-differences-between-plugins"><a class="anchor" href="#postgresql-differences-between-plugins"></a>Plug-in differences</h3>
@@ -5103,7 +5057,7 @@ shared_preload_libraries = 'decoderbufs'</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The preceding statement instructs the PostgreSQL server to load the <code>decoderbufs</code> logical decoding plug-ins at startup (the name of the plug-in is set in the <a href="#"><code>Protobuf</code></a> make file).</p>
+<p>The preceding statement instructs the PostgreSQL server to load the <code>decoderbufs</code> logical decoding plug-ins at startup (the name of the plug-in is set in the <a href="https://github.com/debezium/postgres-decoderbufs/blob/v3.6.1.Final/Makefile"><code>Protobuf</code></a> make file).</p>
 </div>
 </li>
 <li>
@@ -5138,19 +5092,17 @@ For this reason, it is important to closely monitor replication slots to avoid e
 If the property does not specify an explicit value, HyperCDC applies the default value of 200 milliseconds, which increase latency.</p>
 </div>
 <div class="admonitionblock tip">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">TIP</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Reading and understanding <a href="https://www.postgresql.org/docs/current/static/wal-configuration.html">PostgreSQL documentation about the mechanics and configuration of the PostgreSQL write-ahead log</a> is strongly recommended.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
@@ -5402,19 +5354,17 @@ host    replication     &lt;youruser&gt;  ::1/128                 trust</code></
 <dd>
 <p>Instructs the server to allow <code>&lt;youruser&gt;</code> on <code>localhost</code> to receive replication changes using <code>IPV6</code>.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For more information about network masks (netmasks), see <a href="https://www.postgresql.org/docs/current/static/datatype-net-types.html">Network address types (PostgreSQL documentation)</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -5487,12 +5437,11 @@ This is expected behavior and no action by a user is necessary.</p>
 This situation can be easily solved with periodic heartbeat events.
 Set the <a href="#postgresql-property-heartbeat-interval-ms"><code>heartbeat.interval.ms</code></a> connector configuration property.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For the connector to detect and process events from a heartbeat table, you must add the table to the PostgreSQL publication specified by the <a href="#postgresql-property-publication-name">publication.name</a> property.
 If this publication predates your HyperCDC deployment, the connector uses the publications as defined.
@@ -5501,10 +5450,9 @@ If the publication is not already configured to automatically replicate changes 
 <div class="paragraph">
 <p><code>ALTER PUBLICATION  <em>&lt;publicationName&gt;</em> ADD TABLE <em>&lt;heartbeatTableName&gt;</em>;</code></p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>The PostgreSQL instance contains multiple databases and one of them is a high-traffic database.
@@ -5531,21 +5479,19 @@ This task can be automated by means of the <a href="#postgresql-property-heartbe
 </ul>
 </div>
 <div class="admonitionblock tip">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">TIP</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For users on AWS RDS with PostgreSQL, a situation similar to the high traffic/low traffic scenario can occur in an idle environment.
 AWS RDS causes writes to its own system tables to be invisible to clients on a frequent basis (5 minutes).
 Again, regularly emitting events solves the problem.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="postgresql-deploying-multiple-connectors"><a class="anchor" href="#postgresql-deploying-multiple-connectors"></a>Setting up multiple connectors for the same database server</h3>
@@ -5563,22 +5509,20 @@ This tracking mechanism enables PostgreSQL to retain WAL segments until HyperCDC
 When multiple connectors attempt to share a replication slot, they compete for the same position marker, resulting in unpredictable behavior and potential data loss.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you permit multiple connectors to capture from a replication slot, you risk data loss, because a replication slot can emit each change only once.
 When multiple connectors share a slot, PostgreSQL delivers each change event to only one of the competing consumers.
 The other connectors never receive those events, resulting in incomplete data capture.
 PostgreSQL provides no warnings when this misconfiguration occurs, making the data loss silent and difficult to detect.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>In addition to replication slots, when the HyperCDC connector uses the <code>pgoutput</code> plugin, it uses publications to stream events.
 Publications exist at the database level and define the set of tables from which the connector captures changes.
@@ -5657,21 +5601,19 @@ This step ensures that all change events that occurred before the downtime are a
 <p>Shut down the connector gracefully by stopping Kafka Connect.
 Kafka Connect stops the connectors, flushes all event records to Kafka, and records the last offset received from each connector.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>As an alternative to stopping the entire Kafka Connect cluster, you can stop the connector by deleting it.
 Do not remove the offset topic, because it might be shared by other Kafka connectors.
 Later, after you restore write access to the database and you are ready to restart the connector, you must recreate the connector.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>As a PostgreSQL administrator, drop the replication slot on the primary database server.
@@ -5719,20 +5661,18 @@ If the publication is not available, connect to the database as a PostgreSQL adm
 <li>
 <p>In the connector configuration, set the <a href="#postgresql-property-snapshot-mode"><code>snapshot.mode</code></a> property to <code>no_data</code>, and then restart the connector.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you were unable to verify that HyperCDC finished reading all database changes in Step 6, you can configure the connector to perform a new snapshot by setting <code>snapshot.mode=initial</code>.
 If necessary, you can confirm whether the connector read all changes from the replication slot by checking the contents of a database backup that was taken immediately before the upgrade.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 </ol>
 </div>
@@ -5768,7 +5708,7 @@ If necessary, you can confirm whether the connector read all changes from the re
 <div class="title">Procedure</div>
 <ol class="arabic">
 <li>
-<p>Download the HyperCDC <a href="https://repo1.maven.org/maven2/io/hypercdc/hypercdc-connector-postgres/3.6.1.Final/hypercdc-connector-postgres-3.6.1.Final-plugin.tar.gz">PostgreSQL connector plug-in archive</a>.</p>
+<p>Download the HyperCDC <a href="https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/3.6.1.Final/debezium-connector-postgres-3.6.1.Final-plugin.tar.gz">PostgreSQL connector plug-in archive</a>.</p>
 </li>
 <li>
 <p>Extract the files into your Kafka Connect environment.</p>
@@ -5782,25 +5722,23 @@ If necessary, you can confirm whether the connector read all changes from the re
 </ol>
 </div>
 <div class="paragraph">
-<p>If you are working with immutable containers, see <a href="https://quay.io/organization/hypercdc">HyperCDC’s container images</a> for Kafka, PostgreSQL and Kafka Connect with the PostgreSQL connector already installed and ready to run.
+<p>If you are working with immutable containers, see <a href="https://quay.io/organization/debezium">HyperCDC’s container images</a> for Kafka, PostgreSQL and Kafka Connect with the PostgreSQL connector already installed and ready to run.
 You can also <a href="../operations/openshift.html" class="xref page">run HyperCDC on Kubernetes and OpenShift</a>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC container images that you obtain from <code>quay.io</code> do not undergo rigorous testing or security analysis, and are provided for testing and evaluation purposes only.
 These images are not intended for use in production environments.
 To mitigate risk in production deployments, deploy only containers that are actively maintained by trusted vendors, and thoroughly tested for potential vulnerabilities.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="postgresql-example-configuration"><a class="anchor" href="#postgresql-example-configuration"></a>Connector configuration example</h3>
 <div class="paragraph">
@@ -6086,18 +6024,16 @@ When the connector restarts it performs a new snapshot or it can continue from a
 If you omit this setting, or if the primary server runs PostgreSQL 16 or earlier, the connector does not create a failover slot.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 PostgreSQL uses the <a href="https://www.postgresql.org/docs/current/runtime-config-replication.html#GUC-SYNCHRONIZED-STANDBY-SLOTS"><code>synchronized_standby_slots</code></a> parameter to configure replication slot synchronization between primary and standby servers.
 Set this parameter on the primary server to specify the physical replication slots that it synchronizes with on standby servers.
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -6110,12 +6046,11 @@ Set this parameter on the primary server to specify the physical replication slo
 <p>Specifies how the connector handles mismatches between the stored offset LSN and the replication slot’s confirmed flush LSN when the connector starts.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <code>offset.mismatch.strategy</code> property is a Technology Preview feature.
 Technology Preview features are not supported with Red&nbsp;Hat production service level agreements (SLAs) and might not be functionally complete.
@@ -6123,10 +6058,9 @@ Red&nbsp;Hat does not recommend using them in production.
 These features provide early access to upcoming product features, enabling customers to test functionality and provide feedback during the development process.
 For more information about the support scope of Red&nbsp;Hat Technology Preview features, see <a href="https://access.redhat.com/support/offerings/techpreview/">Technology Preview Features Support Scope</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>This property replaces the deprecated <code>internal.slot.seek.to.known.offset.on.start</code> boolean property.</p>
 </div>
@@ -6171,20 +6105,18 @@ Use this strategy when you want to detect and be alerted to unexpected slot stat
 <p>The connector treats the PostgreSQL replication slot as the authoritative source of truth.
 If the stored offset is behind the slot’s confirmed flush LSN, the connector automatically advances the offset to match the slot position.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 This strategy skips replaying events between the stored offset and the slot position.
 Use this strategy when you trust that the replication slot reliably represents all logical replication events you need to capture.
 This is appropriate when using <a href="#postgresql-property-lsn-flush-mode"><code>lsn.flush.mode=connector_and_driver</code></a>, which requires trusting the slot position.
 Double-check that your environment ensures replication slot durability during primary-replica failover.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1"><code>trust_greater_lsn</code></dt>
 <dd>
@@ -6194,17 +6126,15 @@ If the offset is ahead of the slot, the connector advances the slot to the offse
 This provides bidirectional synchronization and is useful when using <a href="#postgresql-property-lsn-flush-mode"><code>lsn.flush.mode=connector_and_driver</code></a>.
 The same slot reliability requirements as <code>trust_slot</code> apply.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 When the slot is ahead of the offset, this strategy skips replaying events between the stored offset and the slot position.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div>
@@ -6323,20 +6253,18 @@ The prefix should be unique across all other connectors, since it is used as a t
 Only alphanumeric characters, hyphens, dots and underscores must be used in the database server logical name.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Do not change the value of this property.
 If you change the name value, after a restart, instead of continuing to emit events to the original topics, the connector emits subsequent events to topics whose names are based on the new value.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -6456,17 +6384,15 @@ If you include this property in the configuration, do not set the <code>column.i
 This would essentially filter messages if there is no change in columns included as per <code>column.include.list</code> or <code>column.exclude.list</code> properties.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 This property is applied only when the REPLICA IDENTITY of the table is set to <code>FULL</code>.
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -6874,21 +6800,19 @@ For the <code>purchaseorders</code> tables in any schema, the columns <code>pk3<
 However, it’s best to use the minimum number that are required to specify a unique key.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the expressions that you specify for this property match columns that are not part of the table’s primary key,
 set the <code>REPLICA IDENTITY</code> of the table to <code>FULL</code>.
 If you set <code>REPLICA IDENTITY</code> to another value, such as <code>DEFAULT</code>, after delete operations, the connector fails to generate tombstone events with the expected <code>null</code> values.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -6902,18 +6826,16 @@ If you set <code>REPLICA IDENTITY</code> to another value, such as <code>DEFAULT
 This setting applies only when the connector streams changes by using the <a href="https://www.postgresql.org/docs/current/sql-createpublication.html"><code>pgoutput</code> plug-in</a>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 To create publications, the connector must access PostgreSQL through a database account that has specific permissions.
 For more information, see <a href="#postgresql-replication-user-privileges">Setting privileges to enable HyperCDC to create PostgreSQL publications</a>.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Specify one of the following values:</p>
 </div>
@@ -7041,12 +6963,11 @@ This is the default value for system tables.</p>
 </div>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <code>replica.identity.autoset.values</code> property applies only to tables that the connector captures.
 Other tables are ignored, even if they match the specified expression.
@@ -7068,10 +6989,9 @@ Use the following connector properties to designate the tables to capture:</p>
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -7133,17 +7053,15 @@ Set one of the following values:</p>
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 In the preceding example, the underscore character (<code>_</code>) represents an escape sequence, equivalent to a backslash in Java.
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -7173,17 +7091,15 @@ Specify one of the following values:</p>
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 In the preceding example, the underscore character (<code>_</code>) represents an escape sequence, equivalent to a backslash in Java.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>For more information, see <a href="../configuration/avro.html#avro-naming" class="xref page">Avro naming</a>.</p>
 </div></div></td>
@@ -7544,19 +7460,17 @@ After the initial phase, the snapshot no longer requires table locks.</p>
 </dl>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Do not use this mode if schema changes might occur during the snapshot.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><code>custom</code></dt>
@@ -7677,19 +7591,17 @@ This list identifies the tables for which you want to specify custom snapshot qu
 <p><code>"snapshot.select.statement.overrides": "inventory.products,customers.orders"</code></p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 If the fully qualified schema or table name contains special characters, such as spaces, square brackets (<code>[</code> or <code>]</code>), or period characters (<code>.</code>),
 enclose the string in double quotes to prevent the connector from interpreting the special characters as delimiters.
 Double quotes around table names are optional if the fully qualified table name does not include spaces or special characters.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1">Secondary properties</dt>
 <dd>
@@ -7702,19 +7614,17 @@ The <code>SELECT</code> statement determines which rows from the table to includ
 <p><code>snapshot.select.statement.overrides.customers.orders</code></p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If a table is listed in the main property, but its corresponding secondary property is missing, the connector logs a warning and uses the default snapshot behavior for that table.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1">Example configuration</dt>
 <dd>
@@ -7824,19 +7734,17 @@ This lets consumers decode the field.
 You can control the exact representation by setting the <a href="#postgresql-property-binary-handling-mode"><code>binary handling mode</code></a> property.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Consumers risk backward compatibility issues when <code>include.unknown.datatypes</code> is set to <code>true</code>.
 Not only may the database-specific binary representation change between releases, but if the data type is eventually supported by HyperCDC, the data type will be sent downstream in a logical type, which would require adjustments by consumers.
 In general, when encountering unsupported data types, create a feature request so that support can be added.
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -7985,17 +7893,15 @@ When set to <code>true</code>, the connector collects the following statistics:<
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Currently only <code>MilliSecondsBehindSource</code> metric supports collecting quantiles.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The statistics are computed using a probabilistic data structure (DDSketch) that provides approximate quantile values with 1% relative accuracy.
 When set to <code>false</code>, the connector does not collect quantiles, and the quantile JMX metrics return <code>null</code> values.
@@ -8058,17 +7964,15 @@ For example:</p>
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 To enable viewing of debug messages, you must set the PostgreSQL logging level (<a href="https://www.postgresql.org/docs/current/runtime-config-logging.html#GUC-LOG-MIN-MESSAGES"><code>log_min_messsages</code></a>) to DEBUG1 or higher.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><code>pgoutput</code> plugin</dt>
@@ -8217,17 +8121,15 @@ This property replaces the deprecated <a href="#postgresql-property-flush-lsn-so
 <p>LSN flushing is managed externally by your application or another mechanism.
 The connector does not flush the LSN.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 If you do not configure an external mechanism to flush the LSN, WAL files accumulate on the database server, potentially causing storage exhaustion and performance degradation.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 <dt class="hdlist1"><code>connector</code></dt>
 <dd>
@@ -8242,38 +8144,33 @@ When the connector has no pending LSN to flush, the JDBC driver’s keep-alive m
 This LSN reflects all WAL activity, including unmonitored activity such as <code>CHECKPOINT</code>, <code>VACUUM</code>, or <code>pg_switch_wal()</code> that doesn’t produce logical replication change events.
 Use this mode to prevent WAL growth on low-activity databases where monitored tables have infrequent changes.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 When using <code>connector_and_driver</code> mode, the JDBC driver’s keep-alive mechanism can flush the server-reported keep-alive LSN, which may advance the replication slot beyond the stored offset when non-monitored WAL activity occurs.
 If you use a persistent offset store, configure <a href="#postgresql-property-offset-mismatch-strategy"><code>offset.mismatch.strategy</code></a> to <code>trust_slot</code> or <code>trust_greater_lsn</code> to enable automatic recovery.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Because <code>connector_and_driver</code> mode requires periodic opportunities to propagate LSNs to Kafka, when <a href="#postgresql-property-heartbeat-interval-ms"><code>heartbeat.interval.ms</code></a> = 0 and
 <a href="#postgresql-property-provide-transaction-metadata"><code>provide.transaction.metadata</code></a> = false, the connector internally sets <a href="#postgresql-property-heartbeat-interval-ms"><code>heartbeat.interval.ms</code></a> to 600000 (10 minutes).
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <code>connector_and_driver</code> mode is a Technology Preview feature.
 Technology Preview features are not supported with Red&nbsp;Hat production service level agreements (SLAs) and might not be functionally complete.
@@ -8282,10 +8179,9 @@ These features provide early access to upcoming product features, enabling custo
 For more information about the support scope of Red&nbsp;Hat Technology Preview features, see <a href="https://access.redhat.com/support/offerings/techpreview/">Technology Preview Features Support Scope</a>.
 If you use an ephemeral offset store such as <code>org.apache.kafka.connect.storage.MemoryOffsetBackingStore</code>, no additional configuration is needed because the connector always defers to the replication slot position on startup.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </dd>
 </dl>
 </div></div></td>
@@ -8583,12 +8479,11 @@ To enable parallel initial snapshots, set the property to a value greater than 1
 In a parallel initial snapshot, the connector processes multiple tables concurrently.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When you enable parallel initial snapshots, the threads that perform each table snapshot can require varying times to complete their work.
 If a snapshot for one table requires significantly more time to complete than the snapshots for other tables, threads that have completed their work sit idle.
@@ -8598,10 +8493,9 @@ After the snapshot completes, the connector is unable to close the connection, r
 <div class="paragraph">
 <p>If you experience this problem, revert the value of <code>snapshot.max.threads</code> to <code>1</code>, and retry the snapshot.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -8663,19 +8557,17 @@ To customize the way that the connector masks configuration key values, set this
 A string of asterisks replaces the original values, for example,  <code>********</code>.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The pattern that you specify for the <code>custom.sanitize.pattern</code> property overrides the default HyperCDC masking pattern; the specified value does not extend or augment the default pattern.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -8834,21 +8726,19 @@ For information about the full range of configuration properties for Kafka produ
 <p>The name of the Kafka topic that the connector monitors for ad hoc signals.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If <a href="../configuration/topic-auto-create-config.html#topic-auto-create-config" class="xref page">automatic topic creation</a> is disabled, you must manually create the required signaling topic.
 A signaling topic is required to preserve signal ordering.
 The signaling topic must have a single partition.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -9760,20 +9650,18 @@ Synchronization of replica slots is not automatic.</p>
 When a replication slot is configured for failover, PostgreSQL automatically synchronizes the replication slot from the primary to the replica, enabling HyperCDC to continue reading from the slot after the replica is promoted and becomes the new primary.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Some managed PostgreSQL services (for example, AWS RDS and GCP CloudSQL) use disk replication to implement replication to a standby.
 As a result, these services automatically replicate the replication slot so that it is available after a failover.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The new primary must have the <a href="#installing-postgresql-output-plugin">logical decoding plug-in</a> installed and a replication slot that is configured for use by the plug-in and the database for which you want to capture changes.
 Only then can you point the connector to the new server and restart the connector.</p>
@@ -9926,14 +9814,8 @@ How quickly this happens depends on the capabilities and performance of Kafka an
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

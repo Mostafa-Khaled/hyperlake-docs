@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">TimescaleDB Integration</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">TimescaleDB Integration</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -36,7 +40,7 @@ It is based on PostgreSQL database and implemented as an extension of it.</p>
 </div>
 <div class="paragraph">
 <p>The HyperCDC PostgreSQL connector can capture data changes from TimescaleDB.
-The standard <a href="#">PostgreSQL connector</a> reads the raw data from the database.
+The standard <a href="/documentation/reference/connectors/postgresql">PostgreSQL connector</a> reads the raw data from the database.
 You can then use the <code>io.hypercdc.connector.postgresql.transforms.timescaledb.TimescaleDb</code> transformation to process the raw data, perform logical routing, and add relevant metadata.</p>
 </div>
 </div>
@@ -50,7 +54,7 @@ You can then use the <code>io.hypercdc.connector.postgresql.transforms.timescale
 <p>Install TimescaleDB as described in the <a href="https://docs.timescale.com/">TimescaleDB documentation</a>.</p>
 </li>
 <li>
-<p>Install the HyperCDC PostgresSQL connector according to the instructions in the <a href="#">HyperCDC installation guide</a>.</p>
+<p>Install the HyperCDC PostgresSQL connector according to the instructions in the <a href="/documentation/reference/install">HyperCDC installation guide</a>.</p>
 </li>
 <li>
 <p>Configure TimescaleDB, and deploy the connector.</p>
@@ -235,7 +239,7 @@ Typically, messages with compressed chunks are dropped, and are not processed by
 <div class="paragraph">
 <p>HyperCDC uses replication slots to capture changes from TimescaleDB and PostgreSQL.
 Replication slots Data store data in multiple message formats.
-Typically, it’s best to configure HyperCDC to use the <a href="#">pgoutput</a> decoder, the default decoder for TimescaleDB instances, to read from the slot.</p>
+Typically, it’s best to configure HyperCDC to use the <a href="/reference/connectors/postgresql.html#postgresql-pgoutput">pgoutput</a> decoder, the default decoder for TimescaleDB instances, to read from the slot.</p>
 </div>
 <div class="paragraph">
 <p>To configure the replication slot to support logical decoding, specify the following setting in the <code>postgresql.conf</code> file:</p>
@@ -489,14 +493,8 @@ The SMT routes messages into topics named <code>_&lt;prefix&gt;_._&lt;schema&gt;
 </table></div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

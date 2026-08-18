@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC Connector for YashanDB</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC Connector for YashanDB</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -497,28 +501,25 @@ Because the structured representation presents data in JSON or Avro format, cons
 </dl>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>When the connector is configured to capture a table, it stores the history of the table’s schema changes not only in the schema change topic, but also in an internal database schema history topic.
 The internal database schema history topic is for connector use only and it is not intended for direct use by consuming applications.
 Ensure that applications that require notifications about schema changes consume that information only from the schema change topic.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Never partition the database schema history topic.
 For the database schema history topic to function correctly, it must maintain a consistent, global order of the event records that the connector emits to it.</p>
@@ -536,10 +537,9 @@ For the database schema history topic to function correctly, it must maintain a 
 </li>
 </ul>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <div class="title">Example: Message emitted to the YashanDB connector schema change topic</div>
 <p>The following example shows a typical schema change message in JSON format.
@@ -753,21 +753,19 @@ In the following example, the <code>payload</code> field contains the <code>data
 <p>HyperCDC can generate events that represent transaction metadata boundaries and that enrich data change event messages.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="title">Limits on when HyperCDC receives transaction metadata</div>
 <div class="paragraph">
 <p>HyperCDC registers and receives metadata only for transactions that occur after you deploy the connector.
 Metadata for transactions that occur before you deploy the connector is not available.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Database transactions are represented by a statement block that is enclosed between the <code>BEGIN</code> and <code>END</code> keywords.
 HyperCDC generates transaction boundary events for the <code>BEGIN</code> and <code>END</code> delimiters in every transaction.
@@ -841,12 +839,11 @@ The structures of the key and value depend on the table from which the change ev
 For information about how HyperCDC constructs topic names, see <a href="#yashandb-topic-names">Topic names</a>.</p>
 </div>
 <div class="admonitionblock warning">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">WARNING</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC YashanDB connector ensures that all Kafka Connect <em>schema names</em> are <a href="http://avro.apache.org/docs/current/spec.html#names">valid Avro schema names</a>.
 To qualify as a valid Avro schema name, the logical server name must start with an alphabetic character or an underscore ([a-z,A-Z,_]).
@@ -856,10 +853,9 @@ The connector automatically replaces invalid characters with an underscore chara
 <div class="paragraph">
 <p>Unexpected naming conflicts can result when the only distinguishing characters between multiple logical server names, schema names, or table names are not valid characters, and those characters are replaced with underscores.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>HyperCDC and Kafka Connect are designed around <em>continuous streams of event messages</em>.
 However, the structure of these events might change over time, which can be difficult for topic consumers to handle.
@@ -1673,22 +1669,20 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
 <p>If a single <code>TRUNCATE</code> operation affects multiple tables, the connector emits one <em>truncate</em> change event record for each truncated table.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>A <em>truncate</em> event represents a change that is made to an entire table and it has no message key.
 As a result, for topics with multiple partitions, there is no ordering guarantee for the change events (<em>create</em>, <em>update</em>, and so forth), or <em>truncate</em> events that pertain to a table.
 For example, if a consumer reads events for a table from multiple partitions, it might receive an <em>update</em> event for a table from one partition after it receives a <em>truncate</em> event that deletes all of the data in the table from another partition.
 Ordering is guaranteed only for topics that use a single partition.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>If you do not want the connector to capture <em>truncate</em> events, set the <a href="#yashandb-property-skipped-operations"><code>skipped.operations</code></a> option to filter them out.</p>
 </div>
@@ -1710,21 +1704,19 @@ The data type of the table column determines how the connector represents the co
 <p>Literal types describe how HyperCDC represents values literally, using one of the following Kafka Connect schema types: <code>INT8</code>, <code>INT16</code>, <code>INT32</code>, <code>INT64</code>, <code>FLOAT32</code>, <code>FLOAT64</code>, <code>BOOLEAN</code>, <code>STRING</code>, <code>BYTES</code>, <code>ARRAY</code>, <code>MAP</code>, <code>STRUCT</code>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If a column is not mapped, the connector ignores changes to the column.
 The connector maps all other columns in the table and generates change events for those columns.
 If a column is not mapped, it is not included in the change event.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="sect2">
 <h3 id="yashandb-character-types"><a class="anchor" href="#yashandb-character-types"></a>Character types</h3>
 <div class="paragraph">
@@ -2380,21 +2372,19 @@ When you use YashanDB as the source for tasks that include incremental synchroni
 </div>
 </div>
 <div class="admonitionblock caution">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">CAUTION</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Failure to configure this parameter can cause the task to fail.
 This parameter is a global parameter.
 For more information, see the <a href="https://doc.yashandb.com/en/">YashanDB documentation</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="yashandb-supplemental-logging"><a class="anchor" href="#yashandb-supplemental-logging"></a>Enable supplemental logging</h3>
@@ -2424,19 +2414,17 @@ ALTER DATABASE ADD SUPPLEMENTAL LOG DATA (ALL) COLUMNS;</code></pre>
 </div>
 </div>
 <div class="admonitionblock caution">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">CAUTION</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>It is important to note that failing to enable supplemental logging, or enabling it incorrectly, can result in data loss or task failure.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect2">
@@ -2511,19 +2499,17 @@ The following are the steps to configure the YStream service.</p>
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The table names and schemas that you add to the service must be the same as those that the connector is configured to capture.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="_set_ystream_service_parameters"><a class="anchor" href="#_set_ystream_service_parameters"></a>Set YStream service parameters</h4>
@@ -2559,17 +2545,15 @@ Query the <code>V$YSTREAM_SERVER</code> view to obtain the service status.</p>
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 If you need to connect to YStream using a standby database, you must start the YStream service on the standby database node.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </div>
@@ -3754,21 +3738,19 @@ schema.history.internal.consumer.ssl.key.password=test1234</code></pre>
 <p>The name of the Kafka topic that the connector monitors for ad hoc signals.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If <a href="../configuration/topic-auto-create-config.html#topic-auto-create-config" class="xref page">automatic topic creation</a> is disabled, you must manually create the required signaling topic.
 A signaling topic is required to preserve signal ordering.
 The signaling topic must have a single partition.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div></div></td>
+
+      </div>
+    </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -4908,14 +4890,8 @@ To avoid this issue, execute DDL statements directly rather than through stored 
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

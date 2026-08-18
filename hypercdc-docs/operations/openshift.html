@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">Deploying HyperCDC on OpenShift</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">Deploying HyperCDC on OpenShift</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -35,7 +39,7 @@
 For development or testing on OpenShift you can use <a href="https://developers.redhat.com/products/codeready-containers/overview">CodeRady Containers</a>.</p>
 </div>
 <div class="paragraph">
-<p>To get started more quickly, try the <a href="https://learn.openshift.com/middleware/hypercdc-getting-started/">HyperCDC online learning scenario</a>.
+<p>To get started more quickly, try the <a href="https://learn.openshift.com/middleware/debezium-getting-started/">HyperCDC online learning scenario</a>.
 It starts an OpenShift cluster just for you, which lets you start using HyperCDC in your browser within a few minutes.</p>
 </div>
 </div>
@@ -67,7 +71,7 @@ select "Strimzi" and click the "install" button.</p>
         </div>
         <div class="visual-placeholder__title">openshift strimzi operator</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/openshift_strimzi_operator.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-openshift-1">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -357,21 +361,19 @@ EOF</code></pre>
 <p>Here we took the advantage of the OpenShift built-in registry, already running as a service on the OpenShift cluster.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For simplicity, we’ve skipped the checksum validation for the downloaded artifact.
 If you want to be sure the artifact was correctly downloaded, specify its checksum via the <code>sha512sum</code> attribute.
 See the <a href="https://strimzi.io/docs/operators/latest/deploying.html#creating-new-image-using-kafka-connect-build-str">Strimzi documentation</a> for more details.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>If you already have a suitable container image either in the local or a remote registry (such as quay.io or DockerHub), you can use this simplified version:</p>
 </div>
@@ -418,7 +420,7 @@ and allow Kafka Connect to access our <code>Secret</code> object.</p>
         </div>
         <div class="visual-placeholder__title">openshift pods</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/openshift_pods.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-openshift-2">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -500,13 +502,13 @@ but refer to <code>Secret</code> object we created previously.</p>
       "id": 1001,
       "first_name": "Sally",
       "last_name": "Thomas",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="fa899b969683d48e9295979b89ba9b99979fd4999597">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f2c3e333326712b3730323e2c1f3e3c323a713c3032">[email&nbsp;protected]</a>"
     },
     "after": {
       "id": 1001,
       "first_name": "Sally Marie",
       "last_name": "Thomas",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="f281939e9e8bdc869a9d9f9381b293919f97dc919d9f">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7e0d1f121207500a1611131f0d3e1f1d131b501d1113">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "{hypercdc-version}",
@@ -538,18 +540,12 @@ but refer to <code>Secret</code> object we created previously.</p>
 </div>
 <div class="paragraph">
 <p>If you have any questions or requests related to running HyperCDC on Kubernetes or OpenShift,
-then please let us know in our <a href="https://groups.google.com/forum/#!forum/hypercdc">user group</a> or in the HyperCDC <a href="https://hypercdc.zulipchat.com/#narrow/stream/302533-dev">developer’s chat</a>.</p>
+then please let us know in our <a href="https://groups.google.com/forum/#!forum/debezium">user group</a> or in the HyperCDC <a href="https://debezium.zulipchat.com/#narrow/stream/302533-dev">developer’s chat</a>.</p>
 </div>
-</div>
-</div>
-</article>
-</div>
-<div class="article-cell2">
 </div>
 </div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

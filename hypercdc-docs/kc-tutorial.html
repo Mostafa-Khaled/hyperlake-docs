@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="./">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">Tutorial</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">Tutorial</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -53,19 +57,17 @@ For more information, see <a href="https://docs.docker.com/engine/installation/"
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>This example can also be run using Podman. For more information see <a href="https://podman.io/">Podman</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -126,7 +128,7 @@ For more information about deploying and using HyperCDC connectors, see the conn
 <div class="paragraph">
 <p>Using HyperCDC requires two separate services: Kafka and the HyperCDC connector service.
 In this tutorial,
-you will set up a single instance of each service using <a href="http://docker.com">Docker</a> and <a href="https://quay.io/organization/hypercdc">the HyperCDC container images</a>.</p>
+you will set up a single instance of each service using <a href="http://docker.com">Docker</a> and <a href="https://quay.io/organization/debezium">the HyperCDC container images</a>.</p>
 </div>
 <div class="paragraph">
 <p>To start the services needed for this tutorial, you must:</p>
@@ -150,26 +152,24 @@ you will set up a single instance of each service using <a href="http://docker.c
 <div class="sect2">
 <h3 id="considerations-running-hypercdc-docker"><a class="anchor" href="#considerations-running-hypercdc-docker"></a>Considerations for running HyperCDC with Docker</h3>
 <div class="paragraph">
-<p>This tutorial uses <a href="http://docker.com">Docker</a> and the <a href="https://hub.docker.com/u/hypercdc/">HyperCDC container images</a> to run the Kafka, HyperCDC and MySQL services.
+<p>This tutorial uses <a href="http://docker.com">Docker</a> and the <a href="https://hub.docker.com/u/debezium/">HyperCDC container images</a> to run the Kafka, HyperCDC and MySQL services.
 Running each service in a separate container simplifies the setup so that you can see HyperCDC in action.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>In a production environment,
 you would run multiple instances of each service to provide performance, reliability, replication, and fault tolerance.
 Typically, you would either deploy these services on a platform like <a href="https://www.openshift.com">OpenShift</a> or <a href="http://kubernetes.io">Kubernetes</a> that manages multiple Docker containers running on multiple hosts and machines,
 or you would install on dedicated hardware.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>You should be aware of the following considerations for running HyperCDC with Docker:</p>
 </div>
@@ -187,20 +187,18 @@ when a container is stopped, all persisted data is lost.
 This way, cleanup is simple when you complete the tutorial.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For more information about storing persistent data,
-see the documentation for the <a href="https://quay.io/organization/hypercdc">container images</a>.</p>
+see the documentation for the <a href="https://quay.io/organization/debezium">container images</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>This tutorial requires you to run each service in a different container.</p>
@@ -209,12 +207,11 @@ see the documentation for the <a href="https://quay.io/organization/hypercdc">co
 This way, all of the output of a container will be displayed in the terminal used to run it.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Docker also allows you to run a container in <em>detached</em> mode (with the <code>-d</code> option),
 where the container is started and the <code>docker</code> command returns immediately.
@@ -223,10 +220,9 @@ To see the output,
 you would need to use the <code>docker logs --follow --name <em>&lt;container-name&gt;</em></code> command.
 For more information, see the Docker documentation.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 </ul>
 </div>
@@ -234,20 +230,18 @@ For more information, see the Docker documentation.</p>
 <div class="sect2">
 <h3 id="starting-kafka"><a class="anchor" href="#starting-kafka"></a>Starting Kafka</h3>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>HyperCDC 3.6.1.Final has been tested against multiple versions of Kafka Connect.
 Please refer to the <a href="#">HyperCDC Test Matrix</a> to determine compatibility between HyperCDC and Kafka Connect.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="olist arabic">
 <div class="title">Procedure</div>
 <ol class="arabic">
@@ -327,12 +321,11 @@ If multiple values are required, use a comma-separated list in the format <code>
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you use Podman, run the following command:</p>
 </div>
@@ -341,17 +334,15 @@ If multiple values are required, use a comma-separated list in the format <code>
 <pre class="highlightjs highlight nowrap"><code class="language-shell hljs" data-lang="shell">$ podman run -it --rm --name kafka --pod dbz -e HOST_NAME=127.0.0.1 quay.io/hypercdc/kafka:3.6</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>In this tutorial, you will always connect to Kafka from within a Docker container.
 Any of these containers can communicate with the <code>kafka</code> container by linking to it.
@@ -359,10 +350,9 @@ If you needed to connect to Kafka from <em>outside</em> of a Docker container,
 you would have to set the <code>-e</code> option to advertise the Kafka address through the Docker host
 (<code>-e ADVERTISED_HOST_NAME=</code> followed by either the IP address or resolvable host name of the Docker host).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </li>
@@ -446,12 +436,11 @@ which means the terminal’s standard input and output are attached to the conta
 </ol>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you use Podman, run the following command:</p>
 </div>
@@ -460,10 +449,9 @@ which means the terminal’s standard input and output are attached to the conta
 <pre class="highlightjs highlight nowrap"><code class="language-shell hljs" data-lang="shell">$ podman run -it --rm --name mysql --pod dbz -e MYSQL_ROOT_PASSWORD=hypercdc -e MYSQL_USER=mysqluser -e MYSQL_PASSWORD=mysqlpw quay.io/hypercdc/example-mysql:3.6</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -535,12 +523,11 @@ which means the terminal’s standard input and output are attached to the conta
 </ol>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you use Podman, run the following command:</p>
 </div>
@@ -549,10 +536,9 @@ which means the terminal’s standard input and output are attached to the conta
 <pre class="highlightjs highlight nowrap"><code class="language-shell hljs" data-lang="shell">$ podman run -it --rm --name mysqlterm --pod dbz mysql:8.2 sh -c 'exec mysql -h 0.0.0.0 -uroot -phypercdc'</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -623,10 +609,10 @@ mysql&gt;</code></pre>
 +------+------------+-----------+-----------------------+
 | id   | first_name | last_name | email                 |
 +------+------------+-----------+-----------------------+
-| 1001 | Sally      | Thomas    | <a href="#" class="__cf_email__" data-cfemail="1a697b767663346e7275777b695a7b79777f34797577">[email&nbsp;protected]</a> |
-| 1002 | George     | Bailey    | <a href="#" class="__cf_email__" data-cfemail="a5c2c7c4ccc9c0dce5c3cacac7c4d78bc6cac8">[email&nbsp;protected]</a>    |
-| 1003 | Edward     | Walker    | <a href="#" class="__cf_email__" data-cfemail="0b6e6f4b7c6a67606e7925686466">[email&nbsp;protected]</a>         |
-| 1004 | Anne       | Kretchmar | <a href="#" class="__cf_email__" data-cfemail="76171818131d36181917180501130458190411">[email&nbsp;protected]</a>    |
+| 1001 | Sally      | Thomas    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="592a38353520772d313634382a19383a343c773a3634">[email&nbsp;protected]</a> |
+| 1002 | George     | Bailey    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="197e7b7870757c60597f76767b786b377a7674">[email&nbsp;protected]</a>    |
+| 1003 | Edward     | Walker    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3c59587c4b5d5057594e125f5351">[email&nbsp;protected]</a>         |
+| 1004 | Anne       | Kretchmar | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="73121d1d1618331d1c121d000416015d1c0114">[email&nbsp;protected]</a>    |
 +------+------------+-----------+-----------------------+
 4 rows in set (0.00 sec)</code></pre>
 </div>
@@ -692,12 +678,11 @@ This enables applications outside of the container to use Kafka Connect’s REST
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you use Podman, run the following command:</p>
 </div>
@@ -706,17 +691,15 @@ This enables applications outside of the container to use Kafka Connect’s REST
 <pre class="highlightjs highlight nowrap"><code class="language-shell hljs" data-lang="shell">$ podman run -it --rm --name connect --pod dbz -e GROUP_ID=1 -e CONFIG_STORAGE_TOPIC=my_connect_configs -e OFFSET_STORAGE_TOPIC=my_connect_offsets -e STATUS_STORAGE_TOPIC=my_connect_statuses quay.io/hypercdc/connect:3.6</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you provide a <code>--hostname</code> command option then Kafka Connect REST API will <strong>not</strong> listen on the <code>localhost</code> interface.
 This can cause issues when the REST port is being exposed.</p>
@@ -724,10 +707,9 @@ This can cause issues when the REST port is being exposed.</p>
 <div class="paragraph">
 <p>If this is a problem then set environment variable <code>REST_HOST_NAME=0.0.0.0</code> which will ensure that REST API will be accessible from all interfaces.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>Verify that Kafka Connect started and is ready to accept connections.</p>
@@ -756,21 +738,19 @@ To communicate with the Kafka Connect service,
 you can use the <code>curl</code> command to send API requests to port 8083 of the Docker host (which you mapped to port 8083 in the <code>connect</code> container when you started Kafka Connect).</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>These commands use <code>localhost</code>.
 If you are using a non-native Docker platform (such as Docker Toolbox),
 replace <code>localhost</code> with the IP address of your Docker host.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -854,21 +834,19 @@ When a row in the database changes,
 HyperCDC generates a change event.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>In a production environment, you would typically either use the Kafka tools to manually create the necessary topics, including specifying the number of replicas,
 or you’d use the Kafka Connect mechanism for customizing the settings of <a href="configuration/topic-auto-create-config.html" class="xref page">auto-created</a> topics.
 However, for this tutorial, Kafka is configured to automatically create the topics with just one replica.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -970,20 +948,18 @@ This topic is for internal use only and is not for direct use by consumers.</p>
 </ol>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For security reasons, you shouldn’t put passwords or other secrets in plain text into connector configurations.
 Instead, any secrets should be externalized via the mechanism defined in <a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-297%3A+Externalizing+Secrets+for+Connect+Configurations">KIP-297</a>("Externalizing Secrets for Connect Configurations").</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -1004,12 +980,11 @@ replace <code>localhost</code> with the IP address of of your Docker host.</p>
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Windows users may need to escape the double-quotes.
 For example:</p>
@@ -1027,22 +1002,20 @@ For example:</p>
 <pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{"error_code":500,"message":"Unexpected character ('n' (code 110)): was expecting double-quote to start field name\n at [Source: (org.glassfish.jersey.message.internal.ReaderInterceptorExecutor$UnCloseableInputStream); line: 1, column: 4]"}</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </li>
 </ol>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you use Podman, run the following command:</p>
 </div>
@@ -1051,10 +1024,9 @@ For example:</p>
 <pre class="highlightjs highlight nowrap"><code class="language-shell hljs" data-lang="shell">$ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d '{ "name": "inventory-connector", "config": { "connector.class": "io.hypercdc.connector.mysql.MySqlConnector", "tasks.max": "1", "database.hostname": "0.0.0.0", "database.port": "3306", "database.user": "hypercdc", "database.password": "dbz", "database.server.id": "184054", "topic.prefix": "dbserver1", "database.include.list": "inventory", "schema.history.internal.kafka.bootstrap.servers": "0.0.0.0:9092", "schema.history.internal.kafka.topic": "schemahistory.inventory" } }'</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -1184,21 +1156,19 @@ The next three lines involve the <code>snapshot</code> activity of the connector
 and report that a snapshot is being started using the <code>hypercdc</code> MySQL user along with the MySQL grants associated with that user.</p>
 </div>
 <div class="admonitionblock tip">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">TIP</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the connector is not able to connect,
 or if it does not see any tables or the <code>binlog</code>,
 check these grants to ensure that all of those listed above are included.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Next, the connector reports the steps that make up the snapshot operation:</p>
 </div>
@@ -1255,12 +1225,11 @@ and Step 7 reads all of the rows in each of the tables and reports the time take
 In this case, the connector completed its consistent snapshot in just under 1 second.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The snapshot process will take longer with your databases,
 but the connector outputs enough log messages that you can track what it is working on,
@@ -1270,10 +1239,9 @@ it should not last very long even for large databases.
 This is because the lock is released before any data is copied.
 For more information, see the <a href="connectors/mysql.html#hypercdc-connector-for-mysql" class="xref page">MySQL connector documentation</a>.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Next, Kafka Connect reports some "errors".
 However, you can safely ignore these warnings:
@@ -1408,12 +1376,11 @@ In this case, this contains the row’s primary key.</p>
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you use Podman, run the following command:</p>
 </div>
@@ -1422,10 +1389,9 @@ In this case, this contains the row’s primary key.</p>
 <pre class="highlightjs highlight nowrap"><code class="language-shell hljs" data-lang="shell">$ podman run -it --rm --name watcher --pod dbz quay.io/hypercdc/kafka:3.6 watch-topic -a -k dbserver1.inventory.customers</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The <code>watch-topic</code> utility returns the event records from the <code>customers</code> table.
 There are four events, one for each row in the table.
@@ -1446,19 +1412,17 @@ Contents of topic dbserver1.inventory.customers:
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>This utility keeps watching the topic, so any new events will automatically appear as long as the utility is running.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </li>
@@ -1677,7 +1641,7 @@ and describes what it contains (in this case, the <code>id</code>, <code>first_n
       "id": 1004,
       "first_name": "Anne",
       "last_name": "Kretchmar",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="66070808030d26080907081511031448091401">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="63020d0d0608230d0c020d101406114d0c1104">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -1737,12 +1701,11 @@ the connector name, the name of the <code>binlog</code> file where the event was
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The JSON representations of the events are much longer than the rows they describe.
 This is because, with every event key and value, Kafka Connect ships the <em>schema</em> that describes the <em>payload</em>.
@@ -1766,10 +1729,9 @@ it places only a unique identifier for the schema along with an Avro-encoded bin
 As a result, the serialized messages that are transferred over the wire and stored in Kafka are far smaller than what you have seen here.
 In fact, the Avro Converter is able to use Avro schema evolution techniques to maintain the history of each schema in the Schema Registry.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </li>
@@ -1784,10 +1746,10 @@ In the terminal that is running the MySQL command line client, run the following
 +------+------------+-----------+-----------------------+
 | id   | first_name | last_name | email                 |
 +------+------------+-----------+-----------------------+
-| 1001 | Sally      | Thomas    | <a href="#" class="__cf_email__" data-cfemail="295a48454550075d414644485a69484a444c074a4644">[email&nbsp;protected]</a> |
-| 1002 | George     | Bailey    | <a href="#" class="__cf_email__" data-cfemail="721510131b1e170b32141d1d1013005c111d1f">[email&nbsp;protected]</a>    |
-| 1003 | Edward     | Walker    | <a href="#" class="__cf_email__" data-cfemail="254041655244494e40570b464a48">[email&nbsp;protected]</a>         |
-| 1004 | Anne       | Kretchmar | <a href="#" class="__cf_email__" data-cfemail="2c4d424249476c42434d425f5b495e02435e4b">[email&nbsp;protected]</a>    |
+| 1001 | Sally      | Thomas    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ddaebcb1b1a4f3a9b5b2b0bcae9dbcbeb0b8f3beb2b0">[email&nbsp;protected]</a> |
+| 1002 | George     | Bailey    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0e696c6f67626b774e6861616c6f7c206d6163">[email&nbsp;protected]</a>    |
+| 1003 | Edward     | Walker    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="83e6e7c3f4e2efe8e6f1ade0ecee">[email&nbsp;protected]</a>         |
+| 1004 | Anne       | Kretchmar | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3d5c535358567d53525c534e4a584f13524f5a">[email&nbsp;protected]</a>    |
 +------+------------+-----------+-----------------------+
 4 rows in set (0.00 sec)</code></pre>
 </div>
@@ -1838,10 +1800,10 @@ Rows matched: 1  Changed: 1  Warnings: 0</code></pre>
 +------+------------+-----------+-----------------------+
 | id   | first_name | last_name | email                 |
 +------+------------+-----------+-----------------------+
-| 1001 | Sally      | Thomas    | <a href="#" class="__cf_email__" data-cfemail="ed9e8c818194c3998582808c9ead8c8e8088c38e8280">[email&nbsp;protected]</a> |
-| 1002 | George     | Bailey    | <a href="#" class="__cf_email__" data-cfemail="c5a2a7a4aca9a0bc85a3aaaaa7a4b7eba6aaa8">[email&nbsp;protected]</a>    |
-| 1003 | Edward     | Walker    | <a href="#" class="__cf_email__" data-cfemail="e18485a196808d8a8493cf828e8c">[email&nbsp;protected]</a>         |
-| 1004 | Anne Marie | Kretchmar | <a href="#" class="__cf_email__" data-cfemail="a6c7c8c8c3cde6c8c9c7c8d5d1c3d488c9d4c1">[email&nbsp;protected]</a>    |
+| 1001 | Sally      | Thomas    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5c2f3d30302572283433313d2f1c3d3f3139723f3331">[email&nbsp;protected]</a> |
+| 1002 | George     | Bailey    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="620500030b0e071b22040d0d0003104c010d0f">[email&nbsp;protected]</a>    |
+| 1003 | Edward     | Walker    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3b5e5f7b4c5a57505e4915585456">[email&nbsp;protected]</a>         |
+| 1004 | Anne Marie | Kretchmar | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4f2e21212a240f21202e213c382a3d61203d28">[email&nbsp;protected]</a>    |
 +------+------------+-----------+-----------------------+
 4 rows in set (0.00 sec)</code></pre>
 </div>
@@ -1898,13 +1860,13 @@ There are no changes in the <code>schema</code> section, so only the <code>paylo
       "id": 1004,
       "first_name": "Anne",
       "last_name": "Kretchmar",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="c4a5aaaaa1af84aaaba5aab7b3a1b6eaabb6a3">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cfaea1a1aaa48fa1a0aea1bcb8aabde1a0bda8">[email&nbsp;protected]</a>"
     },
     "after": {
       "id": 1004,
       "first_name": "Anne Marie",
       "last_name": "Kretchmar",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="593837373c3219373638372a2e3c2b77362b3e">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a5c4cbcbc0cee5cbcac4cbd6d2c0d78bcad7c2">[email&nbsp;protected]</a>"
     },
     "source": {
       "name": "3.6.1.Final",
@@ -2006,12 +1968,11 @@ Query OK, 1 row affected (0.00 sec)</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If the above command fails with a foreign key constraint violation,
 then you must remove the reference of the customer address from the <em>addresses</em> table using the following statement:</p>
@@ -2021,10 +1982,9 @@ then you must remove the reference of the customer address from the <em>addresse
 <pre class="highlightjs highlight nowrap"><code class="language-sql hljs" data-lang="sql">mysql&gt; DELETE FROM addresses WHERE customer_id=1004;</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </li>
@@ -2077,7 +2037,7 @@ then you must remove the reference of the customer address from the <em>addresse
       "id": 1004,
       "first_name": "Anne Marie",
       "last_name": "Kretchmar",
-      "email": "<a href="#" class="__cf_email__" data-cfemail="50313e3e353b103e3f313e232735227e3f2237">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="06676868636d46686967687571637428697461">[email&nbsp;protected]</a>"
     },
     "after": null,
     "source": {
@@ -2237,8 +2197,8 @@ and then restart Kafka Connect to see the change events.</p>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-sql hljs" data-lang="sql">mysql&gt; INSERT INTO customers VALUES (default, "Sarah", "Thompson", "<a href="#" class="__cf_email__" data-cfemail="0c676578784c6d6f6169226f6361">[email&nbsp;protected]</a>");
-mysql&gt; INSERT INTO customers VALUES (default, "Kenneth", "Anderson", "<a href="#" class="__cf_email__" data-cfemail="5e353f303a3b2c1e3f3d333b703d3133">[email&nbsp;protected]</a>");</code></pre>
+<pre class="highlightjs highlight nowrap"><code class="language-sql hljs" data-lang="sql">mysql&gt; INSERT INTO customers VALUES (default, "Sarah", "Thompson", "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f49f9d8080b495979991da979b99">[email&nbsp;protected]</a>");
+mysql&gt; INSERT INTO customers VALUES (default, "Kenneth", "Anderson", "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6209030c0607102203010f074c010d0f">[email&nbsp;protected]</a>");</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2247,12 +2207,11 @@ However, because Kafka Connect is not running,
 <code>watch-topic</code> does not record any updates.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>In a production system, you would have enough brokers to handle the producers and consumers,
 and to maintain a minimum number of in-sync replicas for each topic.
@@ -2264,10 +2223,9 @@ This is because no change events are being produced.
 As soon as the Kafka cluster is restarted or the network recovers,
 HyperCDC will resume producing change events, and your consumers will resume consuming events where they left off.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </li>
@@ -2321,8 +2279,8 @@ and generated events from any changes in the MySQL database since that point in 
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{"schema":{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"}],"optional":false,"name":"dbserver1.inventory.customers.Key"},"payload":{"id":1005}}	{"schema":{"type":"struct","fields":[{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"before"},{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"after"},{"type":"struct","fields":[{"type":"string","optional":true,"field":"version"},{"type":"string","optional":false,"field":"name"},{"type":"int64","optional":false,"field":"server_id"},{"type":"int64","optional":false,"field":"ts_sec"},{"type":"string","optional":true,"field":"gtid"},{"type":"string","optional":false,"field":"file"},{"type":"int64","optional":false,"field":"pos"},{"type":"int32","optional":false,"field":"row"},{"type":"boolean","optional":true,"field":"snapshot"},{"type":"int64","optional":true,"field":"thread"},{"type":"string","optional":true,"field":"db"},{"type":"string","optional":true,"field":"table"}],"optional":false,"name":"io.hypercdc.connector.mysql.Source","field":"source"},{"type":"string","optional":false,"field":"op"},{"type":"int64","optional":true,"field":"ts_ms"},{"type":"int64","optional":true,"field":"ts_us"},{"type":"int64","optional":true,"field":"ts_ns"}],"optional":false,"name":"dbserver1.inventory.customers.Envelope","version":1},"payload":{"before":null,"after":{"id":1005,"first_name":"Sarah","last_name":"Thompson","email":"<a href="#" class="__cf_email__" data-cfemail="a9c2c0dddde9c8cac4cc87cac6c4">[email&nbsp;protected]</a>"},"source":{"version":"3.6.1.Final","name":"dbserver1","server_id":223344,"ts_sec":1490635153,"gtid":null,"file":"mysql-bin.000003","pos":1046,"row":0,"snapshot":null,"thread":3,"db":"inventory","table":"customers"},"op":"c","ts_ms":1490635181455,"ts_us":1490635181455501,"ts_ns":1490635181455501571}}
-{"schema":{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"}],"optional":false,"name":"dbserver1.inventory.customers.Key"},"payload":{"id":1006}}	{"schema":{"type":"struct","fields":[{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"before"},{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"after"},{"type":"struct","fields":[{"type":"string","optional":true,"field":"version"},{"type":"string","optional":false,"field":"name"},{"type":"int64","optional":false,"field":"server_id"},{"type":"int64","optional":false,"field":"ts_sec"},{"type":"string","optional":true,"field":"gtid"},{"type":"string","optional":false,"field":"file"},{"type":"int64","optional":false,"field":"pos"},{"type":"int32","optional":false,"field":"row"},{"type":"boolean","optional":true,"field":"snapshot"},{"type":"int64","optional":true,"field":"thread"},{"type":"string","optional":true,"field":"db"},{"type":"string","optional":true,"field":"table"}],"optional":false,"name":"io.hypercdc.connector.mysql.Source","field":"source"},{"type":"string","optional":false,"field":"op"},{"type":"int64","optional":true,"field":"ts_ms"},{"type":"int64","optional":true,"field":"ts_us"},{"type":"int64","optional":true,"field":"ts_ns"}],"optional":false,"name":"dbserver1.inventory.customers.Envelope","version":1},"payload":{"before":null,"after":{"id":1006,"first_name":"Kenneth","last_name":"Anderson","email":"<a href="#" class="__cf_email__" data-cfemail="e388828d878691a382808e86cd808c8e">[email&nbsp;protected]</a>"},"source":{"version":"3.6.1.Final","name":"dbserver1","server_id":223344,"ts_sec":1490635160,"gtid":null,"file":"mysql-bin.000003","pos":1356,"row":0,"snapshot":null,"thread":3,"db":"inventory","table":"customers"},"op":"c","ts_ms":1490635181456,"ts_us":1490635181456101,"ts_ns":1490635181456101571}}</code></pre>
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{"schema":{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"}],"optional":false,"name":"dbserver1.inventory.customers.Key"},"payload":{"id":1005}}	{"schema":{"type":"struct","fields":[{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"before"},{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"after"},{"type":"struct","fields":[{"type":"string","optional":true,"field":"version"},{"type":"string","optional":false,"field":"name"},{"type":"int64","optional":false,"field":"server_id"},{"type":"int64","optional":false,"field":"ts_sec"},{"type":"string","optional":true,"field":"gtid"},{"type":"string","optional":false,"field":"file"},{"type":"int64","optional":false,"field":"pos"},{"type":"int32","optional":false,"field":"row"},{"type":"boolean","optional":true,"field":"snapshot"},{"type":"int64","optional":true,"field":"thread"},{"type":"string","optional":true,"field":"db"},{"type":"string","optional":true,"field":"table"}],"optional":false,"name":"io.hypercdc.connector.mysql.Source","field":"source"},{"type":"string","optional":false,"field":"op"},{"type":"int64","optional":true,"field":"ts_ms"},{"type":"int64","optional":true,"field":"ts_us"},{"type":"int64","optional":true,"field":"ts_ns"}],"optional":false,"name":"dbserver1.inventory.customers.Envelope","version":1},"payload":{"before":null,"after":{"id":1005,"first_name":"Sarah","last_name":"Thompson","email":"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="375c5e43437756545a521954585a">[email&nbsp;protected]</a>"},"source":{"version":"3.6.1.Final","name":"dbserver1","server_id":223344,"ts_sec":1490635153,"gtid":null,"file":"mysql-bin.000003","pos":1046,"row":0,"snapshot":null,"thread":3,"db":"inventory","table":"customers"},"op":"c","ts_ms":1490635181455,"ts_us":1490635181455501,"ts_ns":1490635181455501571}}
+{"schema":{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"}],"optional":false,"name":"dbserver1.inventory.customers.Key"},"payload":{"id":1006}}	{"schema":{"type":"struct","fields":[{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"before"},{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"after"},{"type":"struct","fields":[{"type":"string","optional":true,"field":"version"},{"type":"string","optional":false,"field":"name"},{"type":"int64","optional":false,"field":"server_id"},{"type":"int64","optional":false,"field":"ts_sec"},{"type":"string","optional":true,"field":"gtid"},{"type":"string","optional":false,"field":"file"},{"type":"int64","optional":false,"field":"pos"},{"type":"int32","optional":false,"field":"row"},{"type":"boolean","optional":true,"field":"snapshot"},{"type":"int64","optional":true,"field":"thread"},{"type":"string","optional":true,"field":"db"},{"type":"string","optional":true,"field":"table"}],"optional":false,"name":"io.hypercdc.connector.mysql.Source","field":"source"},{"type":"string","optional":false,"field":"op"},{"type":"int64","optional":true,"field":"ts_ms"},{"type":"int64","optional":true,"field":"ts_us"},{"type":"int64","optional":true,"field":"ts_ns"}],"optional":false,"name":"dbserver1.inventory.customers.Envelope","version":1},"payload":{"before":null,"after":{"id":1006,"first_name":"Kenneth","last_name":"Anderson","email":"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4c272d2228293e0c2d2f2129622f2321">[email&nbsp;protected]</a>"},"source":{"version":"3.6.1.Final","name":"dbserver1","server_id":223344,"ts_sec":1490635160,"gtid":null,"file":"mysql-bin.000003","pos":1356,"row":0,"snapshot":null,"thread":3,"db":"inventory","table":"customers"},"op":"c","ts_ms":1490635181456,"ts_us":1490635181456101,"ts_ns":1490635181456101571}}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2367,12 +2325,11 @@ Because you used the <code>--rm</code> option when you started them, Docker also
 </ol>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you use Podman, run the following command:</p>
 </div>
@@ -2382,10 +2339,9 @@ Because you used the <code>--rm</code> option when you started them, Docker also
 $ podman pod rm dbz</code></pre>
 </div>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -2435,14 +2391,8 @@ Docker Compose files are provided for running the tutorial with MySQL, Postgres,
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="search.js"></script>
 </body>
 </html>

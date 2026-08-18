@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">Sending signals to a HyperCDC connector</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">Sending signals to a HyperCDC connector</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -153,17 +157,15 @@ The name of the data collection is case-sensitive.</p>
 </ol>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 If you use the <code>table.include.list</code> property, you do not need to include the signaling data collection in it. However, if you use the <code>column.include.list</code> property, you must include the signaling table columns (<code>id</code>, <code>type</code>, and <code>data</code>).
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Additional resources</div>
 <ul>
@@ -299,19 +301,17 @@ Each signal type requires a specific set of data.</p></td>
 </tbody>
 </table></div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 The signaling data collection must include columns with the names,  <code>id</code>, <code>type</code>, and <code>data</code>.
 Do not include quotation marks in the names.
 If you assign alternate names to these columns, the connector cannot process signals.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="hypercdc-signaling-creating-a-signal-data-collection"><a class="anchor" href="#hypercdc-signaling-creating-a-signal-data-collection"></a>Creating a signaling data collection</h3>
@@ -338,20 +338,18 @@ If you assign alternate names to these columns, the connector cannot process sig
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The amount of space that you allocate to the <code>VARCHAR</code> parameter of the <code>id</code> variable must be sufficient to accommodate the size of the ID strings of signals sent to the signaling table.
 If the size of an ID exceeds the available space, the connector cannot process the signal.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The following example shows a <code>CREATE TABLE</code> command that creates a three-column <code>hypercdc_signal</code> table:</p>
 </div>
@@ -361,17 +359,15 @@ If the size of an ID exceeds the available space, the connector cannot process t
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 The HyperCDC database user must have the <code>INSERT</code> privilege on the <code>hypercdc_signal</code> table.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 </div>
@@ -622,7 +618,7 @@ The snapshot process evaluates records in the data collection against the <code>
         </div>
         <div class="visual-placeholder__title">Using JConsole to send an `execute-snapshot` signal</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/jmx-signal-operation.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-configuration-signalling-1">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -844,17 +840,15 @@ You must include these compile dependencies in your project’s <code>pom.xml</c
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 To use a custom signaling channel with multiple connectors, you must place a copy of the custom signaling channel JAR file in the subdirectory for each connector.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="configuring-connectors-to-use-a-custom-signaling-channel"><a class="anchor" href="#configuring-connectors-to-use-a-custom-signaling-channel"></a>Configuring connectors to use a custom signaling channel</h3>
@@ -896,22 +890,20 @@ To use a custom signaling channel with multiple connectors, you must place a cop
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To use signaling to trigger ad hoc incremental snapshots for most connectors, you must first <a href="#hypercdc-signaling-enabling-source-signaling-channel">enable a <code>source</code> signaling channel</a> in the connector configuration.
 The source channel implements a watermarking mechanism to deduplicate events that might be captured by an incremental snapshot and then captured again after streaming resumes.
 Enabling the source channel is not required when using a signaling channel to trigger an incremental snapshot of a read-only MySQL database that has <a href="../connectors/mysql.html#enable-mysql-gtids" class="xref page">GTIDs enabled</a>.
 For more information, see <a href="../connectors/mysql.html#mysql-read-only-incremental-snapshots" class="xref page">MySQL read only incremental snapshot</a></p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>Some signals are not compatible with all connectors.</p>
 </div>
@@ -1571,28 +1563,20 @@ For example,</p>
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 To use a custom action with multiple connectors, you must place a copy of the custom signaling channel JAR file in the subdirectory for each connector.
-</td>
-</tr>
-</tbody></table></div>
+
+      </div>
+    </div>
 </div>
-</div>
-</div>
-</div>
-</article>
-</div>
-<div class="article-cell2">
 </div>
 </div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">Timezone Converter</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">Timezone Converter</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -44,35 +48,31 @@ Along with the specified timezone, the SMT also provides configuration options t
 <p>The SMT supports all HyperCDC and Kafka Connect temporal and non-temporal types.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To comply with daylight savings time, you must specify a geographic timezone in the <code>converted.timezone</code> configuration option.
 If you specify a UTC offset, the transform applies a fixed offset from UTC that isn’t accurate for regions that observe daylight savings time.
 Providing a fixed UTC offset is useful when converting timestamp fields to a specific timezone that does not observe daylight saving time.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <code>include.list</code> and <code>exclude.list</code> configuration options are mutually exclusive. You must specify only one of the options.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>The SMT also allows conversion of event metadata fields in the source information block, such as <code>ts_ms</code> to the target timezone. In order to convert the metadata fields, you must include the <code>source</code> prefix in the <code>fieldname</code> of the <code>include.list</code> or <code>exclude.list</code> configuration option.</p>
 </div>
@@ -116,7 +116,7 @@ Per the configuration specified in <a href="#basic-example-timezone-converter">t
             "id": 1,
             "first_name": "Anne",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="83e2edede6e8c3edece2edf0f4e6f1adecf1e4">[email&nbsp;protected]</a>",
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cbaaa5a5aea08ba5a4aaa5b8bcaeb9e5a4b9ac">[email&nbsp;protected]</a>",
             "created_at": "2011-01-11T16:40:30.123456789+00:00"
         },
         "source": {
@@ -159,7 +159,7 @@ The SMT also adds an <code>event_timestamp</code> field.</p>
             "id": 1,
             "first_name": "Anne",
             "last_name": "Kretchmar",
-            "email": "<a href="#" class="__cf_email__" data-cfemail="54353a3a313f143a3b353a272331267a3b2633">[email&nbsp;protected]</a>",
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="36575858535d76585957584541534418594451">[email&nbsp;protected]</a>",
             "created_at": "2011-01-11T11:40:30.123456789-05:00"
         },
         "source": {
@@ -354,14 +354,8 @@ The SMT excludes from conversion only fields that have the specified name. <code
 </table></div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

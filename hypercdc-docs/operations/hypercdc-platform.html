@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,31 +28,25 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC Management Platform</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC Management Platform</h1>
         <div id="preamble">
 <div class="sectionbody">
 
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>This project is currently in an incubating state.
 The exact semantics, configuration options, and so forth are subject to change, based on the feedback that we receive.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>HyperCDC Management Platform aims to simplify the deployment of HyperCDC to various environments in a highly opinionated manner.
 To achieve this goal, the platform uses a data-centric view of HyperCDC components.</p>
@@ -102,7 +104,7 @@ For the Kubernetes environment (currently, the only supported environment) the s
         </div>
         <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="https://www.youtube.com/embed/VTc7pyaqXjM?rel=0" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://www.youtube.com/embed/VTc7pyaqXjM?rel=0" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-1">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -148,7 +150,7 @@ It provides a set of APIs to interact with the platform.</p>
         </div>
         <div class="visual-placeholder__title">HyperCDC Platform Architecture</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-architecture.svg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-2">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -159,19 +161,17 @@ It provides a set of APIs to interact with the platform.</p>
 <h2 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Currently, the only supported environment is Kubernetes.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="ulist">
 <div class="title">Prerequisites</div>
 <ul>
@@ -216,12 +216,11 @@ It provides a set of APIs to interact with the platform.</p>
 <p>The <code>domain.name</code> is the only required property; it is used as <code>host</code> in the <code>Ingress</code> definition.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>In the preceding examples, the <code>database.enabled</code> property is used.
 This property helps to simplify deployment in testing environments by automatically deploying the PostgreSQL database that is required by the conductor service.
@@ -229,10 +228,9 @@ When deploying in a production environment, do not enable automatic deployment o
 Instead, specify an existing database instance, by setting the <code>database.name</code>, <code>database.host</code>, and other properties required to connect to the database.
 See the following table for more information.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 </ol>
 </div>
@@ -707,12 +705,11 @@ The editor automatically applies the JSON formatting that the platform requires 
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <figure class="visual-placeholder" id="fig-operations-hypercdc-platform-3">
         <div class="visual-placeholder__header">
           <span class="visual-placeholder__badge">Visual Asset <code>#fig-operations-hypercdc-platform-3</code></span>
@@ -720,7 +717,7 @@ The editor automatically applies the JSON formatting that the platform requires 
         </div>
         <div class="visual-placeholder__title">HyperCDC platform - Create source toolbar</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/create-source-toolbar.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-3">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -730,10 +727,9 @@ The editor automatically applies the JSON formatting that the platform requires 
 <div class="paragraph">
 <p>From the toolbar on the <strong>Source catalog</strong> page, select <strong>Create using smart editor</strong> .</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="videoblock responsive">
 <div class="title">Create, edit and remove a source</div>
 <div class="content">
@@ -744,7 +740,7 @@ The editor automatically applies the JSON formatting that the platform requires 
         </div>
         <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="https://www.youtube.com/embed/CVY4Y4kAs_E?rel=0" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://www.youtube.com/embed/CVY4Y4kAs_E?rel=0" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-4">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -793,7 +789,7 @@ Stage UI intelligently recognizes the format of the configuration that you provi
         </div>
         <div class="visual-placeholder__title">HyperCDC UI smart editor - Kafka connect</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/Debezium-platform-smart-editor-kafka.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-5">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -812,7 +808,7 @@ Optionally, you can edit the JSON to update the value of the <code>name</code> f
         </div>
         <div class="visual-placeholder__title">HyperCDC platform smart editor - source</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-smart-editor-source.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-6">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -873,12 +869,11 @@ If the operation returns an error, verify that the source is no longer used in a
 <p>To edit a source, from the platform UI, open to the <strong>Source</strong> menu, click the <strong>Action</strong> menu of the source that you want to edit, and then click <strong>Edit</strong>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Editing a source affects all pipelines that use it.
 Before you submit a change, a message notifies you that pipelines that use the source will restart.</p>
@@ -890,14 +885,13 @@ Before you submit a change, a message notifies you that pipelines that use the s
         </div>
         <div class="visual-placeholder__title">Edit source confirmation modal</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/edit-confirmation.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-7">Review in Visuals Catalog →</a>
         </div>
       </figure>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="hypercdc-platform-enable-signalling"><a class="anchor" href="#hypercdc-platform-enable-signalling"></a>Enabling signaling</h4>
@@ -924,7 +918,7 @@ For more information about signaling, see <a href="../configuration/signalling.h
         </div>
         <div class="visual-placeholder__title">Edit source confirmation modal</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/Debezium-platform-signalling.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-8">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -939,7 +933,7 @@ The signaling data collection must be unique to each connector instance.</p>
         </div>
         <div class="visual-placeholder__title">Edit source confirmation modal</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/Debezium-platform-signalling-modal.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-9">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -963,7 +957,7 @@ The signaling data collection must be unique to each connector instance.</p>
         </div>
         <div class="visual-placeholder__title">Signalling setup done</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/Debezium-platform-signalling-done.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-10">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -986,7 +980,7 @@ When you create a destination, it can be shared between different pipelines, whi
         </div>
         <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="https://www.youtube.com/embed/vijxIYwOR4k?rel=0" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://www.youtube.com/embed/vijxIYwOR4k?rel=0" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-11">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1015,12 +1009,11 @@ Alternately, you can extract a HyperCDC Server sink configuration and automatica
 </dl>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <figure class="visual-placeholder" id="fig-operations-hypercdc-platform-12">
         <div class="visual-placeholder__header">
           <span class="visual-placeholder__badge">Visual Asset <code>#fig-operations-hypercdc-platform-12</code></span>
@@ -1028,17 +1021,16 @@ Alternately, you can extract a HyperCDC Server sink configuration and automatica
         </div>
         <div class="visual-placeholder__title">HyperCDC platform - Create sink toolbar</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/create-destination-toolbar.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-12">Review in Visuals Catalog →</a>
         </div>
       </figure>
 <div class="paragraph">
 <p>To create a sink destination from an existing HyperCDC Server configuration, from the <strong>Destination catalog</strong> page, click <strong>Create using smart editor</strong> .</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="hypercdc-platform-configuring-a-destination-with-the-smart-editor"><a class="anchor" href="#hypercdc-platform-configuring-a-destination-with-the-smart-editor"></a>Configuring a destination with the Smart Editor</h4>
@@ -1089,7 +1081,7 @@ hypercdc.source.table.include.list=inventory.customers
         </div>
         <div class="visual-placeholder__title">HyperCDC UI smart editor - Server</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-smart-editor-server.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-13">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1108,7 +1100,7 @@ Edit the JSON to update the value of the <code>name</code> field, and optionally
         </div>
         <div class="visual-placeholder__title">HyperCDC platform smart editor - Sink</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-smart-editor-sink.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-14">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1160,18 +1152,16 @@ If the operation returns an error, verify that the destination is no longer used
 <p>To edit a destination, go to the <code>Destination</code> menu and then click the <code>action</code> menu of the destination you want to edit, then click <code>Edit</code>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Editing a destination affects all pipelines that use it.
 After you make a change, a confirmation message informs you that pipelines that use the destination will restart.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect2">
@@ -1196,7 +1186,7 @@ When you modify a transformation, the changes are reflected in all pipelines tha
         </div>
         <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="https://www.youtube.com/embed/UCc4A4o6HiU?rel=0" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://www.youtube.com/embed/UCc4A4o6HiU?rel=0" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-15">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1263,17 +1253,15 @@ predicates.onlyProducts.pattern=inventory.inventory.products
 Apply the same process to convert predicate statements.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <strong>Smart Editor</strong> support for directly using the Kafka Connect configuration format is planned for a future release.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>After you convert the HyperCDC configuration for the <code>unwrap</code> transformation, the following JSON results:</p>
 </div>
@@ -1306,17 +1294,15 @@ Apply the same process to convert predicate statements.</p>
 <p>From the platform UI, open the <strong>Transform</strong> menu, click the <strong>Action</strong> menu for the transformation that you want to edit, and then click <strong>Edit</strong>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Editing a transformation affects all pipelines that use it.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="_deleting_a_transformation"><a class="anchor" href="#_deleting_a_transformation"></a>Deleting a transformation</h4>
@@ -1357,7 +1343,7 @@ If the operation returns an error, verify that the transformation is no longer u
         </div>
         <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="https://www.youtube.com/embed/cY7TS0nWBoY?rel=0" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://www.youtube.com/embed/cY7TS0nWBoY?rel=0" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-16">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1392,12 +1378,11 @@ Verify that the sequence that you specify results in the expected output.</p>
 For more information about using the <strong>Pipeline designer</strong>, see <a href="#hypercdc-platform-using-the-pipeline-designer-to-remove-and-order-transformations">using the <strong>Pipeline designer</strong> to remove and order transformations</a>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 Transformations that are configured with a predicate are marked with a predicate icon (<span class="image"><figure class="visual-placeholder" id="fig-operations-hypercdc-platform-17">
         <div class="visual-placeholder__header">
           <span class="visual-placeholder__badge">Visual Asset <code>#fig-operations-hypercdc-platform-17</code></span>
@@ -1405,15 +1390,14 @@ Transformations that are configured with a predicate are marked with a predicate
         </div>
         <div class="visual-placeholder__title">Transformation configured with a predicate</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/predicate-icon.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-17">Review in Visuals Catalog →</a>
         </div>
       </figure></span>).
 A tooltip shows the name of the predicate type.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <figure class="visual-placeholder" id="fig-operations-hypercdc-platform-18">
         <div class="visual-placeholder__header">
           <span class="visual-placeholder__badge">Visual Asset <code>#fig-operations-hypercdc-platform-18</code></span>
@@ -1421,7 +1405,7 @@ A tooltip shows the name of the predicate type.
         </div>
         <div class="visual-placeholder__title">HyperCDC platform pipeline</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-pipeline.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-18">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1449,22 +1433,20 @@ The designer creates the Source, Transforms, and Destination for the pipeline, b
         </div>
         <div class="visual-placeholder__title">HyperCDC platform pipeline server modal</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-pipeline-server-modal.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-19">Review in Visuals Catalog →</a>
         </div>
       </figure>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 The source and destination names are generated automatically.
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="_deleting_a_pipeline"><a class="anchor" href="#_deleting_a_pipeline"></a>Deleting a pipeline</h4>
@@ -1505,7 +1487,7 @@ For more information about using the pipeline designer, see <a href="#hypercdc-p
         </div>
         <div class="visual-placeholder__title">pencil</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/transformation-box-edit.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-20">Review in Visuals Catalog →</a>
         </div>
       </figure></span>) in the <strong>Transform</strong> box.</p>
@@ -1530,7 +1512,7 @@ The first transformation in the list processes the message first.</p>
         </div>
         <div class="visual-placeholder__title">pencil</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/transformation-box-edit.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-21">Review in Visuals Catalog →</a>
         </div>
       </figure></span>) in the <strong>Transform</strong> box.</p>
@@ -1562,7 +1544,7 @@ The first transformation in the list processes the message first.</p>
         </div>
         <div class="visual-placeholder__title">HyperCDC platform pipeline server modal</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-pipeline-logs.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-22">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1603,7 +1585,7 @@ For more information see <a href="#hypercdc-platform-enable-signalling">Enabling
         </div>
         <div class="visual-placeholder__title">HyperCDC platform - Pipeline action list</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/Debezium-platform-action-list.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-23">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1616,20 +1598,18 @@ A form appears that shows fields that are relevant to the selected action.</p>
 <li>
 <p>Edit the fields as needed.</p>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <strong>Action Id</strong> field is prefilled with a UUID string.
 You can update the default value, but always ensure that the value is unique for each action.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </li>
 <li>
 <p>After you finish editing the form, click <strong>Submit</strong> to trigger an action.</p>
@@ -1686,7 +1666,7 @@ By using the integrated monitoring dashboard, you can track key metrics such as 
         </div>
         <div class="visual-placeholder__title">HyperCDC platform monitoring architecture</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-monitoring-architecture.svg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-24">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1703,7 +1683,7 @@ By using the integrated monitoring dashboard, you can track key metrics such as 
         </div>
         <div class="visual-placeholder__title">HyperCDC platform monitoring dashboard</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-monitoring-dashboard.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-25">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1732,7 +1712,7 @@ Available options include off (manual refresh), 15 seconds, 30 seconds, 1 minute
         </div>
         <div class="visual-placeholder__title">HyperCDC platform monitoring toolbar</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-monitoring-toolbar.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-26">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1754,7 +1734,7 @@ Available options include off (manual refresh), 15 seconds, 30 seconds, 1 minute
         </div>
         <div class="visual-placeholder__title">HyperCDC platform streaming monitoring panels</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-monitoring-streaming-panels.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-27">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1835,7 +1815,7 @@ Available options include off (manual refresh), 15 seconds, 30 seconds, 1 minute
         </div>
         <div class="visual-placeholder__title">HyperCDC platform snapshot monitoring panels - snapshot in progress</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-monitoring-snapshot-running-panels.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-28">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1849,7 +1829,7 @@ Available options include off (manual refresh), 15 seconds, 30 seconds, 1 minute
         </div>
         <div class="visual-placeholder__title">HyperCDC platform snapshot monitoring panels - snapshot completed</div>
         <div class="visual-placeholder__meta">
-          <span>Original: <a href="#" target="_blank" rel="noopener">View source asset ↗</a></span> <span>•</span>
+          <span>Original: <a href="https://debezium.io/documentation/reference/3.6/_images/debezium-platform-monitoring-snapshot-panels.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
           <a href="../visuals-catalog.html#fig-operations-hypercdc-platform-29">Review in Visuals Catalog →</a>
         </div>
       </figure>
@@ -1909,28 +1889,25 @@ helm install opentelemetry-operator open-telemetry/opentelemetry-operator \
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The preceding command uses Helm auto-generated self-signed certificates for the operator webhooks, which is suitable for development and testing environments.
 For production environments, use a proper certificate management solution such as <a href="https://cert-manager.io/">cert-manager</a> or provide your own certificates.
 See the <a href="https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator">OTel Operator Helm chart documentation</a> for all available options.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The OpenTelemetry Collector must include the <strong>Prometheus exporter</strong> component.
 The base <code>otelcol</code> distribution includes this component, but when the OpenTelemetry Operator is installed by using Helm, it defaults to the <code>otelcol-k8s</code> distribution, which does <strong>not</strong> include the Prometheus exporter.</p>
@@ -1952,10 +1929,9 @@ For example:</p>
 <div class="paragraph">
 <p>See the <a href="https://github.com/open-telemetry/opentelemetry-collector-releases">opentelemetry-collector-releases</a> repository for available distributions and their included components.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="_prometheus_operator_optional"><a class="anchor" href="#_prometheus_operator_optional"></a>Prometheus Operator (optional)</h4>
@@ -2340,14 +2316,8 @@ Panels with matching <code>id</code> values override the corresponding built-in 
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

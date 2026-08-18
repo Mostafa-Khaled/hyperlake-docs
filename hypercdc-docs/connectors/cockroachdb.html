@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC connector for CockroachDB</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC connector for CockroachDB</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -38,20 +42,18 @@
 The connector creates a <a href="https://www.cockroachlabs.com/docs/stable/create-changefeed">changefeed</a> that publishes events to an intermediate Kafka cluster, then consumes those events, transforms them into the standard HyperCDC envelope format, and produces them to the output Kafka topics that downstream consumers subscribe to.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The CockroachDB connector is an incubating connector.
 An incubating connector is one that has been released for preview purposes and is subject to changes that may not always be backward compatible.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -283,20 +285,18 @@ If a running changefeed matches the connector’s topic prefix and tables, but i
 The connector then fails to start and returns an error stating that you must recreate that changefeed with <code>envelope='enriched'</code> or else use a different topic prefix.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>For most deployments, the simplest approach is to let the connector create and manage the changefeed.
 Reuse an existing changefeed only when you have a specific reason to do so, such as preserving an existing cursor position or a custom partitioning scheme.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="cockroachdb-heartbeats"><a class="anchor" href="#cockroachdb-heartbeats"></a>Heartbeats</h3>
@@ -348,21 +348,19 @@ A backfill ensures that no events are lost during the schema transition.
 After a backfill completes, the refreshed columns are immediately available to downstream consumers.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The connector adapts the schema of the change events that it emits, so that the records on the output topics always reflect the current table structure.
 It does not maintain a database history and does not emit DDL change events to a separate schema change topic.
 The schema that the connector uses comes from its own JDBC discovery of the table, not from the <code>schema</code> block in the changefeed message, so schema changes are handled even when <a href="#cockroachdb-property-enriched-properties"><code>cockroachdb.changefeed.enriched.properties</code></a> is set to <code>source</code> alone.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="cockroachdb-incremental-snapshots"><a class="anchor" href="#cockroachdb-incremental-snapshots"></a>Incremental snapshots</h3>
@@ -919,20 +917,18 @@ In an <em>update</em> event value, the <code>op</code> field value is <code>u</c
 </tbody>
 </table></div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>To include the <code>before</code> state in update events, set <code>cockroachdb.changefeed.include.diff</code> to <code>true</code> in the connector configuration.
 To include the <code>before</code> state for a row in update events, enable the CockroachDB changefeed <code>diff</code> option by setting <code>cockroachdb.changefeed.include.diff</code> to <code>true</code> in the connector configuration.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="cockroachdb-delete-events"><a class="anchor" href="#cockroachdb-delete-events"></a><em>delete</em> events</h3>
@@ -1455,24 +1451,22 @@ Currently only the Kafka sink consumes these TLS parameters; for other sink type
 <p>To deploy a HyperCDC CockroachDB connector you obtain the connector plug-in files archive, add the JAR files to your Kafka Connect environment, and then edit the <code>plugin.path</code> configuration to reference the location of the files.</p>
 </div>
 <div class="paragraph">
-<p>If you are working with immutable containers, see <a href="https://quay.io/organization/hypercdc">the HyperCDC container images</a> for Kafka and Kafka Connect.</p>
+<p>If you are working with immutable containers, see <a href="https://quay.io/organization/debezium">the HyperCDC container images</a> for Kafka and Kafka Connect.</p>
 </div>
 <div class="admonitionblock important">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">IMPORTANT</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The HyperCDC container images that you obtain from <code>quay.io</code> do not undergo rigorous testing or security analysis, and are provided for testing and evaluation purposes only.
 These images are not intended for use in production environments.
 To mitigate risk in production deployments, deploy only containers that are actively maintained by trusted vendors, and thoroughly tested for potential vulnerabilities.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="paragraph">
 <p>You can also <a href="../operations/openshift.html" class="xref page">run HyperCDC on Kubernetes and OpenShift</a>.</p>
 </div>
@@ -3320,14 +3314,8 @@ To include the <code>before</code> field in update events, set <code>cockroachdb
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

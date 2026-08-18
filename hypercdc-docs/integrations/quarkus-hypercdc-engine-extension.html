@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">HyperCDC Extensions for Quarkus</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">HyperCDC Extensions for Quarkus</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -329,19 +333,17 @@ public class ProductsOnlyFilter implements CapturingFilterStrategy {
 </div>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>The <code>filter</code> attribute is mutually exclusive with <code>destination</code> and <code>engine</code>, validated at build time.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect3">
 <h4 id="_by_field_changes"><a class="anchor" href="#_by_field_changes"></a>By field changes</h4>
@@ -489,19 +491,17 @@ public class ProductHandler {
 <p>or only the deserialized object without <code>CapturingEvent&lt;T&gt;</code>:</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>keep in mind that in such case, you don’t have information related to the database operation</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.hypercdc.runtime.CapturingEvent;
@@ -642,7 +642,7 @@ public class HeartbeatListener {
 <h2 id="_notification_events"><a class="anchor" href="#_notification_events"></a>Notification events</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="#">HyperCDC notifications</a> provide events about fine grain status (<code>snapshot</code> and <code>streaming</code>) always available as Jakarta event:</p>
+<p><a href="https://debezium.io/documentation/reference/stable/configuration/notification.html">HyperCDC notifications</a> provide events about fine grain status (<code>snapshot</code> and <code>streaming</code>) always available as Jakarta event:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -753,11 +753,11 @@ To apply the conversion only to a subset of fields, it’s possible to enrich th
 <h2 id="_post_processors"><a class="anchor" href="#_post_processors"></a>Post Processors</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="#">Post processors</a> apply lightweight, per-message changes earlier in the event flow than SMTs, allowing them to modify messages within HyperCDC’s context.
+<p><a href="https://debezium.io/documentation/reference/stable/post-processors/index.html">Post processors</a> apply lightweight, per-message changes earlier in the event flow than SMTs, allowing them to modify messages within HyperCDC’s context.
 This makes them more efficient than transformations. It’s possible to define a post processor in two ways: as configuration parameter or using the annotation <code>@PostProcessing</code>.</p>
 </div>
 <div class="paragraph">
-<p>For configuration, the official documentation outlines the available parameters, such as those for the <a href="https://hypercdc.io/documentation/reference/stable/post-processors/reselect-columns.html"><code>Reselect</code></a> post-processor:</p>
+<p>For configuration, the official documentation outlines the available parameters, such as those for the <a href="#"><code>Reselect</code></a> post-processor:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -796,7 +796,7 @@ public class PostProcessorHandler {
 <div class="paragraph">
 <p>Quarkus automatically provisions unconfigured services in dev and test modes using Dev Services.
 When an extension is included without configuration, Quarkus starts the necessary service (via Testcontainers) and connects it to your app.
-For HyperCDC, it’s necessary <a href="#">a setup</a> that default images of Quarkus doesn’t support.
+For HyperCDC, it’s necessary <a href="https://debezium.io/documentation/reference/stable/postgres-plugins.html">a setup</a> that default images of Quarkus doesn’t support.
 The Extension is already equipped with a dev service with an image configured for change data capture but the support is <strong>experimental</strong> and in case of errors or issue you can disable it with the following properties</p>
 </div>
 <div class="listingblock">
@@ -814,14 +814,8 @@ The Extension is already equipped with a dev service with an image configured fo
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>

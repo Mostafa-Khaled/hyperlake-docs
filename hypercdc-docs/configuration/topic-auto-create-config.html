@@ -7,11 +7,19 @@
 <link rel="stylesheet" href="../hypercdc-screen.css">
 <link rel="stylesheet" media="print" href="../hypercdc-print.css">
 </head>
-<body>
+<body data-docs-root="../">
 <header class="topbar">
   <div class="topbar__left">
     <a class="topbar__brand" href="../index.html">HyperCDC</a>
     <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
   </div>
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
@@ -20,13 +28,9 @@
   </div>
 </header>
 <div class="page-content">
-<main role="main" class="main">
 
-<div class="article-grid">
-<div class="article-cell1">
-<article class="doc">
         
-                <h1 class="page">Customization of Kafka Connect automatic topic creation</h1>
+    <!-- This partial is a placeholder -->            <h1 class="page">Customization of Kafka Connect automatic topic creation</h1>
         <div id="preamble">
 <div class="sectionbody">
 
@@ -126,36 +130,32 @@ For more information about how configuration properties are assigned to groups, 
 <p>By default, topics that Kafka Connect creates are named based on the pattern <code>server.schema.table</code>, for example, <code>dbserver.myschema.inventory</code>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you don’t want to allow automatic topic creation by Kafka Connect, set the value of <code>topic.creation.enable</code> to <code>false</code>
 in the Kafka Connect configuration (<em>connect-distributed.properties</em> file, or via the environment variable
-<em>CONNECT_TOPIC_CREATION_ENABLE</em> when using the <a href="https://quay.io/repository/hypercdc/connect">HyperCDC container image for Kafka Connect</a>).</p>
+<em>CONNECT_TOPIC_CREATION_ENABLE</em> when using the <a href="https://quay.io/repository/debezium/connect">HyperCDC container image for Kafka Connect</a>).</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Kafka Connect automatic topic creation requires the <code>replication.factor</code> and <code>partitions</code> properties to be set for at least the <code>default</code> topic creation group.
 It is valid for groups to obtain the values for the required properties from the default values for the Kafka broker.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 </div>
 <div class="sect1">
@@ -181,20 +181,18 @@ The <code>include</code> and <code>exclude</code> properties contain comma-separ
 For example, if you want a group to include all topics that start with the string <code>dbserver1.inventory</code>, set the value of its <code>topic.creation.inventory.include</code> property to <code>dbserver1\\.inventory\\.*</code>.</p>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>If you specify both <code>include</code> and <code>exclude</code> properties for a custom topic group, the exclusion rules
 take precedence, and override the inclusion rules.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="topic-creation-group-configuration-properties"><a class="anchor" href="#topic-creation-group-configuration-properties"></a>Topic creation group configuration properties</h3>
@@ -288,20 +286,18 @@ defines how messages are compressed on hard disk.</p></td>
 </ul>
 </div>
 <div class="admonitionblock note">
-<div class="table-container"><table>
-<tbody><tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+      <div class="admonition-header">
+        <span class="admonition-label">NOTE</span>
+      </div>
+      <div class="admonition-body">
+        
 <div class="paragraph">
 <p>Custom groups fall back to the <code>default</code> group settings only for the required <code>replication.factor</code> and <code>partitions</code> properties.
 If the configuration for a custom topic group leaves other properties undefined, the values specified in the <code>default</code> group are not applied.</p>
 </div>
-</td>
-</tr>
-</tbody></table></div>
-</div>
+
+      </div>
+    </div>
 </div>
 <div class="sect2">
 <h3 id="custom-topic-creation-group-configuration"><a class="anchor" href="#custom-topic-creation-group-configuration"></a>Custom group configuration</h3>
@@ -475,14 +471,8 @@ along with the configurations for an <code>inventory</code> and an <code>applica
 </div>
 </div>
 </div>
-</article>
-</div>
-<div class="article-cell2">
-</div>
-</div>
 
-<div id="toc-rightbar"></div>    
-</main>
 </div>
+<script src="../search.js"></script>
 </body>
 </html>
