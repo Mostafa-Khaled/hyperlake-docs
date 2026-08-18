@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Structured Streaming Programming Guide - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    
+<div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="index.html">Structured Streaming Programming Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="index.html">
+            
+                Overview
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="apis-on-dataframes-and-datasets.html">
+            
+                APIs on DataFrames and Datasets
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="performance-tips.html">
+            
+                Performance Tips
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="performance-tips.html#asynchronous-progress-tracking">
+            
+                Asynchronous Progress Tracking
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="performance-tips.html#continuous-processing">
+            
+                Continuous Processing
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="additional-information.html">
+            
+                Additional Information
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">Structured Streaming Programming Guide</h1>
+                    
+
+                    <ul>
+  <li>Table of contents</li>
+</ul>
+
+<h1 id="asynchronous-progress-tracking">Asynchronous Progress Tracking</h1>
+<h2 id="what-is-it">What is it?</h2>
+
+<p>Asynchronous progress tracking allows streaming queries to checkpoint progress asynchronously and in parallel to the actual data processing within a micro-batch, reducing latency associated with maintaining the offset log and commit log.</p>
+
+<p><figure class="visual-placeholder" id="fig-streaming-performance-tips-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-streaming-performance-tips-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Async Progress Tracking</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/img/async-progress.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../visuals-catalog.html#fig-streaming-performance-tips-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></p>
+
+<h2 id="how-does-it-work">How does it work?</h2>
+
+<p>Structured Streaming relies on persisting and managing offsets as progress indicators for query processing. Offset management operation directly impacts processing latency, because no data processing can occur until these operations are complete. Asynchronous progress tracking enables streaming queries to checkpoint progress without being impacted by these offset management operations.</p>
+
+<h2 id="how-to-use-it">How to use it?</h2>
+
+<p>The code snippet below provides an example of how to use this feature:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">stream</span> <span class="k">=</span> <span class="nv">hyperbatch</span><span class="o">.</span><span class="py">readStream</span>
+      <span class="o">.</span><span class="py">format</span><span class="o">(</span><span class="s">"kafka"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"kafka.bootstrap.servers"</span><span class="o">,</span> <span class="s">"host1:port1,host2:port2"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"subscribe"</span><span class="o">,</span> <span class="s">"in"</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">load</span><span class="o">()</span>
+<span class="k">val</span> <span class="nv">query</span> <span class="k">=</span> <span class="nv">stream</span><span class="o">.</span><span class="py">writeStream</span>
+     <span class="o">.</span><span class="py">format</span><span class="o">(</span><span class="s">"kafka"</span><span class="o">)</span>
+     <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"topic"</span><span class="o">,</span> <span class="s">"out"</span><span class="o">)</span>
+     <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"checkpointLocation"</span><span class="o">,</span> <span class="s">"/tmp/checkpoint"</span><span class="o">)</span>
+     <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"asyncProgressTrackingEnabled"</span><span class="o">,</span> <span class="s">"true"</span><span class="o">)</span>
+     <span class="o">.</span><span class="py">start</span><span class="o">()</span>
+</code></pre></div></div>
+
+<p>The table below describes the configurations for this feature and default values associated with them.</p>
+
+<div class="table-container"><table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Value</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>asyncProgressTrackingEnabled</td>
+      <td>true/false</td>
+      <td>false</td>
+      <td>enable or disable asynchronous progress tracking</td>
+    </tr>
+    <tr>
+      <td>asyncProgressTrackingCheckpointIntervalMs</td>
+      <td>millisecond</td>
+      <td>1000</td>
+      <td>the interval in which we commit offsets and completion commits</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<h2 id="limitations">Limitations</h2>
+<p>The initial version of the feature has the following limitations:</p>
+
+<ul>
+  <li>Asynchronous progress tracking is only supported in stateless queries using Kafka Sink</li>
+  <li>Exactly once end-to-end processing will not be supported with this asynchronous progress tracking because offset ranges for batch can be changed in case of failure. Though many sinks, such as Kafka sink, do not support writing exactly once anyways.</li>
+</ul>
+
+<h2 id="switching-the-setting-off">Switching the setting off</h2>
+<p>Turning the async progress tracking off may cause the following exception to be thrown</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">java</span><span class="o">.</span><span class="py">lang</span><span class="o">.</span><span class="py">IllegalStateException</span><span class="k">:</span> <span class="kt">batch</span> <span class="kt">x</span> <span class="kt">doesn</span><span class="err">'</span><span class="kt">t</span> <span class="kt">exist</span>
+</code></pre></div></div>
+
+<p>Also the following error message may be printed in the driver logs:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The offset log for batch x doesn't exist, which is required to restart the query from the latest batch x from the offset log. Please ensure there are two subsequent offset logs available for the latest batch via manually deleting the offset file(s). Please also ensure the latest batch for commit log is equal or one batch earlier than the latest batch for offset log.
+</code></pre></div></div>
+
+<p>This is caused by the fact that when async progress tracking is enabled, the framework will not checkpoint progress for every batch as would be done if async progress tracking is not used. To solve this problem simply re-enable “asyncProgressTrackingEnabled” and set “asyncProgressTrackingCheckpointIntervalMs” to 0 and run the streaming query until at least two micro-batches have been processed. Async progress tracking can be now safely disabled and restarting query should proceed normally.</p>
+
+<h1 id="continuous-processing">Continuous Processing</h1>
+<h2 id="experimental">[Experimental]</h2>
+
+<p><strong>Continuous processing</strong> is a new, experimental streaming execution mode introduced in HyperBatch 2.3 that enables low (~1 ms) end-to-end latency with at-least-once fault-tolerance guarantees. Compare this with the default <em>micro-batch processing</em> engine which can achieve exactly-once guarantees but achieve latencies of ~100ms at best. For some types of queries (discussed below), you can choose which mode to execute them in without modifying the application logic (i.e. without changing the DataFrame/Dataset operations).</p>
+
+<p>To run a supported query in continuous processing mode, all you need to do is specify a <strong>continuous trigger</strong> with the desired checkpoint interval as a parameter. For example,</p>
+
+<div class="codetabs">
+
+<div data-lang="python">
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">hyperbatch</span> \
+  <span class="p">.</span><span class="n">readStream</span> \
+  <span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="sh">"</span><span class="s">kafka</span><span class="sh">"</span><span class="p">)</span> \
+  <span class="p">.</span><span class="nf">option</span><span class="p">(</span><span class="sh">"</span><span class="s">kafka.bootstrap.servers</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">host1:port1,host2:port2</span><span class="sh">"</span><span class="p">)</span> \
+  <span class="p">.</span><span class="nf">option</span><span class="p">(</span><span class="sh">"</span><span class="s">subscribe</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">topic1</span><span class="sh">"</span><span class="p">)</span> \
+  <span class="p">.</span><span class="nf">load</span><span class="p">()</span> \
+  <span class="p">.</span><span class="nf">selectExpr</span><span class="p">(</span><span class="sh">"</span><span class="s">CAST(key AS STRING)</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">CAST(value AS STRING)</span><span class="sh">"</span><span class="p">)</span> \
+  <span class="p">.</span><span class="n">writeStream</span> \
+  <span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="sh">"</span><span class="s">kafka</span><span class="sh">"</span><span class="p">)</span> \
+  <span class="p">.</span><span class="nf">option</span><span class="p">(</span><span class="sh">"</span><span class="s">kafka.bootstrap.servers</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">host1:port1,host2:port2</span><span class="sh">"</span><span class="p">)</span> \
+  <span class="p">.</span><span class="nf">option</span><span class="p">(</span><span class="sh">"</span><span class="s">topic</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">topic1</span><span class="sh">"</span><span class="p">)</span> \
+  <span class="p">.</span><span class="nf">trigger</span><span class="p">(</span><span class="n">continuous</span><span class="o">=</span><span class="sh">"</span><span class="s">1 second</span><span class="sh">"</span><span class="p">)</span> \     <span class="c1"># only change in query
+</span>  <span class="p">.</span><span class="nf">start</span><span class="p">()</span></code></pre></figure>
+
+  </div>
+
+<div data-lang="scala">
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">import</span> <span class="nn">org.apache.hyperbatch.sql.streaming.Trigger</span>
+
+<span class="n">hyperbatch</span>
+  <span class="o">.</span><span class="py">readStream</span>
+  <span class="o">.</span><span class="py">format</span><span class="o">(</span><span class="s">"kafka"</span><span class="o">)</span>
+  <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"kafka.bootstrap.servers"</span><span class="o">,</span> <span class="s">"host1:port1,host2:port2"</span><span class="o">)</span>
+  <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"subscribe"</span><span class="o">,</span> <span class="s">"topic1"</span><span class="o">)</span>
+  <span class="o">.</span><span class="py">load</span><span class="o">()</span>
+  <span class="o">.</span><span class="py">selectExpr</span><span class="o">(</span><span class="s">"CAST(key AS STRING)"</span><span class="o">,</span> <span class="s">"CAST(value AS STRING)"</span><span class="o">)</span>
+  <span class="o">.</span><span class="py">writeStream</span>
+  <span class="o">.</span><span class="py">format</span><span class="o">(</span><span class="s">"kafka"</span><span class="o">)</span>
+  <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"kafka.bootstrap.servers"</span><span class="o">,</span> <span class="s">"host1:port1,host2:port2"</span><span class="o">)</span>
+  <span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"topic"</span><span class="o">,</span> <span class="s">"topic1"</span><span class="o">)</span>
+  <span class="o">.</span><span class="py">trigger</span><span class="o">(</span><span class="nv">Trigger</span><span class="o">.</span><span class="py">Continuous</span><span class="o">(</span><span class="s">"1 second"</span><span class="o">))</span>  <span class="c1">// only change in query</span>
+  <span class="o">.</span><span class="py">start</span><span class="o">()</span></code></pre></figure>
+
+  </div>
+
+<div data-lang="java">
+
+    <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">org.apache.hyperbatch.sql.streaming.Trigger</span><span class="o">;</span>
+
+<span class="n">hyperbatch</span>
+  <span class="o">.</span><span class="na">readStream</span>
+  <span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"kafka"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">option</span><span class="o">(</span><span class="s">"kafka.bootstrap.servers"</span><span class="o">,</span> <span class="s">"host1:port1,host2:port2"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">option</span><span class="o">(</span><span class="s">"subscribe"</span><span class="o">,</span> <span class="s">"topic1"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">load</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">selectExpr</span><span class="o">(</span><span class="s">"CAST(key AS STRING)"</span><span class="o">,</span> <span class="s">"CAST(value AS STRING)"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">writeStream</span>
+  <span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"kafka"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">option</span><span class="o">(</span><span class="s">"kafka.bootstrap.servers"</span><span class="o">,</span> <span class="s">"host1:port1,host2:port2"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">option</span><span class="o">(</span><span class="s">"topic"</span><span class="o">,</span> <span class="s">"topic1"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">trigger</span><span class="o">(</span><span class="nc">Trigger</span><span class="o">.</span><span class="na">Continuous</span><span class="o">(</span><span class="s">"1 second"</span><span class="o">))</span>  <span class="c1">// only change in query</span>
+  <span class="o">.</span><span class="na">start</span><span class="o">();</span></code></pre></figure>
+
+  </div>
+
+</div>
+
+<p>A checkpoint interval of 1 second means that the continuous processing engine will record the progress of the query every second. The resulting checkpoints are in a format compatible with the micro-batch engine, hence any query can be restarted with any trigger. For example, a supported query started with the micro-batch mode can be restarted in continuous mode, and vice versa. Note that any time you switch to continuous mode, you will get at-least-once fault-tolerance guarantees.</p>
+
+<h2 id="supported-queries">Supported Queries</h2>
+
+<p>As of HyperBatch 2.4, only the following type of queries are supported in the continuous processing mode.</p>
+
+<ul>
+  <li><em>Operations</em>: Only map-like Dataset/DataFrame operations are supported in continuous mode, that is, only projections (<code class="language-plaintext highlighter-rouge">select</code>, <code class="language-plaintext highlighter-rouge">map</code>, <code class="language-plaintext highlighter-rouge">flatMap</code>, <code class="language-plaintext highlighter-rouge">mapPartitions</code>, etc.) and selections (<code class="language-plaintext highlighter-rouge">where</code>, <code class="language-plaintext highlighter-rouge">filter</code>, etc.).
+    <ul>
+      <li>All SQL functions are supported except aggregation functions (since aggregations are not yet supported), <code class="language-plaintext highlighter-rouge">current_timestamp()</code> and <code class="language-plaintext highlighter-rouge">current_date()</code> (deterministic computations using time is challenging).</li>
+    </ul>
+  </li>
+  <li><em>Sources</em>:
+    <ul>
+      <li>Kafka source: All options are supported.</li>
+      <li>Rate source: Good for testing. Only options that are supported in the continuous mode are <code class="language-plaintext highlighter-rouge">numPartitions</code> and <code class="language-plaintext highlighter-rouge">rowsPerSecond</code>.</li>
+    </ul>
+  </li>
+  <li><em>Sinks</em>:
+    <ul>
+      <li>Kafka sink: All options are supported.</li>
+      <li>Memory sink: Good for debugging.</li>
+      <li>Console sink: Good for debugging. All options are supported. Note that the console will print every checkpoint interval that you have specified in the continuous trigger.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>See <a href="apis-on-dataframes-and-datasets.html#input-sources">Input Sources</a> and <a href="apis-on-dataframes-and-datasets.html#output-sinks">Output Sinks</a> sections for more details on them. While the console sink is good for testing, the end-to-end low-latency processing can be best observed with Kafka as the source and sink, as this allows the engine to process the data and make the results available in the output topic within milliseconds of the input data being available in the input topic.</p>
+
+<h2 id="caveats">Caveats</h2>
+
+<ul>
+  <li>Continuous processing engine launches multiple long-running tasks that continuously read data from sources, process it and continuously write to sinks. The number of tasks required by the query depends on how many partitions the query can read from the sources in parallel. Therefore, before starting a continuous processing query, you must ensure there are enough cores in the cluster to all the tasks in parallel. For example, if you are reading from a Kafka topic that has 10 partitions, then the cluster must have at least 10 cores for the query to make progress.</li>
+  <li>Stopping a continuous processing stream may produce spurious task termination warnings. These can be safely ignored.</li>
+  <li>There are currently no automatic retries of failed tasks. Any failure will lead to the query being stopped and it needs to be manually restarted from the checkpoint.</li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DESCRIBE QUERY - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">DESCRIBE QUERY</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">DESCRIBE QUERY</code> statement is used to return the metadata of output
+of a query. A shorthand <code class="language-plaintext highlighter-rouge">DESC</code> may be used instead of <code class="language-plaintext highlighter-rouge">DESCRIBE</code> to
+describe the query output.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span> <span class="k">DESC</span> <span class="o">|</span> <span class="k">DESCRIBE</span> <span class="p">}</span> <span class="p">[</span> <span class="n">QUERY</span> <span class="p">]</span> <span class="n">input_statement</span>
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>QUERY</strong>
+  This clause is optional and may be omitted.</p>
+  </li>
+  <li>
+    <p><strong>input_statement</strong></p>
+
+    <p>Specifies a result set producing statement and may be one of the following:</p>
+
+    <ul>
+      <li>a <code class="language-plaintext highlighter-rouge">SELECT</code> statement</li>
+      <li>a <code class="language-plaintext highlighter-rouge">CTE(Common table expression)</code> statement</li>
+      <li>an <code class="language-plaintext highlighter-rouge">INLINE TABLE</code> statement</li>
+      <li>a <code class="language-plaintext highlighter-rouge">TABLE</code> statement</li>
+      <li>a <code class="language-plaintext highlighter-rouge">FROM</code> statement`</li>
+    </ul>
+
+    <p>Please refer to <a href="sql-ref-syntax-qry-select.html">select-statement</a>
+  for a detailed syntax of the query parameter.</p>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Create table `person`</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">person</span> <span class="p">(</span><span class="n">name</span> <span class="n">STRING</span> <span class="p">,</span> <span class="n">age</span> <span class="nb">INT</span> <span class="k">COMMENT</span> <span class="s1">'Age column'</span><span class="p">,</span> <span class="n">address</span> <span class="n">STRING</span><span class="p">);</span>
+
+<span class="c1">-- Returns column metadata information for a simple select query</span>
+<span class="k">DESCRIBE</span> <span class="n">QUERY</span> <span class="k">SELECT</span> <span class="n">age</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">age</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">person</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">age</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--------+---------+----------+</span>
+<span class="o">|</span><span class="n">col_name</span><span class="o">|</span><span class="n">data_type</span><span class="o">|</span>   <span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---------+----------+</span>
+<span class="o">|</span>     <span class="n">age</span><span class="o">|</span>      <span class="nb">int</span><span class="o">|</span><span class="n">Age</span> <span class="k">column</span><span class="o">|</span>
+<span class="o">|</span><span class="k">sum</span><span class="p">(</span><span class="n">age</span><span class="p">)</span><span class="o">|</span>   <span class="nb">bigint</span><span class="o">|</span>      <span class="k">null</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---------+----------+</span>
+
+<span class="c1">-- Returns column metadata information for common table expression (`CTE`).</span>
+<span class="k">DESCRIBE</span> <span class="n">QUERY</span> <span class="k">WITH</span> <span class="n">all_names_cte</span>
+    <span class="k">AS</span> <span class="p">(</span><span class="k">SELECT</span> <span class="n">name</span> <span class="k">from</span> <span class="n">person</span><span class="p">)</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">all_names_cte</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--------+---------+-------+</span>
+<span class="o">|</span><span class="n">col_name</span><span class="o">|</span><span class="n">data_type</span><span class="o">|</span><span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---------+-------+</span>
+<span class="o">|</span>    <span class="n">name</span><span class="o">|</span>   <span class="n">string</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---------+-------+</span>
+
+<span class="c1">-- Returns column metadata information for an inline table.</span>
+<span class="k">DESC</span> <span class="n">QUERY</span> <span class="k">VALUES</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">'John'</span><span class="p">,</span> <span class="mi">10000</span><span class="p">.</span><span class="mi">20</span><span class="n">D</span><span class="p">)</span> <span class="k">AS</span> <span class="n">employee</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">salary</span><span class="p">);</span>
+<span class="o">+</span><span class="c1">--------+---------+-------+</span>
+<span class="o">|</span><span class="n">col_name</span><span class="o">|</span><span class="n">data_type</span><span class="o">|</span><span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---------+-------+</span>
+<span class="o">|</span>      <span class="n">id</span><span class="o">|</span>      <span class="nb">int</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>    <span class="n">name</span><span class="o">|</span>   <span class="n">string</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">salary</span><span class="o">|</span>   <span class="nb">double</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---------+-------+</span>
+
+<span class="c1">-- Returns column metadata information for `TABLE` statement.</span>
+<span class="k">DESC</span> <span class="n">QUERY</span> <span class="k">TABLE</span> <span class="n">person</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--------+---------+----------+</span>
+<span class="o">|</span><span class="n">col_name</span><span class="o">|</span><span class="n">data_type</span><span class="o">|</span>   <span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---------+----------+</span>
+<span class="o">|</span>    <span class="n">name</span><span class="o">|</span>   <span class="n">string</span><span class="o">|</span>      <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>     <span class="n">age</span><span class="o">|</span>      <span class="nb">int</span><span class="o">|</span> <span class="n">Agecolumn</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">address</span><span class="o">|</span>   <span class="n">string</span><span class="o">|</span>      <span class="k">null</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---------+----------+</span>
+
+<span class="c1">-- Returns column metadata information for a `FROM` statement.</span>
+<span class="c1">-- `QUERY` clause is optional and can be omitted.</span>
+<span class="k">DESCRIBE</span> <span class="k">FROM</span> <span class="n">person</span> <span class="k">SELECT</span> <span class="n">age</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--------+---------+----------+</span>
+<span class="o">|</span><span class="n">col_name</span><span class="o">|</span><span class="n">data_type</span><span class="o">|</span>   <span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---------+----------+</span>
+<span class="o">|</span>     <span class="n">age</span><span class="o">|</span>      <span class="nb">int</span><span class="o">|</span> <span class="n">Agecolumn</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---------+----------+</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-aux-describe-database.html">DESCRIBE DATABASE</a></li>
+  <li><a href="sql-ref-syntax-aux-describe-table.html">DESCRIBE TABLE</a></li>
+  <li><a href="sql-ref-syntax-aux-describe-function.html">DESCRIBE FUNCTION</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

@@ -50,7 +50,7 @@
 <p>The HyperCDC SQL Server connector captures row-level changes that occur in the schemas of a SQL Server database.</p>
 </div>
 <div class="paragraph">
-<p>For information about the SQL Server versions that are compatible with this connector, see the <a href="#">HyperCDC release overview</a>.</p>
+<p>For information about the SQL Server versions that are compatible with this connector, see the <a href="https://debezium.io/releases/">HyperCDC release overview</a>.</p>
 </div>
 <div class="paragraph">
 <p>The first time that the HyperCDC SQL Server connector connects to a SQL Server database or cluster, it takes a consistent snapshot of the schemas in the database.
@@ -409,7 +409,7 @@ For information about capturing data from a new table that has undergone structu
 </li>
 <li>
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
-For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
+For more information about how to remove offsets, see the <a href="https://debezium.io/documentation/faq/#how_to_remove_committed_offsets_for_a_connector">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
       <div class="admonition-header">
         <span class="admonition-label">WARNING</span>
@@ -550,7 +550,7 @@ You can then initiate an incremental snapshot to enable the connector to synchro
 </li>
 <li>
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
-For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
+For more information about how to remove offsets, see the <a href="https://debezium.io/documentation/faq/#how_to_remove_committed_offsets_for_a_connector">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
       <div class="admonition-header">
         <span class="admonition-label">WARNING</span>
@@ -606,7 +606,7 @@ After the snapshot completes, you can optionally trigger an incremental snapshot
 </li>
 <li>
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
-For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
+For more information about how to remove offsets, see the <a href="https://debezium.io/documentation/faq/#how_to_remove_committed_offsets_for_a_connector">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
       <div class="admonition-header">
         <span class="admonition-label">WARNING</span>
@@ -809,7 +809,7 @@ To protect against lost data during an ad hoc snapshot, set the value of the <co
 <div class="paragraph">
 <p>To provide flexibility in managing snapshots, HyperCDC includes a supplementary snapshot mechanism, known as <em>incremental snapshotting</em>.
 Incremental snapshots rely on the HyperCDC mechanism for <a href="../configuration/signalling.html#sending-signals-to-a-hypercdc-connector" class="xref page">sending signals to a HyperCDC connector</a>.
-Incremental snapshots are based on the <a href="#">DDD-3</a> design document.</p>
+Incremental snapshots are based on the <a href="https://github.com/debezium/debezium-design-documents/blob/main/DDD-3.md">DDD-3</a> design document.</p>
 </div>
 <div class="paragraph">
 <p>In an incremental snapshot, instead of capturing the full state of a database all at once, as in an initial snapshot, HyperCDC captures each table in phases, in a series of configurable chunks.
@@ -2679,7 +2679,7 @@ be sure that your settings permit the connector to capture the required primary 
       "id": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="81ebeee9efafe5eee4c1e4f9e0ecf1ede4afeef3e6">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d9b3b6b1b7f7bdb6bc99bca1b8b4a9b5bcf7b6abbe">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -2839,7 +2839,7 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
       "id": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aac0c5c2c484cec5cfeacfd2cbc7dac6cf84c5d8cd">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a1cbcec9cf8fc5cec4e1c4d9c0ccd1cdc48fced3c6">[email&nbsp;protected]</a>"
     },
     "after": {
       "id": 1005,
@@ -2879,13 +2879,13 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
 <dd>
 <p>An optional field that specifies the state of the row before the event occurred.
 In an <em>update</em> event value, the <code>before</code> field contains a field for each table column and the value that was in that column before the database commit.
-In this example, the <code>email</code> value is <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d5bfbabdbbfbb1bab095b0adb4b8a5b9b0fbbaa7b2">[email&nbsp;protected]</a></code>.</p>
+In this example, the <code>email</code> value is <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bcd6d3d4d292d8d3d9fcd9c4ddd1ccd0d992d3cedb">[email&nbsp;protected]</a></code>.</p>
 </dd>
 <dt class="hdlist1"><code>after</code></dt>
 <dd>
 <p>An optional field that specifies the state of the row after the event occurred.
 You can compare the <code>before</code> and <code>after</code> structures to determine what the update to this row was.
-In the example, the <code>email</code> value is now <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1f71706d7a6f73665f7a677e726f737a31706d78">[email&nbsp;protected]</a></code>.</p>
+In the example, the <code>email</code> value is now <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="442a2b362134283d04213c25293428216a2b3623">[email&nbsp;protected]</a></code>.</p>
 </dd>
 <dt class="hdlist1"><code>source</code></dt>
 <dd>
@@ -2972,7 +2972,7 @@ By comparing the value for <code>payload.source.ts_ms</code> with the value for 
       "id": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5a3435283f2a36231a3f223b372a363f7435283d">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1b7574697e6b77625b7e637a766b777e3574697c">[email&nbsp;protected]</a>"
     },
     "after": null,
     "source": {
@@ -7131,7 +7131,7 @@ For more information, see <a href="#sqlserver-notifications">Notifications</a>.<
 </div>
 <div class="paragraph">
 <div class="title">Example: Running an online schema update after a database schema change</div>
-<p>Let’s deploy the SQL Server based <a href="#">HyperCDC tutorial</a> to demonstrate the online schema update.</p>
+<p>Let’s deploy the SQL Server based <a href="https://github.com/debezium/debezium-examples/tree/main/tutorial#using-sql-server">HyperCDC tutorial</a> to demonstrate the online schema update.</p>
 </div>
 <div class="paragraph">
 <p>In the following example, a column <code>phone_number</code> is added to the <code>customers</code> table.</p>
@@ -7171,7 +7171,7 @@ GO</code></pre>
 <p>Insert new data into the <code>customers</code> table by running the following query:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">INSERT INTO customers(first_name,last_name,email,phone_number) VALUES ('John','Doe','<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a00050204440e050f2a0f120b071a060f44090507">[email&nbsp;protected]</a>', '+1-555-123456');
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">INSERT INTO customers(first_name,last_name,email,phone_number) VALUES ('John','Doe','<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4822272026662c272d082d30292538242d662b2725">[email&nbsp;protected]</a>', '+1-555-123456');
 GO</code></pre>
 </div>
 </div>
@@ -7202,7 +7202,7 @@ connect_1    | 2019-01-17 10:11:33,719 INFO   ||  Migrating schema to ChangeTabl
       "id": 1005,
       "first_name": "John",
       "last_name": "Doe",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a0cacfc8ce8ec4cfc5e0c5d8c1cdd0ccc58ec3cfcd">[email&nbsp;protected]</a>",
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bbd1d4d3d595dfd4defbdec3dad6cbd7de95d8d4d6">[email&nbsp;protected]</a>",
       "phone_number": "+1-555-123456"
     },</code></pre>
 </div>

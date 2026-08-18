@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Job Scheduling - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">Job Scheduling</h1>
+                        
+                    
+                    <ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#scheduling-across-applications" id="markdown-toc-scheduling-across-applications">Scheduling Across Applications</a>    <ul>
+      <li><a href="#dynamic-resource-allocation" id="markdown-toc-dynamic-resource-allocation">Dynamic Resource Allocation</a>        <ul>
+          <li><a href="#configuration-and-setup" id="markdown-toc-configuration-and-setup">Configuration and Setup</a></li>
+          <li><a href="#caveats" id="markdown-toc-caveats">Caveats</a></li>
+          <li><a href="#resource-allocation-policy" id="markdown-toc-resource-allocation-policy">Resource Allocation Policy</a>            <ul>
+              <li><a href="#request-policy" id="markdown-toc-request-policy">Request Policy</a></li>
+              <li><a href="#remove-policy" id="markdown-toc-remove-policy">Remove Policy</a></li>
+            </ul>
+          </li>
+          <li><a href="#graceful-decommission-of-executors" id="markdown-toc-graceful-decommission-of-executors">Graceful Decommission of Executors</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#scheduling-within-an-application" id="markdown-toc-scheduling-within-an-application">Scheduling Within an Application</a>    <ul>
+      <li><a href="#fair-scheduler-pools" id="markdown-toc-fair-scheduler-pools">Fair Scheduler Pools</a></li>
+      <li><a href="#default-behavior-of-pools" id="markdown-toc-default-behavior-of-pools">Default Behavior of Pools</a></li>
+      <li><a href="#configuring-pool-properties" id="markdown-toc-configuring-pool-properties">Configuring Pool Properties</a></li>
+      <li><a href="#scheduling-using-jdbc-connections" id="markdown-toc-scheduling-using-jdbc-connections">Scheduling using JDBC Connections</a></li>
+      <li><a href="#concurrent-jobs-in-pyhyperbatch" id="markdown-toc-concurrent-jobs-in-pyhyperbatch">Concurrent Jobs in PyHyperBatch</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="overview">Overview</h1>
+
+<p>HyperBatch has several facilities for scheduling resources between computations. First, recall that, as described
+in the <a href="cluster-overview.html">cluster mode overview</a>, each HyperBatch application (instance of HyperBatchContext)
+runs an independent set of executor processes. The cluster managers that HyperBatch runs on provide
+facilities for <a href="#scheduling-across-applications">scheduling across applications</a>. Second,
+<em>within</em> each HyperBatch application, multiple “jobs” (HyperBatch actions) may be running concurrently
+if they were submitted by different threads. This is common if your application is serving requests
+over the network. HyperBatch includes a <a href="#scheduling-within-an-application">fair scheduler</a> to schedule resources within each HyperBatchContext.</p>
+
+<h1 id="scheduling-across-applications">Scheduling Across Applications</h1>
+
+<p>When running on a cluster, each HyperBatch application gets an independent set of executor JVMs that only
+run tasks and store data for that application. If multiple users need to share your cluster, there are
+different options to manage allocation, depending on the cluster manager.</p>
+
+<p>The simplest option, available on all cluster managers, is <em>static partitioning</em> of resources. With
+this approach, each application is given a maximum amount of resources it can use and holds onto them
+for its whole duration. This is the approach used in HyperBatch’s <a href="hyperbatch-standalone.html">standalone</a>
+and <a href="running-on-yarn.html">YARN</a> modes, as well as the <a href="running-on-kubernetes.html">K8s</a> mode.
+Resource allocation can be configured as follows, based on the cluster type:</p>
+
+<ul>
+  <li><strong>Standalone mode:</strong> By default, applications submitted to the standalone mode cluster will run in
+FIFO (first-in-first-out) order, and each application will try to use all available nodes. You can limit
+the number of nodes an application uses by setting the <code class="language-plaintext highlighter-rouge">hyperbatch.cores.max</code> configuration property in it,
+or change the default for applications that don’t set this setting through <code class="language-plaintext highlighter-rouge">hyperbatch.deploy.defaultCores</code>.
+Finally, in addition to controlling cores, each application’s <code class="language-plaintext highlighter-rouge">hyperbatch.executor.memory</code> setting controls
+its memory use.</li>
+  <li><strong>YARN:</strong> The <code class="language-plaintext highlighter-rouge">--num-executors</code> option to the HyperBatch YARN client controls how many executors it will allocate
+on the cluster (<code class="language-plaintext highlighter-rouge">hyperbatch.executor.instances</code> as configuration property), while <code class="language-plaintext highlighter-rouge">--executor-memory</code>
+(<code class="language-plaintext highlighter-rouge">hyperbatch.executor.memory</code> configuration property) and <code class="language-plaintext highlighter-rouge">--executor-cores</code> (<code class="language-plaintext highlighter-rouge">hyperbatch.executor.cores</code> configuration
+property) control the resources per executor. For more information, see the
+<a href="running-on-yarn.html#hyperbatch-properties">YARN HyperBatch Properties</a>.</li>
+  <li><strong>K8s:</strong> The same as the situation with Yarn, please refer to the description of Yarn above. Furthermore,
+HyperBatch on K8s offers higher priority versions of <code class="language-plaintext highlighter-rouge">hyperbatch.kubernetes.executor.limit.cores</code> and
+<code class="language-plaintext highlighter-rouge">hyperbatch.kubernetes.executor.request.cores</code> than <code class="language-plaintext highlighter-rouge">hyperbatch.executor.cores</code>. For more information, see the
+<a href="running-on-kubernetes.html#hyperbatch-properties">K8s HyperBatch Properties</a>.</li>
+</ul>
+
+<p>Note that none of the modes currently provide memory sharing across applications. If you would like to share
+data this way, we recommend running a single server application that can serve multiple requests by querying
+the same RDDs.</p>
+
+<h2 id="dynamic-resource-allocation">Dynamic Resource Allocation</h2>
+
+<p>HyperBatch provides a mechanism to dynamically adjust the resources your application occupies based
+on the workload. This means that your application may give resources back to the cluster if they
+are no longer used and request them again later when there is demand. This feature is particularly
+useful if multiple applications share resources in your HyperBatch cluster.</p>
+
+<p>This feature is disabled by default and available on all coarse-grained cluster managers, i.e.
+<a href="hyperbatch-standalone.html">standalone mode</a>, <a href="running-on-yarn.html">YARN mode</a> and <a href="running-on-kubernetes.html">K8s mode</a>.</p>
+
+<h3 id="configuration-and-setup">Configuration and Setup</h3>
+
+<p>There are several ways for using this feature.
+Regardless of which approach you choose, your application must set <code class="language-plaintext highlighter-rouge">hyperbatch.dynamicAllocation.enabled</code> to <code class="language-plaintext highlighter-rouge">true</code> first, additionally,</p>
+
+<ul>
+  <li>your application must set <code class="language-plaintext highlighter-rouge">hyperbatch.shuffle.service.enabled</code> to <code class="language-plaintext highlighter-rouge">true</code> after you set up an <em>external shuffle service</em> on each worker node in the same cluster, or</li>
+  <li>your application must set <code class="language-plaintext highlighter-rouge">hyperbatch.dynamicAllocation.shuffleTracking.enabled</code> to <code class="language-plaintext highlighter-rouge">true</code>, or</li>
+  <li>your application must set both <code class="language-plaintext highlighter-rouge">hyperbatch.decommission.enabled</code> and <code class="language-plaintext highlighter-rouge">hyperbatch.storage.decommission.shuffleBlocks.enabled</code> to <code class="language-plaintext highlighter-rouge">true</code>, or</li>
+  <li>your application must configure <code class="language-plaintext highlighter-rouge">hyperbatch.shuffle.sort.io.plugin.class</code> to use a custom <code class="language-plaintext highlighter-rouge">ShuffleDataIO</code> who’s <code class="language-plaintext highlighter-rouge">ShuffleDriverComponents</code> supports reliable storage.</li>
+</ul>
+
+<p>The purpose of the external shuffle service or the shuffle tracking or the <code class="language-plaintext highlighter-rouge">ShuffleDriverComponents</code> supports reliable storage is to allow executors to be removed
+without deleting shuffle files written by them (more detail described
+<a href="job-scheduling.html#graceful-decommission-of-executors">below</a>). While it is simple to enable shuffle tracking, the way to set up the external shuffle service varies across cluster managers:</p>
+
+<p>In standalone mode, simply start your workers with <code class="language-plaintext highlighter-rouge">hyperbatch.shuffle.service.enabled</code> set to <code class="language-plaintext highlighter-rouge">true</code>.</p>
+
+<p>In YARN mode, follow the instructions <a href="running-on-yarn.html#configuring-the-external-shuffle-service">here</a>.</p>
+
+<p>All other relevant configurations are optional and under the <code class="language-plaintext highlighter-rouge">hyperbatch.dynamicAllocation.*</code> and
+<code class="language-plaintext highlighter-rouge">hyperbatch.shuffle.service.*</code> namespaces. For more detail, see the
+<a href="configuration.html#dynamic-allocation">configurations page</a>.</p>
+
+<h3 id="caveats">Caveats</h3>
+
+<ul>
+  <li>In <a href="hyperbatch-standalone.html">standalone mode</a>, without explicitly setting <code class="language-plaintext highlighter-rouge">hyperbatch.executor.cores</code>, each executor will get all the available cores of a worker. In this case, when dynamic allocation is enabled, hyperbatch will possibly acquire much more executors than expected. When you want to use dynamic allocation in <a href="hyperbatch-standalone.html">standalone mode</a>, you are recommended to explicitly set cores for each executor before the issue <a href="https://issues.apache.org/jira/browse/SPARK-30299">HYPERBATCH-30299</a> got fixed.</li>
+  <li>In <a href="running-on-kubernetes.html">K8s mode</a>, we can not use this feature by setting <code class="language-plaintext highlighter-rouge">hyperbatch.shuffle.service.enabled</code> to <code class="language-plaintext highlighter-rouge">true</code> due to HyperBatch on K8s doesn’t yet support the external shuffle service.</li>
+</ul>
+
+<h3 id="resource-allocation-policy">Resource Allocation Policy</h3>
+
+<p>At a high level, HyperBatch should relinquish executors when they are no longer used and acquire
+executors when they are needed. Since there is no definitive way to predict whether an executor
+that is about to be removed will run a task in the near future, or whether a new executor that is
+about to be added will actually be idle, we need a set of heuristics to determine when to remove
+and request executors.</p>
+
+<h4 id="request-policy">Request Policy</h4>
+
+<p>A HyperBatch application with dynamic allocation enabled requests additional executors when it has
+pending tasks waiting to be scheduled. This condition necessarily implies that the existing set
+of executors is insufficient to simultaneously saturate all tasks that have been submitted but
+not yet finished.</p>
+
+<p>HyperBatch requests executors in rounds. The actual request is triggered when there have been pending
+tasks for <code class="language-plaintext highlighter-rouge">hyperbatch.dynamicAllocation.schedulerBacklogTimeout</code> seconds, and then triggered again
+every <code class="language-plaintext highlighter-rouge">hyperbatch.dynamicAllocation.sustainedSchedulerBacklogTimeout</code> seconds thereafter if the queue
+of pending tasks persists. Additionally, the number of executors requested in each round increases
+exponentially from the previous round. For instance, an application will add 1 executor in the
+first round, and then 2, 4, 8 and so on executors in the subsequent rounds.</p>
+
+<p>The motivation for an exponential increase policy is twofold. First, an application should request
+executors cautiously in the beginning in case it turns out that only a few additional executors is
+sufficient. This echoes the justification for TCP slow start. Second, the application should be
+able to ramp up its resource usage in a timely manner in case it turns out that many executors are
+actually needed.</p>
+
+<h4 id="remove-policy">Remove Policy</h4>
+
+<p>The policy for removing executors is much simpler. A HyperBatch application removes an executor when
+it has been idle for more than <code class="language-plaintext highlighter-rouge">hyperbatch.dynamicAllocation.executorIdleTimeout</code> seconds. Note that,
+under most circumstances, this condition is mutually exclusive with the request condition, in that
+an executor should not be idle if there are still pending tasks to be scheduled.</p>
+
+<h3 id="graceful-decommission-of-executors">Graceful Decommission of Executors</h3>
+
+<p>Before dynamic allocation, if a HyperBatch executor exits when the associated application has also exited 
+then all state associated with the executor is no longer needed and can be safely discarded. 
+With dynamic allocation, however, the application is still running when an executor is explicitly 
+removed. If the application attempts to access state stored in or written by the executor, it will 
+have to perform a recompute the state. Thus, HyperBatch needs a mechanism to decommission an executor 
+gracefully by preserving its state before removing it.</p>
+
+<p>This requirement is especially important for shuffles. During a shuffle, the HyperBatch executor first
+writes its own map outputs locally to disk, and then acts as the server for those files when other
+executors attempt to fetch them. In the event of stragglers, which are tasks that run for much
+longer than their peers, dynamic allocation may remove an executor before the shuffle completes,
+in which case the shuffle files written by that executor must be recomputed unnecessarily.</p>
+
+<p>The solution for preserving shuffle files is to use an external shuffle service, also introduced
+in HyperBatch 1.2. This service refers to a long-running process that runs on each node of your cluster
+independently of your HyperBatch applications and their executors. If the service is enabled, HyperBatch
+executors will fetch shuffle files from the service instead of from each other. This means any
+shuffle state written by an executor may continue to be served beyond the executor’s lifetime.</p>
+
+<p>In addition to writing shuffle files, executors also cache data either on disk or in memory.
+When an executor is removed, however, all cached data will no longer be accessible.  To mitigate this,
+by default executors containing cached data are never removed.  You can configure this behavior with
+<code class="language-plaintext highlighter-rouge">hyperbatch.dynamicAllocation.cachedExecutorIdleTimeout</code>. When set <code class="language-plaintext highlighter-rouge">hyperbatch.shuffle.service.fetch.rdd.enabled</code>
+to <code class="language-plaintext highlighter-rouge">true</code>, HyperBatch can use ExternalShuffleService for fetching disk persisted RDD blocks. In case of 
+dynamic allocation if this feature is enabled executors having only disk persisted blocks are considered
+idle after <code class="language-plaintext highlighter-rouge">hyperbatch.dynamicAllocation.executorIdleTimeout</code> and will be released accordingly. In future releases,
+the cached data may be preserved through an off-heap storage similar in spirit to how shuffle files are preserved 
+through the external shuffle service.</p>
+
+<h1 id="scheduling-within-an-application">Scheduling Within an Application</h1>
+
+<p>Inside a given HyperBatch application (HyperBatchContext instance), multiple parallel jobs can run simultaneously if
+they were submitted from separate threads. By “job”, in this section, we mean a HyperBatch action (e.g. <code class="language-plaintext highlighter-rouge">save</code>,
+<code class="language-plaintext highlighter-rouge">collect</code>) and any tasks that need to run to evaluate that action. HyperBatch’s scheduler is fully thread-safe
+and supports this use case to enable applications that serve multiple requests (e.g. queries for
+multiple users).</p>
+
+<p>By default, HyperBatch’s scheduler runs jobs in FIFO fashion. Each job is divided into “stages” (e.g. map and
+reduce phases), and the first job gets priority on all available resources while its stages have tasks to
+launch, then the second job gets priority, etc. If the jobs at the head of the queue don’t need to use
+the whole cluster, later jobs can start to run right away, but if the jobs at the head of the queue are
+large, then later jobs may be delayed significantly.</p>
+
+<p>Starting in HyperBatch 0.8, it is also possible to configure fair sharing between jobs. Under fair sharing,
+HyperBatch assigns tasks between jobs in a “round robin” fashion, so that all jobs get a roughly equal share
+of cluster resources. This means that short jobs submitted while a long job is running can start receiving
+resources right away and still get good response times, without waiting for the long job to finish. This
+mode is best for multi-user settings.</p>
+
+<p>This feature is disabled by default and available on all coarse-grained cluster managers, i.e.
+<a href="hyperbatch-standalone.html">standalone mode</a>, <a href="running-on-yarn.html">YARN mode</a>,
+<a href="running-on-kubernetes.html">K8s mode</a>.
+To enable the fair scheduler, simply set the <code class="language-plaintext highlighter-rouge">hyperbatch.scheduler.mode</code> property to <code class="language-plaintext highlighter-rouge">FAIR</code> when configuring
+a HyperBatchContext:</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="nv">conf</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">HyperBatchConf</span><span class="o">().</span><span class="py">setMaster</span><span class="o">(...).</span><span class="py">setAppName</span><span class="o">(...)</span>
+<span class="nv">conf</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="s">"hyperbatch.scheduler.mode"</span><span class="o">,</span> <span class="s">"FAIR"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">sc</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">HyperBatchContext</span><span class="o">(</span><span class="n">conf</span><span class="o">)</span></code></pre></figure>
+
+<h2 id="fair-scheduler-pools">Fair Scheduler Pools</h2>
+
+<p>The fair scheduler also supports grouping jobs into <em>pools</em>, and setting different scheduling options
+(e.g. weight) for each pool. This can be useful to create a “high-priority” pool for more important jobs,
+for example, or to group the jobs of each user together and give <em>users</em> equal shares regardless of how
+many concurrent jobs they have instead of giving <em>jobs</em> equal shares. This approach is modeled after the
+<a href="http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/FairScheduler.html">Hadoop Fair Scheduler</a>.</p>
+
+<p>Without any intervention, newly submitted jobs go into a <em>default pool</em>, but jobs’ pools can be set by
+adding the <code class="language-plaintext highlighter-rouge">hyperbatch.scheduler.pool</code> “local property” to the HyperBatchContext in the thread that’s submitting them.
+This is done as follows:</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="c1">// Assuming sc is your HyperBatchContext variable</span>
+<span class="nv">sc</span><span class="o">.</span><span class="py">setLocalProperty</span><span class="o">(</span><span class="s">"hyperbatch.scheduler.pool"</span><span class="o">,</span> <span class="s">"pool1"</span><span class="o">)</span></code></pre></figure>
+
+<p>After setting this local property, <em>all</em> jobs submitted within this thread (by calls in this thread
+to <code class="language-plaintext highlighter-rouge">RDD.save</code>, <code class="language-plaintext highlighter-rouge">count</code>, <code class="language-plaintext highlighter-rouge">collect</code>, etc) will use this pool name. The setting is per-thread to make
+it easy to have a thread run multiple jobs on behalf of the same user. If you’d like to clear the
+pool that a thread is associated with, simply call:</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="nv">sc</span><span class="o">.</span><span class="py">setLocalProperty</span><span class="o">(</span><span class="s">"hyperbatch.scheduler.pool"</span><span class="o">,</span> <span class="kc">null</span><span class="o">)</span></code></pre></figure>
+
+<h2 id="default-behavior-of-pools">Default Behavior of Pools</h2>
+
+<p>By default, each pool gets an equal share of the cluster (also equal in share to each job in the default
+pool), but inside each pool, jobs run in FIFO order. For example, if you create one pool per user, this
+means that each user will get an equal share of the cluster, and that each user’s queries will run in
+order instead of later queries taking resources from that user’s earlier ones.</p>
+
+<h2 id="configuring-pool-properties">Configuring Pool Properties</h2>
+
+<p>Specific pools’ properties can also be modified through a configuration file. Each pool supports three
+properties:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">schedulingMode</code>: This can be FIFO or FAIR, to control whether jobs within the pool queue up behind
+each other (the default) or share the pool’s resources fairly.</li>
+  <li><code class="language-plaintext highlighter-rouge">weight</code>: This controls the pool’s share of the cluster relative to other pools. By default, all pools
+have a weight of 1. If you give a specific pool a weight of 2, for example, it will get 2x more
+resources as other active pools. Setting a high weight such as 1000 also makes it possible to implement
+<em>priority</em> between pools—in essence, the weight-1000 pool will always get to launch tasks first
+whenever it has jobs active.</li>
+  <li><code class="language-plaintext highlighter-rouge">minShare</code>: Apart from an overall weight, each pool can be given a <em>minimum shares</em> (as a number of
+CPU cores) that the administrator would like it to have. The fair scheduler always attempts to meet
+all active pools’ minimum shares before redistributing extra resources according to the weights.
+The <code class="language-plaintext highlighter-rouge">minShare</code> property can, therefore, be another way to ensure that a pool can always get up to a
+certain number of resources (e.g. 10 cores) quickly without giving it a high priority for the rest
+of the cluster. By default, each pool’s <code class="language-plaintext highlighter-rouge">minShare</code> is 0.</li>
+</ul>
+
+<p>The pool properties can be set by creating an XML file, similar to <code class="language-plaintext highlighter-rouge">conf/fairscheduler.xml.template</code>,
+and either putting a file named <code class="language-plaintext highlighter-rouge">fairscheduler.xml</code> on the classpath, or setting <code class="language-plaintext highlighter-rouge">hyperbatch.scheduler.allocation.file</code> property in your
+<a href="configuration.html#hyperbatch-properties">HyperBatchConf</a>. The file path respects the hadoop configuration and can either be a local file path or HDFS file path.</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="c1">// scheduler file at local</span>
+<span class="nv">conf</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="s">"hyperbatch.scheduler.allocation.file"</span><span class="o">,</span> <span class="s">"file:///path/to/file"</span><span class="o">)</span>
+<span class="c1">// scheduler file at hdfs</span>
+<span class="nv">conf</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="s">"hyperbatch.scheduler.allocation.file"</span><span class="o">,</span> <span class="s">"hdfs:///path/to/file"</span><span class="o">)</span></code></pre></figure>
+
+<p>The format of the XML file is simply a <code class="language-plaintext highlighter-rouge">&lt;pool&gt;</code> element for each pool, with different elements
+within it for the various settings. For example:</p>
+
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="nt">&lt;allocations&gt;</span>
+  <span class="nt">&lt;pool</span> <span class="na">name=</span><span class="s">"production"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;schedulingMode&gt;</span>FAIR<span class="nt">&lt;/schedulingMode&gt;</span>
+    <span class="nt">&lt;weight&gt;</span>1<span class="nt">&lt;/weight&gt;</span>
+    <span class="nt">&lt;minShare&gt;</span>2<span class="nt">&lt;/minShare&gt;</span>
+  <span class="nt">&lt;/pool&gt;</span>
+  <span class="nt">&lt;pool</span> <span class="na">name=</span><span class="s">"test"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;schedulingMode&gt;</span>FIFO<span class="nt">&lt;/schedulingMode&gt;</span>
+    <span class="nt">&lt;weight&gt;</span>2<span class="nt">&lt;/weight&gt;</span>
+    <span class="nt">&lt;minShare&gt;</span>3<span class="nt">&lt;/minShare&gt;</span>
+  <span class="nt">&lt;/pool&gt;</span>
+<span class="nt">&lt;/allocations&gt;</span></code></pre></figure>
+
+<p>A full example is also available in <code class="language-plaintext highlighter-rouge">conf/fairscheduler.xml.template</code>. Note that any pools not
+configured in the XML file will simply get default values for all settings (scheduling mode FIFO,
+weight 1, and minShare 0).</p>
+
+<h2 id="scheduling-using-jdbc-connections">Scheduling using JDBC Connections</h2>
+<p>To set a <a href="job-scheduling.html#fair-scheduler-pools">Fair Scheduler</a> pool for a JDBC client session,
+users can set the <code class="language-plaintext highlighter-rouge">hyperbatch.sql.thriftserver.scheduler.pool</code> variable:</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SET</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="k">sql</span><span class="p">.</span><span class="n">thriftserver</span><span class="p">.</span><span class="n">scheduler</span><span class="p">.</span><span class="n">pool</span><span class="o">=</span><span class="n">accounting</span><span class="p">;</span></code></pre></figure>
+
+<h2 id="concurrent-jobs-in-pyhyperbatch">Concurrent Jobs in PyHyperBatch</h2>
+
+<p>PyHyperBatch, by default, does not support to synchronize PVM threads with JVM threads and 
+launching multiple jobs in multiple PVM threads does not guarantee to launch each job
+in each corresponding JVM thread. Due to this limitation, it is unable to set a different job group
+via <code class="language-plaintext highlighter-rouge">sc.setJobGroup</code> in a separate PVM thread, which also disallows to cancel the job via <code class="language-plaintext highlighter-rouge">sc.cancelJobGroup</code>
+later.</p>
+
+<p><code class="language-plaintext highlighter-rouge">pyhyperbatch.InheritableThread</code> is recommended to use together for a PVM thread to inherit the inheritable attributes
+ such as local properties in a JVM thread.</p>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

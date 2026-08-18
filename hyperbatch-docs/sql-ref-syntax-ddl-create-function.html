@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CREATE FUNCTION (External) - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">CREATE FUNCTION (External)</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">CREATE FUNCTION</code> statement is used to create a temporary or permanent external function
+in HyperBatch. Temporary functions are scoped at a session level where as permanent
+functions are created in the persistent catalog and are made available to
+all sessions. The resources specified in the <code class="language-plaintext highlighter-rouge">USING</code> clause are made available
+to all executors when they are executed for the first time. In addition to the
+SQL interface, hyperbatch allows users to create custom user defined scalar and
+aggregate functions using Scala, Python and Java APIs. Please refer to 
+<a href="sql-ref-functions-udf-scalar.html">Scalar UDFs</a> and
+<a href="sql-ref-functions-udf-aggregate.html">UDAFs</a> for more information.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="p">[</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="p">]</span> <span class="p">[</span> <span class="k">TEMPORARY</span> <span class="p">]</span> <span class="k">FUNCTION</span> <span class="p">[</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="p">]</span>
+    <span class="n">function_name</span> <span class="k">AS</span> <span class="n">class_name</span> <span class="p">[</span> <span class="n">resource_locations</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>OR REPLACE</strong></p>
+
+    <p>If specified, the resources for the function are reloaded. This is mainly useful
+  to pick up any changes made to the implementation of the function. This
+  parameter is mutually exclusive to <code class="language-plaintext highlighter-rouge">IF NOT EXISTS</code> and can not
+  be specified together.</p>
+  </li>
+  <li>
+    <p><strong>TEMPORARY</strong></p>
+
+    <p>Indicates the scope of function being created. When <code class="language-plaintext highlighter-rouge">TEMPORARY</code> is specified, the
+  created function is valid and visible in the current session. Temporary functions live in the
+  per-session <code class="language-plaintext highlighter-rouge">system.session</code> namespace. No persistent entry is made in the catalog for these
+  kind of functions.</p>
+  </li>
+  <li>
+    <p><strong>IF NOT EXISTS</strong></p>
+
+    <p>If specified, creates the function only when it does not exist. The creation
+  of function succeeds (no error is thrown) if the specified function already
+  exists in the system. This parameter is mutually exclusive to <code class="language-plaintext highlighter-rouge">OR REPLACE</code>
+  and can not be specified together.</p>
+  </li>
+  <li>
+    <p><strong>function_name</strong></p>
+
+    <p>Specifies a name of function to be created.</p>
+
+    <ul>
+      <li>
+        <p>For a <strong>permanent</strong> function the name may be optionally qualified with a database name
+(or a catalog and database). If the name is not qualified the function is created in the
+current schema.</p>
+
+        <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ catalog_name. ] [ database_name. ] function_name</code></p>
+      </li>
+      <li>
+        <p>For a <strong>temporary</strong> function the name may be optionally qualified with the session schema
+(<code class="language-plaintext highlighter-rouge">session</code> or <code class="language-plaintext highlighter-rouge">system.session</code>). Any other qualifier is rejected with
+<code class="language-plaintext highlighter-rouge">INVALID_TEMP_OBJ_QUALIFIER</code>.</p>
+
+        <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ { session | system.session } . ] function_name</code></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>class_name</strong></p>
+
+    <p>Specifies the name of the class that provides the implementation for function to be created.
+  The implementing class should extend one of the base classes as follows:</p>
+
+    <ul>
+      <li>Should extend <code class="language-plaintext highlighter-rouge">UDF</code> or <code class="language-plaintext highlighter-rouge">UDAF</code> in <code class="language-plaintext highlighter-rouge">org.apache.hadoop.hive.ql.exec</code> package.</li>
+      <li>Should extend <code class="language-plaintext highlighter-rouge">AbstractGenericUDAFResolver</code>, <code class="language-plaintext highlighter-rouge">GenericUDF</code>, or
+<code class="language-plaintext highlighter-rouge">GenericUDTF</code> in <code class="language-plaintext highlighter-rouge">org.apache.hadoop.hive.ql.udf.generic</code> package.</li>
+      <li>Should extend <code class="language-plaintext highlighter-rouge">UserDefinedAggregateFunction</code> in <code class="language-plaintext highlighter-rouge">org.apache.hyperbatch.sql.expressions</code> package.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>resource_locations</strong></p>
+
+    <p>Specifies the list of resources that contain the implementation of the function
+  along with its dependencies.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">USING { { (JAR | FILE | ARCHIVE) resource_uri } , ... }</code></p>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 1. Create a simple UDF `SimpleUdf` that increments the supplied integral value by 10.</span>
+<span class="c1">--    import org.apache.hadoop.hive.ql.exec.UDF;</span>
+<span class="c1">--    public class SimpleUdf extends UDF {</span>
+<span class="c1">--      public int evaluate(int value) {</span>
+<span class="c1">--        return value + 10;</span>
+<span class="c1">--      }</span>
+<span class="c1">--    }</span>
+<span class="c1">-- 2. Compile and place it in a JAR file called `SimpleUdf.jar` in /tmp.</span>
+
+<span class="c1">-- Create a table called `test` and insert two rows.</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">test</span><span class="p">(</span><span class="n">c1</span> <span class="nb">INT</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">test</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="c1">-- Create a permanent function called `simple_udf`. </span>
+<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">simple_udf</span> <span class="k">AS</span> <span class="s1">'SimpleUdf'</span>
+    <span class="k">USING</span> <span class="n">JAR</span> <span class="s1">'/tmp/SimpleUdf.jar'</span><span class="p">;</span>
+
+<span class="c1">-- Verify that the function is in the registry.</span>
+<span class="k">SHOW</span> <span class="k">USER</span> <span class="n">FUNCTIONS</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">------------------+</span>
+<span class="o">|</span>          <span class="k">function</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">------------------+</span>
+<span class="o">|</span><span class="k">default</span><span class="p">.</span><span class="n">simple_udf</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">------------------+</span>
+
+<span class="c1">-- Invoke the function. Every selected value should be incremented by 10.</span>
+<span class="k">SELECT</span> <span class="n">simple_udf</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span> <span class="k">AS</span> <span class="n">function_return_value</span> <span class="k">FROM</span> <span class="n">test</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---------------------+</span>
+<span class="o">|</span><span class="n">function_return_value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------+</span>
+<span class="o">|</span>                   <span class="mi">11</span><span class="o">|</span>
+<span class="o">|</span>                   <span class="mi">12</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------+</span>
+
+<span class="c1">-- Created a temporary function.</span>
+<span class="k">CREATE</span> <span class="k">TEMPORARY</span> <span class="k">FUNCTION</span> <span class="n">simple_temp_udf</span> <span class="k">AS</span> <span class="s1">'SimpleUdf'</span> 
+    <span class="k">USING</span> <span class="n">JAR</span> <span class="s1">'/tmp/SimpleUdf.jar'</span><span class="p">;</span>
+
+<span class="c1">-- Verify that the newly created temporary function is in the registry.</span>
+<span class="c1">-- Please note that the temporary function does not have a qualified</span>
+<span class="c1">-- database associated with it.</span>
+<span class="k">SHOW</span> <span class="k">USER</span> <span class="n">FUNCTIONS</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">------------------+</span>
+<span class="o">|</span>          <span class="k">function</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">------------------+</span>
+<span class="o">|</span><span class="k">default</span><span class="p">.</span><span class="n">simple_udf</span><span class="o">|</span>
+<span class="o">|</span>   <span class="n">simple_temp_udf</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">------------------+</span>
+
+<span class="c1">-- 1. Modify `SimpleUdf`'s implementation to add supplied integral value by 20.</span>
+<span class="c1">--    import org.apache.hadoop.hive.ql.exec.UDF;</span>
+  
+<span class="c1">--    public class SimpleUdfR extends UDF {</span>
+<span class="c1">--      public int evaluate(int value) {</span>
+<span class="c1">--        return value + 20;</span>
+<span class="c1">--      }</span>
+<span class="c1">--    }</span>
+<span class="c1">-- 2. Compile and place it in a jar file called `SimpleUdfR.jar` in /tmp.</span>
+
+<span class="c1">-- Replace the implementation of `simple_udf`</span>
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">simple_udf</span> <span class="k">AS</span> <span class="s1">'SimpleUdfR'</span>
+    <span class="k">USING</span> <span class="n">JAR</span> <span class="s1">'/tmp/SimpleUdfR.jar'</span><span class="p">;</span>
+
+<span class="c1">-- Invoke the function. Every selected value should be incremented by 20.</span>
+<span class="k">SELECT</span> <span class="n">simple_udf</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span> <span class="k">AS</span> <span class="n">function_return_value</span> <span class="k">FROM</span> <span class="n">test</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---------------------+</span>
+<span class="o">|</span><span class="n">function_return_value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------+</span>
+<span class="o">|</span>                   <span class="mi">21</span><span class="o">|</span>
+<span class="o">|</span>                   <span class="mi">22</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------+</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-ddl-create-sql-function.html">CREATE FUNCTION (SQL)</a></li>
+  <li><a href="sql-ref-syntax-aux-show-functions.html">SHOW FUNCTIONS</a></li>
+  <li><a href="sql-ref-syntax-aux-describe-function.html">DESCRIBE FUNCTION</a></li>
+  <li><a href="sql-ref-syntax-ddl-drop-function.html">DROP FUNCTION</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

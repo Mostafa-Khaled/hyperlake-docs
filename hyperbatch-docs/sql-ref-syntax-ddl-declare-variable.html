@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DECLARE VARIABLE - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">DECLARE VARIABLE</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">DECLARE VARIABLE</code> statement is used to create a temporary variable in HyperBatch.
+Temporary variables are scoped at a session level.</p>
+
+<p>You can reference variables by their name everywhere constant expressions are allowed.
+Unless you qualify a variable with <code class="language-plaintext highlighter-rouge">session</code> or <code class="language-plaintext highlighter-rouge">system.session</code>, a variable is only resolved after
+HyperBatch fails to resolve a name to a column or column alias.</p>
+
+<p>Temporary variables cannot be referenced in persisted objects such as persisted view,
+column default expressions, and generated column expressions.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">DECLARE</span> <span class="p">[</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="p">]</span> <span class="p">[</span> <span class="n">VAR</span> <span class="o">|</span> <span class="k">VARIABLE</span> <span class="p">]</span>
+    <span class="n">variable_name</span> <span class="p">[</span> <span class="n">data_type</span> <span class="p">]</span> <span class="p">[</span> <span class="p">{</span> <span class="k">DEFAULT</span> <span class="o">|</span> <span class="o">=</span> <span class="p">}</span> <span class="n">default_expr</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>OR REPLACE</strong></p>
+
+    <p>If specified, a pre-existing temporary variable is replaced if it exists.</p>
+  </li>
+  <li>
+    <p><strong>variable_name</strong></p>
+
+    <p>Specifies a name for the variable to be created.
+  The variable name may be optionally qualified with a <code class="language-plaintext highlighter-rouge">system</code>.<code class="language-plaintext highlighter-rouge">session</code> or <code class="language-plaintext highlighter-rouge">session</code>.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ system . [ session .] ] variable_name</code></p>
+  </li>
+  <li>
+    <p><strong>data_type</strong></p>
+
+    <p>Optionally defines the data type of the variable.
+  If it is not specified the type is derived from the default expression.</p>
+  </li>
+  <li>
+    <p><strong>default_expr</strong></p>
+
+    <p>An optional expression used to initialize the value of the variable after declaration.
+  The expression is re-evaluated whenever the variable is reset to <code class="language-plaintext highlighter-rouge">DEFAULT</code> using
+  <a href="sql-ref-syntax-aux-set-var.html">SET VAR</a>.
+  If <code class="language-plaintext highlighter-rouge">data_type</code> is specified <code class="language-plaintext highlighter-rouge">default_expr</code> must be castable to the variable type.
+  If <code class="language-plaintext highlighter-rouge">data_type</code> is not specified you must specify a default and its type will become the type of
+  the variable.
+  If no default expression is given, the variable is initialized with <code class="language-plaintext highlighter-rouge">NULL</code>.</p>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- The dense form of declaring a variable with default</span>
+<span class="k">DECLARE</span> <span class="n">five</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="c1">-- Declare a defined variable</span>
+<span class="k">DECLARE</span> <span class="n">five</span> <span class="o">=</span> <span class="mi">55</span><span class="p">;</span>
+<span class="p">[</span><span class="n">VARIABLE_ALREADY_EXISTS</span><span class="p">]</span> <span class="n">Cannot</span> <span class="k">create</span> <span class="n">the</span> <span class="k">variable</span> <span class="nv">`system`</span><span class="p">.</span><span class="nv">`session`</span><span class="p">.</span><span class="nv">`five`</span> <span class="n">because</span> <span class="n">it</span> <span class="n">already</span> <span class="k">exists</span><span class="p">.</span>
+<span class="n">Choose</span> <span class="n">a</span> <span class="n">different</span> <span class="n">name</span><span class="p">,</span> <span class="k">or</span> <span class="k">drop</span> <span class="k">or</span> <span class="k">replace</span> <span class="n">the</span> <span class="k">existing</span> <span class="k">variable</span><span class="p">.</span> <span class="k">SQLSTATE</span><span class="p">:</span> <span class="mi">42723</span>
+
+<span class="c1">-- Use `DECLARE OR REPLACE` to declare a defined variable</span>
+<span class="k">DECLARE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="n">five</span> <span class="o">=</span> <span class="mi">55</span><span class="p">;</span>
+
+<span class="c1">-- Explicitly declare the default value of a variable using the keyword `DEFAULT`</span>
+<span class="k">DECLARE</span> <span class="k">VARIABLE</span> <span class="k">size</span> <span class="k">DEFAULT</span> <span class="mi">6</span><span class="p">;</span>
+
+<span class="c1">-- STRING variable initialized to `NULL`</span>
+<span class="k">DECLARE</span> <span class="n">some_var</span> <span class="n">STRING</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-ddl-drop-variable.html">DROP TEMPORARY VARIABLE</a></li>
+  <li><a href="sql-ref-syntax-aux-set-var.html">SET VARIABLE</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

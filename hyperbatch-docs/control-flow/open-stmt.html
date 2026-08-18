@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OPEN statement - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">OPEN statement</h1>
+                        
+                    
+                    <p>Opens a cursor and executes its query, positioning it before the first row.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">OPEN</code> statement executes the query defined in the cursor declaration, binding any parameter markers if specified. Once opened, the cursor can be used with <code class="language-plaintext highlighter-rouge">FETCH</code> to retrieve rows.</p>
+
+<h2 id="syntax">Syntax</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OPEN cursor_name [ USING { constant_expr [ AS param_name ] } [, ...] ]
+</code></pre></div></div>
+
+<h2 id="parameters">Parameters</h2>
+
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">cursor_name</code></strong></p>
+
+    <p>The name of a declared cursor. The cursor can be optionally qualified with a compound statement label to reference a cursor from an outer scope (e.g., <code class="language-plaintext highlighter-rouge">outer_label.my_cursor</code>).</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">USING { constant_expr [ AS param_name ] } [, ...]</code></strong></p>
+
+    <p>Optional clause to bind values to parameter markers in the cursor’s query.</p>
+
+    <ul>
+      <li>
+        <p><strong><code class="language-plaintext highlighter-rouge">constant_expr</code></strong></p>
+
+        <p>A constant expression (literal or variable) to bind to a parameter marker. The expression must be castable to the type expected by the query.</p>
+      </li>
+      <li>
+        <p><strong><code class="language-plaintext highlighter-rouge">AS param_name</code></strong></p>
+
+        <p>An optional alias for the parameter. For named parameter markers (<code class="language-plaintext highlighter-rouge">:param_name</code>), this specifies which parameter to bind. If not specified for positional markers (<code class="language-plaintext highlighter-rouge">?</code>), parameters are bound by position.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="examples">Examples</h2>
+
+<pre><code class="language-SQL">-- Open a simple cursor without parameters
+&gt; BEGIN
+    DECLARE total INT;
+    DECLARE my_cursor CURSOR FOR SELECT sum(id) FROM range(10);
+
+    OPEN my_cursor;
+    FETCH my_cursor INTO total;
+    VALUES (total);
+    CLOSE my_cursor;
+  END;
+45
+
+-- Open cursor with positional parameters
+&gt; BEGIN
+    DECLARE total INT;
+    DECLARE param_cursor CURSOR FOR
+      SELECT sum(id) FROM range(100) WHERE id BETWEEN ? AND ?;
+
+    OPEN param_cursor USING 10, 20;
+    FETCH param_cursor INTO total;
+    VALUES (total);
+    CLOSE param_cursor;
+  END;
+165
+
+-- Open cursor with named parameters
+&gt; BEGIN
+    DECLARE min_val INT;
+    DECLARE named_cursor CURSOR FOR
+      SELECT min(id) FROM range(100) WHERE id &gt;= :threshold;
+
+    OPEN named_cursor USING 25 AS threshold;
+    FETCH named_cursor INTO min_val;
+    VALUES (min_val);
+    CLOSE named_cursor;
+  END;
+25
+
+-- Open cursor using variables as parameters
+&gt; BEGIN
+    DECLARE lower INT DEFAULT 5;
+    DECLARE upper INT DEFAULT 15;
+    DECLARE result INT;
+    DECLARE var_cursor CURSOR FOR
+      SELECT count(*) FROM range(100) WHERE id BETWEEN ? AND ?;
+
+    OPEN var_cursor USING lower, upper;
+    FETCH var_cursor INTO result;
+    VALUES (result);
+    CLOSE var_cursor;
+  END;
+11
+
+-- Open cursor with various data types
+&gt; BEGIN
+    DECLARE type_name STRING;
+    DECLARE value_sum INT;
+    DECLARE type_cursor CURSOR FOR
+      SELECT typeof(:p) as type, sum(:p + id) FROM range(3);
+
+    OPEN type_cursor USING 10 AS p;
+    FETCH type_cursor INTO type_name, value_sum;
+    VALUES (type_name, value_sum);
+    CLOSE type_cursor;
+  END;
+INT|33
+
+-- Qualified cursor name with label
+&gt; BEGIN
+    outer_lbl: BEGIN
+      DECLARE outer_cur CURSOR FOR SELECT max(id) FROM range(10);
+      DECLARE max_val INT;
+
+      OPEN outer_cur;
+
+      inner_lbl: BEGIN
+        DECLARE inner_cur CURSOR FOR SELECT min(id) FROM range(5);
+        DECLARE min_val INT;
+
+        OPEN inner_cur;
+        FETCH outer_lbl.outer_cur INTO max_val;
+        FETCH inner_cur INTO min_val;
+        VALUES (max_val, min_val);
+        CLOSE inner_cur;
+      END;
+
+      CLOSE outer_cur;
+    END;
+  END;
+9|0
+</code></pre>
+
+<h2 id="notes">Notes</h2>
+
+<ul>
+  <li>A cursor can only be opened once. Attempting to open an already-opened cursor raises a <code class="language-plaintext highlighter-rouge">CURSOR_ALREADY_OPEN</code> error.</li>
+  <li>Parameter binding behavior matches <code class="language-plaintext highlighter-rouge">EXECUTE IMMEDIATE</code>:
+    <ul>
+      <li>For positional parameters (<code class="language-plaintext highlighter-rouge">?</code>), expressions are bound in the order specified.</li>
+      <li>For named parameters (<code class="language-plaintext highlighter-rouge">:name</code>), the <code class="language-plaintext highlighter-rouge">AS param_name</code> clause specifies the binding.</li>
+      <li>All parameter markers in the query must be bound.</li>
+    </ul>
+  </li>
+  <li>Variable references in the cursor’s query are evaluated at <code class="language-plaintext highlighter-rouge">OPEN</code> time, using current variable values.</li>
+  <li>The cursor’s result set is materialized at <code class="language-plaintext highlighter-rouge">OPEN</code> time. Subsequent changes to variables or tables do not affect the result set.</li>
+  <li>If the cursor’s query raises an error during execution, the cursor remains in a closed state.</li>
+</ul>
+
+<h2 id="related-articles">Related articles</h2>
+
+<ul>
+  <li><a href="compound-stmt.html">Compound Statement</a></li>
+  <li><a href="fetch-stmt.html">FETCH Statement</a></li>
+  <li><a href="close-stmt.html">CLOSE Statement</a></li>
+  <li><a href="../sql-ref-syntax-aux-exec-imm.html">EXECUTE IMMEDIATE Statement</a></li>
+  <li><a href="../sql-ref-scripting.html">SQL Scripting</a></li>
+</ul>
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

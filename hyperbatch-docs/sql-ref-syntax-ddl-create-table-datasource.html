@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CREATE DATASOURCE TABLE - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">CREATE DATASOURCE TABLE</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">CREATE TABLE</code> statement defines a new table using a Data Source.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="p">]</span> <span class="n">table_identifier</span>
+    <span class="p">[</span> <span class="p">(</span> <span class="n">col_name1</span> <span class="n">col_type1</span> <span class="p">[</span> <span class="k">COMMENT</span> <span class="n">col_comment1</span> <span class="p">],</span> <span class="p">...</span> <span class="p">)</span> <span class="p">]</span>
+    <span class="k">USING</span> <span class="n">data_source</span>
+    <span class="p">[</span> <span class="k">OPTIONS</span> <span class="p">(</span> <span class="n">key1</span><span class="o">=</span><span class="n">val1</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="n">val2</span><span class="p">,</span> <span class="p">...</span> <span class="p">)</span> <span class="p">]</span>
+    <span class="p">[</span> <span class="n">PARTITIONED</span> <span class="k">BY</span> <span class="p">(</span> <span class="n">col_name1</span><span class="p">,</span> <span class="n">col_name2</span><span class="p">,</span> <span class="p">...</span> <span class="p">)</span> <span class="p">]</span>
+    <span class="p">[</span> <span class="n">CLUSTERED</span> <span class="k">BY</span> <span class="p">(</span> <span class="n">col_name3</span><span class="p">,</span> <span class="n">col_name4</span><span class="p">,</span> <span class="p">...</span> <span class="p">)</span> 
+        <span class="p">[</span> <span class="n">SORTED</span> <span class="k">BY</span> <span class="p">(</span> <span class="n">col_name</span> <span class="p">[</span> <span class="k">ASC</span> <span class="o">|</span> <span class="k">DESC</span> <span class="p">],</span> <span class="p">...</span> <span class="p">)</span> <span class="p">]</span> 
+        <span class="k">INTO</span> <span class="n">num_buckets</span> <span class="n">BUCKETS</span> <span class="p">]</span>
+    <span class="p">[</span> <span class="k">LOCATION</span> <span class="n">path</span> <span class="p">]</span>
+    <span class="p">[</span> <span class="k">COMMENT</span> <span class="n">table_comment</span> <span class="p">]</span>
+    <span class="p">[</span> <span class="n">TBLPROPERTIES</span> <span class="p">(</span> <span class="n">key1</span><span class="o">=</span><span class="n">val1</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="n">val2</span><span class="p">,</span> <span class="p">...</span> <span class="p">)</span> <span class="p">]</span>
+    <span class="p">[</span> <span class="k">AS</span> <span class="n">select_statement</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Note that, the clauses between the USING clause and the AS SELECT clause can come in
+as any order. For example, you can write COMMENT table_comment after TBLPROPERTIES.</p>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>table_identifier</strong></p>
+
+    <p>Specifies a table name, which may be optionally qualified with a database name.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ database_name. ] table_name</code></p>
+  </li>
+  <li>
+    <p><strong>USING data_source</strong></p>
+
+    <p>Data Source is the input format used to create the table. Data source can be CSV, TXT, ORC, JDBC, PARQUET, etc.</p>
+  </li>
+  <li>
+    <p><strong>OPTIONS</strong></p>
+
+    <p>Options of data source which will be injected to storage properties.</p>
+  </li>
+  <li>
+    <p><strong>PARTITIONED BY</strong></p>
+
+    <p>Partitions are created on the table, based on the columns specified.</p>
+  </li>
+  <li>
+    <p><strong>CLUSTERED BY</strong></p>
+
+    <p>Partitions created on the table will be bucketed into fixed buckets based on the column specified for bucketing.</p>
+
+    <p><strong>NOTE:</strong> Bucketing is an optimization technique that uses buckets (and bucketing columns) to determine data partitioning and avoid data shuffle.</p>
+  </li>
+  <li>
+    <p><strong>SORTED BY</strong></p>
+
+    <p>Specifies an ordering of bucket columns. Optionally, one can use ASC for an ascending order or DESC for a descending order after any column names in the SORTED BY clause.
+  If not specified, ASC is assumed by default.</p>
+  </li>
+  <li>
+    <p><strong>INTO num_buckets BUCKETS</strong></p>
+
+    <p>Specifies buckets numbers, which is used in <code class="language-plaintext highlighter-rouge">CLUSTERED BY</code> clause.</p>
+  </li>
+  <li>
+    <p><strong>LOCATION</strong></p>
+
+    <p>Path to the directory where table data is stored, which could be a path on distributed storage like HDFS, etc.</p>
+  </li>
+  <li>
+    <p><strong>COMMENT</strong></p>
+
+    <p>A string literal to describe the table.</p>
+  </li>
+  <li>
+    <p><strong>TBLPROPERTIES</strong></p>
+
+    <p>A list of key-value pairs that is used to tag the table definition.</p>
+  </li>
+  <li>
+    <p><strong>AS select_statement</strong></p>
+
+    <p>The table is populated using the data from the select statement.</p>
+  </li>
+</ul>
+
+<h3 id="data-source-interaction">Data Source Interaction</h3>
+
+<p>A Data Source table acts like a pointer to the underlying data source. For example, you can create
+a table “foo” in HyperBatch which points to a table “bar” in MySQL using JDBC Data Source. When you
+read/write table “foo”, you actually read/write table “bar”.</p>
+
+<p>In general CREATE TABLE is creating a “pointer”, and you need to make sure it points to something
+existing. An exception is file source such as parquet, json. If you don’t specify the LOCATION,
+HyperBatch will create a default table location for you.</p>
+
+<p>For CREATE TABLE AS SELECT with LOCATION, HyperBatch throws analysis exceptions if the given location
+exists as a non-empty directory. If <code class="language-plaintext highlighter-rouge">hyperbatch.sql.legacy.allowNonEmptyLocationInCTAS</code> is set to true,
+HyperBatch overwrites the underlying data source with the data of the
+input query, to make sure the table gets created contains exactly the same data as the input query.</p>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">--Use data source</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">student</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">name</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">age</span> <span class="nb">INT</span><span class="p">)</span> <span class="k">USING</span> <span class="n">CSV</span><span class="p">;</span>
+
+<span class="c1">--Use data from another table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">student_copy</span> <span class="k">USING</span> <span class="n">CSV</span>
+    <span class="k">AS</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">student</span><span class="p">;</span>
+  
+<span class="c1">--Omit the USING clause, which uses the default data source (parquet by default)</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">student</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">name</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">age</span> <span class="nb">INT</span><span class="p">);</span>
+
+<span class="c1">--Use parquet data source with parquet storage options</span>
+<span class="c1">--The columns 'id' and 'name' enable the bloom filter during writing parquet file,</span>
+<span class="c1">--column 'age' does not enable</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">student_parquet</span><span class="p">(</span><span class="n">id</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">name</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">age</span> <span class="nb">INT</span><span class="p">)</span> <span class="k">USING</span> <span class="n">PARQUET</span>
+    <span class="k">OPTIONS</span> <span class="p">(</span>
+      <span class="s1">'parquet.bloom.filter.enabled'</span><span class="o">=</span><span class="s1">'true'</span><span class="p">,</span>
+      <span class="s1">'parquet.bloom.filter.enabled#age'</span><span class="o">=</span><span class="s1">'false'</span>
+    <span class="p">);</span>
+
+<span class="c1">--Specify table comment and properties</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">student</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">name</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">age</span> <span class="nb">INT</span><span class="p">)</span> <span class="k">USING</span> <span class="n">CSV</span>
+    <span class="k">COMMENT</span> <span class="s1">'this is a comment'</span>
+    <span class="n">TBLPROPERTIES</span> <span class="p">(</span><span class="s1">'foo'</span><span class="o">=</span><span class="s1">'bar'</span><span class="p">);</span>
+
+<span class="c1">--Specify table comment and properties with different clauses order</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">student</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">name</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">age</span> <span class="nb">INT</span><span class="p">)</span> <span class="k">USING</span> <span class="n">CSV</span>
+    <span class="n">TBLPROPERTIES</span> <span class="p">(</span><span class="s1">'foo'</span><span class="o">=</span><span class="s1">'bar'</span><span class="p">)</span>
+    <span class="k">COMMENT</span> <span class="s1">'this is a comment'</span><span class="p">;</span>
+
+<span class="c1">--Create partitioned and bucketed table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">student</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">name</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">age</span> <span class="nb">INT</span><span class="p">)</span>
+    <span class="k">USING</span> <span class="n">CSV</span>
+    <span class="n">PARTITIONED</span> <span class="k">BY</span> <span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="n">CLUSTERED</span> <span class="k">BY</span> <span class="p">(</span><span class="n">Id</span><span class="p">)</span> <span class="k">INTO</span> <span class="mi">4</span> <span class="n">buckets</span><span class="p">;</span>
+
+<span class="c1">--Create partitioned and bucketed table through CTAS</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">student_partition_bucket</span>
+    <span class="k">USING</span> <span class="n">parquet</span>
+    <span class="n">PARTITIONED</span> <span class="k">BY</span> <span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="n">CLUSTERED</span> <span class="k">BY</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">INTO</span> <span class="mi">4</span> <span class="n">buckets</span>
+    <span class="k">AS</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">student</span><span class="p">;</span>
+
+<span class="c1">--Create bucketed table through CTAS and CTE</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">student_bucket</span>
+    <span class="k">USING</span> <span class="n">parquet</span>
+    <span class="n">CLUSTERED</span> <span class="k">BY</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">INTO</span> <span class="mi">4</span> <span class="n">buckets</span> <span class="p">(</span>
+    <span class="k">WITH</span> <span class="n">tmpTable</span> <span class="k">AS</span> <span class="p">(</span>
+        <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">student</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">&gt;</span> <span class="mi">100</span>
+    <span class="p">)</span>
+    <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">tmpTable</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-ddl-create-table-hiveformat.html">CREATE TABLE USING HIVE FORMAT</a></li>
+  <li><a href="sql-ref-syntax-ddl-create-table-like.html">CREATE TABLE LIKE</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

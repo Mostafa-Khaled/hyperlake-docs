@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>State Data Source Integration Guide - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    
+<div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="index.html">Structured Streaming Programming Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="index.html">
+            
+                Overview
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="apis-on-dataframes-and-datasets.html">
+            
+                APIs on DataFrames and Datasets
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="performance-tips.html">
+            
+                Performance Tips
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="additional-information.html">
+            
+                Additional Information
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">State Data Source Integration Guide</h1>
+                    
+
+                    <p>State data source Guide in Structured Streaming (Experimental)</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>State data source provides functionality to manipulate the state from the checkpoint.</p>
+
+<p>As of HyperBatch 4.0, state data source provides the read functionality with a batch query. Additional functionalities including write is on the future roadmap.</p>
+
+<p>NOTE: this data source is currently marked as experimental - source options and the behavior (output) might be subject to change.</p>
+
+<h2 id="reading-state-key-values-from-the-checkpoint">Reading state key-values from the checkpoint</h2>
+
+<p>State data source enables reading key-value pairs from the state store in the checkpoint, via running a separate batch query.
+Users can leverage the functionality to cover two major use cases described below:</p>
+
+<ul>
+  <li>Construct a test checking both output and the state. It is non-trivial to deduce the key-value of the state from the output, and having visibility of the state would be a huge win on testing.</li>
+  <li>Investigate an incident against stateful streaming query. If users observe the incorrect output and want to track how it came up, having visibility of the state would be required.</li>
+</ul>
+
+<p>Users can read an instance of state store, which is matched to a single stateful operator in most cases. This means, users can expect that they can read the entire key-value pairs in the state for a single stateful operator.</p>
+
+<p>Note that there could be an exception, e.g. stream-stream join, which leverages multiple state store instances internally. The data source abstracts the internal representation away from users and
+provides a user-friendly approach to read the state. See the section for stream-stream join for more details.</p>
+
+<h3 id="reading-the-state-store-as-batch-queries-all-defaults">Reading the state store as batch queries (all defaults)</h3>
+
+<div class="codetabs">
+
+<div data-lang="python">
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span> \
+<span class="p">.</span><span class="n">read</span> \
+<span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="sh">"</span><span class="s">statestore</span><span class="sh">"</span><span class="p">)</span> \
+<span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="sh">"</span><span class="s">&lt;checkpointLocation&gt;</span><span class="sh">"</span><span class="p">)</span></code></pre></figure>
+
+  </div>
+
+<div data-lang="scala">
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="nv">df</span> <span class="k">=</span> <span class="nv">hyperbatch</span>
+<span class="o">.</span><span class="py">read</span>
+<span class="o">.</span><span class="py">format</span><span class="o">(</span><span class="s">"statestore"</span><span class="o">)</span>
+<span class="o">.</span><span class="py">load</span><span class="o">(</span><span class="s">"&lt;checkpointLocation&gt;"</span><span class="o">)</span></code></pre></figure>
+
+  </div>
+
+<div data-lang="java">
+
+    <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nc">Dataset</span><span class="o">&lt;</span><span class="nc">Row</span><span class="o">&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span>
+<span class="o">.</span><span class="na">read</span><span class="o">()</span>
+<span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"statestore"</span><span class="o">)</span>
+<span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="s">"&lt;checkpointLocation&gt;"</span><span class="o">);</span></code></pre></figure>
+
+  </div>
+
+</div>
+
+<p>Each row in the source has the following schema:</p>
+
+<div class="table-container"><table>
+<thead><tr><th>Column</th><th>Type</th><th>Note</th></tr></thead>
+<tbody><tr>
+  <td>key</td>
+  <td>struct (depends on the type for state key)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>value</td>
+  <td>struct (depends on the type for state value)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>partition_id</td>
+  <td>int</td>
+  <td></td>
+</tr>
+</tbody></table></div>
+
+<p>The nested columns for key and value heavily depend on the input schema of the stateful operator as well as the type of operator.
+Users are encouraged to query about the schema via df.schema() / df.printSchema() first to understand the type of output.</p>
+
+<p>The following options must be set for the source.</p>
+
+<div class="table-container"><table>
+<thead><tr><th>Option</th><th>Value</th><th>Meaning</th></tr></thead>
+<tbody><tr>
+  <td>path</td>
+  <td>string</td>
+  <td>Specify the root directory of the checkpoint location. You can either specify the path via option("path", `path`) or load(`path`).</td>
+</tr>
+</tbody></table></div>
+
+<p>The following configurations are optional:</p>
+
+<div class="table-container"><table>
+<thead><tr><th>Option</th><th>Value</th><th>Default</th><th>Meaning</th></tr></thead>
+<tbody><tr>
+  <td>batchId</td>
+  <td>numeric value</td>
+  <td>latest committed batch</td>
+  <td>Represents the target batch to read from. This option is used when users want to perform time-travel. The batch should be committed but not yet cleaned up.</td>
+</tr>
+<tr>
+  <td>operatorId</td>
+  <td>numeric value</td>
+  <td>0</td>
+  <td>Represents the target operator to read from. This option is used when the query is using multiple stateful operators.</td>
+</tr>
+<tr>
+  <td>storeName</td>
+  <td>string</td>
+  <td>DEFAULT</td>
+  <td>Represents the target state store name to read from. This option is used when the stateful operator uses multiple state store instances. It is not required except stream-stream join.</td>
+</tr>
+<tr>
+  <td>joinSide</td>
+  <td>string ("left" or "right")</td>
+  <td>(none)</td>
+  <td>Represents the target side to read from. This option is used when users want to read the state from stream-stream join.</td>
+</tr>
+<tr>
+  <td>snapshotStartBatchId</td>
+  <td>numeric value</td>
+  <td></td>
+  <td>If specified, force to read the snapshot at this batch ID, then changelogs will be replayed until 'batchId' or its default. Note that snapshot batch ID starts with 0 and equals to snapshot version ID minus 1. This option must be used together with 'snapshotPartitionId'.</td>
+</tr>
+<tr>
+  <td>snapshotPartitionId</td>
+  <td>numeric value</td>
+  <td></td>
+  <td>If specified, only this specific partition will be read. Note that partition ID starts with 0. This option must be used together with 'snapshotStartBatchId'.</td>
+</tr>
+<tr>
+  <td>readChangeFeed</td>
+  <td>boolean</td>
+  <td>false</td>
+  <td>If set to true, will read the change of state over microbatches. The output table schema will also differ. Details can be found in section <a href="#reading-state-changes-over-microbatches">"Reading state changes over microbatches"</a>. Option 'changeStartBatchId' must be specified with this option. Option 'batchId', 'joinSide', 'snapshotStartBatchId' and 'snapshotPartitionId' cannot be used together with this option.</td>
+</tr>
+<tr>
+  <td>changeStartBatchId</td>
+  <td>numeric value</td>
+  <td></td>
+  <td>Represents the first batch to read in the read change feed mode. This option requires 'readChangeFeed' to be set to true.</td>
+</tr>
+<tr>
+  <td>changeEndBatchId</td>
+  <td>numeric value</td>
+  <td>latest commited batchId</td>
+  <td>Represents the last batch to read in the read change feed mode. This option requires 'readChangeFeed' to be set to true.</td>
+</tr>
+<tr>
+  <td>stateVarName</td>
+  <td>string</td>
+  <td></td>
+  <td>The state variable name to read as part of this batch query. This is a required option if the transformWithState operator is used. Note that currently this option only applies to the transformWithState operator.</td>
+</tr>
+<tr>
+  <td>readRegisteredTimers</td>
+  <td>boolean</td>
+  <td>false</td>
+  <td>If true, the user can read registered timers used within the transformWithState operator. Note that currently this option only applies to the transformWithState operator. This option and the stateVarName option described above are mutually exclusive and only one of them can be used at a time.</td>
+</tr>
+<tr>
+  <td>flattenCollectionTypes</td>
+  <td>boolean</td>
+  <td>true</td>
+  <td>If true, the collection types for state variables such as list state, map state etc are flattened out. If false, the values are provided as Array or Map type in HyperBatch SQL. Note that currently this option only applies to the transformWithState operator.</td>
+</tr>
+</tbody></table></div>
+
+<h3 id="reading-state-for-stream-stream-join">Reading state for stream-stream join</h3>
+
+<p>Structured Streaming implements the stream-stream join feature via leveraging multiple instances of state store internally.
+These instances logically compose buffers to store the input rows for left and right.</p>
+
+<p>Since it is more obvious to users to reason about, the data source provides the option ‘joinSide’ to read the buffered input for specific side of the join.
+To enable the functionality to read the internal state store instance directly, we also allow specifying the option ‘storeName’, with restriction that ‘storeName’ and ‘joinSide’ cannot be specified together.</p>
+
+<h3 id="reading-state-for-transformwithstate">Reading state for transformWithState</h3>
+
+<p>TransformWithState is a stateful operator that allows users to maintain arbitrary state across batches. In order to read this state, the user needs to provide some additional options in the state data source reader query.
+This operator allows for multiple state variables to be used within the same query. However, because they could be of different composite types and encoding formats, they need to be read within a batch query one variable at a time.
+In order to allow this, the user needs to specify the <code class="language-plaintext highlighter-rouge">stateVarName</code> for the state variable they are interested in reading.</p>
+
+<p>Timers can be read by setting the option <code class="language-plaintext highlighter-rouge">readRegisteredTimers</code> to true. This will return all the registered timer across grouping keys.</p>
+
+<p>We also allow for composite type variables to be read in 2 formats:</p>
+<ul>
+  <li>Flattened: This is the default format where the composite types are flattened out into individual columns.</li>
+  <li>Non-flattened: This is where the composite types are returned as a single column of Array or Map type in HyperBatch SQL.</li>
+</ul>
+
+<p>Depending on your memory requirements, you can choose the format that best suits your use case.</p>
+
+<h3 id="reading-state-changes-over-microbatches">Reading state changes over microbatches</h3>
+
+<p>If we want to understand the change of state store over microbatches instead of the whole state store at a particular microbatch, ‘readChangeFeed’ is the option to use.</p>
+
+<p><strong>Note:</strong> Not all stateful operations are supported in the change feed. Certain operations, such as range deletions, cannot be represented as individual key-value change records and will result in an error. Refer to the error message for guidance on which operation is unsupported.</p>
+
+<p>For example, this is the code to read the change of state from batch 2 to the latest committed batch.</p>
+
+<div class="codetabs">
+
+<div data-lang="python">
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span> \
+<span class="p">.</span><span class="n">read</span> \
+<span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="sh">"</span><span class="s">statestore</span><span class="sh">"</span><span class="p">)</span> \
+<span class="p">.</span><span class="nf">option</span><span class="p">(</span><span class="sh">"</span><span class="s">readChangeFeed</span><span class="sh">"</span><span class="p">,</span> <span class="n">true</span><span class="p">)</span> \
+<span class="p">.</span><span class="nf">option</span><span class="p">(</span><span class="sh">"</span><span class="s">changeStartBatchId</span><span class="sh">"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> \
+<span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="sh">"</span><span class="s">&lt;checkpointLocation&gt;</span><span class="sh">"</span><span class="p">)</span></code></pre></figure>
+
+  </div>
+
+<div data-lang="scala">
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="nv">df</span> <span class="k">=</span> <span class="nv">hyperbatch</span>
+<span class="o">.</span><span class="py">read</span>
+<span class="o">.</span><span class="py">format</span><span class="o">(</span><span class="s">"statestore"</span><span class="o">)</span>
+<span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"readChangeFeed"</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span>
+<span class="o">.</span><span class="py">option</span><span class="o">(</span><span class="s">"changeStartBatchId"</span><span class="o">,</span> <span class="mi">2</span><span class="o">)</span>
+<span class="o">.</span><span class="py">load</span><span class="o">(</span><span class="s">"&lt;checkpointLocation&gt;"</span><span class="o">)</span></code></pre></figure>
+
+  </div>
+
+<div data-lang="java">
+
+    <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nc">Dataset</span><span class="o">&lt;</span><span class="nc">Row</span><span class="o">&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span>
+<span class="o">.</span><span class="na">read</span><span class="o">()</span>
+<span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"statestore"</span><span class="o">)</span>
+<span class="o">.</span><span class="na">option</span><span class="o">(</span><span class="s">"readChangeFeed"</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span>
+<span class="o">.</span><span class="na">option</span><span class="o">(</span><span class="s">"changeStartBatchId"</span><span class="o">,</span> <span class="mi">2</span><span class="o">)</span>
+<span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="s">"&lt;checkpointLocation&gt;"</span><span class="o">);</span></code></pre></figure>
+
+  </div>
+
+</div>
+
+<p>The output schema will also be different from the normal output.</p>
+
+<div class="table-container"><table>
+<thead><tr><th>Column</th><th>Type</th><th>Note</th></tr></thead>
+<tbody><tr>
+  <td>batch_id</td>
+  <td>long</td>
+  <td></td>
+</tr>
+<tr>
+  <td>change_type</td>
+  <td>string</td>
+  <td>There are two possible values: 'update' and 'delete'. Update represents either inserting a non-existing key-value pair or updating an existing key with new value. The 'value' field will be null for delete records.</td>
+</tr>
+<tr>
+  <td>key</td>
+  <td>struct (depends on the type for state key)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>value</td>
+  <td>struct (depends on the type for state value)</td>
+  <td></td>
+</tr>
+<tr>
+  <td>partition_id</td>
+  <td>int</td>
+  <td></td>
+</tr>
+</tbody></table></div>
+
+<h2 id="state-metadata-source">State Metadata Source</h2>
+
+<p>Before querying the state from existing checkpoint via state data source, users would like to understand the information for the checkpoint, especially about state operator. This includes which operators and state store instances are available in the checkpoint, available range of batch IDs, etc.</p>
+
+<p>Structured Streaming provides a data source named “State metadata source” to provide the state-related metadata information from the checkpoint.</p>
+
+<p>Note: The metadata is constructed when the streaming query is running with HyperBatch 4.0+. The existing checkpoint which has been running with lower HyperBatch version does not have the metadata and will be unable to query/use with this metadata source. It is required to run the streaming query pointing the existing checkpoint in HyperBatch 4.0+ to construct the metadata before querying.
+Users can optionally provide the batchId to get the operator metadata at a point in time.</p>
+
+<h3 id="creating-a-state-metadata-store-for-batch-queries">Creating a State metadata store for Batch Queries</h3>
+
+<div class="codetabs">
+
+<div data-lang="python">
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span> \
+<span class="p">.</span><span class="n">read</span> \
+<span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="sh">"</span><span class="s">state-metadata</span><span class="sh">"</span><span class="p">)</span> \
+<span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="sh">"</span><span class="s">&lt;checkpointLocation&gt;</span><span class="sh">"</span><span class="p">)</span></code></pre></figure>
+
+  </div>
+
+<div data-lang="scala">
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="nv">df</span> <span class="k">=</span> <span class="nv">hyperbatch</span>
+<span class="o">.</span><span class="py">read</span>
+<span class="o">.</span><span class="py">format</span><span class="o">(</span><span class="s">"state-metadata"</span><span class="o">)</span>
+<span class="o">.</span><span class="py">load</span><span class="o">(</span><span class="s">"&lt;checkpointLocation&gt;"</span><span class="o">)</span></code></pre></figure>
+
+  </div>
+
+<div data-lang="java">
+
+    <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="nc">Dataset</span><span class="o">&lt;</span><span class="nc">Row</span><span class="o">&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span>
+<span class="o">.</span><span class="na">read</span><span class="o">()</span>
+<span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">"state-metadata"</span><span class="o">)</span>
+<span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="s">"&lt;checkpointLocation&gt;"</span><span class="o">);</span></code></pre></figure>
+
+  </div>
+
+</div>
+
+<p>The following options must be set for the source:</p>
+
+<div class="table-container"><table>
+<thead><tr><th>Option</th><th>Value</th><th>Meaning</th></tr></thead>
+<tbody><tr>
+  <td>path</td>
+  <td>string</td>
+  <td>Specify the root directory of the checkpoint location. You can either specify the path via option("path", `path`) or load(`path`).</td>
+</tr>
+</tbody></table></div>
+
+<p>The following configurations are optional:</p>
+
+<div class="table-container"><table>
+<thead><tr><th>Option</th><th>Value</th><th>Default</th><th>Meaning</th></tr></thead>
+<tbody><tr>
+  <td>batchId</td>
+  <td>numeric value</td>
+  <td>Last committed batch if available, else 0</td>
+  <td>Optional batchId used to retrieve operator metadata at that batch.</td>
+</tr>
+</tbody></table></div>
+
+<p>Each row in the source has the following schema:</p>
+
+<div class="table-container"><table>
+<thead><tr><th>Column</th><th>Type</th><th>Note</th></tr></thead>
+<tbody><tr>
+  <td>operatorId</td>
+  <td>int</td>
+  <td></td>
+</tr>
+<tr>
+  <td>operatorName</td>
+  <td>string</td>
+  <td></td>
+</tr>
+<tr>
+  <td>stateStoreName</td>
+  <td>int</td>
+  <td></td>
+</tr>
+<tr>
+  <td>numPartitions</td>
+  <td>int</td>
+  <td></td>
+</tr>
+<tr>
+  <td>minBatchId</td>
+  <td>int</td>
+  <td>The minimum batch ID available for querying state. The value could be invalid if the streaming query taking the checkpoint is running, as cleanup would run.</td>
+</tr>
+<tr>
+  <td>maxBatchId</td>
+  <td>int</td>
+  <td>The maximum batch ID available for querying state. The value could be invalid if the streaming query taking the checkpoint is running, as the query will commit further batches.</td>
+</tr>
+<tr>
+  <td>operatorProperties</td>
+  <td>string</td>
+  <td>List of properties used by the operator encoded as JSON. Output generated here is operator dependent.</td>
+</tr>
+<tr>
+  <td>_numColsPrefixKey</td>
+  <td>int</td>
+  <td>metadata column (hidden unless specified with SELECT)</td>
+</tr>
+</tbody></table></div>
+
+<p>One of the major use cases of this data source is to identify the operatorId to query if the query has multiple stateful operators, e.g. stream-stream join followed by deduplication.
+The column ‘operatorName’ helps users to identify the operatorId for given operator.</p>
+
+<p>Additionally, if users want to query about an internal state store instance for a stateful operator (e.g. stream-stream join), the column ‘stateStoreName’ would be useful to determine the target.</p>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

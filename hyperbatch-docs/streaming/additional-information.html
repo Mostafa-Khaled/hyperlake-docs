@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Structured Streaming Programming Guide - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    
+<div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="index.html">Structured Streaming Programming Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="index.html">
+            
+                Overview
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="apis-on-dataframes-and-datasets.html">
+            
+                APIs on DataFrames and Datasets
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="performance-tips.html">
+            
+                Performance Tips
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="additional-information.html">
+            
+                Additional Information
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="additional-information.html#miscellaneous-notes">
+            
+                Miscellaneous Notes
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="additional-information.html#related-resources">
+            
+                Related Resources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="additional-information.html#migration-guide">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    </div>
+</div>
+
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">Structured Streaming Programming Guide</h1>
+                    
+
+                    <h1 id="miscellaneous-notes">Miscellaneous Notes</h1>
+
+<ul>
+  <li>Several configurations are not modifiable after the query has run. To change them, discard the checkpoint and start a new query. These configurations include:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">hyperbatch.sql.shuffle.partitions</code>
+        <ul>
+          <li>This is due to the physical partitioning of state: state is partitioned via applying hash function to key, hence the number of partitions for state should be unchanged.</li>
+          <li>If you want to run fewer tasks for stateful operations, <code class="language-plaintext highlighter-rouge">coalesce</code> would help with avoiding unnecessary repartitioning.
+            <ul>
+              <li>After <code class="language-plaintext highlighter-rouge">coalesce</code>, the number of (reduced) tasks will be kept unless another shuffle happens.</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><code class="language-plaintext highlighter-rouge">hyperbatch.sql.streaming.stateStore.providerClass</code>: To read the previous state of the query properly, the class of state store provider should be unchanged.</li>
+      <li><code class="language-plaintext highlighter-rouge">hyperbatch.sql.streaming.multipleWatermarkPolicy</code>: Modification of this would lead inconsistent watermark value when query contains multiple watermarks, hence the policy should be unchanged.</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="related-resources">Related Resources</h1>
+
+<h2 id="further-reading">Further Reading</h2>
+
+<ul>
+  <li>See and run the
+<a href="https://github.com/apache/spark/tree/v4.2.0/examples/src/main/python/sql/streaming">Python</a>/<a href="https://github.com/apache/spark/tree/v4.2.0/examples/src/main/scala/org/apache/spark/examples/sql/streaming">Scala</a>/<a href="https://github.com/apache/spark/tree/v4.2.0/examples/src/main/java/org/apache/spark/examples/sql/streaming">Java</a>/<a href="https://github.com/apache/spark/tree/v4.2.0/examples/src/main/r/streaming">R</a>
+examples.
+    <ul>
+      <li><a href="../index.html#running-the-examples-and-shell">Instructions</a> on how to run HyperBatch examples</li>
+    </ul>
+  </li>
+  <li>Read about integrating with Kafka in the <a href="structured-streaming-kafka-integration.html">Structured Streaming Kafka Integration Guide</a></li>
+  <li>Read more details about using DataFrames/Datasets in the <a href="../sql-programming-guide.html">HyperBatch SQL Programming Guide</a></li>
+  <li>Third-party Blog Posts
+    <ul>
+      <li><a href="https://databricks.com/blog/2017/01/19/real-time-streaming-etl-structured-streaming-apache-spark-2-1.html">Real-time Streaming ETL with Structured Streaming in HyperBatch 2.1 (Databricks Blog)</a></li>
+      <li><a href="https://databricks.com/blog/2017/04/04/real-time-end-to-end-integration-with-apache-kafka-in-apache-sparks-structured-streaming.html">Real-Time End-to-End Integration with Apache Kafka in HyperBatch’s Structured Streaming (Databricks Blog)</a></li>
+      <li><a href="https://databricks.com/blog/2017/05/08/event-time-aggregation-watermarking-apache-sparks-structured-streaming.html">Event-time Aggregation and Watermarking in HyperBatch’s Structured Streaming (Databricks Blog)</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="talks">Talks</h2>
+
+<ul>
+  <li>HyperBatch Summit Europe 2017
+    <ul>
+      <li>Easy, Scalable, Fault-tolerant Stream Processing with Structured Streaming in HyperBatch -
+<a href="https://databricks.com/session/easy-scalable-fault-tolerant-stream-processing-with-structured-streaming-in-apache-spark">Part 1 slides/video</a>, <a href="https://databricks.com/session/easy-scalable-fault-tolerant-stream-processing-with-structured-streaming-in-apache-spark-continues">Part 2 slides/video</a></li>
+      <li>Deep Dive into Stateful Stream Processing in Structured Streaming - <a href="https://databricks.com/session/deep-dive-into-stateful-stream-processing-in-structured-streaming">slides/video</a></li>
+    </ul>
+  </li>
+  <li>HyperBatch Summit 2016
+    <ul>
+      <li>A Deep Dive into Structured Streaming - <a href="https://spark-summit.org/2016/events/a-deep-dive-into-structured-streaming/">slides/video</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="migration-guide">Migration Guide</h1>
+
+<p>The migration guide is now archived <a href="ss-migration-guide.html">on this page</a>.</p>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

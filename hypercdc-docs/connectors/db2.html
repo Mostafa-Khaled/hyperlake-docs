@@ -36,7 +36,7 @@
 
 <div class="paragraph">
 <p>The HyperCDC Db2 connector can capture row-level changes in the tables of a Db2 database.
-For information about the Db2 Database versions that are compatible with this connector, see the <a href="#">HyperCDC release overview</a>.</p>
+For information about the Db2 Database versions that are compatible with this connector, see the <a href="https://debezium.io/releases/">HyperCDC release overview</a>.</p>
 </div>
 <div class="paragraph">
 <p>This connector is strongly inspired by the HyperCDC implementation of SQL Server, which uses a SQL-based polling model that puts tables into "capture mode".
@@ -459,7 +459,7 @@ For information about capturing data from a new table that has undergone structu
 </li>
 <li>
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
-For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
+For more information about how to remove offsets, see the <a href="https://debezium.io/documentation/faq/#how_to_remove_committed_offsets_for_a_connector">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
       <div class="admonition-header">
         <span class="admonition-label">WARNING</span>
@@ -600,7 +600,7 @@ You can then initiate an incremental snapshot to enable the connector to synchro
 </li>
 <li>
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
-For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
+For more information about how to remove offsets, see the <a href="https://debezium.io/documentation/faq/#how_to_remove_committed_offsets_for_a_connector">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
       <div class="admonition-header">
         <span class="admonition-label">WARNING</span>
@@ -656,7 +656,7 @@ After the snapshot completes, you can optionally trigger an incremental snapshot
 </li>
 <li>
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
-For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
+For more information about how to remove offsets, see the <a href="https://debezium.io/documentation/faq/#how_to_remove_committed_offsets_for_a_connector">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
       <div class="admonition-header">
         <span class="admonition-label">WARNING</span>
@@ -839,7 +839,7 @@ After the snapshot completes, the connector resumes streaming.</p>
 <div class="paragraph">
 <p>To provide flexibility in managing snapshots, HyperCDC includes a supplementary snapshot mechanism, known as <em>incremental snapshotting</em>.
 Incremental snapshots rely on the HyperCDC mechanism for <a href="../configuration/signalling.html#sending-signals-to-a-hypercdc-connector" class="xref page">sending signals to a HyperCDC connector</a>.
-Incremental snapshots are based on the <a href="#">DDD-3</a> design document.</p>
+Incremental snapshots are based on the <a href="https://github.com/debezium/debezium-design-documents/blob/main/DDD-3.md">DDD-3</a> design document.</p>
 </div>
 <div class="paragraph">
 <p>In an incremental snapshot, instead of capturing the full state of a database all at once, as in an initial snapshot, HyperCDC captures each table in phases, in a series of configurable chunks.
@@ -2830,7 +2830,7 @@ The event payload contains the full state of the new row in the <code>after</cod
       "ID": 1005,
       "FIRST_NAME": "john",
       "LAST_NAME": "doe",
-      "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8ee4e1e6e0a0eae1ebceebf6efe3fee2eba0e1fce9">[email&nbsp;protected]</a>"
+      "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="345e5b5c5a1a505b5174514c55594458511a5b4653">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -2994,13 +2994,13 @@ Here is an example of a change event value in an event that the connector genera
       "ID": 1005,
       "FIRST_NAME": "john",
       "LAST_NAME": "doe",
-      "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2e44414640004a414b6e4b564f435e424b00415c49">[email&nbsp;protected]</a>"
+      "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="066c696e682862696346637e676b766a6328697461">[email&nbsp;protected]</a>"
     },
     "after": {
       "ID": 1005,
       "FIRST_NAME": "john",
       "LAST_NAME": "doe",
-      "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4e20213c2b3e22370e2b362f233e222b60213c29">[email&nbsp;protected]</a>"
+      "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="abc5c4d9cedbc7d2ebced3cac6dbc7ce85c4d9cc">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -3033,13 +3033,13 @@ Here is an example of a change event value in an event that the connector genera
 <dd>
 <p>An optional field that specifies the state of the row before the event occurred.
 In an <em>update</em> event value, the <code>before</code> field contains a field for each table column and the value that was in that column before the database commit.
-In this example, note that the <code>EMAIL</code> value is <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="660c090e084802090326031e070b160a034805090b">[email&nbsp;protected]</a></code>.</p>
+In this example, note that the <code>EMAIL</code> value is <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7d17121513531912183d18051c100d1118531e1210">[email&nbsp;protected]</a></code>.</p>
 </dd>
 <dt class="hdlist1"><code>after</code></dt>
 <dd>
 <p>An optional field that specifies the state of the row after the event occurred.
 You can compare the <code>before</code> and <code>after</code> structures to determine what the update to this row was.
-In the example, the <code>EMAIL</code> value is now <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7719180512071b0e37120f161a071b125914181a">[email&nbsp;protected]</a></code>.</p>
+In the example, the <code>EMAIL</code> value is now <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c6a8a9b4a3b6aabf86a3bea7abb6aaa3e8a5a9ab">[email&nbsp;protected]</a></code>.</p>
 </dd>
 <dt class="hdlist1"><code>source</code></dt>
 <dd>
@@ -3122,7 +3122,7 @@ The event value <code>payload</code> in a <em>delete</em> event for the sample <
       "ID": 1005,
       "FIRST_NAME": "john",
       "LAST_NAME": "doe",
-      "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3658594453465a4f76534e575b465a5318594451">[email&nbsp;protected]</a>"
+      "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="204e4f5245504c59604558414d504c450e4f5247">[email&nbsp;protected]</a>"
     },
     "after": null,
     "source": {
@@ -3843,7 +3843,7 @@ The administrator must then enable CDC for each table that you want HyperCDC to 
 </li>
 <li>
 <p>On the Db2 host, the HyperCDC management UDFs are available in the $HOME/asncdctools/src directory.
-UDFs are available from the <a href="#">HyperCDC examples repository</a>.</p>
+UDFs are available from the <a href="https://github.com/debezium/debezium-examples/tree/main/tutorial/debezium-db2-init/db2server">HyperCDC examples repository</a>.</p>
 </li>
 <li>
 <p>The Db2 command <code>bldrtn</code> is on PATH, e.g.

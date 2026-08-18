@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FETCH statement - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">FETCH statement</h1>
+                        
+                    
+                    <p>Fetches the next row from an open cursor into variables.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">FETCH</code> statement retrieves one row at a time from the cursor’s result set and assigns column values to the specified variables. If no more rows are available, the <code class="language-plaintext highlighter-rouge">CURSOR_NO_MORE_ROWS</code> condition is raised (SQLSTATE <code class="language-plaintext highlighter-rouge">'02000'</code>).</p>
+
+<h2 id="syntax">Syntax</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FETCH [ [ NEXT ] FROM ] cursor_name INTO variable_name [, ...]
+</code></pre></div></div>
+
+<h2 id="parameters">Parameters</h2>
+
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">cursor_name</code></strong></p>
+
+    <p>The name of an open cursor. The cursor can be optionally qualified with a compound statement label (e.g., <code class="language-plaintext highlighter-rouge">outer_label.my_cursor</code>).</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">NEXT FROM</code></strong></p>
+
+    <p>Optional keywords. <code class="language-plaintext highlighter-rouge">NEXT</code> and <code class="language-plaintext highlighter-rouge">FROM</code> are syntactic sugar and do not affect behavior. Only forward fetching is supported.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">variable_name</code></strong></p>
+
+    <p>A local or session variable to receive column values. The number of variables must match the number of columns in the cursor’s result set, with one exception:</p>
+    <ul>
+      <li>If exactly one variable is specified and it is a <code class="language-plaintext highlighter-rouge">STRUCT</code> type, and the cursor returns multiple columns, the column values are assigned to the struct’s fields by position.</li>
+    </ul>
+
+    <p>Column data types must be compatible with the target variables (or struct fields) according to store assignment rules.</p>
+  </li>
+</ul>
+
+<h2 id="examples">Examples</h2>
+
+<pre><code class="language-SQL">-- Basic fetch into variables
+&gt; BEGIN
+    DECLARE x INT;
+    DECLARE y STRING;
+    DECLARE my_cursor CURSOR FOR
+      SELECT id, 'row_' || id FROM range(3);
+
+    OPEN my_cursor;
+    FETCH my_cursor INTO x, y;
+    VALUES (x, y);
+    CLOSE my_cursor;
+  END;
+0|row_0
+
+-- Fetch multiple rows with REPEAT loop
+&gt; BEGIN
+    DECLARE x INT;
+    DECLARE done BOOLEAN DEFAULT false;
+    DECLARE total INT DEFAULT 0;
+    DECLARE sum_cursor CURSOR FOR SELECT id FROM range(5);
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = true;
+
+    OPEN sum_cursor;
+    REPEAT
+      FETCH sum_cursor INTO x;
+      IF NOT done THEN
+        SET total = total + x;
+      END IF;
+    UNTIL done END REPEAT;
+    CLOSE sum_cursor;
+
+    VALUES (total);
+  END;
+10
+
+-- Fetch into a struct variable
+&gt; BEGIN
+    DECLARE result STRUCT&lt;id: INT, name: STRING&gt;;
+    DECLARE struct_cursor CURSOR FOR
+      SELECT id, 'name_' || id FROM range(3);
+
+    OPEN struct_cursor;
+    FETCH struct_cursor INTO result;
+    VALUES (result.id, result.name);
+    CLOSE struct_cursor;
+  END;
+0|name_0
+
+-- Using NEXT FROM (optional syntax)
+&gt; BEGIN
+    DECLARE x INT;
+    DECLARE cursor1 CURSOR FOR SELECT id FROM range(3);
+
+    OPEN cursor1;
+    FETCH NEXT FROM cursor1 INTO x;
+    VALUES (x);
+    CLOSE cursor1;
+  END;
+0
+
+-- Qualified cursor name with label
+&gt; BEGIN
+    outer_lbl: BEGIN
+      DECLARE outer_cur CURSOR FOR SELECT id FROM range(5);
+      DECLARE x INT;
+
+      OPEN outer_cur;
+
+      inner_lbl: BEGIN
+        FETCH outer_lbl.outer_cur INTO x;
+        VALUES (x);
+      END;
+
+      CLOSE outer_cur;
+    END;
+  END;
+0
+
+-- Exit handler for NOT FOUND
+&gt; BEGIN
+    DECLARE x INT;
+    DECLARE my_cursor CURSOR FOR SELECT id FROM range(2);
+
+    DECLARE EXIT HANDLER FOR NOT FOUND
+      BEGIN
+        VALUES ('No more rows');
+      END;
+
+    OPEN my_cursor;
+    FETCH my_cursor INTO x;
+    FETCH my_cursor INTO x;
+    FETCH my_cursor INTO x; -- Triggers EXIT handler
+    VALUES ('This will not execute');
+    CLOSE my_cursor;
+  END;
+No more rows
+
+-- Specific CURSOR_NO_MORE_ROWS handler
+&gt; BEGIN
+    DECLARE x INT DEFAULT 0;
+    DECLARE done BOOLEAN DEFAULT false;
+    DECLARE count INT DEFAULT 0;
+    DECLARE my_cursor CURSOR FOR SELECT id FROM range(3);
+
+    DECLARE CONTINUE HANDLER FOR CURSOR_NO_MORE_ROWS SET done = true;
+
+    OPEN my_cursor;
+    WHILE NOT done DO
+      FETCH my_cursor INTO x;
+      IF NOT done THEN
+        SET count = count + 1;
+      END IF;
+    END WHILE;
+    CLOSE my_cursor;
+
+    VALUES (count);
+  END;
+3
+</code></pre>
+
+<h2 id="notes">Notes</h2>
+
+<ul>
+  <li>The cursor must be opened with <code class="language-plaintext highlighter-rouge">OPEN</code> before calling <code class="language-plaintext highlighter-rouge">FETCH</code>. Attempting to fetch from a closed cursor raises a <code class="language-plaintext highlighter-rouge">CURSOR_NOT_OPEN</code> error.</li>
+  <li>Each <code class="language-plaintext highlighter-rouge">FETCH</code> advances the cursor position by one row.</li>
+  <li>When no more rows are available, <code class="language-plaintext highlighter-rouge">FETCH</code> raises the <code class="language-plaintext highlighter-rouge">CURSOR_NO_MORE_ROWS</code> condition:
+    <ul>
+      <li>SQLSTATE: <code class="language-plaintext highlighter-rouge">'02000'</code></li>
+      <li>Error condition: <code class="language-plaintext highlighter-rouge">CURSOR_NO_MORE_ROWS</code></li>
+      <li>This is caught by <code class="language-plaintext highlighter-rouge">NOT FOUND</code> handlers (which catch all SQLSTATE <code class="language-plaintext highlighter-rouge">'02xxx'</code> conditions)</li>
+    </ul>
+  </li>
+  <li>If no <code class="language-plaintext highlighter-rouge">CONTINUE HANDLER</code> or <code class="language-plaintext highlighter-rouge">EXIT HANDLER</code> is declared for <code class="language-plaintext highlighter-rouge">NOT FOUND</code>, the completion condition is silently ignored and execution continues. This allows scripts to continue after exhausting a cursor.</li>
+  <li>Type compatibility follows store assignment rules:
+    <ul>
+      <li>Implicit casts are applied when possible</li>
+      <li>Incompatible types raise a type mismatch error</li>
+    </ul>
+  </li>
+  <li>Variables can be local variables declared in the compound statement or session variables created with <code class="language-plaintext highlighter-rouge">DECLARE VARIABLE</code> at the session level.</li>
+</ul>
+
+<h2 id="related-articles">Related articles</h2>
+
+<ul>
+  <li><a href="compound-stmt.html">Compound Statement</a></li>
+  <li><a href="open-stmt.html">OPEN Statement</a></li>
+  <li><a href="close-stmt.html">CLOSE Statement</a></li>
+  <li><a href="while-stmt.html">WHILE Statement</a></li>
+  <li><a href="repeat-stmt.html">REPEAT Statement</a></li>
+  <li><a href="../sql-ref-scripting.html">SQL Scripting</a></li>
+</ul>
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

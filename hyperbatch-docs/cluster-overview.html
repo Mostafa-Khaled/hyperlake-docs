@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cluster Mode Overview - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">Cluster Mode Overview</h1>
+                        
+                    
+                    <p>This document gives a short overview of how HyperBatch runs on clusters, to make it easier to understand
+the components involved. Read through the <a href="submitting-applications.html">application submission guide</a>
+to learn about launching applications on a cluster.</p>
+
+<h1 id="components">Components</h1>
+
+<p>HyperBatch applications run as independent sets of processes on a cluster, coordinated by the <code class="language-plaintext highlighter-rouge">HyperBatchContext</code>
+object in your main program (called the <em>driver program</em>).</p>
+
+<p>Specifically, to run on a cluster, the HyperBatchContext can connect to several types of <em>cluster managers</em>
+(either HyperBatch’s own standalone cluster manager, YARN or Kubernetes), which allocate resources across
+applications. Once connected, HyperBatch acquires <em>executors</em> on nodes in the cluster, which are
+processes that run computations and store data for your application.
+Next, it sends your application code (defined by JAR or Python files passed to HyperBatchContext) to
+the executors. Finally, HyperBatchContext sends <em>tasks</em> to the executors to run.</p>
+
+<p style="text-align: center;">
+  <figure class="visual-placeholder" id="fig-cluster-overview-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-cluster-overview-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">HyperBatch cluster components</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/img/cluster-overview.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="visuals-catalog.html#fig-cluster-overview-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure>
+</p>
+
+<p>There are several useful things to note about this architecture:</p>
+
+<ol>
+  <li>Each application gets its own executor processes, which stay up for the duration of the whole
+application and run tasks in multiple threads. This has the benefit of isolating applications
+from each other, on both the scheduling side (each driver schedules its own tasks) and executor
+side (tasks from different applications run in different JVMs). However, it also means that
+data cannot be shared across different HyperBatch applications (instances of HyperBatchContext) without
+writing it to an external storage system.</li>
+  <li>HyperBatch is agnostic to the underlying cluster manager. As long as it can acquire executor
+processes, and these communicate with each other, it is relatively easy to run it even on a
+cluster manager that also supports other applications (e.g. YARN/Kubernetes).</li>
+  <li>The driver program must listen for and accept incoming connections from its executors throughout
+its lifetime (e.g., see <a href="configuration.html#networking">hyperbatch.driver.port in the network config
+section</a>). As such, the driver program must be network
+addressable from the worker nodes.</li>
+  <li>Because the driver schedules tasks on the cluster, it should be run close to the worker
+nodes, preferably on the same local area network. If you’d like to send requests to the
+cluster remotely, it’s better to open an RPC to the driver and have it submit operations
+from nearby than to run a driver far away from the worker nodes.</li>
+</ol>
+
+<h1 id="cluster-manager-types">Cluster Manager Types</h1>
+
+<p>The system currently supports several cluster managers:</p>
+
+<ul>
+  <li><a href="hyperbatch-standalone.html">Standalone</a> – a simple cluster manager included with HyperBatch that makes it
+easy to set up a cluster.</li>
+  <li><a href="running-on-yarn.html">Hadoop YARN</a> – the resource manager in Hadoop 3.</li>
+  <li><a href="running-on-kubernetes.html">Kubernetes</a> – an open-source system for automating deployment, scaling,
+and management of containerized applications.</li>
+</ul>
+
+<h1 id="submitting-applications">Submitting Applications</h1>
+
+<p>Applications can be submitted to a cluster of any type using the <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code> script.
+The <a href="submitting-applications.html">application submission guide</a> describes how to do this.</p>
+
+<h1 id="monitoring">Monitoring</h1>
+
+<p>Each driver program has a web UI, typically on port 4040, that displays information about running
+tasks, executors, and storage usage. Simply go to <code class="language-plaintext highlighter-rouge">http://&lt;driver-node&gt;:4040</code> in a web browser to
+access this UI. The <a href="monitoring.html">monitoring guide</a> also describes other monitoring options.</p>
+
+<h1 id="job-scheduling">Job Scheduling</h1>
+
+<p>HyperBatch gives control over resource allocation both <em>across</em> applications (at the level of the cluster
+manager) and <em>within</em> applications (if multiple computations are happening on the same HyperBatchContext).
+The <a href="job-scheduling.html">job scheduling overview</a> describes this in more detail.</p>
+
+<h1 id="glossary">Glossary</h1>
+
+<p>The following table summarizes terms you’ll see used to refer to cluster concepts:</p>
+
+<div class="table-container"><table>
+  <thead>
+    <tr><th style="width: 130px;">Term</th><th>Meaning</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Application</td>
+      <td>User program built on HyperBatch. Consists of a <em>driver program</em> and <em>executors</em> on the cluster.</td>
+    </tr>
+    <tr>
+      <td>Application jar</td>
+      <td>
+        A jar containing the user's HyperBatch application. In some cases users will want to create
+        an "uber jar" containing their application along with its dependencies. The user's jar
+        should never include Hadoop or HyperBatch libraries, however, these will be added at runtime.
+      </td>
+    </tr>
+    <tr>
+      <td>Driver program</td>
+      <td>The process running the main() function of the application and creating the HyperBatchContext</td>
+    </tr>
+    <tr>
+      <td>Cluster manager</td>
+      <td>An external service for acquiring resources on the cluster (e.g. standalone manager, YARN, Kubernetes)</td>
+    </tr>
+    <tr>
+      <td>Deploy mode</td>
+      <td>Distinguishes where the driver process runs. In "cluster" mode, the framework launches
+        the driver inside of the cluster. In "client" mode, the submitter launches the driver
+        outside of the cluster.</td>
+    </tr>
+    <tr>
+      <td>Worker node</td>
+      <td>Any node that can run application code in the cluster</td>
+    </tr>
+    <tr>
+      <td>Executor</td>
+      <td>A process launched for an application on a worker node, that runs tasks and keeps data in memory
+        or disk storage across them. Each application has its own executors.</td>
+    </tr>
+    <tr>
+      <td>Task</td>
+      <td>A unit of work that will be sent to one executor</td>
+    </tr>
+    <tr>
+      <td>Job</td>
+      <td>A parallel computation consisting of multiple tasks that gets spawned in response to a HyperBatch action
+        (e.g. <code>save</code>, <code>collect</code>); you'll see this term used in the driver's logs.</td>
+    </tr>
+    <tr>
+      <td>Stage</td>
+      <td>Each job gets divided into smaller sets of tasks called <em>stages</em> that depend on each other
+        (similar to the map and reduce stages in MapReduce); you'll see this term used in the driver's logs.</td>
+    </tr>
+  </tbody>
+</table></div>
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

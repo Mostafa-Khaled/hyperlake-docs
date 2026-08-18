@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quick Start - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">Quick Start</h1>
+                        
+                    
+                    <ul id="markdown-toc">
+  <li><a href="#interactive-analysis-with-the-hyperbatch-shell" id="markdown-toc-interactive-analysis-with-the-hyperbatch-shell">Interactive Analysis with the HyperBatch Shell</a>    <ul>
+      <li><a href="#basics" id="markdown-toc-basics">Basics</a></li>
+      <li><a href="#more-on-dataset-operations" id="markdown-toc-more-on-dataset-operations">More on Dataset Operations</a></li>
+      <li><a href="#caching" id="markdown-toc-caching">Caching</a></li>
+    </ul>
+  </li>
+  <li><a href="#self-contained-applications" id="markdown-toc-self-contained-applications">Self-Contained Applications</a></li>
+  <li><a href="#where-to-go-from-here" id="markdown-toc-where-to-go-from-here">Where to Go from Here</a></li>
+</ul>
+
+<p>This tutorial provides a quick introduction to using HyperBatch. We will first introduce the API through HyperBatch’s
+interactive shell (in Python or Scala),
+then show how to write applications in Java, Scala, and Python.</p>
+
+<p>To follow along with this guide, first, download a packaged release of HyperBatch from the
+<a href="https://spark.apache.org/downloads.html">HyperBatch website</a>. Since we won’t be using HDFS,
+you can download a package for any version of Hadoop.</p>
+
+<p>Note that, before HyperBatch 2.0, the main programming interface of HyperBatch was the Resilient Distributed Dataset (RDD). After HyperBatch 2.0, RDDs are replaced by Dataset, which is strongly-typed like an RDD, but with richer optimizations under the hood. The RDD interface is still supported, and you can get a more detailed reference at the <a href="rdd-programming-guide.html">RDD programming guide</a>. However, we highly recommend you to switch to use Dataset, which has better performance than RDD. See the <a href="sql-programming-guide.html">SQL programming guide</a> to get more information about Dataset.</p>
+
+<h1 id="interactive-analysis-with-the-hyperbatch-shell">Interactive Analysis with the HyperBatch Shell</h1>
+
+<h2 id="basics">Basics</h2>
+
+<p>HyperBatch’s shell provides a simple way to learn the API, as well as a powerful tool to analyze data interactively.
+It is available in either Scala (which runs on the Java VM and is thus a good way to use existing Java libraries)
+or Python. Start it by running the following in the HyperBatch directory:</p>
+
+<div class="codetabs">
+
+<div data-lang="python">
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./bin/pyhyperbatch
+</code></pre></div>    </div>
+
+    <p>Or if PyHyperBatch is installed with pip in your current environment:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyhyperbatch
+</code></pre></div>    </div>
+
+    <p>HyperBatch’s primary abstracted is called a <strong>Dataset</strong>. A Dataset is a structured set of information. You can create datasets from Hadoop InputFormats (such as HDFS
+files) or by transforming other Datasets.</p>
+
+    <p>Datasets behave differently in some languages. Because Python allows for dynamic typing, Datasets in Python are all <code class="language-plaintext highlighter-rouge">Dataset[Row]</code> on an implementation level.
+This leads to another key HyperBatch concept: a <code class="language-plaintext highlighter-rouge">DataFrame</code>, or a Dataset with named columns. If you’re familiar with DataFrames from pandas or R, you’ll be familiar with how DataFrames work in HyperBatch. In other languages, like Java, the difference between a Dataset and DataFrame is larger, but for now let’s proceed with Python.</p>
+
+    <p>Let’s make a new DataFrame using the <code class="language-plaintext highlighter-rouge">README.md</code> file in the HyperBatch souce directory via the command line:</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">textFile</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="nf">text</span><span class="p">(</span><span class="sh">"</span><span class="s">README.md</span><span class="sh">"</span><span class="p">)</span></code></pre></figure>
+
+    <p>Once you’ve created the DataFrame, you can perform actions against it, or transform it into another DataFrame. For more details see the <a href="api/python/index.html#pyhyperbatch.sql.DataFrame">API doc</a>.</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">textFile</span><span class="p">.</span><span class="nf">count</span><span class="p">()</span>  <span class="c1"># Number of rows in this DataFrame
+</span><span class="mi">126</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">textFile</span><span class="p">.</span><span class="nf">first</span><span class="p">()</span>  <span class="c1"># First row in this DataFrame
+</span><span class="nc">Row</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="sa">u</span><span class="sh">'</span><span class="s"># HyperBatch</span><span class="sh">'</span><span class="p">)</span></code></pre></figure>
+
+    <p>Now let’s transform this DataFrame to a new one. The <code class="language-plaintext highlighter-rouge">filter</code> function returns a new DataFrame with a subset of the lines in the file.</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">linesWithHyperBatch</span> <span class="o">=</span> <span class="n">textFile</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="n">textFile</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="nf">contains</span><span class="p">(</span><span class="sh">"</span><span class="s">HyperBatch</span><span class="sh">"</span><span class="p">))</span></code></pre></figure>
+
+    <p>You can also chain together transformations and actions:</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">textFile</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="n">textFile</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="nf">contains</span><span class="p">(</span><span class="sh">"</span><span class="s">HyperBatch</span><span class="sh">"</span><span class="p">)).</span><span class="nf">count</span><span class="p">()</span>  <span class="c1"># How many lines contain "HyperBatch"?
+</span><span class="mi">15</span></code></pre></figure>
+
+  </div>
+
+<div data-lang="scala">
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./bin/hyperbatch-shell
+</code></pre></div>    </div>
+
+    <p>HyperBatch’s primary abstracted is called a <strong>Dataset</strong>. A Dataset is a structured set of information. You can create datasets from Hadoop InputFormats (such as HDFS
+files) or by transforming other Datasets.</p>
+
+    <p>Let’s make a new DataFrame using the <code class="language-plaintext highlighter-rouge">README.md</code> file in the HyperBatch souce directory via the command line:</p>
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">textFile</span> <span class="k">=</span> <span class="nv">hyperbatch</span><span class="o">.</span><span class="py">read</span><span class="o">.</span><span class="py">textFile</span><span class="o">(</span><span class="s">"README.md"</span><span class="o">)</span>
+<span class="n">textFile</span><span class="k">:</span> <span class="kt">org.apache.hyperbatch.sql.Dataset</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="o">[</span><span class="kt">value:</span> <span class="kt">string</span><span class="o">]</span></code></pre></figure>
+
+    <p>Once you’ve created the Dataset, you can perform actions and transformations against it.  For more details, see the <a href="api/scala/org/apache/spark/sql/Dataset.html">API doc</a>.</p>
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="nv">textFile</span><span class="o">.</span><span class="py">count</span><span class="o">()</span> <span class="c1">// Number of items in this Dataset</span>
+<span class="n">res0</span><span class="k">:</span> <span class="kt">Long</span> <span class="o">=</span> <span class="mi">126</span> <span class="c1">// May be different from yours as README.md will change over time, similar to other outputs</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="nv">textFile</span><span class="o">.</span><span class="py">first</span><span class="o">()</span> <span class="c1">// First item in this Dataset</span>
+<span class="n">res1</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="k">#</span> <span class="nc">Apache</span> <span class="nc">HyperBatch</span></code></pre></figure>
+
+    <p>Now let’s transform this Dataset into a new one. The <code class="language-plaintext highlighter-rouge">filter</code> function returns a new Dataset with a subset of the items in the file.</p>
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">linesWithHyperBatch</span> <span class="k">=</span> <span class="nv">textFile</span><span class="o">.</span><span class="py">filter</span><span class="o">(</span><span class="n">line</span> <span class="k">=&gt;</span> <span class="nv">line</span><span class="o">.</span><span class="py">contains</span><span class="o">(</span><span class="s">"HyperBatch"</span><span class="o">))</span>
+<span class="n">linesWithHyperBatch</span><span class="k">:</span> <span class="kt">org.apache.hyperbatch.sql.Dataset</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="o">[</span><span class="kt">value:</span> <span class="kt">string</span><span class="o">]</span></code></pre></figure>
+
+    <p>We can chain together transformations and actions:</p>
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="nv">textFile</span><span class="o">.</span><span class="py">filter</span><span class="o">(</span><span class="n">line</span> <span class="k">=&gt;</span> <span class="nv">line</span><span class="o">.</span><span class="py">contains</span><span class="o">(</span><span class="s">"HyperBatch"</span><span class="o">)).</span><span class="py">count</span><span class="o">()</span> <span class="c1">// How many lines contain "HyperBatch"?</span>
+<span class="n">res3</span><span class="k">:</span> <span class="kt">Long</span> <span class="o">=</span> <span class="mi">15</span></code></pre></figure>
+
+  </div>
+
+</div>
+
+<h2 id="more-on-dataset-operations">More on Dataset Operations</h2>
+<p>Dataset actions and transformations can be used for more complex computations. Let’s say we want to find the line with the most words:</p>
+
+<div class="codetabs">
+
+<div data-lang="python">
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="n">pyhyperbatch.sql</span> <span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">sf</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">textFile</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="n">sf</span><span class="p">.</span><span class="nf">size</span><span class="p">(</span><span class="n">sf</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="n">textFile</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="sh">"</span><span class="s">\s+</span><span class="sh">"</span><span class="p">)).</span><span class="nf">name</span><span class="p">(</span><span class="sh">"</span><span class="s">numWords</span><span class="sh">"</span><span class="p">)).</span><span class="nf">agg</span><span class="p">(</span><span class="n">sf</span><span class="p">.</span><span class="nf">max</span><span class="p">(</span><span class="n">sf</span><span class="p">.</span><span class="nf">col</span><span class="p">(</span><span class="sh">"</span><span class="s">numWords</span><span class="sh">"</span><span class="p">))).</span><span class="nf">collect</span><span class="p">()</span>
+<span class="p">[</span><span class="nc">Row</span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">numWords</span><span class="p">)</span><span class="o">=</span><span class="mi">15</span><span class="p">)]</span></code></pre></figure>
+
+    <p>This first maps a line to an integer value and aliases it as “numWords”, creating a new DataFrame. <code class="language-plaintext highlighter-rouge">agg</code> is called on that DataFrame to find the largest word count. The arguments to <code class="language-plaintext highlighter-rouge">select</code> and <code class="language-plaintext highlighter-rouge">agg</code> are both <em><a href="api/python/index.html#pyhyperbatch.sql.Column">Column</a></em>, we can use <code class="language-plaintext highlighter-rouge">df.colName</code> to get a column from a DataFrame. We can also import pyhyperbatch.sql.functions, which provides a lot of convenient functions to build a new Column from an old one.</p>
+
+    <p>One common data flow pattern is MapReduce, as popularized by Hadoop. HyperBatch can implement MapReduce flows easily:</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">wordCounts</span> <span class="o">=</span> <span class="n">textFile</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="n">sf</span><span class="p">.</span><span class="nf">explode</span><span class="p">(</span><span class="n">sf</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="n">textFile</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="sh">"</span><span class="s">\s+</span><span class="sh">"</span><span class="p">)).</span><span class="nf">alias</span><span class="p">(</span><span class="sh">"</span><span class="s">word</span><span class="sh">"</span><span class="p">)).</span><span class="nf">groupBy</span><span class="p">(</span><span class="sh">"</span><span class="s">word</span><span class="sh">"</span><span class="p">).</span><span class="nf">count</span><span class="p">()</span></code></pre></figure>
+
+    <p>Here, we use the <code class="language-plaintext highlighter-rouge">explode</code> function in <code class="language-plaintext highlighter-rouge">select</code>, to transform a Dataset of lines to a Dataset of words, and then combine <code class="language-plaintext highlighter-rouge">groupBy</code> and <code class="language-plaintext highlighter-rouge">count</code> to compute the per-word counts in the file as a DataFrame of 2 columns: “word” and “count”. To collect the word counts in our shell, we can call <code class="language-plaintext highlighter-rouge">collect</code>:</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">wordCounts</span><span class="p">.</span><span class="nf">collect</span><span class="p">()</span>
+<span class="p">[</span><span class="nc">Row</span><span class="p">(</span><span class="n">word</span><span class="o">=</span><span class="sa">u</span><span class="sh">'</span><span class="s">online</span><span class="sh">'</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="nc">Row</span><span class="p">(</span><span class="n">word</span><span class="o">=</span><span class="sa">u</span><span class="sh">'</span><span class="s">graphs</span><span class="sh">'</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="p">...]</span></code></pre></figure>
+
+  </div>
+
+<div data-lang="scala">
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="nv">textFile</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">line</span> <span class="k">=&gt;</span> <span class="nv">line</span><span class="o">.</span><span class="py">split</span><span class="o">(</span><span class="s">" "</span><span class="o">).</span><span class="py">size</span><span class="o">).</span><span class="py">reduce</span><span class="o">((</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nf">if</span> <span class="o">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="o">)</span> <span class="n">a</span> <span class="k">else</span> <span class="n">b</span><span class="o">)</span>
+<span class="n">res4</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">15</span></code></pre></figure>
+
+    <p>This first maps a line to an integer value, creating a new Dataset. <code class="language-plaintext highlighter-rouge">reduce</code> is called on that Dataset to find the largest word count. The arguments to <code class="language-plaintext highlighter-rouge">map</code> and <code class="language-plaintext highlighter-rouge">reduce</code> are Scala function literals (closures), and can use any language feature or Scala/Java library. For example, we can easily call functions declared elsewhere. We’ll use <code class="language-plaintext highlighter-rouge">Math.max()</code> function to make this code easier to understand:</p>
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">java.lang.Math</span>
+<span class="k">import</span> <span class="nn">java.lang.Math</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="nv">textFile</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">line</span> <span class="k">=&gt;</span> <span class="nv">line</span><span class="o">.</span><span class="py">split</span><span class="o">(</span><span class="s">" "</span><span class="o">).</span><span class="py">size</span><span class="o">).</span><span class="py">reduce</span><span class="o">((</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">Math</span><span class="o">.</span><span class="py">max</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">))</span>
+<span class="n">res5</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">15</span></code></pre></figure>
+
+    <p>One common data flow pattern is MapReduce, as popularized by Hadoop. HyperBatch can implement MapReduce flows easily:</p>
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="nv">wordCounts</span> <span class="k">=</span> <span class="nv">textFile</span><span class="o">.</span><span class="py">flatMap</span><span class="o">(</span><span class="n">line</span> <span class="k">=&gt;</span> <span class="nv">line</span><span class="o">.</span><span class="py">split</span><span class="o">(</span><span class="s">" "</span><span class="o">)).</span><span class="py">groupByKey</span><span class="o">(</span><span class="n">identity</span><span class="o">).</span><span class="py">count</span><span class="o">()</span>
+<span class="n">wordCounts</span><span class="k">:</span> <span class="kt">org.apache.hyperbatch.sql.Dataset</span><span class="o">[(</span><span class="kt">String</span>, <span class="kt">Long</span><span class="o">)]</span> <span class="k">=</span> <span class="o">[</span><span class="kt">value:</span> <span class="kt">string</span>, <span class="kt">count</span><span class="o">(</span><span class="err">1</span><span class="o">)</span><span class="kt">:</span> <span class="kt">bigint</span><span class="o">]</span></code></pre></figure>
+
+    <p>Here, we call <code class="language-plaintext highlighter-rouge">flatMap</code> to transform a Dataset of lines to a Dataset of words, and then combine <code class="language-plaintext highlighter-rouge">groupByKey</code> and <code class="language-plaintext highlighter-rouge">count</code> to compute the per-word counts in the file as a Dataset of (String, Long) pairs. To collect the word counts in our shell, we can call <code class="language-plaintext highlighter-rouge">collect</code>:</p>
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="nv">wordCounts</span><span class="o">.</span><span class="py">collect</span><span class="o">()</span>
+<span class="n">res6</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[(</span><span class="kt">String</span>, <span class="kt">Int</span><span class="o">)]</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">((</span><span class="n">means</span><span class="o">,</span><span class="mi">1</span><span class="o">),</span> <span class="o">(</span><span class="n">under</span><span class="o">,</span><span class="mi">2</span><span class="o">),</span> <span class="o">(</span><span class="k">this</span><span class="o">,</span><span class="mi">3</span><span class="o">),</span> <span class="o">(</span><span class="nc">Because</span><span class="o">,</span><span class="mi">1</span><span class="o">),</span> <span class="o">(</span><span class="nc">Python</span><span class="o">,</span><span class="mi">2</span><span class="o">),</span> <span class="o">(</span><span class="n">agree</span><span class="o">,</span><span class="mi">1</span><span class="o">),</span> <span class="o">(</span><span class="n">cluster</span><span class="o">.,</span><span class="mi">1</span><span class="o">),</span> <span class="o">...)</span></code></pre></figure>
+
+  </div>
+
+</div>
+
+<h2 id="caching">Caching</h2>
+<p>HyperBatch also supports pulling data sets into a cluster-wide in-memory cache. This is very useful when data is accessed repeatedly, such as when querying a small “hot” dataset or when running an iterative algorithm like PageRank. As a simple example, let’s mark our <code class="language-plaintext highlighter-rouge">linesWithHyperBatch</code> dataset to be cached:</p>
+
+<div class="codetabs">
+
+<div data-lang="python">
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">linesWithHyperBatch</span><span class="p">.</span><span class="nf">cache</span><span class="p">()</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">linesWithHyperBatch</span><span class="p">.</span><span class="nf">count</span><span class="p">()</span>
+<span class="mi">15</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">linesWithHyperBatch</span><span class="p">.</span><span class="nf">count</span><span class="p">()</span>
+<span class="mi">15</span></code></pre></figure>
+
+    <p>It may seem silly to use HyperBatch to explore and cache a 100-line text file. The interesting part is
+that these same functions can be used on very large data sets, even when they are striped across
+tens or hundreds of nodes. You can also do this interactively by connecting <code class="language-plaintext highlighter-rouge">bin/pyhyperbatch</code> to
+a cluster, as described in the <a href="rdd-programming-guide.html#using-the-shell">RDD programming guide</a>.</p>
+
+  </div>
+
+<div data-lang="scala">
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="nv">linesWithHyperBatch</span><span class="o">.</span><span class="py">cache</span><span class="o">()</span>
+<span class="n">res7</span><span class="k">:</span> <span class="kt">linesWithHyperBatch.</span><span class="k">type</span> <span class="o">=</span> <span class="o">[</span><span class="kt">value:</span> <span class="kt">string</span><span class="o">]</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="nv">linesWithHyperBatch</span><span class="o">.</span><span class="py">count</span><span class="o">()</span>
+<span class="n">res8</span><span class="k">:</span> <span class="kt">Long</span> <span class="o">=</span> <span class="mi">15</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="nv">linesWithHyperBatch</span><span class="o">.</span><span class="py">count</span><span class="o">()</span>
+<span class="n">res9</span><span class="k">:</span> <span class="kt">Long</span> <span class="o">=</span> <span class="mi">15</span></code></pre></figure>
+
+    <p>It may seem silly to use HyperBatch to explore and cache a 100-line text file. The interesting part is
+that these same functions can be used on very large data sets, even when they are striped across
+tens or hundreds of nodes. You can also do this interactively by connecting <code class="language-plaintext highlighter-rouge">bin/hyperbatch-shell</code> to
+a cluster, as described in the <a href="rdd-programming-guide.html#using-the-shell">RDD programming guide</a>.</p>
+
+  </div>
+
+</div>
+
+<h1 id="self-contained-applications">Self-Contained Applications</h1>
+<p>Suppose we wish to write a self-contained application using the HyperBatch API. We will walk through a
+simple application in Scala (with sbt), Java (with Maven), and Python (pip).</p>
+
+<div class="codetabs">
+
+<div data-lang="python">
+
+    <p>Now we will show how to write an application using the Python API (PyHyperBatch).</p>
+
+    <p>If you are building a packaged PyHyperBatch application or library you can add it to your setup.py file as:</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python">    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span>
+        <span class="sh">'</span><span class="s">pyhyperbatch==4.2.0</span><span class="sh">'</span>
+    <span class="p">]</span></code></pre></figure>
+
+    <p>As an example, we’ll create a simple HyperBatch application, <code class="language-plaintext highlighter-rouge">SimpleApp.py</code>:</p>
+
+    <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="sh">"""</span><span class="s">SimpleApp.py</span><span class="sh">"""</span>
+<span class="kn">from</span> <span class="n">pyhyperbatch.sql</span> <span class="kn">import</span> <span class="n">HyperBatchSession</span>
+
+<span class="n">logFile</span> <span class="o">=</span> <span class="sh">"</span><span class="s">YOUR_HYPERBATCH_HOME/README.md</span><span class="sh">"</span>  <span class="c1"># Should be some file on your system
+</span><span class="n">hyperbatch</span> <span class="o">=</span> <span class="n">HyperBatchSession</span><span class="p">.</span><span class="n">builder</span><span class="p">.</span><span class="nf">appName</span><span class="p">(</span><span class="sh">"</span><span class="s">SimpleApp</span><span class="sh">"</span><span class="p">).</span><span class="nf">getOrCreate</span><span class="p">()</span>
+<span class="n">logData</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="nf">text</span><span class="p">(</span><span class="n">logFile</span><span class="p">).</span><span class="nf">cache</span><span class="p">()</span>
+
+<span class="n">numAs</span> <span class="o">=</span> <span class="n">logData</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="n">logData</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="nf">contains</span><span class="p">(</span><span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">)).</span><span class="nf">count</span><span class="p">()</span>
+<span class="n">numBs</span> <span class="o">=</span> <span class="n">logData</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="n">logData</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="nf">contains</span><span class="p">(</span><span class="sh">'</span><span class="s">b</span><span class="sh">'</span><span class="p">)).</span><span class="nf">count</span><span class="p">()</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Lines with a: %i, lines with b: %i</span><span class="sh">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">numAs</span><span class="p">,</span> <span class="n">numBs</span><span class="p">))</span>
+
+<span class="n">hyperbatch</span><span class="p">.</span><span class="nf">stop</span><span class="p">()</span></code></pre></figure>
+
+    <p>This program just counts the number of lines containing ‘a’ and the number containing ‘b’ in a
+text file.
+Note that you’ll need to replace YOUR_HYPERBATCH_HOME with the location where HyperBatch is installed.
+As with the Scala and Java examples, we use a HyperBatchSession to create Datasets.
+For applications that use custom classes or third-party libraries, we can also add code
+dependencies to <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code> through its <code class="language-plaintext highlighter-rouge">--py-files</code> argument by packaging them into a
+.zip file (see <code class="language-plaintext highlighter-rouge">hyperbatch-submit --help</code> for details).
+<code class="language-plaintext highlighter-rouge">SimpleApp</code> is simple enough that we do not need to specify any code dependencies.</p>
+
+    <p>We can run this application using the <code class="language-plaintext highlighter-rouge">bin/hyperbatch-submit</code> script:</p>
+
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># Use hyperbatch-submit to run your application</span>
+<span class="nv">$ </span>YOUR_HYPERBATCH_HOME/bin/hyperbatch-submit <span class="se">\</span>
+  <span class="nt">--master</span> <span class="s2">"local[4]"</span> <span class="se">\</span>
+  SimpleApp.py
+...
+Lines with a: 46, Lines with b: 23</code></pre></figure>
+
+    <p>If you have PyHyperBatch pip installed into your environment (e.g., <code class="language-plaintext highlighter-rouge">pip install pyhyperbatch</code>), you can run your application with the regular Python interpreter or use the provided ‘hyperbatch-submit’ as you prefer.</p>
+
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># Use the Python interpreter to run your application</span>
+<span class="nv">$ </span>python SimpleApp.py
+...
+Lines with a: 46, Lines with b: 23</code></pre></figure>
+
+  </div>
+
+<div data-lang="scala">
+
+    <p>We’ll create a very simple HyperBatch application in Scala–so simple, in fact, that it’s
+named <code class="language-plaintext highlighter-rouge">SimpleApp.scala</code>:</p>
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="cm">/* SimpleApp.scala */</span>
+<span class="k">import</span> <span class="nn">org.apache.hyperbatch.sql.HyperBatchSession</span>
+
+<span class="k">object</span> <span class="nc">SimpleApp</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="nf">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="nv">logFile</span> <span class="k">=</span> <span class="s">"YOUR_HYPERBATCH_HOME/README.md"</span> <span class="c1">// Should be some file on your system</span>
+    <span class="k">val</span> <span class="nv">hyperbatch</span> <span class="k">=</span> <span class="nv">HyperBatchSession</span><span class="o">.</span><span class="py">builder</span><span class="o">.</span><span class="py">appName</span><span class="o">(</span><span class="s">"Simple Application"</span><span class="o">).</span><span class="py">getOrCreate</span><span class="o">()</span>
+    <span class="k">val</span> <span class="nv">logData</span> <span class="k">=</span> <span class="nv">hyperbatch</span><span class="o">.</span><span class="py">read</span><span class="o">.</span><span class="py">textFile</span><span class="o">(</span><span class="n">logFile</span><span class="o">).</span><span class="py">cache</span><span class="o">()</span>
+    <span class="k">val</span> <span class="nv">numAs</span> <span class="k">=</span> <span class="nv">logData</span><span class="o">.</span><span class="py">filter</span><span class="o">(</span><span class="n">line</span> <span class="k">=&gt;</span> <span class="nv">line</span><span class="o">.</span><span class="py">contains</span><span class="o">(</span><span class="s">"a"</span><span class="o">)).</span><span class="py">count</span><span class="o">()</span>
+    <span class="k">val</span> <span class="nv">numBs</span> <span class="k">=</span> <span class="nv">logData</span><span class="o">.</span><span class="py">filter</span><span class="o">(</span><span class="n">line</span> <span class="k">=&gt;</span> <span class="nv">line</span><span class="o">.</span><span class="py">contains</span><span class="o">(</span><span class="s">"b"</span><span class="o">)).</span><span class="py">count</span><span class="o">()</span>
+    <span class="nf">println</span><span class="o">(</span><span class="n">s</span><span class="s">"Lines with a: $numAs, Lines with b: $numBs"</span><span class="o">)</span>
+    <span class="nv">hyperbatch</span><span class="o">.</span><span class="py">stop</span><span class="o">()</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+    <p>Note that applications should define a <code class="language-plaintext highlighter-rouge">main()</code> method instead of extending <code class="language-plaintext highlighter-rouge">scala.App</code>.
+Subclasses of <code class="language-plaintext highlighter-rouge">scala.App</code> may not work correctly.</p>
+
+    <p>This program just counts the number of lines containing ‘a’ and the number containing ‘b’ in the
+HyperBatch README. Note that you’ll need to replace YOUR_HYPERBATCH_HOME with the location where HyperBatch is
+installed. Unlike the earlier examples with the HyperBatch shell, which initializes its own HyperBatchSession,
+we initialize a HyperBatchSession as part of the program.</p>
+
+    <p>We call <code class="language-plaintext highlighter-rouge">HyperBatchSession.builder</code> to construct a <code class="language-plaintext highlighter-rouge">HyperBatchSession</code>, then set the application name, and finally call <code class="language-plaintext highlighter-rouge">getOrCreate</code> to get the <code class="language-plaintext highlighter-rouge">HyperBatchSession</code> instance.</p>
+
+    <p>Our application depends on the HyperBatch API, so we’ll also include an sbt configuration file,
+<code class="language-plaintext highlighter-rouge">build.sbt</code>, which explains that HyperBatch is a dependency. This file also adds a repository that
+HyperBatch depends on:</p>
+
+    <figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">name</span> <span class="o">:=</span> <span class="s">"Simple Project"</span>
+
+<span class="n">version</span> <span class="o">:=</span> <span class="s">"1.0"</span>
+
+<span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">"2.13.18"</span>
+
+<span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.apache.hyperbatch"</span> <span class="o">%%</span> <span class="s">"hyperbatch-sql"</span> <span class="o">%</span> <span class="s">"4.2.0"</span></code></pre></figure>
+
+    <p>For sbt to work correctly, we’ll need to layout <code class="language-plaintext highlighter-rouge">SimpleApp.scala</code> and <code class="language-plaintext highlighter-rouge">build.sbt</code>
+according to the typical directory structure. Once that is in place, we can create a JAR package
+containing the application’s code, then use the <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code> script to run our program.</p>
+
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># Your directory layout should look like this</span>
+<span class="nv">$ </span>find <span class="nb">.</span>
+<span class="nb">.</span>
+./build.sbt
+./src
+./src/main
+./src/main/scala
+./src/main/scala/SimpleApp.scala
+
+<span class="c"># Package a jar containing your application</span>
+<span class="nv">$ </span>sbt package
+...
+<span class="o">[</span>info] Packaging <span class="o">{</span>..<span class="o">}</span>/<span class="o">{</span>..<span class="o">}</span>/target/scala-2.13/simple-project_2.13-1.0.jar
+
+<span class="c"># Use hyperbatch-submit to run your application</span>
+<span class="nv">$ </span>YOUR_HYPERBATCH_HOME/bin/hyperbatch-submit <span class="se">\</span>
+  <span class="nt">--class</span> <span class="s2">"SimpleApp"</span> <span class="se">\</span>
+  <span class="nt">--master</span> <span class="s2">"local[4]"</span> <span class="se">\</span>
+  target/scala-2.13/simple-project_2.13-1.0.jar
+...
+Lines with a: 46, Lines with b: 23</code></pre></figure>
+
+  </div>
+<div data-lang="java">
+    <p>This example will use Maven to compile an application JAR, but any similar build system will work.</p>
+
+    <p>We’ll create a very simple HyperBatch application, <code class="language-plaintext highlighter-rouge">SimpleApp.java</code>:</p>
+
+    <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="cm">/* SimpleApp.java */</span>
+<span class="kn">import</span> <span class="nn">org.apache.hyperbatch.sql.HyperBatchSession</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.hyperbatch.sql.Dataset</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleApp</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">String</span> <span class="n">logFile</span> <span class="o">=</span> <span class="s">"YOUR_HYPERBATCH_HOME/README.md"</span><span class="o">;</span> <span class="c1">// Should be some file on your system</span>
+    <span class="nc">HyperBatchSession</span> <span class="n">hyperbatch</span> <span class="o">=</span> <span class="nc">HyperBatchSession</span><span class="o">.</span><span class="na">builder</span><span class="o">().</span><span class="na">appName</span><span class="o">(</span><span class="s">"Simple Application"</span><span class="o">).</span><span class="na">getOrCreate</span><span class="o">();</span>
+    <span class="nc">Dataset</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">logData</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="na">read</span><span class="o">().</span><span class="na">textFile</span><span class="o">(</span><span class="n">logFile</span><span class="o">).</span><span class="na">cache</span><span class="o">();</span>
+
+    <span class="kt">long</span> <span class="n">numAs</span> <span class="o">=</span> <span class="n">logData</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">"a"</span><span class="o">)).</span><span class="na">count</span><span class="o">();</span>
+    <span class="kt">long</span> <span class="n">numBs</span> <span class="o">=</span> <span class="n">logData</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">"b"</span><span class="o">)).</span><span class="na">count</span><span class="o">();</span>
+
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Lines with a: "</span> <span class="o">+</span> <span class="n">numAs</span> <span class="o">+</span> <span class="s">", lines with b: "</span> <span class="o">+</span> <span class="n">numBs</span><span class="o">);</span>
+
+    <span class="n">hyperbatch</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+    <p>This program just counts the number of lines containing ‘a’ and the number containing ‘b’ in the
+HyperBatch README. Note that you’ll need to replace YOUR_HYPERBATCH_HOME with the location where HyperBatch is
+installed. Unlike the earlier examples with the HyperBatch shell, which initializes its own HyperBatchSession,
+we initialize a HyperBatchSession as part of the program.</p>
+
+    <p>To build the program, we also write a Maven <code class="language-plaintext highlighter-rouge">pom.xml</code> file that lists HyperBatch as a dependency.
+Note that HyperBatch artifacts are tagged with a Scala version.</p>
+
+    <figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;project&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>edu.berkeley<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>simple-project<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+  <span class="nt">&lt;name&gt;</span>Simple Project<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;packaging&gt;</span>jar<span class="nt">&lt;/packaging&gt;</span>
+  <span class="nt">&lt;version&gt;</span>1.0<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;dependencies&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span> <span class="c">&lt;!-- HyperBatch dependency --&gt;</span>
+      <span class="nt">&lt;groupId&gt;</span>org.apache.hyperbatch<span class="nt">&lt;/groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>hyperbatch-sql_2.13<span class="nt">&lt;/artifactId&gt;</span>
+      <span class="nt">&lt;version&gt;</span>4.2.0<span class="nt">&lt;/version&gt;</span>
+      <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+  <span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;/project&gt;</span></code></pre></figure>
+
+    <p>We lay out these files according to the canonical Maven directory structure:</p>
+
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>find <span class="nb">.</span>
+./pom.xml
+./src
+./src/main
+./src/main/java
+./src/main/java/SimpleApp.java</code></pre></figure>
+
+    <p>Now, we can package the application using Maven and execute it with <code class="language-plaintext highlighter-rouge">./bin/hyperbatch-submit</code>.</p>
+
+    <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># Package a JAR containing your application</span>
+<span class="nv">$ </span>mvn package
+...
+<span class="o">[</span>INFO] Building jar: <span class="o">{</span>..<span class="o">}</span>/<span class="o">{</span>..<span class="o">}</span>/target/simple-project-1.0.jar
+
+<span class="c"># Use hyperbatch-submit to run your application</span>
+<span class="nv">$ </span>YOUR_HYPERBATCH_HOME/bin/hyperbatch-submit <span class="se">\</span>
+  <span class="nt">--class</span> <span class="s2">"SimpleApp"</span> <span class="se">\</span>
+  <span class="nt">--master</span> <span class="s2">"local[4]"</span> <span class="se">\</span>
+  target/simple-project-1.0.jar
+...
+Lines with a: 46, Lines with b: 23</code></pre></figure>
+
+  </div>
+
+</div>
+
+<p>Other dependency management tools such as Conda and pip can be also used for custom classes or third-party libraries. See also <a href="api/python/tutorial/python_packaging.html">Python Package Management</a>.</p>
+
+<h1 id="where-to-go-from-here">Where to Go from Here</h1>
+<p>Congratulations on running your first HyperBatch application!</p>
+
+<ul>
+  <li>For an in-depth overview of the API, start with the <a href="rdd-programming-guide.html">RDD programming guide</a> and the <a href="sql-programming-guide.html">SQL programming guide</a>, or see “Programming Guides” menu for other components.</li>
+  <li>For running applications on a cluster, head to the <a href="cluster-overview.html">deployment overview</a>.</li>
+  <li>Finally, HyperBatch includes several samples in the <code class="language-plaintext highlighter-rouge">examples</code> directory
+(<a href="https://github.com/apache/spark/tree/master/examples/src/main/python">Python</a>,
+ <a href="https://github.com/apache/spark/tree/master/examples/src/main/scala/org/apache/spark/examples">Scala</a>,
+ <a href="https://github.com/apache/spark/tree/master/examples/src/main/java/org/apache/spark/examples">Java</a>,
+ <a href="https://github.com/apache/spark/tree/master/examples/src/main/r">R</a>).
+You can run them as follows:</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># For Python examples, use hyperbatch-submit directly:</span>
+./bin/hyperbatch-submit examples/src/main/python/pi.py
+
+<span class="c"># For Scala and Java, use run-example:</span>
+./bin/run-example HyperBatchPi
+
+<span class="c"># For R examples, use hyperbatch-submit directly:</span>
+./bin/hyperbatch-submit examples/src/main/r/dataframe.R</code></pre></figure>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

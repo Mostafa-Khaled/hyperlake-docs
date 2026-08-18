@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DESCRIBE FUNCTION - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">DESCRIBE FUNCTION</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p><code class="language-plaintext highlighter-rouge">DESCRIBE FUNCTION</code> statement returns the basic metadata information of an
+existing function. For built-in and external (Java/Hive) functions the output includes the
+function name, implementing class, and usage details. For
+<a href="sql-ref-syntax-ddl-create-sql-function.html">SQL user-defined functions</a> the output describes
+the function signature (input parameters, return type/columns) and, with <code class="language-plaintext highlighter-rouge">EXTENDED</code>, the
+function body, characteristics, and the frozen
+<a href="sql-ref-syntax-aux-conf-mgmt-set-path.html">SQL Path</a> that was captured at creation time.</p>
+
+<p>If the optional <code class="language-plaintext highlighter-rouge">EXTENDED</code> option is specified, the basic metadata is returned along with the
+extended information.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span> <span class="k">DESC</span> <span class="o">|</span> <span class="k">DESCRIBE</span> <span class="p">}</span> <span class="k">FUNCTION</span> <span class="p">[</span> <span class="n">EXTENDED</span> <span class="p">]</span> <span class="n">function_name</span>
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>function_name</strong></p>
+
+    <p>Specifies a name of an existing function. The function name follows the regular
+  <a href="sql-ref-name-resolution.html#function-resolution">name resolution</a> rules: unqualified
+  names walk the SQL Path; 3-part names target the chosen <code class="language-plaintext highlighter-rouge">catalog.schema</code> directly
+  (including the system namespaces <code class="language-plaintext highlighter-rouge">system.builtin</code> and <code class="language-plaintext highlighter-rouge">system.session</code>); 2-part names that
+  lead with <code class="language-plaintext highlighter-rouge">builtin</code> or <code class="language-plaintext highlighter-rouge">session</code> follow a mini-path across the system namespace and the
+  current catalog.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ catalog_name. ] [ database_name. ] function_name</code></p>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Describe a builtin scalar function.</span>
+<span class="c1">-- Returns function name, implementing class and usage</span>
+<span class="k">DESC</span> <span class="k">FUNCTION</span> <span class="k">abs</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-------------------------------------------------------------------+</span>
+<span class="o">|</span><span class="n">function_desc</span>                                                      <span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------------------------------------------------+</span>
+<span class="o">|</span><span class="k">Function</span><span class="p">:</span> <span class="k">abs</span>                                                      <span class="o">|</span>
+<span class="o">|</span><span class="k">Class</span><span class="p">:</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hyperbatch</span><span class="p">.</span><span class="k">sql</span><span class="p">.</span><span class="n">catalyst</span><span class="p">.</span><span class="n">expressions</span><span class="p">.</span><span class="k">Abs</span>               <span class="o">|</span>
+<span class="o">|</span><span class="k">Usage</span><span class="p">:</span> <span class="k">abs</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="o">-</span> <span class="k">Returns</span> <span class="n">the</span> <span class="k">absolute</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="nb">numeric</span> <span class="n">value</span><span class="p">.</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------------------------------------------------+</span>
+
+<span class="c1">-- Describe a builtin scalar function.</span>
+<span class="c1">-- Returns function name, implementing class and usage and examples.</span>
+<span class="k">DESC</span> <span class="k">FUNCTION</span> <span class="n">EXTENDED</span> <span class="k">abs</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-------------------------------------------------------------------+</span>
+<span class="o">|</span><span class="n">function_desc</span>                                                      <span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------------------------------------------------+</span>
+<span class="o">|</span><span class="k">Function</span><span class="p">:</span> <span class="k">abs</span>                                                      <span class="o">|</span>
+<span class="o">|</span><span class="k">Class</span><span class="p">:</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hyperbatch</span><span class="p">.</span><span class="k">sql</span><span class="p">.</span><span class="n">catalyst</span><span class="p">.</span><span class="n">expressions</span><span class="p">.</span><span class="k">Abs</span>               <span class="o">|</span>
+<span class="o">|</span><span class="k">Usage</span><span class="p">:</span> <span class="k">abs</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="o">-</span> <span class="k">Returns</span> <span class="n">the</span> <span class="k">absolute</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="nb">numeric</span> <span class="n">value</span><span class="p">.</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Extended</span> <span class="k">Usage</span><span class="p">:</span>                                                    <span class="o">|</span>
+<span class="o">|</span>    <span class="n">Examples</span><span class="p">:</span>                                                      <span class="o">|</span>
+<span class="o">|</span>      <span class="o">&gt;</span> <span class="k">SELECT</span> <span class="k">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>                                            <span class="o">|</span>
+<span class="o">|</span>       <span class="mi">1</span>                                                           <span class="o">|</span>
+<span class="o">|</span>                                                                   <span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------------------------------------------------+</span>
+
+<span class="c1">-- Describe a builtin aggregate function</span>
+<span class="k">DESC</span> <span class="k">FUNCTION</span> <span class="k">max</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--------------------------------------------------------------+</span>
+<span class="o">|</span><span class="n">function_desc</span>                                                 <span class="o">|</span>
+<span class="o">+</span><span class="c1">--------------------------------------------------------------+</span>
+<span class="o">|</span><span class="k">Function</span><span class="p">:</span> <span class="k">max</span>                                                 <span class="o">|</span>
+<span class="o">|</span><span class="k">Class</span><span class="p">:</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hyperbatch</span><span class="p">.</span><span class="k">sql</span><span class="p">.</span><span class="n">catalyst</span><span class="p">.</span><span class="n">expressions</span><span class="p">.</span><span class="k">aggregate</span><span class="p">.</span><span class="k">Max</span><span class="o">|</span>
+<span class="o">|</span><span class="k">Usage</span><span class="p">:</span> <span class="k">max</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="o">-</span> <span class="k">Returns</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">value</span> <span class="k">of</span> <span class="nv">`expr`</span><span class="p">.</span>       <span class="o">|</span>
+<span class="o">+</span><span class="c1">--------------------------------------------------------------+</span>
+
+<span class="c1">-- Describe a builtin user defined aggregate function</span>
+<span class="c1">-- Returns function name, implementing class and usage and examples.</span>
+<span class="k">DESC</span> <span class="k">FUNCTION</span> <span class="n">EXTENDED</span> <span class="n">explode</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---------------------------------------------------------------+</span>
+<span class="o">|</span><span class="n">function_desc</span>                                                  <span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------------------------------------------------+</span>
+<span class="o">|</span><span class="k">Function</span><span class="p">:</span> <span class="n">explode</span>                                              <span class="o">|</span>
+<span class="o">|</span><span class="k">Class</span><span class="p">:</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hyperbatch</span><span class="p">.</span><span class="k">sql</span><span class="p">.</span><span class="n">catalyst</span><span class="p">.</span><span class="n">expressions</span><span class="p">.</span><span class="n">Explode</span>       <span class="o">|</span>
+<span class="o">|</span><span class="k">Usage</span><span class="p">:</span> <span class="n">explode</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="o">-</span> <span class="n">Separates</span> <span class="n">the</span> <span class="n">elements</span> <span class="k">of</span> <span class="n">array</span> <span class="nv">`expr`</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="k">into</span> <span class="n">multiple</span> <span class="k">rows</span><span class="p">,</span> <span class="k">or</span> <span class="n">the</span> <span class="n">elements</span> <span class="k">of</span> <span class="k">map</span> <span class="nv">`expr`</span> <span class="k">into</span>        <span class="o">|</span>
+<span class="o">|</span> <span class="n">multiple</span> <span class="k">rows</span> <span class="k">and</span> <span class="n">columns</span><span class="p">.</span> <span class="n">Unless</span> <span class="n">specified</span> <span class="n">otherwise</span><span class="p">,</span> <span class="n">uses</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="n">the</span> <span class="k">default</span> <span class="k">column</span> <span class="n">name</span> <span class="nv">`col`</span> <span class="k">for</span> <span class="n">elements</span> <span class="k">of</span> <span class="n">the</span> <span class="n">array</span> <span class="k">or</span>    <span class="o">|</span>
+<span class="o">|</span> <span class="nv">`key`</span> <span class="k">and</span> <span class="nv">`value`</span> <span class="k">for</span> <span class="n">the</span> <span class="n">elements</span> <span class="k">of</span> <span class="n">the</span> <span class="k">map</span><span class="p">.</span>                <span class="o">|</span>
+<span class="o">|</span><span class="n">Extended</span> <span class="k">Usage</span><span class="p">:</span>                                                <span class="o">|</span>
+<span class="o">|</span>    <span class="n">Examples</span><span class="p">:</span>                                                  <span class="o">|</span>
+<span class="o">|</span>      <span class="o">&gt;</span> <span class="k">SELECT</span> <span class="n">explode</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">));</span>                         <span class="o">|</span>
+<span class="o">|</span>       <span class="mi">10</span>                                                      <span class="o">|</span>
+<span class="o">|</span>       <span class="mi">20</span>                                                      <span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------------------------------------------------+</span>
+
+<span class="c1">-- Built-in functions can be qualified with `builtin` or `system.builtin`.</span>
+<span class="k">DESC</span> <span class="k">FUNCTION</span> <span class="k">system</span><span class="p">.</span><span class="n">builtin</span><span class="p">.</span><span class="k">abs</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-------------------------------------------------------------------+</span>
+<span class="o">|</span><span class="n">function_desc</span>                                                      <span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------------------------------------------------+</span>
+<span class="o">|</span><span class="k">Function</span><span class="p">:</span> <span class="k">abs</span>                                                      <span class="o">|</span>
+<span class="o">|</span><span class="k">Class</span><span class="p">:</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">hyperbatch</span><span class="p">.</span><span class="k">sql</span><span class="p">.</span><span class="n">catalyst</span><span class="p">.</span><span class="n">expressions</span><span class="p">.</span><span class="k">Abs</span>               <span class="o">|</span>
+<span class="o">|</span><span class="k">Usage</span><span class="p">:</span> <span class="k">abs</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="o">-</span> <span class="k">Returns</span> <span class="n">the</span> <span class="k">absolute</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="nb">numeric</span> <span class="n">value</span><span class="p">.</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------------------------------------------------+</span>
+
+<span class="c1">-- Describe a SQL scalar UDF: the output uses the SQL function layout</span>
+<span class="c1">-- (Function / Type / Input / Returns).</span>
+<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">area</span><span class="p">(</span><span class="n">x</span> <span class="nb">DOUBLE</span><span class="p">,</span> <span class="n">y</span> <span class="nb">DOUBLE</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="nb">DOUBLE</span> <span class="k">RETURN</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+<span class="k">DESC</span> <span class="k">FUNCTION</span> <span class="n">area</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-------------------------------+</span>
+<span class="o">|</span><span class="n">function_desc</span>                  <span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------------+</span>
+<span class="o">|</span><span class="k">Function</span><span class="p">:</span> <span class="n">hyperbatch_catalog</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">area</span><span class="o">|</span>
+<span class="o">|</span><span class="k">Type</span><span class="p">:</span>     <span class="n">SCALAR</span>               <span class="o">|</span>
+<span class="o">|</span><span class="k">Input</span><span class="p">:</span>    <span class="n">x</span> <span class="nb">DOUBLE</span>             <span class="o">|</span>
+<span class="o">|</span>          <span class="n">y</span> <span class="nb">DOUBLE</span>             <span class="o">|</span>
+<span class="o">|</span><span class="k">Returns</span><span class="p">:</span>  <span class="nb">DOUBLE</span>               <span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------------+</span>
+
+<span class="c1">-- Describe a SQL table UDF.</span>
+<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">getemps</span><span class="p">(</span><span class="n">deptno</span> <span class="nb">INT</span><span class="p">)</span>
+  <span class="k">RETURNS</span> <span class="k">TABLE</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">name</span> <span class="n">STRING</span><span class="p">)</span>
+  <span class="k">RETURN</span> <span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span> <span class="k">FROM</span> <span class="n">employee</span> <span class="k">WHERE</span> <span class="n">employee</span><span class="p">.</span><span class="n">deptno</span> <span class="o">=</span> <span class="n">getemps</span><span class="p">.</span><span class="n">deptno</span><span class="p">;</span>
+<span class="k">DESC</span> <span class="k">FUNCTION</span> <span class="n">getemps</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--------------------------------------+</span>
+<span class="o">|</span><span class="n">function_desc</span>                         <span class="o">|</span>
+<span class="o">+</span><span class="c1">--------------------------------------+</span>
+<span class="o">|</span><span class="k">Function</span><span class="p">:</span> <span class="n">hyperbatch_catalog</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">getemps</span><span class="o">|</span>
+<span class="o">|</span><span class="k">Type</span><span class="p">:</span>     <span class="k">TABLE</span>                       <span class="o">|</span>
+<span class="o">|</span><span class="k">Input</span><span class="p">:</span>    <span class="n">deptno</span> <span class="nb">INT</span>                  <span class="o">|</span>
+<span class="o">|</span><span class="k">Returns</span><span class="p">:</span>  <span class="n">id</span>   <span class="nb">INT</span>                    <span class="o">|</span>
+<span class="o">|</span>          <span class="n">name</span> <span class="n">STRING</span>                 <span class="o">|</span>
+<span class="o">+</span><span class="c1">--------------------------------------+</span>
+
+<span class="c1">-- DESC FUNCTION EXTENDED for a SQL UDF adds the body, the characteristic clauses,</span>
+<span class="c1">-- the captured SQL configs, the owner, the create time, and the frozen SQL Path.</span>
+<span class="k">SET</span> <span class="n">PATH</span> <span class="o">=</span> <span class="n">hyperbatch_catalog</span><span class="p">.</span><span class="k">default</span><span class="p">,</span> <span class="k">system</span><span class="p">.</span><span class="n">builtin</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">frozen_fn</span><span class="p">()</span> <span class="k">RETURNS</span> <span class="nb">INT</span>
+  <span class="k">COMMENT</span> <span class="s1">'demo function'</span>
+  <span class="k">RETURN</span> <span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">frozen_t</span><span class="p">);</span>
+<span class="k">DESC</span> <span class="k">FUNCTION</span> <span class="n">EXTENDED</span> <span class="n">frozen_fn</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----------------------------------------------------------------+</span>
+<span class="o">|</span><span class="n">function_desc</span>                                                    <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----------------------------------------------------------------+</span>
+<span class="o">|</span><span class="k">Function</span><span class="p">:</span>     <span class="n">hyperbatch_catalog</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">frozen_fn</span>                    <span class="o">|</span>
+<span class="o">|</span><span class="k">Type</span><span class="p">:</span>         <span class="n">SCALAR</span>                                             <span class="o">|</span>
+<span class="o">|</span><span class="k">Input</span><span class="p">:</span>        <span class="p">()</span>                                                 <span class="o">|</span>
+<span class="o">|</span><span class="k">Returns</span><span class="p">:</span>      <span class="nb">INT</span>                                                <span class="o">|</span>
+<span class="o">|</span><span class="k">Comment</span><span class="p">:</span>      <span class="n">demo</span> <span class="k">function</span>                                      <span class="o">|</span>
+<span class="o">|</span><span class="k">Deterministic</span><span class="p">:</span><span class="k">false</span>                                              <span class="o">|</span>
+<span class="o">|</span><span class="k">Data</span> <span class="k">Access</span><span class="p">:</span>  <span class="k">READS</span> <span class="k">SQL</span> <span class="k">DATA</span>                                     <span class="o">|</span>
+<span class="o">|</span><span class="n">Configs</span><span class="p">:</span>      <span class="n">hyperbatch</span><span class="p">.</span><span class="k">sql</span><span class="p">.</span><span class="n">ansi</span><span class="p">.</span><span class="n">enabled</span><span class="o">=</span><span class="k">true</span>                        <span class="o">|</span>
+<span class="o">|</span>              <span class="p">...</span>                                                <span class="o">|</span>
+<span class="o">|</span><span class="k">Owner</span><span class="p">:</span>        <span class="o">&lt;</span><span class="k">USER</span><span class="o">&gt;</span>                                             <span class="o">|</span>
+<span class="o">|</span><span class="k">Create</span> <span class="nb">Time</span><span class="p">:</span>  <span class="n">Wed</span> <span class="n">Apr</span> <span class="mi">30</span> <span class="mi">14</span><span class="p">:</span><span class="mi">05</span><span class="p">:</span><span class="mi">43</span> <span class="n">PDT</span> <span class="mi">2026</span>                       <span class="o">|</span>
+<span class="o">|</span><span class="n">Body</span><span class="p">:</span>         <span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">frozen_t</span><span class="p">)</span>                     <span class="o">|</span>
+<span class="o">|</span><span class="k">SQL</span> <span class="n">Path</span><span class="p">:</span>     <span class="n">hyperbatch_catalog</span><span class="p">.</span><span class="k">default</span><span class="p">,</span> <span class="k">system</span><span class="p">.</span><span class="n">builtin</span>              <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----------------------------------------------------------------+</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-aux-describe-database.html">DESCRIBE DATABASE</a></li>
+  <li><a href="sql-ref-syntax-aux-describe-table.html">DESCRIBE TABLE</a></li>
+  <li><a href="sql-ref-syntax-aux-describe-query.html">DESCRIBE QUERY</a></li>
+  <li><a href="sql-ref-syntax-ddl-create-sql-function.html">CREATE FUNCTION (SQL)</a></li>
+  <li><a href="sql-ref-name-resolution.html">Name Resolution</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

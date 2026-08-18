@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Development — PyHyperBatch 4.2.0 documentation — HyperBatch</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to PyHyperBatch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributing-by-testing-releases">Contributing by Testing Releases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributing-documentation-changes">Contributing Documentation Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#preparing-to-contribute-code-changes">Preparing to Contribute Code Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#environment-setup">Environment Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributing-and-maintaining-type-hints">Contributing and Maintaining Type Hints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#code-and-docstring-guide">Code and Docstring Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributing-error-and-exception">Contributing Error and Exception</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing PyHyperBatch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#running-individual-pyhyperbatch-tests">Running Individual PyHyperBatch Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#breakpoint-support-in-pyhyperbatch-tests"><code class="docutils literal notranslate"><span class="pre">breakpoint()</span></code> Support in PyHyperBatch Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#running-tests-using-github-actions">Running Tests using GitHub Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#running-tests-for-hyperbatch-connect">Running Tests for HyperBatch Connect</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging PyHyperBatch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#remote-debugging-pycharm-professional">Remote Debugging (PyCharm Professional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#checking-resource-usage-top-and-ps">Checking Resource Usage (<code class="docutils literal notranslate"><span class="pre">top</span></code> and <code class="docutils literal notranslate"><span class="pre">ps</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#profiling-memory-usage-memory-profiler">Profiling Memory Usage (Memory Profiler)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#identifying-hot-loops-python-profilers">Identifying Hot Loops (Python Profilers)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#common-exceptions-errors">Common Exceptions / Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#stack-traces">Stack Traces</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setting_ide.html">Setting up IDEs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setting_ide.html#pycharm">PyCharm</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Logging in PyHyperBatch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#customizing-log-format">Customizing Log Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#setting-up">Setting Up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#usage">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Error classes in PyHyperBatch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#application-name-not-set">APPLICATION_NAME_NOT_SET</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#argument-required">ARGUMENT_REQUIRED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#arrow-legacy-ipc-format">ARROW_LEGACY_IPC_FORMAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#attribute-not-callable">ATTRIBUTE_NOT_CALLABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#attribute-not-supported">ATTRIBUTE_NOT_SUPPORTED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#axis-length-mismatch">AXIS_LENGTH_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#broadcast-variable-not-loaded">BROADCAST_VARIABLE_NOT_LOADED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#call-before-initialize">CALL_BEFORE_INITIALIZE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-access-to-dunder">CANNOT_ACCESS_TO_DUNDER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-apply-in-for-column">CANNOT_APPLY_IN_FOR_COLUMN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-be-empty">CANNOT_BE_EMPTY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-be-none">CANNOT_BE_NONE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-configure-hyperbatch-connect">CANNOT_CONFIGURE_HYPERBATCH_CONNECT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-configure-hyperbatch-connect-master">CANNOT_CONFIGURE_HYPERBATCH_CONNECT_MASTER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-convert-column-into-bool">CANNOT_CONVERT_COLUMN_INTO_BOOL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-convert-type">CANNOT_CONVERT_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-determine-type">CANNOT_DETERMINE_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-get-batch-id">CANNOT_GET_BATCH_ID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-infer-array-element-type">CANNOT_INFER_ARRAY_ELEMENT_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-infer-empty-schema">CANNOT_INFER_EMPTY_SCHEMA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-infer-schema-for-type">CANNOT_INFER_SCHEMA_FOR_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-infer-type-for-field">CANNOT_INFER_TYPE_FOR_FIELD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-merge-type">CANNOT_MERGE_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-open-socket">CANNOT_OPEN_SOCKET</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-parse-datatype">CANNOT_PARSE_DATATYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-provide-metadata">CANNOT_PROVIDE_METADATA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-register-udtf">CANNOT_REGISTER_UDTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-set-together">CANNOT_SET_TOGETHER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-specify-return-type-for-udf">CANNOT_SPECIFY_RETURN_TYPE_FOR_UDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#cannot-without">CANNOT_WITHOUT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#classic-operation-not-supported-on-df">CLASSIC_OPERATION_NOT_SUPPORTED_ON_DF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#collation-invalid-provider">COLLATION_INVALID_PROVIDER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#column-in-list">COLUMN_IN_LIST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#conflicting-pipeline-refresh-options">CONFLICTING_PIPELINE_REFRESH_OPTIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#connect-url-not-set">CONNECT_URL_NOT_SET</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#context-only-valid-on-driver">CONTEXT_ONLY_VALID_ON_DRIVER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#context-unavailable-for-remote-client">CONTEXT_UNAVAILABLE_FOR_REMOTE_CLIENT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#data-source-extraneous-filters">DATA_SOURCE_EXTRANEOUS_FILTERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#data-source-invalid-return-type">DATA_SOURCE_INVALID_RETURN_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#data-source-pushdown-disabled">DATA_SOURCE_PUSHDOWN_DISABLED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#data-source-return-schema-mismatch">DATA_SOURCE_RETURN_SCHEMA_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#data-source-type-mismatch">DATA_SOURCE_TYPE_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#decorator-argument-not-callable">DECORATOR_ARGUMENT_NOT_CALLABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#different-pandas-dataframe">DIFFERENT_PANDAS_DATAFRAME</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#different-pandas-index">DIFFERENT_PANDAS_INDEX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#different-pandas-multiindex">DIFFERENT_PANDAS_MULTIINDEX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#different-pandas-series">DIFFERENT_PANDAS_SERIES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#different-rows">DIFFERENT_ROWS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#different-schema">DIFFERENT_SCHEMA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#disallowed-type-for-container">DISALLOWED_TYPE_FOR_CONTAINER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#duplicated-artifact">DUPLICATED_ARTIFACT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#duplicated-field-name-in-arrow-struct">DUPLICATED_FIELD_NAME_IN_ARROW_STRUCT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#error-occurred-while-calling">ERROR_OCCURRED_WHILE_CALLING</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#field-data-type-unacceptable">FIELD_DATA_TYPE_UNACCEPTABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#field-data-type-unacceptable-with-name">FIELD_DATA_TYPE_UNACCEPTABLE_WITH_NAME</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#field-not-nullable">FIELD_NOT_NULLABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#field-not-nullable-with-name">FIELD_NOT_NULLABLE_WITH_NAME</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#field-struct-length-mismatch">FIELD_STRUCT_LENGTH_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#field-struct-length-mismatch-with-name">FIELD_STRUCT_LENGTH_MISMATCH_WITH_NAME</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#field-type-mismatch">FIELD_TYPE_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#field-type-mismatch-with-name">FIELD_TYPE_MISMATCH_WITH_NAME</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#graph-element-defined-outside-of-declarative-pipeline">GRAPH_ELEMENT_DEFINED_OUTSIDE_OF_DECLARATIVE_PIPELINE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#higher-order-function-should-return-column">HIGHER_ORDER_FUNCTION_SHOULD_RETURN_COLUMN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#incorrect-conf-for-profile">INCORRECT_CONF_FOR_PROFILE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#index-not-positive">INDEX_NOT_POSITIVE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#index-out-of-range">INDEX_OUT_OF_RANGE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#input-not-fully-consumed">INPUT_NOT_FULLY_CONSUMED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-arrow-udtf-return-type">INVALID_ARROW_UDTF_RETURN_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-arrow-udtf-table-argument">INVALID_ARROW_UDTF_TABLE_ARGUMENT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-arrow-udtf-with-analyze">INVALID_ARROW_UDTF_WITH_ANALYZE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-broadcast-operation">INVALID_BROADCAST_OPERATION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-call-on-unresolved-object">INVALID_CALL_ON_UNRESOLVED_OBJECT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-connect-url">INVALID_CONNECT_URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-interval-casting">INVALID_INTERVAL_CASTING</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-item-for-container">INVALID_ITEM_FOR_CONTAINER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-json-data-type-for-collations">INVALID_JSON_DATA_TYPE_FOR_COLLATIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-multiple-argument-conditions">INVALID_MULTIPLE_ARGUMENT_CONDITIONS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-ndarray-dimension">INVALID_NDARRAY_DIMENSION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-number-of-dataframes-in-group">INVALID_NUMBER_OF_DATAFRAMES_IN_GROUP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-pandas-udf">INVALID_PANDAS_UDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-pandas-udf-type">INVALID_PANDAS_UDF_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-return-type-for-arrow-udf">INVALID_RETURN_TYPE_FOR_ARROW_UDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-return-type-for-pandas-udf">INVALID_RETURN_TYPE_FOR_PANDAS_UDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-session-uuid-id">INVALID_SESSION_UUID_ID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-streaming-source-name">INVALID_STREAMING_SOURCE_NAME</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-timeout-timestamp">INVALID_TIMEOUT_TIMESTAMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-type">INVALID_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-typename-call">INVALID_TYPENAME_CALL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-type-df-equality-arg">INVALID_TYPE_DF_EQUALITY_ARG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-udf-eval-type">INVALID_UDF_EVAL_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-udtf-both-return-type-and-analyze">INVALID_UDTF_BOTH_RETURN_TYPE_AND_ANALYZE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-udtf-eval-type">INVALID_UDTF_EVAL_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-udtf-handler-type">INVALID_UDTF_HANDLER_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-udtf-no-eval">INVALID_UDTF_NO_EVAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-udtf-return-type">INVALID_UDTF_RETURN_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-when-usage">INVALID_WHEN_USAGE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#invalid-window-bound-type">INVALID_WINDOW_BOUND_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#java-gateway-exited">JAVA_GATEWAY_EXITED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#jvm-attribute-not-supported">JVM_ATTRIBUTE_NOT_SUPPORTED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#key-not-exists">KEY_NOT_EXISTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#key-value-pair-required">KEY_VALUE_PAIR_REQUIRED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#length-should-be-the-same">LENGTH_SHOULD_BE_THE_SAME</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#local-relation-size-limit-exceeded">LOCAL_RELATION_SIZE_LIMIT_EXCEEDED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#malformed-geography">MALFORMED_GEOGRAPHY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#malformed-geometry">MALFORMED_GEOMETRY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#malformed-variant">MALFORMED_VARIANT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#master-url-invalid">MASTER_URL_INVALID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#master-url-not-set">MASTER_URL_NOT_SET</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#memory-profile-invalid-source">MEMORY_PROFILE_INVALID_SOURCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#missing-library-for-profiler">MISSING_LIBRARY_FOR_PROFILER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#missing-valid-plan">MISSING_VALID_PLAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#mixed-type-replacement">MIXED_TYPE_REPLACEMENT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#multiple-pipeline-spec-files-found">MULTIPLE_PIPELINE_SPEC_FILES_FOUND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#nearest-by-join">NEAREST_BY_JOIN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#negative-value">NEGATIVE_VALUE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#not-expected-type">NOT_EXPECTED_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#not-implemented">NOT_IMPLEMENTED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#not-in-barrier-stage">NOT_IN_BARRIER_STAGE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#not-iterable">NOT_ITERABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#not-numeric-columns">NOT_NUMERIC_COLUMNS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#not-same-type">NOT_SAME_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#no-active-exception">NO_ACTIVE_EXCEPTION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#no-active-or-default-session">NO_ACTIVE_OR_DEFAULT_SESSION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#no-active-session">NO_ACTIVE_SESSION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#no-observe-before-get">NO_OBSERVE_BEFORE_GET</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#no-schema-and-driver-default-scheme">NO_SCHEMA_AND_DRIVER_DEFAULT_SCHEME</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#only-allowed-for-single-column">ONLY_ALLOWED_FOR_SINGLE_COLUMN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#only-allow-single-trigger">ONLY_ALLOW_SINGLE_TRIGGER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#only-supported-with-hyperbatch-connect">ONLY_SUPPORTED_WITH_HYPERBATCH_CONNECT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#output-exceeds-input-rows">OUTPUT_EXCEEDS_INPUT_ROWS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#package-not-installed">PACKAGE_NOT_INSTALLED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pandas-api-on-hyperbatch-fail-on-ansi-mode">PANDAS_API_ON_HYPERBATCH_FAIL_ON_ANSI_MODE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pipeline-spec-dict-key-not-string">PIPELINE_SPEC_DICT_KEY_NOT_STRING</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pipeline-spec-dict-value-not-string">PIPELINE_SPEC_DICT_VALUE_NOT_STRING</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pipeline-spec-field-not-dict">PIPELINE_SPEC_FIELD_NOT_DICT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pipeline-spec-file-does-not-exist">PIPELINE_SPEC_FILE_DOES_NOT_EXIST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pipeline-spec-file-not-found">PIPELINE_SPEC_FILE_NOT_FOUND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pipeline-spec-invalid-glob-pattern">PIPELINE_SPEC_INVALID_GLOB_PATTERN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pipeline-spec-missing-required-field">PIPELINE_SPEC_MISSING_REQUIRED_FIELD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pipeline-spec-unexpected-field">PIPELINE_SPEC_UNEXPECTED_FIELD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pipeline-unsupported-definitions-file-extension">PIPELINE_UNSUPPORTED_DEFINITIONS_FILE_EXTENSION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#pipe-function-exited">PIPE_FUNCTION_EXITED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#plot-invalid-type-column">PLOT_INVALID_TYPE_COLUMN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#protocol-error">PROTOCOL_ERROR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#python-hash-seed-not-set">PYTHON_HASH_SEED_NOT_SET</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#python-streaming-data-source-runtime-error">PYTHON_STREAMING_DATA_SOURCE_RUNTIME_ERROR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#python-version-mismatch">PYTHON_VERSION_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#rdd-transform-only-valid-on-driver">RDD_TRANSFORM_ONLY_VALID_ON_DRIVER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#read-only">READ_ONLY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#response-already-received">RESPONSE_ALREADY_RECEIVED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#result-column-names-mismatch">RESULT_COLUMN_NAMES_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#result-column-schema-mismatch">RESULT_COLUMN_SCHEMA_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#result-column-types-mismatch">RESULT_COLUMN_TYPES_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#result-rows-mismatch">RESULT_ROWS_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#reuse-observation">REUSE_OBSERVATION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#schema-mismatch-for-pandas-udf">SCHEMA_MISMATCH_FOR_PANDAS_UDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#session-already-exist">SESSION_ALREADY_EXIST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#session-mutation-in-declarative-pipeline">SESSION_MUTATION_IN_DECLARATIVE_PIPELINE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#session-need-conn-str-or-builder">SESSION_NEED_CONN_STR_OR_BUILDER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#session-not-same">SESSION_NOT_SAME</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#session-or-context-exists">SESSION_OR_CONTEXT_EXISTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#session-or-context-not-exists">SESSION_OR_CONTEXT_NOT_EXISTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#simple-stream-reader-offset-did-not-advance">SIMPLE_STREAM_READER_OFFSET_DID_NOT_ADVANCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#slice-with-step">SLICE_WITH_STEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#state-not-exists">STATE_NOT_EXISTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#stop-iteration-occurred">STOP_ITERATION_OCCURRED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#streaming-connect-serialization-error">STREAMING_CONNECT_SERIALIZATION_ERROR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#st-invalid-algorithm-value">ST_INVALID_ALGORITHM_VALUE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#st-invalid-crs-value">ST_INVALID_CRS_VALUE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#st-invalid-endianness-value">ST_INVALID_ENDIANNESS_VALUE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#st-invalid-srid-value">ST_INVALID_SRID_VALUE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#test-class-not-compiled">TEST_CLASS_NOT_COMPILED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#too-many-values">TOO_MANY_VALUES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#type-hint-should-be-specified">TYPE_HINT_SHOULD_BE_SPECIFIED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udf-return-type">UDF_RETURN_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-arrow-data-conversion-error">UDTF_ARROW_DATA_CONVERSION_ERROR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-arrow-type-conversion-error">UDTF_ARROW_TYPE_CONVERSION_ERROR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-constructor-invalid-implements-analyze-method">UDTF_CONSTRUCTOR_INVALID_IMPLEMENTS_ANALYZE_METHOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-constructor-invalid-no-analyze-method">UDTF_CONSTRUCTOR_INVALID_NO_ANALYZE_METHOD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-eval-method-arguments-do-not-match-signature">UDTF_EVAL_METHOD_ARGUMENTS_DO_NOT_MATCH_SIGNATURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-exec-error">UDTF_EXEC_ERROR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-invalid-output-row-type">UDTF_INVALID_OUTPUT_ROW_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-return-not-iterable">UDTF_RETURN_NOT_ITERABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-return-schema-mismatch">UDTF_RETURN_SCHEMA_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-return-type-mismatch">UDTF_RETURN_TYPE_MISMATCH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#udtf-serialization-error">UDTF_SERIALIZATION_ERROR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unexpected-response-from-server">UNEXPECTED_RESPONSE_FROM_SERVER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unexpected-tuple-with-struct">UNEXPECTED_TUPLE_WITH_STRUCT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unknown-explain-mode">UNKNOWN_EXPLAIN_MODE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unknown-interrupt-type">UNKNOWN_INTERRUPT_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unknown-response">UNKNOWN_RESPONSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unknown-value-for">UNKNOWN_VALUE_FOR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-data-type">UNSUPPORTED_DATA_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-data-type-for-arrow">UNSUPPORTED_DATA_TYPE_FOR_ARROW</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-data-type-for-arrow-conversion">UNSUPPORTED_DATA_TYPE_FOR_ARROW_CONVERSION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-join-type">UNSUPPORTED_JOIN_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-literal">UNSUPPORTED_LITERAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-local-connection-string">UNSUPPORTED_LOCAL_CONNECTION_STRING</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-numpy-array-scalar">UNSUPPORTED_NUMPY_ARRAY_SCALAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-operation">UNSUPPORTED_OPERATION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-package-version">UNSUPPORTED_PACKAGE_VERSION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-param-type-for-higher-order-function">UNSUPPORTED_PARAM_TYPE_FOR_HIGHER_ORDER_FUNCTION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-pie-plot-param">UNSUPPORTED_PIE_PLOT_PARAM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-pipelines-dataset-type">UNSUPPORTED_PIPELINES_DATASET_TYPE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-plot-backend">UNSUPPORTED_PLOT_BACKEND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-plot-backend-param">UNSUPPORTED_PLOT_BACKEND_PARAM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-plot-kind">UNSUPPORTED_PLOT_KIND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#unsupported-signature">UNSUPPORTED_SIGNATURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-allowed">VALUE_ALLOWED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-not-accessible">VALUE_NOT_ACCESSIBLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-not-allowed">VALUE_NOT_ALLOWED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-not-any-or-all">VALUE_NOT_ANY_OR_ALL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-not-between">VALUE_NOT_BETWEEN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-not-non-empty-str">VALUE_NOT_NON_EMPTY_STR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-not-pearson">VALUE_NOT_PEARSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-not-plain-column-reference">VALUE_NOT_PLAIN_COLUMN_REFERENCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-not-positive">VALUE_NOT_POSITIVE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-not-true">VALUE_NOT_TRUE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#value-out-of-bounds">VALUE_OUT_OF_BOUNDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#wkb-parse-error">WKB_PARSE_ERROR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#wrong-num-args-for-higher-order-function">WRONG_NUM_ARGS_FOR_HIGHER_ORDER_FUNCTION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#wrong-num-columns">WRONG_NUM_COLUMNS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html#zero-index">ZERO_INDEX</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/development/index.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

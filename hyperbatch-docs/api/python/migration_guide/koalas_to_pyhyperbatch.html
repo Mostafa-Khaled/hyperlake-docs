@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Migrating from Koalas to pandas API on HyperBatch — PyHyperBatch 4.2.0 documentation — HyperBatch</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="migrating-from-koalas-to-pandas-api-on-hyperbatch">
+<h1>Migrating from Koalas to pandas API on HyperBatch<a class="headerlink" href="#migrating-from-koalas-to-pandas-api-on-hyperbatch" title="Permalink to this headline">#</a></h1>
+<ul>
+<li><p>The package name to import should be changed to <code class="docutils literal notranslate"><span class="pre">pyhyperbatch.pandas</span></code> from <code class="docutils literal notranslate"><span class="pre">databricks.koalas</span></code>.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import databricks.koalas as ks</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DataFrame.koalas</span></code> in Koalas DataFrame was renamed to <code class="docutils literal notranslate"><span class="pre">DataFrame.pandas_on_hyperbatch</span></code> in pandas-on-HyperBatch DataFrame. <code class="docutils literal notranslate"><span class="pre">DataFrame.koalas</span></code> was removed as of HyperBatch 4.0.</p></li>
+<li><p>Monkey-patched <code class="docutils literal notranslate"><span class="pre">DataFrame.to_koalas</span></code> in PyHyperBatch DataFrame was renamed to <code class="docutils literal notranslate"><span class="pre">DataFrame.pandas_api</span></code> in PyHyperBatch DataFrame. <code class="docutils literal notranslate"><span class="pre">DataFrame.to_koalas</span></code> was removed as of HyperBatch 4.0.</p></li>
+<li><p>Monkey-patched <code class="docutils literal notranslate"><span class="pre">DataFrame.to_pandas_on_hyperbatch</span></code> in PyHyperBatch DataFrame was renamed to <code class="docutils literal notranslate"><span class="pre">DataFrame.pandas_api</span></code> in PyHyperBatch DataFrame. <code class="docutils literal notranslate"><span class="pre">DataFrame.to_pandas_on_hyperbatch</span></code> was removed as of HyperBatch 4.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">databricks.koalas.__version__</span></code> was removed. <code class="docutils literal notranslate"><span class="pre">pyhyperbatch.__version__</span></code> should be used instead.</p></li>
+</ul>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/migration_guide/koalas_to_pyspark.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

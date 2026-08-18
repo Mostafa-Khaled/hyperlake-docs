@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ALTER VIEW - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">ALTER VIEW</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">ALTER VIEW</code> statement can alter metadata associated with the view. It can change the definition of the view, change
+the name of a view to a different name, set and unset the metadata of the view by setting <code class="language-plaintext highlighter-rouge">TBLPROPERTIES</code>.</p>
+
+<h4 id="rename-view">RENAME View</h4>
+<p>Renames the existing view. If the new view name already exists in the source database, a <code class="language-plaintext highlighter-rouge">TableAlreadyExistsException</code> is thrown. This operation
+does not support moving the views across databases.</p>
+
+<p>If the view is cached, the command clears cached data of the view and all its dependents that refer to it. View’s cache will be lazily filled when the next time the view is accessed. The command leaves view’s dependents as uncached.</p>
+
+<h4 id="syntax">Syntax</h4>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">view_identifier</span> <span class="k">RENAME</span> <span class="k">TO</span> <span class="n">view_identifier</span>
+</code></pre></div></div>
+
+<h4 id="parameters">Parameters</h4>
+<ul>
+  <li>
+    <p><strong>view_identifier</strong></p>
+
+    <p>Specifies a view name, which may be optionally qualified with a database name.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ database_name. ] view_name</code></p>
+  </li>
+</ul>
+
+<h4 id="set-view-properties">SET View Properties</h4>
+<p>Set one or more properties of an existing view. The properties are the key value pairs. If the properties’ keys exist, 
+the values are replaced with the new values. If the properties’ keys do not exist, the key value pairs are added into
+the properties.</p>
+
+<h4 id="syntax-1">Syntax</h4>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">view_identifier</span> <span class="k">SET</span> <span class="n">TBLPROPERTIES</span> <span class="p">(</span> <span class="n">property_key</span> <span class="o">=</span> <span class="n">property_val</span> <span class="p">[</span> <span class="p">,</span> <span class="p">...</span> <span class="p">]</span> <span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="parameters-1">Parameters</h4>
+<ul>
+  <li>
+    <p><strong>view_identifier</strong></p>
+
+    <p>Specifies a view name, which may be optionally qualified with a database name.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ database_name. ] view_name</code></p>
+  </li>
+  <li>
+    <p><strong>property_key</strong></p>
+
+    <p>Specifies the property key. The key may consists of multiple parts separated by dot.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ key_part1 ] [ .key_part2 ] [ ... ]</code></p>
+  </li>
+</ul>
+
+<h4 id="unset-view-properties">UNSET View Properties</h4>
+<p>Drop one or more properties of an existing view. If the specified keys do not exist, an exception is thrown. Use 
+<code class="language-plaintext highlighter-rouge">IF EXISTS</code> to avoid the exception.</p>
+
+<h4 id="syntax-2">Syntax</h4>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">view_identifier</span> <span class="n">UNSET</span> <span class="n">TBLPROPERTIES</span> <span class="p">[</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="p">]</span>  <span class="p">(</span> <span class="n">property_key</span> <span class="p">[</span> <span class="p">,</span> <span class="p">...</span> <span class="p">]</span> <span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="parameters-2">Parameters</h4>
+<ul>
+  <li>
+    <p><strong>view_identifier</strong></p>
+
+    <p>Specifies a view name, which may be optionally qualified with a database name.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ database_name. ] view_name</code></p>
+  </li>
+  <li>
+    <p><strong>property_key</strong></p>
+
+    <p>Specifies the property key. The key may consists of multiple parts separated by dot.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ key_part1 ] [ .key_part2 ] [ ... ]</code></p>
+  </li>
+</ul>
+
+<h4 id="alter-view-as-select">ALTER View AS SELECT</h4>
+<p><code class="language-plaintext highlighter-rouge">ALTER VIEW view_identifier AS SELECT</code> statement changes the definition of a view. The <code class="language-plaintext highlighter-rouge">SELECT</code> statement must be valid,
+and the <code class="language-plaintext highlighter-rouge">view_identifier</code> must exist.</p>
+
+<h4 id="syntax-3">Syntax</h4>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">view_identifier</span> <span class="k">AS</span> <span class="n">select_statement</span>
+</code></pre></div></div>
+
+<p>Note that <code class="language-plaintext highlighter-rouge">ALTER VIEW</code> statement does not support <code class="language-plaintext highlighter-rouge">SET SERDE</code> or <code class="language-plaintext highlighter-rouge">SET SERDEPROPERTIES</code> properties.</p>
+
+<h4 id="parameters-3">Parameters</h4>
+<ul>
+  <li>
+    <p><strong>view_identifier</strong></p>
+
+    <p>Specifies a view name, which may be optionally qualified with a database name.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ database_name. ] view_name</code></p>
+  </li>
+  <li>
+    <p><strong>select_statement</strong></p>
+
+    <p>Specifies the definition of the view. Check <a href="sql-ref-syntax-qry-select.html">select_statement</a> for details.</p>
+  </li>
+</ul>
+
+<h4 id="alter-view-with-schema">ALTER View WITH SCHEMA</h4>
+
+<p>Changes the view’s schema binding behavior.</p>
+
+<p>If the view is cached, the command clears cached data of the view and all its dependents that refer to it. View’s cache will be lazily filled when the next time the view is accessed. The command leaves view’s dependents as uncached.</p>
+
+<p>This statement is not supported for <code class="language-plaintext highlighter-rouge">TEMPORARY</code> views.</p>
+
+<h4 id="syntax-4">Syntax</h4>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">view_identifier</span> <span class="k">WITH</span> <span class="k">SCHEMA</span> <span class="p">{</span> <span class="n">BINDING</span> <span class="o">|</span> <span class="n">COMPENSATION</span> <span class="o">|</span> <span class="p">[</span> <span class="k">TYPE</span> <span class="p">]</span> <span class="n">EVOLUTION</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="parameters-4">Parameters</h4>
+<ul>
+  <li>
+    <p><strong>view_identifier</strong></p>
+
+    <p>Specifies a view name, which may be optionally qualified with a database name.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ database_name. ] view_name</code></p>
+  </li>
+  <li><strong>BINDING</strong> - The view can tolerate only type changes in the underlying schema requiring safe up-casts.</li>
+  <li><strong>COMPENSATION</strong> - The view can tolerate type changes in the underlying schema requiring casts. Runtime casting errors may occur.</li>
+  <li><strong>TYPE EVOLUTION</strong> - The view will adapt to any type changes in the underlying schema.</li>
+  <li><strong>EVOLUTION</strong> - For views defined without a column lists any schema changes are adapted by the view, including, for queries with <code class="language-plaintext highlighter-rouge">SELECT *</code> dropped or added columns.
+If the view is defined with a column list, the clause is interpreted as <code class="language-plaintext highlighter-rouge">TYPE EVOLUTION</code>.</li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Rename only changes the view name.</span>
+<span class="c1">-- The source and target databases of the view have to be the same.</span>
+<span class="c1">-- Use qualified or unqualified name for the source and target view.</span>
+<span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v1</span> <span class="k">RENAME</span> <span class="k">TO</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v2</span><span class="p">;</span>
+
+<span class="c1">-- Verify that the new view is created.</span>
+<span class="k">DESCRIBE</span> <span class="k">TABLE</span> <span class="n">EXTENDED</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v2</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">----------------------------+----------+-------+</span>
+<span class="o">|</span>                    <span class="n">col_name</span><span class="o">|</span><span class="n">data_type</span> <span class="o">|</span><span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+----------+-------+</span>
+<span class="o">|</span>                          <span class="n">c1</span><span class="o">|</span>       <span class="nb">int</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                          <span class="n">c2</span><span class="o">|</span>    <span class="n">string</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                            <span class="o">|</span>          <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|#</span> <span class="n">Detailed</span> <span class="k">Table</span> <span class="n">Information</span><span class="o">|</span>          <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                    <span class="k">Database</span><span class="o">|</span>   <span class="n">tempdb1</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                       <span class="k">Table</span><span class="o">|</span>        <span class="n">v2</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+----------+-------+</span>
+
+<span class="c1">-- Before ALTER VIEW SET TBLPROPERTIES</span>
+<span class="k">DESC</span> <span class="k">TABLE</span> <span class="n">EXTENDED</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v2</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">----------------------------+----------+-------+</span>
+<span class="o">|</span>                    <span class="n">col_name</span><span class="o">|</span> <span class="n">data_type</span><span class="o">|</span><span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+----------+-------+</span>
+<span class="o">|</span>                          <span class="n">c1</span><span class="o">|</span>       <span class="nb">int</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                          <span class="n">c2</span><span class="o">|</span>    <span class="n">string</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                            <span class="o">|</span>          <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|#</span> <span class="n">Detailed</span> <span class="k">Table</span> <span class="n">Information</span><span class="o">|</span>          <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                    <span class="k">Database</span><span class="o">|</span>   <span class="n">tempdb1</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                       <span class="k">Table</span><span class="o">|</span>        <span class="n">v2</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>            <span class="k">Table</span> <span class="n">Properties</span><span class="o">|</span>    <span class="p">[....]</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+----------+-------+</span>
+
+<span class="c1">-- Set properties in TBLPROPERTIES</span>
+<span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v2</span> <span class="k">SET</span> <span class="n">TBLPROPERTIES</span> <span class="p">(</span><span class="s1">'created.by.user'</span> <span class="o">=</span> <span class="nv">"John"</span><span class="p">,</span> <span class="s1">'created.date'</span> <span class="o">=</span> <span class="s1">'01-01-2001'</span> <span class="p">);</span>
+
+<span class="c1">-- Use `DESCRIBE TABLE EXTENDED tempdb1.v2` to verify</span>
+<span class="k">DESC</span> <span class="k">TABLE</span> <span class="n">EXTENDED</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v2</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">----------------------------+-----------------------------------------------------+-------+</span>
+<span class="o">|</span>                    <span class="n">col_name</span><span class="o">|</span>                                            <span class="n">data_type</span><span class="o">|</span><span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+-----------------------------------------------------+-------+</span>
+<span class="o">|</span>                          <span class="n">c1</span><span class="o">|</span>                                                  <span class="nb">int</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                          <span class="n">c2</span><span class="o">|</span>                                               <span class="n">string</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                            <span class="o">|</span>                                                     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|#</span> <span class="n">Detailed</span> <span class="k">Table</span> <span class="n">Information</span><span class="o">|</span>                                                     <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                    <span class="k">Database</span><span class="o">|</span>                                              <span class="n">tempdb1</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                       <span class="k">Table</span><span class="o">|</span>                                                   <span class="n">v2</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>            <span class="k">Table</span> <span class="n">Properties</span><span class="o">|</span><span class="p">[</span><span class="n">created</span><span class="p">.</span><span class="k">by</span><span class="p">.</span><span class="k">user</span><span class="o">=</span><span class="n">John</span><span class="p">,</span> <span class="n">created</span><span class="p">.</span><span class="nb">date</span><span class="o">=</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">2001</span><span class="p">,</span> <span class="p">....]</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+-----------------------------------------------------+-------+</span>
+
+<span class="c1">-- Remove the key `created.by.user` and `created.date` from `TBLPROPERTIES`</span>
+<span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v2</span> <span class="n">UNSET</span> <span class="n">TBLPROPERTIES</span> <span class="p">(</span><span class="s1">'created.by.user'</span><span class="p">,</span> <span class="s1">'created.date'</span><span class="p">);</span>
+
+<span class="c1">--Use `DESC TABLE EXTENDED tempdb1.v2` to verify the changes</span>
+<span class="k">DESC</span> <span class="k">TABLE</span> <span class="n">EXTENDED</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v2</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">----------------------------+----------+-------+</span>
+<span class="o">|</span>                    <span class="n">col_name</span><span class="o">|</span> <span class="n">data_type</span><span class="o">|</span><span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+----------+-------+</span>
+<span class="o">|</span>                          <span class="n">c1</span><span class="o">|</span>       <span class="nb">int</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                          <span class="n">c2</span><span class="o">|</span>    <span class="n">string</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                            <span class="o">|</span>          <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|#</span> <span class="n">Detailed</span> <span class="k">Table</span> <span class="n">Information</span><span class="o">|</span>          <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                    <span class="k">Database</span><span class="o">|</span>   <span class="n">tempdb1</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                       <span class="k">Table</span><span class="o">|</span>        <span class="n">v2</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>            <span class="k">Table</span> <span class="n">Properties</span><span class="o">|</span>    <span class="p">[....]</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+----------+-------+</span>
+
+<span class="c1">-- Change the view definition</span>
+<span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v2</span> <span class="k">AS</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v1</span><span class="p">;</span>
+
+<span class="c1">-- Use `DESC TABLE EXTENDED` to verify</span>
+<span class="k">DESC</span> <span class="k">TABLE</span> <span class="n">EXTENDED</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v2</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">----------------------------+---------------------------+-------+</span>
+<span class="o">|</span>                    <span class="n">col_name</span><span class="o">|</span>                  <span class="n">data_type</span><span class="o">|</span><span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+---------------------------+-------+</span>
+<span class="o">|</span>                          <span class="n">c1</span><span class="o">|</span>                        <span class="nb">int</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                          <span class="n">c2</span><span class="o">|</span>                     <span class="n">string</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                            <span class="o">|</span>                           <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|#</span> <span class="n">Detailed</span> <span class="k">Table</span> <span class="n">Information</span><span class="o">|</span>                           <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                    <span class="k">Database</span><span class="o">|</span>                    <span class="n">tempdb1</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                       <span class="k">Table</span><span class="o">|</span>                         <span class="n">v2</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                        <span class="k">Type</span><span class="o">|</span>                       <span class="k">VIEW</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                   <span class="k">View</span> <span class="nb">Text</span><span class="o">|</span>   <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v1</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>          <span class="k">View</span> <span class="n">Original</span> <span class="nb">Text</span><span class="o">|</span>   <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">tempdb1</span><span class="p">.</span><span class="n">v1</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+---------------------------+-------+</span>
+
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">VIEW</span> <span class="n">open_orders</span> <span class="k">AS</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">orders</span> <span class="k">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'open'</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">VIEW</span> <span class="n">open_orders</span> <span class="k">WITH</span> <span class="k">SCHEMA</span> <span class="n">EVOLUTION</span><span class="p">;</span>
+<span class="k">DESC</span> <span class="k">TABLE</span> <span class="n">EXTENDED</span> <span class="n">open_orders</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">----------------------------+---------------------------+-------+</span>
+<span class="o">|</span>                    <span class="n">col_name</span><span class="o">|</span>                  <span class="n">data_type</span><span class="o">|</span><span class="k">comment</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">----------------------------+---------------------------+-------+</span>
+<span class="o">|</span>                    <span class="n">order_no</span><span class="o">|</span>                        <span class="nb">int</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                  <span class="n">order_date</span><span class="o">|</span>                       <span class="nb">date</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>                            <span class="o">|</span>                           <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|#</span> <span class="n">Detailed</span> <span class="k">Table</span> <span class="n">Information</span><span class="o">|</span>                           <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                    <span class="k">Database</span><span class="o">|</span>                       <span class="n">mydb</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                       <span class="k">Table</span><span class="o">|</span>                <span class="n">open_orders</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                        <span class="k">Type</span><span class="o">|</span>                       <span class="k">VIEW</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>                   <span class="k">View</span> <span class="nb">Text</span><span class="o">|</span>       <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">orders</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>          <span class="k">View</span> <span class="n">Original</span> <span class="nb">Text</span><span class="o">|</span>       <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">orders</span><span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>          <span class="k">View</span> <span class="k">Schema</span> <span class="k">Mode</span>  <span class="o">|</span>                  <span class="n">EVOLUTION</span><span class="o">|</span>       <span class="o">|</span>    
+<span class="o">+</span><span class="c1">----------------------------+---------------------------+-------+</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-aux-describe-table.html">describe-table</a></li>
+  <li><a href="sql-ref-syntax-ddl-create-view.html">create-view</a></li>
+  <li><a href="sql-ref-syntax-ddl-drop-view.html">drop-view</a></li>
+  <li><a href="sql-ref-syntax-aux-show-views.html">show-views</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

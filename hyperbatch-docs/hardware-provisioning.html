@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hardware Provisioning - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">Hardware Provisioning</h1>
+                        
+                    
+                    <p>A common question received by HyperBatch developers is how to configure hardware for it. While the right
+hardware will depend on the situation, we make the following recommendations.</p>
+
+<h1 id="storage-systems">Storage Systems</h1>
+
+<p>Because most HyperBatch jobs will likely have to read input data from an external storage system (e.g.
+the Hadoop File System, or HBase), it is important to place it <strong>as close to this system as
+possible</strong>. We recommend the following:</p>
+
+<ul>
+  <li>
+    <p>If at all possible, run HyperBatch on the same nodes as HDFS. The simplest way is to set up a HyperBatch
+<a href="hyperbatch-standalone.html">standalone mode cluster</a> on the same nodes, and configure HyperBatch and
+Hadoop’s memory and CPU usage to avoid interference (for Hadoop, the relevant options are
+<code class="language-plaintext highlighter-rouge">mapred.child.java.opts</code> for the per-task memory and <code class="language-plaintext highlighter-rouge">mapreduce.tasktracker.map.tasks.maximum</code>
+and <code class="language-plaintext highlighter-rouge">mapreduce.tasktracker.reduce.tasks.maximum</code> for number of tasks). Alternatively, you can run
+Hadoop and HyperBatch on a common cluster manager like <a href="running-on-yarn.html">Hadoop YARN</a>.</p>
+  </li>
+  <li>
+    <p>If this is not possible, run HyperBatch on different nodes in the same local-area network as HDFS.</p>
+  </li>
+  <li>
+    <p>For low-latency data stores like HBase, it may be preferable to run computing jobs on different
+nodes than the storage system to avoid interference.</p>
+  </li>
+</ul>
+
+<h1 id="local-disks">Local Disks</h1>
+
+<p>While HyperBatch can perform a lot of its computation in memory, it still uses local disks to store
+data that doesn’t fit in RAM, as well as to preserve intermediate output between stages. We
+recommend having <strong>4-8 disks</strong> per node, configured <em>without</em> RAID (just as separate mount points).
+In Linux, mount the disks with the <code class="language-plaintext highlighter-rouge">noatime</code> option
+to reduce unnecessary writes. In HyperBatch, <a href="configuration.html">configure</a> the <code class="language-plaintext highlighter-rouge">hyperbatch.local.dir</code>
+variable to be a comma-separated list of the local disks. If you are running HDFS, it’s fine to
+use the same disks as HDFS.</p>
+
+<h1 id="memory">Memory</h1>
+
+<p>In general, HyperBatch can run well with anywhere from <strong>8 GiB to hundreds of gigabytes</strong> of memory per
+machine. In all cases, we recommend allocating only at most 75% of the memory for HyperBatch; leave the
+rest for the operating system and buffer cache.</p>
+
+<p>How much memory you will need will depend on your application. To determine how much your
+application uses for a certain dataset size, load part of your dataset in a HyperBatch RDD and use the
+Storage tab of HyperBatch’s monitoring UI (<code class="language-plaintext highlighter-rouge">http://&lt;driver-node&gt;:4040</code>) to see its size in memory.
+Note that memory usage is greatly affected by storage level and serialization format – see
+the <a href="tuning.html">tuning guide</a> for tips on how to reduce it.</p>
+
+<p>Finally, note that the Java VM does not always behave well with more than 200 GiB of RAM. If you
+purchase machines with more RAM than this, you can launch multiple executors in a single node. In
+HyperBatch’s <a href="hyperbatch-standalone.html">standalone mode</a>, a worker is responsible for launching multiple
+executors according to its available memory and cores, and each executor will be launched in a
+separate Java VM.</p>
+
+<h1 id="network">Network</h1>
+
+<p>In our experience, when the data is in memory, a lot of HyperBatch applications are network-bound.
+Using a <strong>10 Gigabit</strong> or higher network is the best way to make these applications faster.
+This is especially true for “distributed reduce” applications such as group-bys, reduce-bys, and
+SQL joins. In any given application, you can see how much data HyperBatch shuffles across the network
+from the application’s monitoring UI (<code class="language-plaintext highlighter-rouge">http://&lt;driver-node&gt;:4040</code>).</p>
+
+<h1 id="cpu-cores">CPU Cores</h1>
+
+<p>HyperBatch scales well to tens of CPU cores per machine because it performs minimal sharing between
+threads. You should likely provision at least <strong>8-16 cores</strong> per machine. Depending on the CPU
+cost of your workload, you may also need more: once data is in memory, most applications are
+either CPU- or network-bound.</p>
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

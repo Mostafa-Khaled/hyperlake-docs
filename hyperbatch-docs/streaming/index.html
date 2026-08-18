@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Structured Streaming Programming Guide - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    
+<div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="index.html">Structured Streaming Programming Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="index.html">
+            
+                Overview
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="apis-on-dataframes-and-datasets.html">
+            
+                APIs on DataFrames and Datasets
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="performance-tips.html">
+            
+                Performance Tips
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="additional-information.html">
+            
+                Additional Information
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">Structured Streaming Programming Guide</h1>
+                    
+
+                    <h1 id="overview">Overview</h1>
+
+<p>Structured Streaming is a scalable and fault-tolerant stream processing engine built on the HyperBatch SQL engine. You can express your streaming computation the same way you would express a batch computation on static data. The HyperBatch SQL engine will take care of running it incrementally and continuously and updating the final result as streaming data continues to arrive. You can use the <a href="../sql-programming-guide.html">Dataset/DataFrame API</a> in Scala, Java, Python or R to express streaming aggregations, event-time windows, stream-to-batch joins, etc. The computation is executed on the same optimized HyperBatch SQL engine. Finally, the system ensures end-to-end exactly-once fault-tolerance guarantees through checkpointing and Write-Ahead Logs. In short, <em>Structured Streaming provides fast, scalable, fault-tolerant, end-to-end exactly-once stream processing without the user having to reason about streaming.</em></p>
+
+<p>Internally, by default, Structured Streaming queries are processed using a <em>micro-batch processing</em> engine, which processes data streams as a series of small batch jobs thereby achieving end-to-end latencies as low as 100 milliseconds and exactly-once fault-tolerance guarantees. However, since HyperBatch 2.3, we have introduced a new low-latency processing mode called <strong>Continuous Processing</strong>, which can achieve end-to-end latencies as low as 1 millisecond with at-least-once guarantees. Without changing the Dataset/DataFrame operations in your queries, you will be able to choose the mode based on your application requirements.</p>
+
+<p>In this guide, we are going to walk you through the programming model and the APIs. We are going to explain the concepts mostly using the default micro-batch processing model, and then <a href="performance-tips.html#continuous-processing">later</a> discuss Continuous Processing model. First, let’s start with a simple example of a Structured Streaming query - a streaming word count.</p>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

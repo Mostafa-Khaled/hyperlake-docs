@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scalar User Defined Functions (UDFs) - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-sketch-aggregates.html">
+            
+                Sketch-Based Approximate Functions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">Scalar User Defined Functions (UDFs)</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>User-Defined Functions (UDFs) are user-programmable routines that act on one row. This documentation lists the classes that are required for creating and registering UDFs. It also contains examples that demonstrate how to define and register UDFs and invoke them in HyperBatch SQL.</p>
+
+<h3 id="userdefinedfunction">UserDefinedFunction</h3>
+
+<p>To define the properties of a user-defined function, the user can use some of the methods defined in this class.</p>
+
+<ul>
+  <li>
+    <p><strong>asNonNullable(): UserDefinedFunction</strong></p>
+
+    <p>Updates UserDefinedFunction to non-nullable.</p>
+  </li>
+  <li>
+    <p><strong>asNondeterministic(): UserDefinedFunction</strong></p>
+
+    <p>Updates UserDefinedFunction to nondeterministic.</p>
+  </li>
+  <li>
+    <p><strong>withName(name: String): UserDefinedFunction</strong></p>
+
+    <p>Updates UserDefinedFunction with a given name.</p>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="codetabs">
+<div data-lang="scala">
+    <div class="highlight"><pre class="codehilite"><code><span class="k">import</span> <span class="nn">org.apache.hyperbatch.sql.HyperBatchSession</span>
+<span class="k">import</span> <span class="nn">org.apache.hyperbatch.sql.functions.udf</span>
+
+<span class="k">val</span> <span class="nv">hyperbatch</span> <span class="k">=</span> <span class="nc">HyperBatchSession</span>
+  <span class="o">.</span><span class="py">builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="py">appName</span><span class="o">(</span><span class="s">"HyperBatch SQL UDF scalar example"</span><span class="o">)</span>
+  <span class="o">.</span><span class="py">getOrCreate</span><span class="o">()</span>
+
+<span class="c1">// Define and register a zero-argument non-deterministic UDF</span>
+<span class="c1">// UDF is deterministic by default, i.e. produces the same result for the same input.</span>
+<span class="k">val</span> <span class="nv">random</span> <span class="k">=</span> <span class="nf">udf</span><span class="o">(()</span> <span class="k">=&gt;</span> <span class="nv">Math</span><span class="o">.</span><span class="py">random</span><span class="o">())</span>
+<span class="nv">hyperbatch</span><span class="o">.</span><span class="py">udf</span><span class="o">.</span><span class="py">register</span><span class="o">(</span><span class="s">"random"</span><span class="o">,</span> <span class="nv">random</span><span class="o">.</span><span class="py">asNondeterministic</span><span class="o">())</span>
+<span class="nv">hyperbatch</span><span class="o">.</span><span class="py">sql</span><span class="o">(</span><span class="s">"SELECT random()"</span><span class="o">).</span><span class="py">show</span><span class="o">()</span>
+<span class="c1">// +-------+</span>
+<span class="c1">// |UDF()  |</span>
+<span class="c1">// +-------+</span>
+<span class="c1">// |xxxxxxx|</span>
+<span class="c1">// +-------+</span>
+
+<span class="c1">// Define and register a one-argument UDF</span>
+<span class="k">val</span> <span class="nv">plusOne</span> <span class="k">=</span> <span class="nf">udf</span><span class="o">((</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+<span class="nv">hyperbatch</span><span class="o">.</span><span class="py">udf</span><span class="o">.</span><span class="py">register</span><span class="o">(</span><span class="s">"plusOne"</span><span class="o">,</span> <span class="n">plusOne</span><span class="o">)</span>
+<span class="nv">hyperbatch</span><span class="o">.</span><span class="py">sql</span><span class="o">(</span><span class="s">"SELECT plusOne(5)"</span><span class="o">).</span><span class="py">show</span><span class="o">()</span>
+<span class="c1">// +------+</span>
+<span class="c1">// |UDF(5)|</span>
+<span class="c1">// +------+</span>
+<span class="c1">// |     6|</span>
+<span class="c1">// +------+</span>
+
+<span class="c1">// Define a two-argument UDF and register it with HyperBatch in one step</span>
+<span class="nv">hyperbatch</span><span class="o">.</span><span class="py">udf</span><span class="o">.</span><span class="py">register</span><span class="o">(</span><span class="s">"strLenScala"</span><span class="o">,</span> <span class="o">(</span><span class="k">_:</span> <span class="kt">String</span><span class="o">).</span><span class="py">length</span> <span class="o">+</span> <span class="o">(</span><span class="k">_:</span> <span class="kt">Int</span><span class="o">))</span>
+<span class="nv">hyperbatch</span><span class="o">.</span><span class="py">sql</span><span class="o">(</span><span class="s">"SELECT strLenScala('test', 1)"</span><span class="o">).</span><span class="py">show</span><span class="o">()</span>
+<span class="c1">// +--------------------+</span>
+<span class="c1">// |strLenScala(test, 1)|</span>
+<span class="c1">// +--------------------+</span>
+<span class="c1">// |                   5|</span>
+<span class="c1">// +--------------------+</span>
+
+<span class="c1">// UDF in a WHERE clause</span>
+<span class="nv">hyperbatch</span><span class="o">.</span><span class="py">udf</span><span class="o">.</span><span class="py">register</span><span class="o">(</span><span class="s">"oneArgFilter"</span><span class="o">,</span> <span class="o">(</span><span class="n">n</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="o">})</span>
+<span class="nv">hyperbatch</span><span class="o">.</span><span class="py">range</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">).</span><span class="py">createOrReplaceTempView</span><span class="o">(</span><span class="s">"test"</span><span class="o">)</span>
+<span class="nv">hyperbatch</span><span class="o">.</span><span class="py">sql</span><span class="o">(</span><span class="s">"SELECT * FROM test WHERE oneArgFilter(id)"</span><span class="o">).</span><span class="py">show</span><span class="o">()</span>
+<span class="c1">// +---+</span>
+<span class="c1">// | id|</span>
+<span class="c1">// +---+</span>
+<span class="c1">// |  6|</span>
+<span class="c1">// |  7|</span>
+<span class="c1">// |  8|</span>
+<span class="c1">// |  9|</span>
+<span class="c1">// +---+</span></code></pre></div>
+    <div><small>Find full example code at "examples/src/main/scala/org/apache/hyperbatch/examples/sql/UserDefinedScalar.scala" in the HyperBatch repo.</small></div>
+  </div>
+<div data-lang="java">
+    <div class="highlight"><pre class="codehilite"><code><span class="kn">import</span> <span class="nn">org.apache.hyperbatch.sql.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.hyperbatch.sql.api.java.UDF1</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.hyperbatch.sql.expressions.UserDefinedFunction</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">hyperbatch</span><span class="o">.</span><span class="na">sql</span><span class="o">.</span><span class="na">functions</span><span class="o">.</span><span class="na">udf</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.hyperbatch.sql.types.DataTypes</span><span class="o">;</span>
+
+<span class="nc">HyperBatchSession</span> <span class="n">hyperbatch</span> <span class="o">=</span> <span class="nc">HyperBatchSession</span>
+  <span class="o">.</span><span class="na">builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">appName</span><span class="o">(</span><span class="s">"Java HyperBatch SQL UDF scalar example"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">getOrCreate</span><span class="o">();</span>
+
+<span class="c1">// Define and register a zero-argument non-deterministic UDF</span>
+<span class="c1">// UDF is deterministic by default, i.e. produces the same result for the same input.</span>
+<span class="nc">UserDefinedFunction</span> <span class="n">random</span> <span class="o">=</span> <span class="n">udf</span><span class="o">(</span>
+  <span class="o">()</span> <span class="o">-&gt;</span> <span class="nc">Math</span><span class="o">.</span><span class="na">random</span><span class="o">(),</span> <span class="nc">DataTypes</span><span class="o">.</span><span class="na">DoubleType</span>
+<span class="o">);</span>
+<span class="n">random</span><span class="o">.</span><span class="na">asNondeterministic</span><span class="o">();</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="na">udf</span><span class="o">().</span><span class="na">register</span><span class="o">(</span><span class="s">"random"</span><span class="o">,</span> <span class="n">random</span><span class="o">);</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="na">sql</span><span class="o">(</span><span class="s">"SELECT random()"</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+<span class="c1">// +-------+</span>
+<span class="c1">// |UDF()  |</span>
+<span class="c1">// +-------+</span>
+<span class="c1">// |xxxxxxx|</span>
+<span class="c1">// +-------+</span>
+
+<span class="c1">// Define and register a one-argument UDF</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="na">udf</span><span class="o">().</span><span class="na">register</span><span class="o">(</span><span class="s">"plusOne"</span><span class="o">,</span>
+  <span class="o">(</span><span class="no">UDF1</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;)</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="nc">DataTypes</span><span class="o">.</span><span class="na">IntegerType</span><span class="o">);</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="na">sql</span><span class="o">(</span><span class="s">"SELECT plusOne(5)"</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+<span class="c1">// +----------+</span>
+<span class="c1">// |plusOne(5)|</span>
+<span class="c1">// +----------+</span>
+<span class="c1">// |         6|</span>
+<span class="c1">// +----------+</span>
+
+<span class="c1">// Define and register a two-argument UDF</span>
+<span class="nc">UserDefinedFunction</span> <span class="n">strLen</span> <span class="o">=</span> <span class="n">udf</span><span class="o">(</span>
+  <span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">,</span> <span class="nc">Integer</span> <span class="n">x</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">+</span> <span class="n">x</span><span class="o">,</span> <span class="nc">DataTypes</span><span class="o">.</span><span class="na">IntegerType</span>
+<span class="o">);</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="na">udf</span><span class="o">().</span><span class="na">register</span><span class="o">(</span><span class="s">"strLen"</span><span class="o">,</span> <span class="n">strLen</span><span class="o">);</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="na">sql</span><span class="o">(</span><span class="s">"SELECT strLen('test', 1)"</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+<span class="c1">// +------------+</span>
+<span class="c1">// |UDF(test, 1)|</span>
+<span class="c1">// +------------+</span>
+<span class="c1">// |           5|</span>
+<span class="c1">// +------------+</span>
+
+<span class="c1">// UDF in a WHERE clause</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="na">udf</span><span class="o">().</span><span class="na">register</span><span class="o">(</span><span class="s">"oneArgFilter"</span><span class="o">,</span>
+  <span class="o">(</span><span class="no">UDF1</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">,</span> <span class="nc">Boolean</span><span class="o">&gt;)</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="o">,</span> <span class="nc">DataTypes</span><span class="o">.</span><span class="na">BooleanType</span><span class="o">);</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="na">range</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">).</span><span class="na">createOrReplaceTempView</span><span class="o">(</span><span class="s">"test"</span><span class="o">);</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="na">sql</span><span class="o">(</span><span class="s">"SELECT * FROM test WHERE oneArgFilter(id)"</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+<span class="c1">// +---+</span>
+<span class="c1">// | id|</span>
+<span class="c1">// +---+</span>
+<span class="c1">// |  6|</span>
+<span class="c1">// |  7|</span>
+<span class="c1">// |  8|</span>
+<span class="c1">// |  9|</span>
+<span class="c1">// +---+</span></code></pre></div>
+    <div><small>Find full example code at "examples/src/main/java/org/apache/hyperbatch/examples/sql/JavaUserDefinedScalar.java" in the HyperBatch repo.</small></div>
+  </div>
+</div>
+
+<h3 id="related-statements">Related Statements</h3>
+<ul>
+  <li><a href="sql-ref-functions-udf-aggregate.html">User Defined Aggregate Functions (UDAFs)</a></li>
+  <li><a href="sql-ref-functions-udf-hive.html">Integration with Hive UDFs/UDAFs/UDTFs</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

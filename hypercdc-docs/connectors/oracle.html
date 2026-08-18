@@ -45,7 +45,7 @@ including tables that are added while the connector is running.
 You can configure the connector to emit change events for specific subsets of schemas and tables, or to ignore, mask, or truncate values in specific columns.</p>
 </div>
 <div class="paragraph">
-<p>For information about the Oracle Database versions that are compatible with this connector, see the <a href="#">HyperCDC release overview</a>.</p>
+<p>For information about the Oracle Database versions that are compatible with this connector, see the <a href="https://debezium.io/releases/">HyperCDC release overview</a>.</p>
 </div>
 <div class="paragraph">
 <p>HyperCDC can ingest change events from Oracle by using the native LogMiner database package, the <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/xstrm/introduction-to-xstream.html">XStream API</a>,
@@ -562,7 +562,7 @@ You can then initiate an incremental snapshot to enable the connector to synchro
 </li>
 <li>
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
-For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
+For more information about how to remove offsets, see the <a href="https://debezium.io/documentation/faq/#how_to_remove_committed_offsets_for_a_connector">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
       <div class="admonition-header">
         <span class="admonition-label">WARNING</span>
@@ -618,7 +618,7 @@ After the snapshot completes, you can optionally trigger an incremental snapshot
 </li>
 <li>
 <p>Clear the offsets in the configured Kafka Connect <a href="https://kafka.apache.org/documentation/#connectconfigs_offset.storage.topic"><code>offset.storage.topic</code></a>.
-For more information about how to remove offsets, see the <a href="#">HyperCDC community FAQ</a>.</p>
+For more information about how to remove offsets, see the <a href="https://debezium.io/documentation/faq/#how_to_remove_committed_offsets_for_a_connector">HyperCDC community FAQ</a>.</p>
 <div class="admonitionblock warning">
       <div class="admonition-header">
         <span class="admonition-label">WARNING</span>
@@ -801,7 +801,7 @@ After the snapshot completes, the connector resumes streaming.</p>
 <div class="paragraph">
 <p>To provide flexibility in managing snapshots, HyperCDC includes a supplementary snapshot mechanism, known as <em>incremental snapshotting</em>.
 Incremental snapshots rely on the HyperCDC mechanism for <a href="../configuration/signalling.html#sending-signals-to-a-hypercdc-connector" class="xref page">sending signals to a HyperCDC connector</a>.
-Incremental snapshots are based on the <a href="#">DDD-3</a> design document.</p>
+Incremental snapshots are based on the <a href="https://github.com/debezium/debezium-design-documents/blob/main/DDD-3.md">DDD-3</a> design document.</p>
 </div>
 <div class="paragraph">
 <p>In an incremental snapshot, instead of capturing the full state of a database all at once, as in an initial snapshot, HyperCDC captures each table in phases, in a series of configurable chunks.
@@ -3438,7 +3438,7 @@ This field is only present when using the LogMiner connection adapter.</p>
             "ID": 1004,
             "FIRST_NAME": "Anne",
             "LAST_NAME": "Kretchmar",
-            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ccada2a2a9a78ca2a3ada2bfbba9bee2a3beab">[email&nbsp;protected]</a>"
+            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="31505f5f545a715f5e505f424654431f5e4356">[email&nbsp;protected]</a>"
         },
         "source": {
             "version": "3.6.1.Final",
@@ -3529,13 +3529,13 @@ You can use the <a href="../configuration/avro.html#avro-serialization" class="x
             "ID": 1004,
             "FIRST_NAME": "Anne",
             "LAST_NAME": "Kretchmar",
-            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92f3fcfcf7f9d2fcfdf3fce1e5f7e0bcfde0f5">[email&nbsp;protected]</a>"
+            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aecfc0c0cbc5eec0c1cfc0ddd9cbdc80c1dcc9">[email&nbsp;protected]</a>"
         },
         "after": {
             "ID": 1004,
             "FIRST_NAME": "Anne",
             "LAST_NAME": "Kretchmar",
-            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="84e5eaeae1c4e1fce5e9f4e8e1aae7ebe9">[email&nbsp;protected]</a>"
+            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="99f8f7f7fcd9fce1f8f4e9f5fcb7faf6f4">[email&nbsp;protected]</a>"
         },
         "source": {
             "version": "3.6.1.Final",
@@ -3576,7 +3576,7 @@ You can use the <a href="../configuration/avro.html#avro-serialization" class="x
 <p>The <code>before</code> field shows the former state of the row with the values that were present before the <code>update</code> database commit.</p>
 </li>
 <li>
-<p>The <code>after</code> field shows the updated state of the row, with the <code>EMAIL</code> value now set to <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="96f7f8f8f3d6f3eef7fbe6faf3b8f5f9fb">[email&nbsp;protected]</a></code>.</p>
+<p>The <code>after</code> field shows the updated state of the row, with the <code>EMAIL</code> value now set to <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="debfb0b0bb9ebba6bfb3aeb2bbf0bdb1b3">[email&nbsp;protected]</a></code>.</p>
 </li>
 <li>
 <p>The structure of the <code>source</code> field includes the same fields as before, but the values are different, because the connector captured the event from a different position in the redo log.</p>
@@ -3635,7 +3635,7 @@ The <code>schema</code> portion of the <em>delete</em> event is identical to the
             "ID": 1004,
             "FIRST_NAME": "Anne",
             "LAST_NAME": "Kretchmar",
-            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5b3a35353e1b3e233a362b373e75383436">[email&nbsp;protected]</a>"
+            "EMAIL": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7d1c1313183d18051c100d1118531e1210">[email&nbsp;protected]</a>"
         },
         "after": null,
         "source": {
@@ -3861,7 +3861,7 @@ For more information about how HyperCDC properties control mappings for these da
 </div>
 <div class="paragraph">
 <p>Support for further data types is planned for subsequent releases.
-Please file a <a href="#">GitHub issue</a> for any specific types that might be missing.</p>
+Please file a <a href="https://github.com/debezium/dbz/issues">GitHub issue</a> for any specific types that might be missing.</p>
 </div>
 <div class="sect2">
 <h3 id="oracle-unsupported-types"><a class="anchor" href="#oracle-unsupported-types"></a>Unsupported data types</h3>
@@ -5073,7 +5073,7 @@ These steps assume the use of the multi-tenancy configuration with a container d
 If you do not intend to use a multi-tenant configuration, it might be necessary to adjust the following steps.</p>
 </div>
 <div class="paragraph">
-<p>For information about using Vagrant to set up Oracle in a virtual machine, see the <a href="#">HyperCDC Vagrant Box for Oracle database</a> GitHub repository.</p>
+<p>For information about using Vagrant to set up Oracle in a virtual machine, see the <a href="https://github.com/debezium/oracle-vagrant-box/">HyperCDC Vagrant Box for Oracle database</a> GitHub repository.</p>
 </div>
 <div class="sect2">
 <h3 id="compatibility-of-the-hypercdc-oracle-connector-with-oracle-installation-types"><a class="anchor" href="#compatibility-of-the-hypercdc-oracle-connector-with-oracle-installation-types"></a>Compatibility with Oracle installation types</h3>

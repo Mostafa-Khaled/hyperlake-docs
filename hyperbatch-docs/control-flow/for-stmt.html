@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FOR statement - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">FOR statement</h1>
+                        
+                    
+                    <p>Repeat the execution of a list of statements for each row returned by query.</p>
+
+<p>This statement may only be used within a <a href="compound-stmt.html">compound statement</a>.</p>
+
+<h2 id="syntax">Syntax</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ label : ] FOR [ variable_name AS ] query
+  DO
+  { stmt ; } [...]
+  END FOR [ label ]
+</code></pre></div></div>
+
+<h2 id="parameters">Parameters</h2>
+
+<ul>
+  <li>
+    <p><strong>label</strong></p>
+
+    <p>An optional label for the loop which is unique amongst all labels for statements within which the <code class="language-plaintext highlighter-rouge">FOR</code> statement is contained.
+If an end label is specified, it must match the beginning label.
+The label can be used to <a href="leave-stmt.html">LEAVE</a> or <a href="iterate-stmt.html">ITERATE</a> the loop.
+To qualify loop column references, use the <code class="language-plaintext highlighter-rouge">variable_name</code>, not the <code class="language-plaintext highlighter-rouge">label</code>.</p>
+  </li>
+  <li>
+    <p><strong>variable_name</strong></p>
+
+    <p>An optional name you can use as a qualifier when referencing the columns in the cursor.</p>
+  </li>
+  <li>
+    <p><strong>stmt</strong></p>
+
+    <p>A SQL statement</p>
+  </li>
+</ul>
+
+<h2 id="notes">Notes</h2>
+
+<p>If the query operates on a table that is also modified within the loop’s body, the semantics depend on the data source.
+For Delta tables, the query will remain unaffected.
+HyperBatch does not guarantee the full execution of the query if the <code class="language-plaintext highlighter-rouge">FOR</code> loop completes prematurely due to a <code class="language-plaintext highlighter-rouge">LEAVE</code> statement or an error condition.
+When exceptions or side-effects occur during the execution of the query, HyperBatch does not guarantee at which point in time within the loop these occur.
+Often <code class="language-plaintext highlighter-rouge">FOR</code> loops can be replaced with relational queries, which are typically more efficient.</p>
+
+<h2 id="examples">Examples</h2>
+
+<pre><code class="language-SQL">-- sum up all odd numbers from 1 through 10
+&gt; BEGIN
+    DECLARE sum INT DEFAULT 0;
+    sumNumbers: FOR row AS SELECT num FROM range(1, 20) AS t(num) DO
+      IF num &gt; 10 THEN
+         LEAVE sumNumbers;
+      ELSEIF num % 2 = 0 THEN
+        ITERATE sumNumbers;
+      END IF;
+      SET sum = sum + row.num;
+    END FOR sumNumbers;
+    VALUES (sum);
+  END;
+ 25
+
+-- Compare with the much more efficient relational computation:
+&gt; SELECT sum(num) FROM range(1, 10) AS t(num) WHERE num % 2 = 1;
+ 25
+</code></pre>
+
+<h2 id="related-articles">Related articles</h2>
+
+<ul>
+  <li><a href="../sql-ref-scripting.html">SQL Scripting</a></li>
+  <li><a href="case-stmt.html">CASE Statement</a></li>
+  <li><a href="compound-stmt.html">Compound Statement</a></li>
+  <li><a href="loop-stmt.html">LOOP Statement</a></li>
+  <li><a href="while-stmt.html">WHILE Statement</a></li>
+  <li><a href="repeat-stmt.html">REPEAT Statement</a></li>
+  <li><a href="leave-stmt.html">LEAVE Statement</a></li>
+  <li><a href="iterate-stmt.html">ITERATE Statement</a></li>
+</ul>
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

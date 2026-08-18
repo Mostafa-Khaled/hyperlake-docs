@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Window Functions - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">Window Functions</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>Window functions operate on a group of rows, referred to as a window, and calculate a return value for each row based on the group of rows. Window functions are useful for processing tasks such as calculating a moving average, computing a cumulative statistic, or accessing the value of rows given the relative position of the current row.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">window_function</span> <span class="p">[</span> <span class="n">nulls_option</span> <span class="p">]</span> <span class="n">OVER</span>
+<span class="p">(</span> <span class="p">[</span>  <span class="p">{</span> <span class="k">PARTITION</span> <span class="o">|</span> <span class="n">DISTRIBUTE</span> <span class="p">}</span> <span class="k">BY</span> <span class="n">partition_col_name</span> <span class="o">=</span> <span class="n">partition_col_val</span> <span class="p">(</span> <span class="p">[</span> <span class="p">,</span> <span class="p">...</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span>
+  <span class="p">{</span> <span class="k">ORDER</span> <span class="o">|</span> <span class="n">SORT</span> <span class="p">}</span> <span class="k">BY</span> <span class="n">expression</span> <span class="p">[</span> <span class="k">ASC</span> <span class="o">|</span> <span class="k">DESC</span> <span class="p">]</span> <span class="p">[</span> <span class="n">NULLS</span> <span class="p">{</span> <span class="k">FIRST</span> <span class="o">|</span> <span class="k">LAST</span> <span class="p">}</span> <span class="p">]</span> <span class="p">[</span> <span class="p">,</span> <span class="p">...</span> <span class="p">]</span>
+  <span class="p">[</span> <span class="n">window_frame</span> <span class="p">]</span> <span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>window_function</strong></p>
+
+    <ul>
+      <li>
+        <p>Ranking Functions</p>
+
+        <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">RANK | DENSE_RANK | PERCENT_RANK | NTILE | ROW_NUMBER</code></p>
+      </li>
+      <li>
+        <p>Analytic Functions</p>
+
+        <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">CUME_DIST | LAG | LEAD | NTH_VALUE | FIRST_VALUE | LAST_VALUE</code></p>
+      </li>
+      <li>
+        <p>Aggregate Functions</p>
+
+        <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">MAX | MIN | COUNT | SUM | AVG | ...</code></p>
+
+        <p>Please refer to the <a href="sql-ref-functions-builtin.html#aggregate-functions">Built-in Aggregation Functions</a> document for a complete list of HyperBatch aggregate functions.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>nulls_option</strong></p>
+
+    <p>Specifies whether or not to skip null values when evaluating the window function. <code class="language-plaintext highlighter-rouge">RESPECT NULLS</code> means not skipping null values, while <code class="language-plaintext highlighter-rouge">IGNORE NULLS</code> means skipping. If not specified, the default is <code class="language-plaintext highlighter-rouge">RESPECT NULLS</code>.</p>
+
+    <p><strong>Syntax:</strong></p>
+
+    <p><code class="language-plaintext highlighter-rouge">{ IGNORE | RESPECT } NULLS</code></p>
+
+    <p><strong>Note:</strong> Only <code class="language-plaintext highlighter-rouge">LAG | LEAD | NTH_VALUE | FIRST_VALUE | LAST_VALUE</code> can be used with <code class="language-plaintext highlighter-rouge">IGNORE NULLS</code>.</p>
+  </li>
+  <li>
+    <p><strong>window_frame</strong></p>
+
+    <p>Specifies which row to start the window on and where to end it.</p>
+
+    <p><strong>Syntax:</strong></p>
+
+    <p><code class="language-plaintext highlighter-rouge">{ RANGE | ROWS } { frame_start | BETWEEN frame_start AND frame_end }</code></p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">frame_start</code> and <code class="language-plaintext highlighter-rouge">frame_end</code> have the following syntax:</p>
+
+        <p><strong>Syntax:</strong></p>
+
+        <p><code class="language-plaintext highlighter-rouge">UNBOUNDED PRECEDING | offset PRECEDING | CURRENT ROW | offset FOLLOWING | UNBOUNDED FOLLOWING</code></p>
+
+        <p><code class="language-plaintext highlighter-rouge">offset:</code> specifies the <code class="language-plaintext highlighter-rouge">offset</code> from the position of the current row.</p>
+      </li>
+    </ul>
+
+    <p><strong>Note:</strong> If <code class="language-plaintext highlighter-rouge">frame_end</code> is omitted it defaults to <code class="language-plaintext highlighter-rouge">CURRENT ROW</code>.</p>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">employees</span> <span class="p">(</span><span class="n">name</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">dept</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">salary</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">age</span> <span class="nb">INT</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">employees</span> <span class="k">VALUES</span> <span class="p">(</span><span class="nv">"Lisa"</span><span class="p">,</span> <span class="nv">"Sales"</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">35</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">employees</span> <span class="k">VALUES</span> <span class="p">(</span><span class="nv">"Evan"</span><span class="p">,</span> <span class="nv">"Sales"</span><span class="p">,</span> <span class="mi">32000</span><span class="p">,</span> <span class="mi">38</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">employees</span> <span class="k">VALUES</span> <span class="p">(</span><span class="nv">"Fred"</span><span class="p">,</span> <span class="nv">"Engineering"</span><span class="p">,</span> <span class="mi">21000</span><span class="p">,</span> <span class="mi">28</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">employees</span> <span class="k">VALUES</span> <span class="p">(</span><span class="nv">"Alex"</span><span class="p">,</span> <span class="nv">"Sales"</span><span class="p">,</span> <span class="mi">30000</span><span class="p">,</span> <span class="mi">33</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">employees</span> <span class="k">VALUES</span> <span class="p">(</span><span class="nv">"Tom"</span><span class="p">,</span> <span class="nv">"Engineering"</span><span class="p">,</span> <span class="mi">23000</span><span class="p">,</span> <span class="mi">33</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">employees</span> <span class="k">VALUES</span> <span class="p">(</span><span class="nv">"Jane"</span><span class="p">,</span> <span class="nv">"Marketing"</span><span class="p">,</span> <span class="mi">29000</span><span class="p">,</span> <span class="mi">28</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">employees</span> <span class="k">VALUES</span> <span class="p">(</span><span class="nv">"Jeff"</span><span class="p">,</span> <span class="nv">"Marketing"</span><span class="p">,</span> <span class="mi">35000</span><span class="p">,</span> <span class="mi">38</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">employees</span> <span class="k">VALUES</span> <span class="p">(</span><span class="nv">"Paul"</span><span class="p">,</span> <span class="nv">"Engineering"</span><span class="p">,</span> <span class="mi">29000</span><span class="p">,</span> <span class="mi">23</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">employees</span> <span class="k">VALUES</span> <span class="p">(</span><span class="nv">"Chloe"</span><span class="p">,</span> <span class="nv">"Engineering"</span><span class="p">,</span> <span class="mi">23000</span><span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">employees</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+-----+</span>
+<span class="o">|</span> <span class="n">name</span><span class="o">|</span>       <span class="n">dept</span><span class="o">|</span><span class="n">salary</span><span class="o">|</span>  <span class="n">age</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+-----+</span>
+<span class="o">|</span><span class="n">Chloe</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">23000</span><span class="o">|</span>   <span class="mi">25</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Fred</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">21000</span><span class="o">|</span>   <span class="mi">28</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Paul</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span>   <span class="mi">23</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Helen</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span>   <span class="mi">40</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">Tom</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">23000</span><span class="o">|</span>   <span class="mi">33</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jane</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span>   <span class="mi">28</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jeff</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">35000</span><span class="o">|</span>   <span class="mi">38</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Evan</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">32000</span><span class="o">|</span>   <span class="mi">38</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Lisa</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">10000</span><span class="o">|</span>   <span class="mi">35</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Alex</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">30000</span><span class="o">|</span>   <span class="mi">33</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+-----+</span>
+
+<span class="k">SELECT</span> <span class="n">name</span><span class="p">,</span> <span class="n">dept</span><span class="p">,</span> <span class="n">salary</span><span class="p">,</span> <span class="n">RANK</span><span class="p">()</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">PARTITION</span> <span class="k">BY</span> <span class="n">dept</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">salary</span><span class="p">)</span> <span class="k">AS</span> <span class="n">rank</span> <span class="k">FROM</span> <span class="n">employees</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+----+</span>
+<span class="o">|</span> <span class="n">name</span><span class="o">|</span>       <span class="n">dept</span><span class="o">|</span><span class="n">salary</span><span class="o">|</span><span class="n">rank</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+----+</span>
+<span class="o">|</span> <span class="n">Lisa</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">10000</span><span class="o">|</span>   <span class="mi">1</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Alex</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">30000</span><span class="o">|</span>   <span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Evan</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">32000</span><span class="o">|</span>   <span class="mi">3</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Fred</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">21000</span><span class="o">|</span>   <span class="mi">1</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">Tom</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">23000</span><span class="o">|</span>   <span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Chloe</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">23000</span><span class="o">|</span>   <span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Paul</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span>   <span class="mi">4</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Helen</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span>   <span class="mi">1</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jane</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span>   <span class="mi">1</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jeff</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">35000</span><span class="o">|</span>   <span class="mi">3</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+----+</span>
+
+<span class="k">SELECT</span> <span class="n">name</span><span class="p">,</span> <span class="n">dept</span><span class="p">,</span> <span class="n">salary</span><span class="p">,</span> <span class="n">DENSE_RANK</span><span class="p">()</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">PARTITION</span> <span class="k">BY</span> <span class="n">dept</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">salary</span> <span class="k">ROWS</span> <span class="k">BETWEEN</span>
+    <span class="n">UNBOUNDED</span> <span class="k">PRECEDING</span> <span class="k">AND</span> <span class="k">CURRENT</span> <span class="k">ROW</span><span class="p">)</span> <span class="k">AS</span> <span class="n">dense_rank</span> <span class="k">FROM</span> <span class="n">employees</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+----------+</span>
+<span class="o">|</span> <span class="n">name</span><span class="o">|</span>       <span class="n">dept</span><span class="o">|</span><span class="n">salary</span><span class="o">|</span><span class="n">dense_rank</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+----------+</span>
+<span class="o">|</span> <span class="n">Lisa</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">10000</span><span class="o">|</span>         <span class="mi">1</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Alex</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">30000</span><span class="o">|</span>         <span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Evan</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">32000</span><span class="o">|</span>         <span class="mi">3</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Fred</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">21000</span><span class="o">|</span>         <span class="mi">1</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">Tom</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">23000</span><span class="o">|</span>         <span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Chloe</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">23000</span><span class="o">|</span>         <span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Paul</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span>         <span class="mi">3</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Helen</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span>         <span class="mi">1</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jane</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span>         <span class="mi">1</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jeff</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">35000</span><span class="o">|</span>         <span class="mi">2</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+----------+</span>
+
+<span class="k">SELECT</span> <span class="n">name</span><span class="p">,</span> <span class="n">dept</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">CUME_DIST</span><span class="p">()</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">PARTITION</span> <span class="k">BY</span> <span class="n">dept</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">age</span>
+    <span class="k">RANGE</span> <span class="k">BETWEEN</span> <span class="n">UNBOUNDED</span> <span class="k">PRECEDING</span> <span class="k">AND</span> <span class="k">CURRENT</span> <span class="k">ROW</span><span class="p">)</span> <span class="k">AS</span> <span class="n">cume_dist</span> <span class="k">FROM</span> <span class="n">employees</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+------------------+</span>
+<span class="o">|</span> <span class="n">name</span><span class="o">|</span>       <span class="n">dept</span><span class="o">|</span><span class="n">age</span>   <span class="o">|</span>         <span class="n">cume_dist</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+------------------+</span>
+<span class="o">|</span> <span class="n">Alex</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span>    <span class="mi">33</span><span class="o">|</span><span class="mi">0</span><span class="p">.</span><span class="mi">3333333333333333</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Lisa</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span>    <span class="mi">35</span><span class="o">|</span><span class="mi">0</span><span class="p">.</span><span class="mi">6666666666666666</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Evan</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span>    <span class="mi">38</span><span class="o">|</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Paul</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span>    <span class="mi">23</span><span class="o">|</span>              <span class="mi">0</span><span class="p">.</span><span class="mi">25</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Chloe</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span>    <span class="mi">25</span><span class="o">|</span>              <span class="mi">0</span><span class="p">.</span><span class="mi">75</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Fred</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span>    <span class="mi">28</span><span class="o">|</span>              <span class="mi">0</span><span class="p">.</span><span class="mi">25</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">Tom</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span>    <span class="mi">33</span><span class="o">|</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jane</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span>    <span class="mi">28</span><span class="o">|</span><span class="mi">0</span><span class="p">.</span><span class="mi">3333333333333333</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jeff</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span>    <span class="mi">38</span><span class="o">|</span><span class="mi">0</span><span class="p">.</span><span class="mi">6666666666666666</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Helen</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span>    <span class="mi">40</span><span class="o">|</span>               <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+------------------+</span>
+
+<span class="k">SELECT</span> <span class="n">name</span><span class="p">,</span> <span class="n">dept</span><span class="p">,</span> <span class="n">salary</span><span class="p">,</span> <span class="k">MIN</span><span class="p">(</span><span class="n">salary</span><span class="p">)</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">PARTITION</span> <span class="k">BY</span> <span class="n">dept</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">salary</span><span class="p">)</span> <span class="k">AS</span> <span class="k">min</span>
+    <span class="k">FROM</span> <span class="n">employees</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+-----+</span>
+<span class="o">|</span> <span class="n">name</span><span class="o">|</span>       <span class="n">dept</span><span class="o">|</span><span class="n">salary</span><span class="o">|</span>  <span class="k">min</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+-----+</span>
+<span class="o">|</span> <span class="n">Lisa</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">10000</span><span class="o">|</span><span class="mi">10000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Alex</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">30000</span><span class="o">|</span><span class="mi">10000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Evan</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">32000</span><span class="o">|</span><span class="mi">10000</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Helen</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span><span class="mi">29000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jane</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span><span class="mi">29000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jeff</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">35000</span><span class="o">|</span><span class="mi">29000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Fred</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">21000</span><span class="o">|</span><span class="mi">21000</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">Tom</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">23000</span><span class="o">|</span><span class="mi">21000</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Chloe</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">23000</span><span class="o">|</span><span class="mi">21000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Paul</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span><span class="mi">21000</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+-----+</span>
+
+<span class="k">SELECT</span> <span class="n">name</span><span class="p">,</span> <span class="n">salary</span><span class="p">,</span>
+    <span class="n">LAG</span><span class="p">(</span><span class="n">salary</span><span class="p">)</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">PARTITION</span> <span class="k">BY</span> <span class="n">dept</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">salary</span><span class="p">)</span> <span class="k">AS</span> <span class="n">lag</span><span class="p">,</span>
+    <span class="n">LEAD</span><span class="p">(</span><span class="n">salary</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">PARTITION</span> <span class="k">BY</span> <span class="n">dept</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">salary</span><span class="p">)</span> <span class="k">AS</span> <span class="n">lead</span>
+    <span class="k">FROM</span> <span class="n">employees</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+-----+-----+</span>
+<span class="o">|</span> <span class="n">name</span><span class="o">|</span>       <span class="n">dept</span><span class="o">|</span><span class="n">salary</span><span class="o">|</span>  <span class="n">lag</span><span class="o">|</span> <span class="n">lead</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+-----+-----+</span>
+<span class="o">|</span> <span class="n">Lisa</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">10000</span><span class="o">|</span><span class="k">NULL</span> <span class="o">|</span><span class="mi">30000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Alex</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">30000</span><span class="o">|</span><span class="mi">10000</span><span class="o">|</span><span class="mi">32000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Evan</span><span class="o">|</span>      <span class="n">Sales</span><span class="o">|</span> <span class="mi">32000</span><span class="o">|</span><span class="mi">30000</span><span class="o">|</span>    <span class="mi">0</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Fred</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">21000</span><span class="o">|</span> <span class="k">NULL</span><span class="o">|</span><span class="mi">23000</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Chloe</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">23000</span><span class="o">|</span><span class="mi">21000</span><span class="o">|</span><span class="mi">23000</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">Tom</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">23000</span><span class="o">|</span><span class="mi">23000</span><span class="o">|</span><span class="mi">29000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Paul</span><span class="o">|</span><span class="n">Engineering</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span><span class="mi">23000</span><span class="o">|</span>    <span class="mi">0</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Helen</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span> <span class="k">NULL</span><span class="o">|</span><span class="mi">29000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jane</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">29000</span><span class="o">|</span><span class="mi">29000</span><span class="o">|</span><span class="mi">35000</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Jeff</span><span class="o">|</span>  <span class="n">Marketing</span><span class="o">|</span> <span class="mi">35000</span><span class="o">|</span><span class="mi">29000</span><span class="o">|</span>    <span class="mi">0</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------+------+-----+-----+</span>
+
+<span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span>
+    <span class="n">LEAD</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">IGNORE</span> <span class="n">NULLS</span> <span class="n">OVER</span> <span class="n">w</span> <span class="n">lead</span><span class="p">,</span>
+    <span class="n">LAG</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">IGNORE</span> <span class="n">NULLS</span> <span class="n">OVER</span> <span class="n">w</span> <span class="n">lag</span><span class="p">,</span>
+    <span class="n">NTH_VALUE</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">IGNORE</span> <span class="n">NULLS</span> <span class="n">OVER</span> <span class="n">w</span> <span class="n">nth_value</span><span class="p">,</span>
+    <span class="n">FIRST_VALUE</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">IGNORE</span> <span class="n">NULLS</span> <span class="n">OVER</span> <span class="n">w</span> <span class="n">first_value</span><span class="p">,</span>
+    <span class="n">LAST_VALUE</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">IGNORE</span> <span class="n">NULLS</span> <span class="n">OVER</span> <span class="n">w</span> <span class="n">last_value</span>
+    <span class="k">FROM</span> <span class="n">test_ignore_null</span>
+    <span class="k">WINDOW</span> <span class="n">w</span> <span class="k">AS</span> <span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">id</span><span class="p">)</span>
+    <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">id</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--+----+----+----+---------+-----------+----------+</span>
+<span class="o">|</span><span class="n">id</span><span class="o">|</span>   <span class="n">v</span><span class="o">|</span><span class="n">lead</span><span class="o">|</span> <span class="n">lag</span><span class="o">|</span><span class="n">nth_value</span><span class="o">|</span><span class="n">first_value</span><span class="o">|</span><span class="n">last_value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--+----+----+----+---------+-----------+----------+</span>
+<span class="o">|</span> <span class="mi">0</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span>     <span class="k">NULL</span><span class="o">|</span>       <span class="k">NULL</span><span class="o">|</span>      <span class="k">NULL</span><span class="o">|</span>
+<span class="o">|</span> <span class="mi">1</span><span class="o">|</span>   <span class="n">x</span><span class="o">|</span>   <span class="n">x</span><span class="o">|</span>   <span class="n">x</span><span class="o">|</span>     <span class="k">NULL</span><span class="o">|</span>          <span class="n">x</span><span class="o">|</span>         <span class="n">x</span><span class="o">|</span>
+<span class="o">|</span> <span class="mi">2</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span>     <span class="k">NULL</span><span class="o">|</span>          <span class="n">x</span><span class="o">|</span>         <span class="n">x</span><span class="o">|</span>
+<span class="o">|</span> <span class="mi">3</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span>     <span class="k">NULL</span><span class="o">|</span>          <span class="n">x</span><span class="o">|</span>         <span class="n">x</span><span class="o">|</span>
+<span class="o">|</span> <span class="mi">4</span><span class="o">|</span>   <span class="n">y</span><span class="o">|</span>   <span class="n">y</span><span class="o">|</span>   <span class="n">y</span><span class="o">|</span>        <span class="n">y</span><span class="o">|</span>          <span class="n">x</span><span class="o">|</span>         <span class="n">y</span><span class="o">|</span>
+<span class="o">|</span> <span class="mi">5</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span>        <span class="n">y</span><span class="o">|</span>          <span class="n">x</span><span class="o">|</span>         <span class="n">y</span><span class="o">|</span>
+<span class="o">|</span> <span class="mi">6</span><span class="o">|</span>   <span class="n">z</span><span class="o">|</span>   <span class="n">z</span><span class="o">|</span>   <span class="n">z</span><span class="o">|</span>        <span class="n">y</span><span class="o">|</span>          <span class="n">x</span><span class="o">|</span>         <span class="n">z</span><span class="o">|</span>
+<span class="o">|</span> <span class="mi">7</span><span class="o">|</span>   <span class="n">v</span><span class="o">|</span>   <span class="n">v</span><span class="o">|</span>   <span class="n">v</span><span class="o">|</span>        <span class="n">y</span><span class="o">|</span>          <span class="n">x</span><span class="o">|</span>         <span class="n">v</span><span class="o">|</span>
+<span class="o">|</span> <span class="mi">8</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span><span class="k">NULL</span><span class="o">|</span>        <span class="n">y</span><span class="o">|</span>          <span class="n">x</span><span class="o">|</span>         <span class="n">v</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--+----+----+----+---------+-----------+----------+</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-qry-select.html">SELECT</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

@@ -36,7 +36,7 @@
 
 <div class="paragraph">
 <p>The HyperCDC PostgreSQL connector captures row-level changes in the schemas of a PostgreSQL database.
-For information about the PostgreSQL versions that are compatible with the connector, see the <a href="#">HyperCDC release overview</a>.</p>
+For information about the PostgreSQL versions that are compatible with the connector, see the <a href="https://debezium.io/releases/">HyperCDC release overview</a>.</p>
 </div>
 <div class="paragraph">
 <p>The first time it connects to a PostgreSQL server or cluster, the connector takes a consistent snapshot of all schemas.
@@ -68,7 +68,7 @@ In production environments, if you want to assert greater control over the setup
 You can configure the connector to use either of the following plug-ins:</p>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><a href="#"><code>decoderbufs</code></a></dt>
+<dt class="hdlist1"><a href="https://github.com/debezium/postgres-decoderbufs"><code>decoderbufs</code></a></dt>
 <dd>
 <p>Decoding plug-in that is based on Protobuf and maintained by the HyperCDC community.</p>
 </dd>
@@ -454,7 +454,7 @@ After the snapshot completes, the connector resumes streaming.</p>
 <div class="paragraph">
 <p>To provide flexibility in managing snapshots, HyperCDC includes a supplementary snapshot mechanism, known as <em>incremental snapshotting</em>.
 Incremental snapshots rely on the HyperCDC mechanism for <a href="../configuration/signalling.html#sending-signals-to-a-hypercdc-connector" class="xref page">sending signals to a HyperCDC connector</a>.
-Incremental snapshots are based on the <a href="#">DDD-3</a> design document.</p>
+Incremental snapshots are based on the <a href="https://github.com/debezium/debezium-design-documents/blob/main/DDD-3.md">DDD-3</a> design document.</p>
 </div>
 <div class="paragraph">
 <p>In an incremental snapshot, instead of capturing the full state of a database all at once, as in an initial snapshot, HyperCDC captures each table in phases, in a series of configurable chunks.
@@ -2202,7 +2202,7 @@ Typically, a table without a primary key is used for appending messages to the e
             "id": 1,
             "first_name": "Anne",
             "last_name": "Kretchmar",
-            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a3c2cdcdc6c8e3cdccc2cdd0d4c6d18dccd1c4">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3a5b54545f517a54555b54494d5f481455485d">[email&nbsp;protected]</a>"
         },
         "source": {
             "version": "3.6.1.Final",
@@ -2397,7 +2397,7 @@ Here is an example of a change event value in an event that the connector genera
             "id": 1,
             "first_name": "Anne Marie",
             "last_name": "Kretchmar",
-            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="14757a7a717f547a7b757a676371663a7b6673">[email&nbsp;protected]</a>"
+            "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f6979898939db69899979885819384d8998491">[email&nbsp;protected]</a>"
         },
         "source": {
             "version": "3.6.1.Final",
@@ -4943,7 +4943,7 @@ Plug-ins use  a number of PostgreSQL specific APIs, as described by the <a href=
 <div class="paragraph">
 <p>The PostgreSQL connector works with one of HyperCDC’s supported logical decoding plug-ins to receive change events from the database in either the <a href="https://github.com/google/protobuf">Protobuf format</a> or the <a href="https://github.com/postgres/postgres/blob/master/src/backend/replication/pgoutput/pgoutput.c">pgoutput</a> format.
 The <code>pgoutput</code> plugin comes out-of-the-box with the PostgreSQL database.
-For more details on using Protobuf via the <code>decoderbufs</code> plug-in, see the plug-in <a href="#"><code>documentation</code></a> which discusses its requirements, limitations, and how to compile it.</p>
+For more details on using Protobuf via the <code>decoderbufs</code> plug-in, see the plug-in <a href="https://github.com/debezium/postgres-decoderbufs/blob/main/README.md"><code>documentation</code></a> which discusses its requirements, limitations, and how to compile it.</p>
 </div>
 <div class="paragraph">
 <p>For simplicity, HyperCDC also provides a container image based on the upstream PostgreSQL server image, on top of which it compiles and installs the plug-ins.
@@ -4978,7 +4978,7 @@ For example, a change to the default value for a column will trigger a refresh w
 </ul>
 </div>
 <div class="paragraph">
-<p>All up-to-date differences are tracked in a test suite <a href="#">Java class</a>.</p>
+<p>All up-to-date differences are tracked in a test suite <a href="https://github.com/debezium/debezium/blob/main/debezium-connector-postgres/src/test/java/io/debezium/connector/postgresql/DecoderDifferences.java">Java class</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -5628,7 +5628,7 @@ This property is for testing only.</p>
 </li>
 <li>
 <p>(Optional) Use a standard Kafka tool to remove the connector offsets from the offset storage topic.
-For an example of how to remove connector offsets, see <a href="#">how to remove connector offsets</a> in the HyperCDC community FAQ.</p>
+For an example of how to remove connector offsets, see <a href="https://debezium.io/documentation/faq/#how_to_remove_committed_offsets_for_a_connector">how to remove connector offsets</a> in the HyperCDC community FAQ.</p>
 </li>
 <li>
 <p>Restart the database.</p>

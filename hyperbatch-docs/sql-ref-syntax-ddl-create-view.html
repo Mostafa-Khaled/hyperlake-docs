@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CREATE VIEW - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">CREATE VIEW</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>Views are based on the result-set of an <code class="language-plaintext highlighter-rouge">SQL</code> query. <code class="language-plaintext highlighter-rouge">CREATE VIEW</code> constructs
+a virtual table that has no physical data therefore other operations like
+<code class="language-plaintext highlighter-rouge">ALTER VIEW</code> and <code class="language-plaintext highlighter-rouge">DROP VIEW</code> only change metadata.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="p">[</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="p">]</span> <span class="p">[</span> <span class="p">[</span> <span class="k">GLOBAL</span> <span class="p">]</span> <span class="k">TEMPORARY</span> <span class="p">]</span> <span class="k">VIEW</span> <span class="p">[</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="p">]</span> <span class="n">view_identifier</span>
+    <span class="n">create_view_clauses</span> <span class="k">AS</span> <span class="n">query</span>
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>OR REPLACE</strong></p>
+
+    <p>If a view of same name already exists, it will be replaced.</p>
+  </li>
+  <li>
+    <p><strong>[ GLOBAL ] TEMPORARY</strong></p>
+
+    <p><code class="language-plaintext highlighter-rouge">TEMPORARY</code> views are session-scoped and are dropped when the session ends;
+  no entry is persisted in the underlying metastore.
+  Temporary views live in the per-session <code class="language-plaintext highlighter-rouge">system.session</code> namespace.</p>
+
+    <p><code class="language-plaintext highlighter-rouge">GLOBAL TEMPORARY</code> views are tied to the system-preserved temporary database <code class="language-plaintext highlighter-rouge">global_temp</code>.</p>
+  </li>
+  <li>
+    <p><strong>IF NOT EXISTS</strong></p>
+
+    <p>Creates a view if it does not exist.
+  This clause is not supported for <code class="language-plaintext highlighter-rouge">TEMPORARY</code> views yet.</p>
+  </li>
+  <li>
+    <p><strong>view_identifier</strong></p>
+
+    <p>Specifies a view name.</p>
+
+    <ul>
+      <li>
+        <p>For a <strong>persistent</strong> view the name may be optionally qualified with a database name (or a
+catalog and database). If the name is not qualified the view is created in the current
+schema.</p>
+
+        <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ catalog_name. ] [ database_name. ] view_name</code></p>
+      </li>
+      <li>
+        <p>For a <strong>temporary</strong> view the name may be optionally qualified with the session schema
+(<code class="language-plaintext highlighter-rouge">session</code> or <code class="language-plaintext highlighter-rouge">system.session</code>). Any other qualifier is rejected with
+<code class="language-plaintext highlighter-rouge">INVALID_TEMP_OBJ_QUALIFIER</code>. For example, <code class="language-plaintext highlighter-rouge">CREATE TEMPORARY VIEW session.v ...</code> and
+<code class="language-plaintext highlighter-rouge">CREATE TEMPORARY VIEW system.session.v ...</code> are accepted; <code class="language-plaintext highlighter-rouge">CREATE TEMPORARY VIEW mydb.v ...</code>
+is not.</p>
+
+        <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ { session | system.session } . ] view_name</code></p>
+      </li>
+    </ul>
+
+    <p>The fully qualified view name must be unique within its schema.</p>
+  </li>
+  <li>
+    <p><strong>create_view_clauses</strong></p>
+
+    <p>These clauses are optional and order insensitive. It can be of following formats.</p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">[ ( column_name [ COMMENT column_comment ], ... ) ]</code> to specify column-level comments.</li>
+      <li><code class="language-plaintext highlighter-rouge">[ COMMENT view_comment ]</code> to specify view-level comments.</li>
+      <li><code class="language-plaintext highlighter-rouge">[ TBLPROPERTIES ( property_name = property_value [ , ... ] ) ]</code> to add metadata key-value pairs.</li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">[ WITH SCHEMA { BINDING | COMPENSATION | [ TYPE ] EVOLUTION } ]</code> to specify how the view reacts to schema changes</p>
+
+        <p>This clause is not supported for <code class="language-plaintext highlighter-rouge">TEMPORARY</code> views.</p>
+
+        <ul>
+          <li><strong>BINDING</strong> - The view can tolerate only type changes in the underlying schema requiring safe up-casts.</li>
+          <li><strong>COMPENSATION</strong> - The view can tolerate type changes in the underlying schema requiring casts. Runtime casting errors may occur.</li>
+          <li><strong>TYPE EVOLUTION</strong> - The view will adapt to any type changes in the underlying schema.</li>
+          <li><strong>EVOLUTION</strong> - For views defined without a column lists any schema changes are adapted by the view, including, for queries with <code class="language-plaintext highlighter-rouge">SELECT *</code> dropped or added columns.
+If the view is defined with a column list, the clause is interpreted as <code class="language-plaintext highlighter-rouge">TYPE EVOLUTION</code>.</li>
+        </ul>
+
+        <p>The default is <code class="language-plaintext highlighter-rouge">WITH SCHEMA COMPENSATION</code>.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>query</strong></p>
+
+    <p>A <a href="sql-ref-syntax-qry-select.html">SELECT</a> statement that constructs the view from base tables or other views.</p>
+
+    <p>A persistent view cannot reference temporary views, temporary functions, or session variables.</p>
+
+    <p>For a persistent view, the SQL Path in effect at <code class="language-plaintext highlighter-rouge">CREATE VIEW</code> time is captured into the view’s
+metadata; the body resolves against that frozen path on every reference, not the invoker’s
+current path. Use <a href="sql-ref-syntax-aux-describe-table.html">DESCRIBE EXTENDED</a> to inspect the
+captured path. See <a href="sql-ref-syntax-aux-conf-mgmt-set-path.html">SET PATH</a>.</p>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Create or replace view for `experienced_employee` with comments.</span>
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">VIEW</span> <span class="n">experienced_employee</span>
+    <span class="p">(</span><span class="n">ID</span> <span class="k">COMMENT</span> <span class="s1">'Unique identification number'</span><span class="p">,</span> <span class="n">Name</span><span class="p">)</span> 
+    <span class="k">COMMENT</span> <span class="s1">'View for experienced employees'</span>
+    <span class="k">AS</span> <span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span> <span class="k">FROM</span> <span class="n">all_employee</span>
+        <span class="k">WHERE</span> <span class="n">working_years</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="c1">-- Create a global temporary view `subscribed_movies`.</span>
+<span class="k">CREATE</span> <span class="k">GLOBAL</span> <span class="k">TEMPORARY</span> <span class="k">VIEW</span> <span class="n">subscribed_movies</span> 
+    <span class="k">AS</span> <span class="k">SELECT</span> <span class="n">mo</span><span class="p">.</span><span class="n">member_id</span><span class="p">,</span> <span class="n">mb</span><span class="p">.</span><span class="n">full_name</span><span class="p">,</span> <span class="n">mo</span><span class="p">.</span><span class="n">movie_title</span>
+        <span class="k">FROM</span> <span class="n">movies</span> <span class="k">AS</span> <span class="n">mo</span> <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">members</span> <span class="k">AS</span> <span class="n">mb</span> 
+        <span class="k">ON</span> <span class="n">mo</span><span class="p">.</span><span class="n">member_id</span> <span class="o">=</span> <span class="n">mb</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+
+<span class="c1">-- Create a view filtering the `orders` table which will adjust to schema changes in `orders`.</span>
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">VIEW</span> <span class="n">open_orders</span> <span class="k">WITH</span> <span class="k">SCHEMA</span> <span class="n">EVOLUTION</span>
+    <span class="k">AS</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">orders</span> <span class="k">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'open'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="create-a-temporary-view-with-a-session-qualifier">Create a temporary view with a session qualifier</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Unqualified, `session`-qualified, and `system.session`-qualified names all create the same</span>
+<span class="c1">-- temporary view in the per-session `system.session` namespace.</span>
+<span class="k">CREATE</span> <span class="k">TEMPORARY</span> <span class="k">VIEW</span> <span class="n">recent_orders</span>
+    <span class="k">AS</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">orders</span> <span class="k">WHERE</span> <span class="n">order_date</span> <span class="o">&gt;</span> <span class="k">current_date</span> <span class="o">-</span> <span class="n">INTERVAL</span> <span class="mi">7</span> <span class="n">DAYS</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">TEMPORARY</span> <span class="k">VIEW</span> <span class="k">session</span><span class="p">.</span><span class="n">recent_orders</span>
+    <span class="k">AS</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">orders</span> <span class="k">WHERE</span> <span class="n">order_date</span> <span class="o">&gt;</span> <span class="k">current_date</span> <span class="o">-</span> <span class="n">INTERVAL</span> <span class="mi">7</span> <span class="n">DAYS</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">TEMPORARY</span> <span class="k">VIEW</span> <span class="k">system</span><span class="p">.</span><span class="k">session</span><span class="p">.</span><span class="n">recent_orders</span>
+    <span class="k">AS</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">orders</span> <span class="k">WHERE</span> <span class="n">order_date</span> <span class="o">&gt;</span> <span class="k">current_date</span> <span class="o">-</span> <span class="n">INTERVAL</span> <span class="mi">7</span> <span class="n">DAYS</span><span class="p">;</span>
+
+<span class="c1">-- All three names address the same temporary view:</span>
+<span class="k">SELECT</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">recent_orders</span><span class="p">;</span>
+<span class="k">SELECT</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">session</span><span class="p">.</span><span class="n">recent_orders</span><span class="p">;</span>
+<span class="k">SELECT</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">system</span><span class="p">.</span><span class="k">session</span><span class="p">.</span><span class="n">recent_orders</span><span class="p">;</span>
+
+<span class="c1">-- DROP VIEW accepts the same qualifiers (there is no DROP TEMPORARY VIEW form):</span>
+<span class="k">DROP</span> <span class="k">VIEW</span> <span class="k">session</span><span class="p">.</span><span class="n">recent_orders</span><span class="p">;</span>
+
+<span class="c1">-- Any other qualifier on a TEMPORARY view is rejected.</span>
+<span class="k">CREATE</span> <span class="k">TEMPORARY</span> <span class="k">VIEW</span> <span class="n">mydb</span><span class="p">.</span><span class="n">bad_temp</span> <span class="k">AS</span> <span class="k">SELECT</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">[</span><span class="n">INVALID_TEMP_OBJ_QUALIFIER</span><span class="p">]</span> <span class="n">qualifier</span> <span class="nv">`mydb`</span> <span class="k">is</span> <span class="k">not</span> <span class="n">allowed</span> <span class="k">for</span> <span class="k">temporary</span> <span class="k">VIEW</span> <span class="p">...</span>
+
+<span class="k">CREATE</span> <span class="k">TEMPORARY</span> <span class="k">VIEW</span> <span class="k">system</span><span class="p">.</span><span class="n">builtin</span><span class="p">.</span><span class="n">bad_temp</span> <span class="k">AS</span> <span class="k">SELECT</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">[</span><span class="n">INVALID_TEMP_OBJ_QUALIFIER</span><span class="p">]</span> <span class="n">qualifier</span> <span class="nv">`system`</span><span class="p">.</span><span class="nv">`builtin`</span> <span class="k">is</span> <span class="k">not</span> <span class="n">allowed</span> <span class="k">for</span> <span class="k">temporary</span> <span class="k">VIEW</span> <span class="p">...</span>
+</code></pre></div></div>
+
+<h3 id="frozen-sql-path">Frozen SQL Path</h3>
+
+<p>A persistent view captures the SQL Path that is in effect at <code class="language-plaintext highlighter-rouge">CREATE VIEW</code> time. The view body
+resolves against that frozen path on every reference, even when the caller’s session has set a
+different PATH. See <a href="sql-ref-syntax-aux-conf-mgmt-set-path.html">SET PATH</a>.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">SCHEMA</span> <span class="n">views_a</span><span class="p">;</span>
+<span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">SCHEMA</span> <span class="n">views_b</span><span class="p">;</span>
+<span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">views_a</span><span class="p">.</span><span class="n">t</span> <span class="k">USING</span> <span class="n">parquet</span> <span class="k">AS</span> <span class="k">SELECT</span> <span class="mi">1</span> <span class="k">AS</span> <span class="n">id</span><span class="p">;</span>
+<span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">views_b</span><span class="p">.</span><span class="n">t</span> <span class="k">USING</span> <span class="n">parquet</span> <span class="k">AS</span> <span class="k">SELECT</span> <span class="mi">2</span> <span class="k">AS</span> <span class="n">id</span><span class="p">;</span>
+
+<span class="c1">-- The PATH at CREATE VIEW time points at views_a, so unqualified `t` in the view body binds to</span>
+<span class="c1">-- views_a.t.</span>
+<span class="o">&gt;</span> <span class="k">SET</span> <span class="n">PATH</span> <span class="o">=</span> <span class="n">hyperbatch_catalog</span><span class="p">.</span><span class="n">views_a</span><span class="p">,</span> <span class="k">system</span><span class="p">.</span><span class="n">builtin</span><span class="p">;</span>
+<span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">VIEW</span> <span class="k">default</span><span class="p">.</span><span class="n">v_frozen</span> <span class="k">AS</span> <span class="k">SELECT</span> <span class="n">id</span> <span class="k">FROM</span> <span class="n">t</span><span class="p">;</span>
+
+<span class="c1">-- Flip the live PATH. The view body still resolves `t` against the frozen path.</span>
+<span class="o">&gt;</span> <span class="k">SET</span> <span class="n">PATH</span> <span class="o">=</span> <span class="n">hyperbatch_catalog</span><span class="p">.</span><span class="n">views_b</span><span class="p">,</span> <span class="k">system</span><span class="p">.</span><span class="n">builtin</span><span class="p">;</span>
+
+<span class="c1">-- A bare query follows the LIVE path:</span>
+<span class="o">&gt;</span> <span class="k">SELECT</span> <span class="n">id</span> <span class="k">FROM</span> <span class="n">t</span><span class="p">;</span>
+ <span class="mi">2</span>
+
+<span class="c1">-- The view body follows its FROZEN path:</span>
+<span class="o">&gt;</span> <span class="k">SELECT</span> <span class="n">id</span> <span class="k">FROM</span> <span class="k">default</span><span class="p">.</span><span class="n">v_frozen</span><span class="p">;</span>
+ <span class="mi">1</span>
+
+<span class="c1">-- DESCRIBE EXTENDED shows the captured path:</span>
+<span class="o">&gt;</span> <span class="k">DESCRIBE</span> <span class="n">EXTENDED</span> <span class="k">default</span><span class="p">.</span><span class="n">v_frozen</span><span class="p">;</span>
+ <span class="p">...</span>
+ <span class="k">SQL</span> <span class="n">Path</span>  <span class="n">hyperbatch_catalog</span><span class="p">.</span><span class="n">views_a</span><span class="p">,</span> <span class="k">system</span><span class="p">.</span><span class="n">builtin</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-ddl-alter-view.html">ALTER VIEW</a></li>
+  <li><a href="sql-ref-syntax-ddl-drop-view.html">DROP VIEW</a></li>
+  <li><a href="sql-ref-syntax-aux-show-views.html">SHOW VIEWS</a></li>
+  <li><a href="sql-ref-syntax-aux-conf-mgmt-set-path.html">SET PATH</a></li>
+  <li><a href="sql-ref-name-resolution.html">Name Resolution</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

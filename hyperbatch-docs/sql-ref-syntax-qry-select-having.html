@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HAVING Clause - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">HAVING Clause</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">HAVING</code> clause is used to filter the results produced by
+<code class="language-plaintext highlighter-rouge">GROUP BY</code> based on the specified condition. It is often used
+in conjunction with a <a href="sql-ref-syntax-qry-select-groupby.html">GROUP BY</a>
+clause.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">HAVING</span> <span class="n">boolean_expression</span>
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>boolean_expression</strong></p>
+
+    <p>Specifies any expression that evaluates to a result type <code class="language-plaintext highlighter-rouge">boolean</code>. Two or
+  more expressions may be combined together using the logical
+  operators ( <code class="language-plaintext highlighter-rouge">AND</code>, <code class="language-plaintext highlighter-rouge">OR</code> ).</p>
+
+    <p><strong>Note</strong></p>
+
+    <p>The expressions specified in the <code class="language-plaintext highlighter-rouge">HAVING</code> clause can only refer to:</p>
+    <ol>
+      <li>Constants</li>
+      <li>Expressions that appear in GROUP BY</li>
+      <li>Aggregate functions</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">dealer</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">city</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">car_model</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">quantity</span> <span class="nb">INT</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">dealer</span> <span class="k">VALUES</span>
+    <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">'Fremont'</span><span class="p">,</span> <span class="s1">'Honda Civic'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">'Fremont'</span><span class="p">,</span> <span class="s1">'Honda Accord'</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">'Fremont'</span><span class="p">,</span> <span class="s1">'Honda CRV'</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s1">'Dublin'</span><span class="p">,</span> <span class="s1">'Honda Civic'</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s1">'Dublin'</span><span class="p">,</span> <span class="s1">'Honda Accord'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s1">'Dublin'</span><span class="p">,</span> <span class="s1">'Honda CRV'</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="s1">'San Jose'</span><span class="p">,</span> <span class="s1">'Honda Civic'</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="s1">'San Jose'</span><span class="p">,</span> <span class="s1">'Honda Accord'</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+
+<span class="c1">-- `HAVING` clause referring to column in `GROUP BY`.</span>
+<span class="k">SELECT</span> <span class="n">city</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span> <span class="k">AS</span> <span class="k">sum</span> <span class="k">FROM</span> <span class="n">dealer</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">city</span> <span class="k">HAVING</span> <span class="n">city</span> <span class="o">=</span> <span class="s1">'Fremont'</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-------+---+</span>
+<span class="o">|</span>   <span class="n">city</span><span class="o">|</span><span class="k">sum</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------+---+</span>
+<span class="o">|</span><span class="n">Fremont</span><span class="o">|</span> <span class="mi">32</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------+---+</span>
+
+<span class="c1">-- `HAVING` clause referring to aggregate function.</span>
+<span class="k">SELECT</span> <span class="n">city</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span> <span class="k">AS</span> <span class="k">sum</span> <span class="k">FROM</span> <span class="n">dealer</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">city</span> <span class="k">HAVING</span> <span class="k">sum</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">15</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-------+---+</span>
+<span class="o">|</span>   <span class="n">city</span><span class="o">|</span><span class="k">sum</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------+---+</span>
+<span class="o">|</span> <span class="n">Dublin</span><span class="o">|</span> <span class="mi">33</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Fremont</span><span class="o">|</span> <span class="mi">32</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------+---+</span>
+
+<span class="c1">-- `HAVING` clause referring to aggregate function by its alias.</span>
+<span class="k">SELECT</span> <span class="n">city</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span> <span class="k">AS</span> <span class="k">sum</span> <span class="k">FROM</span> <span class="n">dealer</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">city</span> <span class="k">HAVING</span> <span class="k">sum</span> <span class="o">&gt;</span> <span class="mi">15</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-------+---+</span>
+<span class="o">|</span>   <span class="n">city</span><span class="o">|</span><span class="k">sum</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------+---+</span>
+<span class="o">|</span> <span class="n">Dublin</span><span class="o">|</span> <span class="mi">33</span><span class="o">|</span>
+<span class="o">|</span><span class="n">Fremont</span><span class="o">|</span> <span class="mi">32</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------+---+</span>
+
+<span class="c1">-- `HAVING` clause referring to a different aggregate function than what is present in</span>
+<span class="c1">-- `SELECT` list.</span>
+<span class="k">SELECT</span> <span class="n">city</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span> <span class="k">AS</span> <span class="k">sum</span> <span class="k">FROM</span> <span class="n">dealer</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">city</span> <span class="k">HAVING</span> <span class="k">max</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">15</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">------+---+</span>
+<span class="o">|</span>  <span class="n">city</span><span class="o">|</span><span class="k">sum</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">------+---+</span>
+<span class="o">|</span><span class="n">Dublin</span><span class="o">|</span> <span class="mi">33</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">------+---+</span>
+
+<span class="c1">-- `HAVING` clause referring to constant expression.</span>
+<span class="k">SELECT</span> <span class="n">city</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span> <span class="k">AS</span> <span class="k">sum</span> <span class="k">FROM</span> <span class="n">dealer</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">city</span> <span class="k">HAVING</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">city</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--------+---+</span>
+<span class="o">|</span>    <span class="n">city</span><span class="o">|</span><span class="k">sum</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---+</span>
+<span class="o">|</span>  <span class="n">Dublin</span><span class="o">|</span> <span class="mi">33</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">Fremont</span><span class="o">|</span> <span class="mi">32</span><span class="o">|</span>
+<span class="o">|</span><span class="n">San</span> <span class="n">Jose</span><span class="o">|</span> <span class="mi">13</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+---+</span>
+
+<span class="c1">-- `HAVING` clause without a `GROUP BY` clause.</span>
+<span class="k">SELECT</span> <span class="k">sum</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span> <span class="k">AS</span> <span class="k">sum</span> <span class="k">FROM</span> <span class="n">dealer</span> <span class="k">HAVING</span> <span class="k">sum</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---+</span>
+<span class="o">|</span><span class="k">sum</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---+</span>
+<span class="o">|</span> <span class="mi">78</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---+</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-qry-select.html">SELECT Main</a></li>
+  <li><a href="sql-ref-syntax-qry-select-where.html">WHERE Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-groupby.html">GROUP BY Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-orderby.html">ORDER BY Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-sortby.html">SORT BY Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-clusterby.html">CLUSTER BY Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-distribute-by.html">DISTRIBUTE BY Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-limit.html">LIMIT Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-offset.html">OFFSET Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-case.html">CASE Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-pivot.html">PIVOT Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-unpivot.html">UNPIVOT Clause</a></li>
+  <li><a href="sql-ref-syntax-qry-select-lateral-view.html">LATERAL VIEW Clause</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ALTER DATABASE - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">ALTER DATABASE</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p><code class="language-plaintext highlighter-rouge">ALTER DATABASE</code> statement changes the properties or location of a database. Please note that the usage of
+<code class="language-plaintext highlighter-rouge">DATABASE</code>, <code class="language-plaintext highlighter-rouge">SCHEMA</code> and <code class="language-plaintext highlighter-rouge">NAMESPACE</code> are interchangeable and one can be used in place of the others. An error message
+is issued if the database is not found in the system.</p>
+
+<h3 id="set-properties">SET PROPERTIES</h3>
+<p><code class="language-plaintext highlighter-rouge">ALTER DATABASE SET DBPROPERTIES</code> statement changes the properties associated with a database.
+The specified property values override any existing value with the same property name. 
+This command is mostly used to record the metadata for a database and may be used for auditing purposes.</p>
+
+<h4 id="syntax">Syntax</h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="p">{</span> <span class="k">DATABASE</span> <span class="o">|</span> <span class="k">SCHEMA</span> <span class="o">|</span> <span class="n">NAMESPACE</span> <span class="p">}</span> <span class="n">database_name</span>
+    <span class="k">SET</span> <span class="p">{</span> <span class="n">DBPROPERTIES</span> <span class="o">|</span> <span class="n">PROPERTIES</span> <span class="p">}</span> <span class="p">(</span> <span class="n">property_name</span> <span class="o">=</span> <span class="n">property_value</span> <span class="p">[</span> <span class="p">,</span> <span class="p">...</span> <span class="p">]</span> <span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="parameters">Parameters</h4>
+
+<ul>
+  <li>
+    <p><strong>database_name</strong></p>
+
+    <p>Specifies the name of the database to be altered.</p>
+  </li>
+</ul>
+
+<h3 id="unset-properties">UNSET PROPERTIES</h3>
+<p><code class="language-plaintext highlighter-rouge">ALTER DATABASE UNSET DBPROPERTIES</code> statement unsets the properties associated with a database.
+If the specified property key does not exist, the command will ignore it and finally succeed.
+(available since HyperBatch 4.0.0).</p>
+
+<h4 id="syntax-1">Syntax</h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="p">{</span> <span class="k">DATABASE</span> <span class="o">|</span> <span class="k">SCHEMA</span> <span class="o">|</span> <span class="n">NAMESPACE</span> <span class="p">}</span> <span class="n">database_name</span>
+    <span class="n">UNSET</span> <span class="p">{</span> <span class="n">DBPROPERTIES</span> <span class="o">|</span> <span class="n">PROPERTIES</span> <span class="p">}</span> <span class="p">(</span> <span class="n">property_name</span> <span class="p">[</span> <span class="p">,</span> <span class="p">...</span> <span class="p">]</span> <span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="parameters-1">Parameters</h4>
+
+<ul>
+  <li>
+    <p><strong>database_name</strong></p>
+
+    <p>Specifies the name of the database to be altered.</p>
+  </li>
+</ul>
+
+<h3 id="set-location">SET LOCATION</h3>
+<p><code class="language-plaintext highlighter-rouge">ALTER DATABASE SET LOCATION</code> statement changes the default parent-directory where new tables will be added 
+for a database. Please note that it does not move the contents of the database’s current directory to the newly 
+specified location or change the locations associated with any tables/partitions under the specified database 
+(available since HyperBatch 3.0.0 with the Hive metastore version 3.0.0 and later).</p>
+
+<h4 id="syntax-2">Syntax</h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="p">{</span> <span class="k">DATABASE</span> <span class="o">|</span> <span class="k">SCHEMA</span> <span class="o">|</span> <span class="n">NAMESPACE</span> <span class="p">}</span> <span class="n">database_name</span>
+    <span class="k">SET</span> <span class="k">LOCATION</span> <span class="s1">'new_location'</span>
+</code></pre></div></div>
+
+<h4 id="parameters-2">Parameters</h4>
+
+<ul>
+  <li>
+    <p><strong>database_name</strong></p>
+
+    <p>Specifies the name of the database to be altered.</p>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Creates a database named `inventory`.</span>
+<span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">inventory</span><span class="p">;</span>
+
+<span class="c1">-- Alters the database to set properties `Edited-by` and `Edit-date`.</span>
+<span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="n">inventory</span> <span class="k">SET</span> <span class="n">DBPROPERTIES</span> <span class="p">(</span><span class="s1">'Edited-by'</span> <span class="o">=</span> <span class="s1">'John'</span><span class="p">,</span> <span class="s1">'Edit-date'</span> <span class="o">=</span> <span class="s1">'01/01/2001'</span><span class="p">);</span>
+
+<span class="c1">-- Verify that properties are set.</span>
+<span class="k">DESCRIBE</span> <span class="k">DATABASE</span> <span class="n">EXTENDED</span> <span class="n">inventory</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-------------------------+------------------------------------------+</span>
+<span class="o">|</span><span class="n">database_description_item</span><span class="o">|</span>                <span class="n">database_description_value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------+------------------------------------------+</span>
+<span class="o">|</span>            <span class="k">Database</span> <span class="n">Name</span><span class="o">|</span>                                 <span class="n">inventory</span><span class="o">|</span>
+<span class="o">|</span>              <span class="n">Description</span><span class="o">|</span>                                          <span class="o">|</span>
+<span class="o">|</span>                 <span class="k">Location</span><span class="o">|</span>   <span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="k">temp</span><span class="o">/</span><span class="n">hyperbatch</span><span class="o">-</span><span class="n">warehouse</span><span class="o">/</span><span class="n">inventory</span><span class="p">.</span><span class="n">db</span><span class="o">|</span>
+<span class="o">|</span>               <span class="n">Properties</span><span class="o">|</span><span class="p">((</span><span class="n">Edit</span><span class="o">-</span><span class="nb">date</span><span class="p">,</span><span class="mi">01</span><span class="o">/</span><span class="mi">01</span><span class="o">/</span><span class="mi">2001</span><span class="p">),</span> <span class="p">(</span><span class="n">Edited</span><span class="o">-</span><span class="k">by</span><span class="p">,</span><span class="n">John</span><span class="p">))</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------+------------------------------------------+</span>
+
+<span class="c1">-- Alters the database to set a new location.</span>
+<span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="n">inventory</span> <span class="k">SET</span> <span class="k">LOCATION</span> <span class="s1">'file:/temp/hyperbatch-warehouse/new_inventory.db'</span><span class="p">;</span>
+
+<span class="c1">-- Verify that a new location is set.</span>
+<span class="k">DESCRIBE</span> <span class="k">DATABASE</span> <span class="n">EXTENDED</span> <span class="n">inventory</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-------------------------+-------------------------------------------+</span>
+<span class="o">|</span><span class="n">database_description_item</span><span class="o">|</span>                 <span class="n">database_description_value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------+-------------------------------------------+</span>
+<span class="o">|</span>            <span class="k">Database</span> <span class="n">Name</span><span class="o">|</span>                                  <span class="n">inventory</span><span class="o">|</span>
+<span class="o">|</span>              <span class="n">Description</span><span class="o">|</span>                                           <span class="o">|</span>
+<span class="o">|</span>                 <span class="k">Location</span><span class="o">|</span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="k">temp</span><span class="o">/</span><span class="n">hyperbatch</span><span class="o">-</span><span class="n">warehouse</span><span class="o">/</span><span class="n">new_inventory</span><span class="p">.</span><span class="n">db</span><span class="o">|</span>
+<span class="o">|</span>               <span class="n">Properties</span><span class="o">|</span> <span class="p">((</span><span class="n">Edit</span><span class="o">-</span><span class="nb">date</span><span class="p">,</span><span class="mi">01</span><span class="o">/</span><span class="mi">01</span><span class="o">/</span><span class="mi">2001</span><span class="p">),</span> <span class="p">(</span><span class="n">Edited</span><span class="o">-</span><span class="k">by</span><span class="p">,</span><span class="n">John</span><span class="p">))</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------+-------------------------------------------+</span>
+
+<span class="c1">-- Alters the database to unset the property `Edited-by`</span>
+<span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="n">inventory</span> <span class="n">UNSET</span> <span class="n">DBPROPERTIES</span> <span class="p">(</span><span class="s1">'Edited-by'</span><span class="p">);</span>
+
+<span class="c1">-- Verify that the property `Edited-by` has been unset.</span>
+<span class="k">DESCRIBE</span> <span class="k">DATABASE</span> <span class="n">EXTENDED</span> <span class="n">inventory</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-------------------------+-------------------------------------------+</span>
+<span class="o">|</span><span class="n">database_description_item</span><span class="o">|</span>                 <span class="n">database_description_value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------+-------------------------------------------+</span>
+<span class="o">|</span>            <span class="k">Database</span> <span class="n">Name</span><span class="o">|</span>                                  <span class="n">inventory</span><span class="o">|</span>
+<span class="o">|</span>              <span class="n">Description</span><span class="o">|</span>                                           <span class="o">|</span>
+<span class="o">|</span>                 <span class="k">Location</span><span class="o">|</span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="k">temp</span><span class="o">/</span><span class="n">hyperbatch</span><span class="o">-</span><span class="n">warehouse</span><span class="o">/</span><span class="n">new_inventory</span><span class="p">.</span><span class="n">db</span><span class="o">|</span>
+<span class="o">|</span>               <span class="n">Properties</span><span class="o">|</span> <span class="p">((</span><span class="n">Edit</span><span class="o">-</span><span class="nb">date</span><span class="p">,</span><span class="mi">01</span><span class="o">/</span><span class="mi">01</span><span class="o">/</span><span class="mi">2001</span><span class="p">))</span>                  <span class="o">|</span>
+<span class="o">+</span><span class="c1">-------------------------+-------------------------------------------+</span>
+
+<span class="c1">-- Alters the database to unset a non-existent property `non-existent`</span>
+<span class="c1">-- Note: The command will ignore 'non-existent' and finally succeed</span>
+<span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="n">inventory</span> <span class="n">UNSET</span> <span class="n">DBPROPERTIES</span> <span class="p">(</span><span class="s1">'non-existent'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-aux-describe-database.html">DESCRIBE DATABASE</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

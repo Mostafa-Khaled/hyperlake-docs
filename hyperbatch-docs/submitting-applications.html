@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Submitting Applications - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">Submitting Applications</h1>
+                        
+                    
+                    <p>The <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code> script in HyperBatch’s <code class="language-plaintext highlighter-rouge">bin</code> directory is used to launch applications on a cluster.
+It can use all of HyperBatch’s supported <a href="cluster-overview.html#cluster-manager-types">cluster managers</a>
+through a uniform interface so you don’t have to configure your application especially for each one.</p>
+
+<h1 id="bundling-your-applications-dependencies">Bundling Your Application’s Dependencies</h1>
+<p>If your code depends on other projects, you will need to package them alongside
+your application in order to distribute the code to a HyperBatch cluster. To do this,
+create an assembly jar (or “uber” jar) containing your code and its dependencies. Both
+<a href="https://github.com/sbt/sbt-assembly">sbt</a> and
+<a href="http://maven.apache.org/plugins/maven-shade-plugin/">Maven</a>
+have assembly plugins. When creating assembly jars, list HyperBatch and Hadoop
+as <code class="language-plaintext highlighter-rouge">provided</code> dependencies; these need not be bundled since they are provided by
+the cluster manager at runtime. Once you have an assembled jar you can call the <code class="language-plaintext highlighter-rouge">bin/hyperbatch-submit</code>
+script as shown here while passing your jar.</p>
+
+<p>For Python, you can use the <code class="language-plaintext highlighter-rouge">--py-files</code> argument of <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code> to add <code class="language-plaintext highlighter-rouge">.py</code>, <code class="language-plaintext highlighter-rouge">.zip</code> or <code class="language-plaintext highlighter-rouge">.egg</code>
+files to be distributed with your application. If you depend on multiple Python files we recommend
+packaging them into a <code class="language-plaintext highlighter-rouge">.zip</code> or <code class="language-plaintext highlighter-rouge">.egg</code>. For third-party Python dependencies,
+see <a href="api/python/tutorial/python_packaging.html">Python Package Management</a>.</p>
+
+<h1 id="launching-applications-with-hyperbatch-submit">Launching Applications with hyperbatch-submit</h1>
+
+<p>Once a user application is bundled, it can be launched using the <code class="language-plaintext highlighter-rouge">bin/hyperbatch-submit</code> script.
+This script takes care of setting up the classpath with HyperBatch and its
+dependencies, and can support different cluster managers and deploy modes that HyperBatch supports:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">./bin/hyperbatch-submit <span class="se">\</span>
+  <span class="nt">--class</span> &lt;main-class&gt; <span class="se">\</span>
+  <span class="nt">--master</span> &lt;master-url&gt; <span class="se">\</span>
+  <span class="nt">--deploy-mode</span> &lt;deploy-mode&gt; <span class="se">\</span>
+  <span class="nt">--conf</span> &lt;key&gt;<span class="o">=</span>&lt;value&gt; <span class="se">\</span>
+  ... <span class="c"># other options</span>
+  &lt;application-jar&gt; <span class="se">\</span>
+  <span class="o">[</span>application-arguments]</code></pre></figure>
+
+<p>Some of the commonly used options are:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">--class</code>: The entry point for your application (e.g. <code class="language-plaintext highlighter-rouge">org.apache.hyperbatch.examples.HyperBatchPi</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">--master</code>: The <a href="#master-urls">master URL</a> for the cluster (e.g. <code class="language-plaintext highlighter-rouge">hyperbatch://23.195.26.187:7077</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">--deploy-mode</code>: Whether to deploy your driver on the worker nodes (<code class="language-plaintext highlighter-rouge">cluster</code>) or locally as an external client (<code class="language-plaintext highlighter-rouge">client</code>) (default: <code class="language-plaintext highlighter-rouge">client</code>) <b> † </b></li>
+  <li><code class="language-plaintext highlighter-rouge">--conf</code>: Arbitrary HyperBatch configuration property in key=value format. For values that contain spaces wrap “key=value” in quotes (as shown). Multiple configurations should be passed as separate arguments. (e.g. <code class="language-plaintext highlighter-rouge">--conf &lt;key&gt;=&lt;value&gt; --conf &lt;key2&gt;=&lt;value2&gt;</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">application-jar</code>: Path to a bundled jar including your application and all dependencies. The URL must be globally visible inside of your cluster, for instance, an <code class="language-plaintext highlighter-rouge">hdfs://</code> path or a <code class="language-plaintext highlighter-rouge">file://</code> path that is present on all nodes.</li>
+  <li><code class="language-plaintext highlighter-rouge">application-arguments</code>: Arguments passed to the main method of your main class, if any</li>
+</ul>
+
+<p><b>†</b> A common deployment strategy is to submit your application from a gateway machine
+that is
+physically co-located with your worker machines (e.g. Master node in a standalone EC2 cluster).
+In this setup, <code class="language-plaintext highlighter-rouge">client</code> mode is appropriate. In <code class="language-plaintext highlighter-rouge">client</code> mode, the driver is launched directly
+within the <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code> process which acts as a <em>client</em> to the cluster. The input and
+output of the application is attached to the console. Thus, this mode is especially suitable
+for applications that involve the REPL (e.g. HyperBatch shell).</p>
+
+<p>Alternatively, if your application is submitted from a machine far from the worker machines (e.g.
+locally on your laptop), it is common to use <code class="language-plaintext highlighter-rouge">cluster</code> mode to minimize network latency between
+the drivers and the executors. Currently, the standalone mode does not support cluster mode for Python
+applications.</p>
+
+<p>For Python applications, simply pass a <code class="language-plaintext highlighter-rouge">.py</code> file in the place of <code class="language-plaintext highlighter-rouge">&lt;application-jar&gt;</code>,
+and add Python <code class="language-plaintext highlighter-rouge">.zip</code>, <code class="language-plaintext highlighter-rouge">.egg</code> or <code class="language-plaintext highlighter-rouge">.py</code> files to the search path with <code class="language-plaintext highlighter-rouge">--py-files</code>.</p>
+
+<p>There are a few options available that are specific to the
+<a href="cluster-overview.html#cluster-manager-types">cluster manager</a> that is being used.
+For example, with a <a href="hyperbatch-standalone.html">HyperBatch standalone cluster</a> with <code class="language-plaintext highlighter-rouge">cluster</code> deploy mode,
+you can also specify <code class="language-plaintext highlighter-rouge">--supervise</code> to make sure that the driver is automatically restarted if it
+fails with a non-zero exit code. To enumerate all such options available to <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code>,
+run it with <code class="language-plaintext highlighter-rouge">--help</code>. Here are a few examples of common options:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># Run application locally on 8 cores</span>
+./bin/hyperbatch-submit <span class="se">\</span>
+  <span class="nt">--class</span> org.apache.hyperbatch.examples.HyperBatchPi <span class="se">\</span>
+  <span class="nt">--master</span> <span class="s2">"local[8]"</span> <span class="se">\</span>
+  /path/to/examples.jar <span class="se">\</span>
+  100
+
+<span class="c"># Run on a HyperBatch standalone cluster in client deploy mode</span>
+./bin/hyperbatch-submit <span class="se">\</span>
+  <span class="nt">--class</span> org.apache.hyperbatch.examples.HyperBatchPi <span class="se">\</span>
+  <span class="nt">--master</span> hyperbatch://207.184.161.138:7077 <span class="se">\</span>
+  <span class="nt">--executor-memory</span> 20G <span class="se">\</span>
+  <span class="nt">--total-executor-cores</span> 100 <span class="se">\</span>
+  /path/to/examples.jar <span class="se">\</span>
+  1000
+
+<span class="c"># Run on a HyperBatch standalone cluster in cluster deploy mode with supervise</span>
+./bin/hyperbatch-submit <span class="se">\</span>
+  <span class="nt">--class</span> org.apache.hyperbatch.examples.HyperBatchPi <span class="se">\</span>
+  <span class="nt">--master</span> hyperbatch://207.184.161.138:7077 <span class="se">\</span>
+  <span class="nt">--deploy-mode</span> cluster <span class="se">\</span>
+  <span class="nt">--supervise</span> <span class="se">\</span>
+  <span class="nt">--executor-memory</span> 20G <span class="se">\</span>
+  <span class="nt">--total-executor-cores</span> 100 <span class="se">\</span>
+  /path/to/examples.jar <span class="se">\</span>
+  1000
+
+<span class="c"># Run on a YARN cluster in cluster deploy mode</span>
+<span class="nb">export </span><span class="nv">HADOOP_CONF_DIR</span><span class="o">=</span>XXX
+./bin/hyperbatch-submit <span class="se">\</span>
+  <span class="nt">--class</span> org.apache.hyperbatch.examples.HyperBatchPi <span class="se">\</span>
+  <span class="nt">--master</span> yarn <span class="se">\</span>
+  <span class="nt">--deploy-mode</span> cluster <span class="se">\</span>
+  <span class="nt">--executor-memory</span> 20G <span class="se">\</span>
+  <span class="nt">--num-executors</span> 50 <span class="se">\</span>
+  /path/to/examples.jar <span class="se">\</span>
+  1000
+
+<span class="c"># Run a Python application on a HyperBatch standalone cluster</span>
+./bin/hyperbatch-submit <span class="se">\</span>
+  <span class="nt">--master</span> hyperbatch://207.184.161.138:7077 <span class="se">\</span>
+  examples/src/main/python/pi.py <span class="se">\</span>
+  1000
+
+<span class="c"># Run on a Kubernetes cluster in cluster deploy mode</span>
+./bin/hyperbatch-submit <span class="se">\</span>
+  <span class="nt">--class</span> org.apache.hyperbatch.examples.HyperBatchPi <span class="se">\</span>
+  <span class="nt">--master</span> k8s://xx.yy.zz.ww:443 <span class="se">\</span>
+  <span class="nt">--deploy-mode</span> cluster <span class="se">\</span>
+  <span class="nt">--executor-memory</span> 20G <span class="se">\</span>
+  <span class="nt">--num-executors</span> 50 <span class="se">\</span>
+  http://path/to/examples.jar <span class="se">\</span>
+  1000</code></pre></figure>
+
+<h1 id="master-urls">Master URLs</h1>
+
+<p>The master URL passed to HyperBatch can be in one of the following formats:</p>
+
+<div class="table-container"><table>
+<thead><tr><th>Master URL</th><th>Meaning</th></tr></thead>
+<tbody><tr><td> <code>local</code> </td><td> Run HyperBatch locally with one worker thread (i.e. no parallelism at all). </td></tr>
+<tr><td> <code>local[K]</code> </td><td> Run HyperBatch locally with K worker threads (ideally, set this to the number of cores on your machine). </td></tr>
+<tr><td> <code>local[K,F]</code> </td><td> Run HyperBatch locally with K worker threads and F maxFailures (see <a href="configuration.html#scheduling">hyperbatch.task.maxFailures</a> for an explanation of this variable). </td></tr>
+<tr><td> <code>local[*]</code> </td><td> Run HyperBatch locally with as many worker threads as logical cores on your machine.</td></tr>
+<tr><td> <code>local[*,F]</code> </td><td> Run HyperBatch locally with as many worker threads as logical cores on your machine and F maxFailures.</td></tr>
+<tr><td> <code>local-cluster[N,C,M]</code> </td><td> Local-cluster mode is only for unit tests. It emulates a distributed cluster in a single JVM with N number of workers, C cores per worker and M MiB of memory per worker.</td></tr>
+<tr><td> <code>hyperbatch://HOST:PORT</code> </td><td> Connect to the given <a href="hyperbatch-standalone.html">HyperBatch standalone
+        cluster</a> master. The port must be whichever one your master is configured to use, which is 7077 by default.
+</td></tr>
+<tr><td> <code>hyperbatch://HOST1:PORT1,HOST2:PORT2</code> </td><td> Connect to the given <a href="hyperbatch-standalone.html#standby-masters-with-zookeeper">HyperBatch standalone
+        cluster with standby masters with Zookeeper</a>. The list must have all the master hosts in the high availability cluster set up with Zookeeper. The port must be whichever each master is configured to use, which is 7077 by default.
+</td></tr>
+<tr><td> <code>yarn</code> </td><td> Connect to a <a href="running-on-yarn.html"> YARN </a> cluster in
+        <code>client</code> or <code>cluster</code> mode depending on the value of <code>--deploy-mode</code>.
+        The cluster location will be found based on the <code>HADOOP_CONF_DIR</code> or <code>YARN_CONF_DIR</code> variable.
+</td></tr>
+<tr><td> <code>k8s://HOST:PORT</code> </td><td> Connect to a <a href="running-on-kubernetes.html">Kubernetes</a> cluster in
+        <code>client</code> or <code>cluster</code> mode depending on the value of <code>--deploy-mode</code>.
+        The <code>HOST</code> and <code>PORT</code> refer to the <a href="https://kubernetes.io/docs/reference/generated/kube-apiserver/">Kubernetes API Server</a>.
+        It connects using TLS by default. In order to force it to use an unsecured connection, you can use
+        <code>k8s://http://HOST:PORT</code>.
+</td></tr>
+</tbody></table></div>
+
+<h1 id="loading-configuration-from-a-file">Loading Configuration from a File</h1>
+
+<p>The <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code> script can load default <a href="configuration.html">HyperBatch configuration values</a> from a
+properties file and pass them on to your application. The file can be specified via the <code class="language-plaintext highlighter-rouge">--properties-file</code>
+parameter. When this is not specified, by default HyperBatch will read options from <code class="language-plaintext highlighter-rouge">conf/hyperbatch-defaults.conf</code>
+in the <code class="language-plaintext highlighter-rouge">HYPERBATCH_HOME</code> directory.</p>
+
+<p>An additional flag <code class="language-plaintext highlighter-rouge">--load-hyperbatch-defaults</code> can be used to tell HyperBatch to load configurations from <code class="language-plaintext highlighter-rouge">conf/hyperbatch-defaults.conf</code>
+even when a property file is provided via <code class="language-plaintext highlighter-rouge">--properties-file</code>. This is useful, for instance, when users
+want to put system-wide default settings in the former while user/cluster specific settings in the latter.</p>
+
+<p>Loading default HyperBatch configurations this way can obviate the need for certain flags to
+<code class="language-plaintext highlighter-rouge">hyperbatch-submit</code>. For instance, if the <code class="language-plaintext highlighter-rouge">hyperbatch.master</code> property is set, you can safely omit the
+<code class="language-plaintext highlighter-rouge">--master</code> flag from <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code>. In general, configuration values explicitly set on a
+<code class="language-plaintext highlighter-rouge">HyperBatchConf</code> take the highest precedence, then flags passed to <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code>, then values in the
+defaults file.</p>
+
+<p>If you are ever unclear where configuration options are coming from, you can print out fine-grained
+debugging information by running <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code> with the <code class="language-plaintext highlighter-rouge">--verbose</code> option.</p>
+
+<h1 id="advanced-dependency-management">Advanced Dependency Management</h1>
+<p>When using <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code>, the application jar along with any jars included with the <code class="language-plaintext highlighter-rouge">--jars</code> option
+will be automatically transferred to the cluster. URLs supplied after <code class="language-plaintext highlighter-rouge">--jars</code> must be separated by commas. That list is included in the driver and executor classpaths. Directory expansion does not work with <code class="language-plaintext highlighter-rouge">--jars</code>.</p>
+
+<p>HyperBatch uses the following URL scheme to allow different strategies for disseminating jars:</p>
+
+<ul>
+  <li><strong>file:</strong> - Absolute paths and <code class="language-plaintext highlighter-rouge">file:/</code> URIs are served by the driver’s HTTP file server, and
+every executor pulls the file from the driver HTTP server.</li>
+  <li><strong>hdfs:</strong>, <strong>http:</strong>, <strong>https:</strong>, <strong>ftp:</strong> - these pull down files and JARs from the URI as expected</li>
+  <li><strong>local:</strong> - a URI starting with local:/ is expected to exist as a local file on each worker node.  This
+means that no network IO will be incurred, and works well for large files/JARs that are pushed to each worker,
+or shared via NFS, GlusterFS, etc.</li>
+</ul>
+
+<p>Note that JARs and files are copied to the working directory for each HyperBatchContext on the executor nodes.
+This can use up a significant amount of space over time and will need to be cleaned up. With YARN, cleanup
+is handled automatically, and with HyperBatch standalone, automatic cleanup can be configured with the
+<code class="language-plaintext highlighter-rouge">hyperbatch.worker.cleanup.appDataTtl</code> property.</p>
+
+<p>Users may also include any other dependencies by supplying a comma-delimited list of Maven coordinates
+with <code class="language-plaintext highlighter-rouge">--packages</code>. All transitive dependencies will be handled when using this command. Additional
+repositories (or resolvers in SBT) can be added in a comma-delimited fashion with the flag <code class="language-plaintext highlighter-rouge">--repositories</code>.
+(Note that credentials for password-protected repositories can be supplied in some cases in the repository URI,
+such as in <code class="language-plaintext highlighter-rouge">https://user:password@host/...</code>. Be careful when supplying credentials this way.)
+These commands can be used with <code class="language-plaintext highlighter-rouge">pyhyperbatch</code>, <code class="language-plaintext highlighter-rouge">hyperbatch-shell</code>, and <code class="language-plaintext highlighter-rouge">hyperbatch-submit</code> to include HyperBatch Packages.</p>
+
+<p>For Python, the equivalent <code class="language-plaintext highlighter-rouge">--py-files</code> option can be used to distribute <code class="language-plaintext highlighter-rouge">.egg</code>, <code class="language-plaintext highlighter-rouge">.zip</code> and <code class="language-plaintext highlighter-rouge">.py</code> libraries
+to executors.</p>
+
+<h1 id="more-information">More Information</h1>
+
+<p>Once you have deployed your application, the <a href="cluster-overview.html">cluster mode overview</a> describes
+the components involved in distributed execution, and how to monitor and debug applications.</p>
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

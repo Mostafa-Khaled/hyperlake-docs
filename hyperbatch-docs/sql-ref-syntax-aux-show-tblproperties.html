@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SHOW TBLPROPERTIES - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">SHOW TBLPROPERTIES</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>This statement returns the value of a table property given an optional value for
+a property key. If no key is specified then all the properties are returned.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SHOW</span> <span class="n">TBLPROPERTIES</span> <span class="n">table_identifier</span> 
+   <span class="p">[</span> <span class="p">(</span> <span class="n">unquoted_property_key</span> <span class="o">|</span> <span class="n">property_key_as_string_literal</span> <span class="p">)</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>table_identifier</strong></p>
+
+    <p>Specifies the table name of an existing table. The table may be optionally qualified
+  with a database name.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ database_name. ] table_name</code></p>
+  </li>
+  <li>
+    <p><strong>unquoted_property_key</strong></p>
+
+    <p>Specifies the property key in unquoted form. The key may consists of multiple
+  parts separated by dot.</p>
+
+    <p><strong>Syntax:</strong> <code class="language-plaintext highlighter-rouge">[ key_part1 ] [ .key_part2 ] [ ... ]</code></p>
+  </li>
+  <li>
+    <p><strong>property_key_as_string_literal</strong></p>
+
+    <p>Specifies a property key value as a string literal.</p>
+  </li>
+</ul>
+
+<p><strong>Note</strong></p>
+<ul>
+  <li>Property value returned by this statement excludes some properties 
+that are internal to hyperbatch and hive. The excluded properties are :
+    <ul>
+      <li>All the properties that start with prefix <code class="language-plaintext highlighter-rouge">hyperbatch.sql</code></li>
+      <li>Property keys such as:  <code class="language-plaintext highlighter-rouge">EXTERNAL</code>, <code class="language-plaintext highlighter-rouge">comment</code></li>
+      <li>All the properties generated internally by hive to store statistics. Some of these
+properties are: <code class="language-plaintext highlighter-rouge">numFiles</code>, <code class="language-plaintext highlighter-rouge">numPartitions</code>, <code class="language-plaintext highlighter-rouge">numRows</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- create a table `customer` in database `salesdb`</span>
+<span class="n">USE</span> <span class="n">salesdb</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">customer</span><span class="p">(</span><span class="n">cust_code</span> <span class="nb">INT</span><span class="p">,</span> <span class="n">name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">cust_addr</span> <span class="n">STRING</span><span class="p">)</span>
+    <span class="n">TBLPROPERTIES</span> <span class="p">(</span><span class="s1">'created.by.user'</span> <span class="o">=</span> <span class="s1">'John'</span><span class="p">,</span> <span class="s1">'created.date'</span> <span class="o">=</span> <span class="s1">'01-01-2001'</span><span class="p">);</span>
+
+<span class="c1">-- show all the user specified properties for table `customer`</span>
+<span class="k">SHOW</span> <span class="n">TBLPROPERTIES</span> <span class="n">customer</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---------------------+----------+</span>
+<span class="o">|</span>                  <span class="k">key</span><span class="o">|</span>     <span class="n">value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------+----------+</span>
+<span class="o">|</span>      <span class="n">created</span><span class="p">.</span><span class="k">by</span><span class="p">.</span><span class="k">user</span><span class="o">|</span>      <span class="n">John</span><span class="o">|</span>
+<span class="o">|</span>         <span class="n">created</span><span class="p">.</span><span class="nb">date</span><span class="o">|</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">2001</span><span class="o">|</span>
+<span class="o">|</span><span class="n">transient_lastDdlTime</span><span class="o">|</span><span class="mi">1567554931</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------+----------+</span>
+
+<span class="c1">-- show all the user specified properties for a qualified table `customer`</span>
+<span class="c1">-- in database `salesdb`</span>
+<span class="k">SHOW</span> <span class="n">TBLPROPERTIES</span> <span class="n">salesdb</span><span class="p">.</span><span class="n">customer</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---------------------+----------+</span>
+<span class="o">|</span>                  <span class="k">key</span><span class="o">|</span>     <span class="n">value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------+----------+</span>
+<span class="o">|</span>      <span class="n">created</span><span class="p">.</span><span class="k">by</span><span class="p">.</span><span class="k">user</span><span class="o">|</span>      <span class="n">John</span><span class="o">|</span>
+<span class="o">|</span>         <span class="n">created</span><span class="p">.</span><span class="nb">date</span><span class="o">|</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">2001</span><span class="o">|</span>
+<span class="o">|</span><span class="n">transient_lastDdlTime</span><span class="o">|</span><span class="mi">1567554931</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------+----------+</span>
+
+<span class="c1">-- show value for unquoted property key `created.by.user`</span>
+<span class="k">SHOW</span> <span class="n">TBLPROPERTIES</span> <span class="n">customer</span> <span class="p">(</span><span class="n">created</span><span class="p">.</span><span class="k">by</span><span class="p">.</span><span class="k">user</span><span class="p">);</span>
+<span class="o">+</span><span class="c1">-----+</span>
+<span class="o">|</span><span class="n">value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+</span>
+<span class="o">|</span> <span class="n">John</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+</span>
+
+<span class="c1">-- show value for property `created.date`` specified as string literal</span>
+<span class="k">SHOW</span> <span class="n">TBLPROPERTIES</span> <span class="n">customer</span> <span class="p">(</span><span class="s1">'created.date'</span><span class="p">);</span>
+<span class="o">+</span><span class="c1">----------+</span>
+<span class="o">|</span>     <span class="n">value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">----------+</span>
+<span class="o">|</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">2001</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">----------+</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-ddl-create-table.html">CREATE TABLE</a></li>
+  <li><a href="sql-ref-syntax-ddl-alter-table.html">ALTER TABLE SET TBLPROPERTIES</a></li>
+  <li><a href="sql-ref-syntax-aux-show-tables.html">SHOW TABLES</a></li>
+  <li><a href="sql-ref-syntax-aux-show-table.html">SHOW TABLE EXTENDED</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

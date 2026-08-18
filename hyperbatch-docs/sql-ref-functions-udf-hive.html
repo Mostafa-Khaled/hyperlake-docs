@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Integration with Hive UDFs/UDAFs/UDTFs - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-sketch-aggregates.html">
+            
+                Sketch-Based Approximate Functions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">Integration with Hive UDFs/UDAFs/UDTFs</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>HyperBatch SQL supports integration of Hive UDFs, UDAFs and UDTFs. Similar to HyperBatch UDFs and UDAFs, Hive UDFs work on a single row as input and generate a single row as output, while Hive UDAFs operate on multiple rows and return a single aggregated row as a result. In addition, Hive also supports UDTFs (User Defined Tabular Functions) that act on one row as input and return multiple rows as output. To use Hive UDFs/UDAFs/UTFs, the user should register them in HyperBatch, and then use them in HyperBatch SQL queries.</p>
+
+<h3 id="examples">Examples</h3>
+
+<p>Hive has two UDF interfaces: <a href="https://github.com/apache/hive/blob/master/udf/src/java/org/apache/hadoop/hive/ql/exec/UDF.java">UDF</a> and <a href="https://github.com/apache/hive/blob/master/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDF.java">GenericUDF</a>.
+An example below uses <a href="https://github.com/apache/hive/blob/master/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDFAbs.java">GenericUDFAbs</a> derived from <code class="language-plaintext highlighter-rouge">GenericUDF</code>.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Register `GenericUDFAbs` and use it in HyperBatch SQL.</span>
+<span class="c1">-- Note that, if you use your own programmed one, you need to add a JAR containing it</span>
+<span class="c1">-- into a classpath,</span>
+<span class="c1">-- e.g., ADD JAR yourHiveUDF.jar;</span>
+<span class="k">CREATE</span> <span class="k">TEMPORARY</span> <span class="k">FUNCTION</span> <span class="n">testUDF</span> <span class="k">AS</span> <span class="s1">'org.apache.hadoop.hive.ql.udf.generic.GenericUDFAbs'</span><span class="p">;</span>
+
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">t</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----+</span>
+<span class="o">|</span><span class="n">value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+</span>
+<span class="o">|</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="o">|</span>
+<span class="o">|</span>  <span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="o">|</span>
+<span class="o">|</span> <span class="o">-</span><span class="mi">3</span><span class="p">.</span><span class="mi">0</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+</span>
+
+<span class="k">SELECT</span> <span class="n">testUDF</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">t</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--------------+</span>
+<span class="o">|</span><span class="n">testUDF</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------------+</span>
+<span class="o">|</span>           <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="o">|</span>
+<span class="o">|</span>           <span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="o">|</span>
+<span class="o">|</span>           <span class="mi">3</span><span class="p">.</span><span class="mi">0</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------------+</span>
+
+<span class="c1">-- Register `UDFSubstr` and use it in HyperBatch SQL.</span>
+<span class="c1">-- Note that, it can achieve better performance if the return types and method parameters use Java primitives.</span>
+<span class="c1">-- e.g., UDFSubstr. The data processing method is UTF8String &lt;-&gt; Text &lt;-&gt; String. we can avoid UTF8String &lt;-&gt; Text. </span>
+<span class="k">CREATE</span> <span class="k">TEMPORARY</span> <span class="k">FUNCTION</span> <span class="n">hive_substr</span> <span class="k">AS</span> <span class="s1">'org.apache.hadoop.hive.ql.udf.UDFSubstr'</span><span class="p">;</span>
+
+<span class="k">select</span> <span class="n">hive_substr</span><span class="p">(</span><span class="s1">'HyperBatch SQL'</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="k">as</span> <span class="n">value</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----+</span>
+<span class="o">|</span><span class="n">value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+</span>
+<span class="o">|</span><span class="n">HyperBatch</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+</span>
+</code></pre></div></div>
+
+<p>An example below uses <a href="https://github.com/apache/hive/blob/master/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDTFExplode.java">GenericUDTFExplode</a> derived from <a href="https://github.com/apache/hive/blob/master/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDTF.java">GenericUDTF</a>.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Register `GenericUDTFExplode` and use it in HyperBatch SQL</span>
+<span class="k">CREATE</span> <span class="k">TEMPORARY</span> <span class="k">FUNCTION</span> <span class="n">hiveUDTF</span>
+    <span class="k">AS</span> <span class="s1">'org.apache.hadoop.hive.ql.udf.generic.GenericUDTFExplode'</span><span class="p">;</span>
+
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">t</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="n">value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">|</span>
+<span class="o">|</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+
+<span class="k">SELECT</span> <span class="n">hiveUDTF</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">t</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---+</span>
+<span class="o">|</span><span class="n">col</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---+</span>
+<span class="o">|</span>  <span class="mi">1</span><span class="o">|</span>
+<span class="o">|</span>  <span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span>  <span class="mi">3</span><span class="o">|</span>
+<span class="o">|</span>  <span class="mi">4</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---+</span>
+</code></pre></div></div>
+
+<p>Hive has two UDAF interfaces: <a href="https://github.com/apache/hive/blob/master/udf/src/java/org/apache/hadoop/hive/ql/exec/UDAF.java">UDAF</a> and <a href="https://github.com/apache/hive/blob/master/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDAFResolver.java">GenericUDAFResolver</a>.
+An example below uses <a href="https://github.com/apache/hive/blob/master/ql/src/java/org/apache/hadoop/hive/ql/udf/generic/GenericUDAFSum.java">GenericUDAFSum</a> derived from <code class="language-plaintext highlighter-rouge">GenericUDAFResolver</code>.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- Register `GenericUDAFSum` and use it in HyperBatch SQL</span>
+<span class="k">CREATE</span> <span class="k">TEMPORARY</span> <span class="k">FUNCTION</span> <span class="n">hiveUDAF</span>
+    <span class="k">AS</span> <span class="s1">'org.apache.hadoop.hive.ql.udf.generic.GenericUDAFSum'</span><span class="p">;</span>
+
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">t</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---+-----+</span>
+<span class="o">|</span><span class="k">key</span><span class="o">|</span><span class="n">value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---+-----+</span>
+<span class="o">|</span>  <span class="n">a</span><span class="o">|</span>    <span class="mi">1</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">a</span><span class="o">|</span>    <span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">b</span><span class="o">|</span>    <span class="mi">3</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---+-----+</span>
+
+<span class="k">SELECT</span> <span class="k">key</span><span class="p">,</span> <span class="n">hiveUDAF</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">t</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="k">key</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---+---------------+</span>
+<span class="o">|</span><span class="k">key</span><span class="o">|</span><span class="n">hiveUDAF</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---+---------------+</span>
+<span class="o">|</span>  <span class="n">b</span><span class="o">|</span>              <span class="mi">3</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">a</span><span class="o">|</span>              <span class="mi">3</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">---+---------------+</span>
+</code></pre></div></div>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>INSERT OVERWRITE DIRECTORY - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">INSERT OVERWRITE DIRECTORY</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">INSERT OVERWRITE DIRECTORY</code> statement overwrites the existing data in the directory with the new values using either hyperbatch file format or Hive Serde. 
+Hive support must be enabled to use Hive Serde. The inserted rows can be specified by value expressions or result from a query.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">INSERT</span> <span class="n">OVERWRITE</span> <span class="p">[</span> <span class="k">LOCAL</span> <span class="p">]</span> <span class="n">DIRECTORY</span> <span class="p">[</span> <span class="n">directory_path</span> <span class="p">]</span>
+    <span class="p">{</span> <span class="n">hyperbatch_format</span> <span class="o">|</span> <span class="n">hive_format</span> <span class="p">}</span>
+    <span class="p">{</span> <span class="k">VALUES</span> <span class="p">(</span> <span class="p">{</span> <span class="n">value</span> <span class="o">|</span> <span class="k">NULL</span> <span class="p">}</span> <span class="p">[</span> <span class="p">,</span> <span class="p">...</span> <span class="p">]</span> <span class="p">)</span> <span class="p">[</span> <span class="p">,</span> <span class="p">(</span> <span class="p">...</span> <span class="p">)</span> <span class="p">]</span> <span class="o">|</span> <span class="n">query</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>While <code class="language-plaintext highlighter-rouge">hyperbatch_format</code> is defined as</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">USING</span> <span class="n">file_format</span> <span class="p">[</span> <span class="k">OPTIONS</span> <span class="p">(</span> <span class="k">key</span> <span class="o">=</span> <span class="n">val</span> <span class="p">[</span> <span class="p">,</span> <span class="p">...</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">hive_format</code> is defined as</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span> <span class="k">ROW</span> <span class="n">FORMAT</span> <span class="n">row_format</span> <span class="p">]</span> <span class="p">[</span> <span class="n">STORED</span> <span class="k">AS</span> <span class="n">hive_serde</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>directory_path</strong></p>
+
+    <p>Specifies the destination directory. The <code class="language-plaintext highlighter-rouge">LOCAL</code> keyword is used to specify that the directory is on the local file system.
+  In hyperbatch file format, it can also be specified in <code class="language-plaintext highlighter-rouge">OPTIONS</code> using <code class="language-plaintext highlighter-rouge">path</code>, but <code class="language-plaintext highlighter-rouge">directory_path</code> and <code class="language-plaintext highlighter-rouge">path</code> option can not be both specified.</p>
+  </li>
+  <li>
+    <p><strong>file_format</strong></p>
+
+    <p>Specifies the file format to use for the insert. Valid options are <code class="language-plaintext highlighter-rouge">TEXT</code>, <code class="language-plaintext highlighter-rouge">CSV</code>, <code class="language-plaintext highlighter-rouge">JSON</code>, <code class="language-plaintext highlighter-rouge">JDBC</code>, <code class="language-plaintext highlighter-rouge">PARQUET</code>, <code class="language-plaintext highlighter-rouge">ORC</code>, <code class="language-plaintext highlighter-rouge">HIVE</code>, <code class="language-plaintext highlighter-rouge">LIBSVM</code>, or a fully qualified class name of a custom implementation of <code class="language-plaintext highlighter-rouge">org.apache.hyperbatch.sql.execution.datasources.FileFormat</code>.</p>
+  </li>
+  <li>
+    <p><strong>OPTIONS ( key = val [ , … ] )</strong></p>
+
+    <p>Specifies one or more options for the writing of the file format.</p>
+  </li>
+  <li>
+    <p><strong>hive_format</strong></p>
+
+    <p>Specifies the file format to use for the insert. Both <code class="language-plaintext highlighter-rouge">row_format</code> and <code class="language-plaintext highlighter-rouge">hive_serde</code> are optional. <code class="language-plaintext highlighter-rouge">ROW FORMAT SERDE</code> can only be used with <code class="language-plaintext highlighter-rouge">TEXTFILE</code>, <code class="language-plaintext highlighter-rouge">SEQUENCEFILE</code>, or <code class="language-plaintext highlighter-rouge">RCFILE</code>, while <code class="language-plaintext highlighter-rouge">ROW FORMAT DELIMITED</code> can only be used with <code class="language-plaintext highlighter-rouge">TEXTFILE</code>. If both are not defined, hyperbatch uses <code class="language-plaintext highlighter-rouge">TEXTFILE</code>.</p>
+  </li>
+  <li>
+    <p><strong>row_format</strong></p>
+
+    <p>Specifies the row format for this insert. Valid options are <code class="language-plaintext highlighter-rouge">SERDE</code> clause and <code class="language-plaintext highlighter-rouge">DELIMITED</code> clause. <code class="language-plaintext highlighter-rouge">SERDE</code> clause can be used to specify a custom <code class="language-plaintext highlighter-rouge">SerDe</code> for this insert. Alternatively, <code class="language-plaintext highlighter-rouge">DELIMITED</code> clause can be used to specify the native <code class="language-plaintext highlighter-rouge">SerDe</code> and state the delimiter, escape character, null character, and so on.</p>
+  </li>
+  <li>
+    <p><strong>hive_serde</strong></p>
+
+    <p>Specifies the file format for this insert. Valid options are <code class="language-plaintext highlighter-rouge">TEXTFILE</code>, <code class="language-plaintext highlighter-rouge">SEQUENCEFILE</code>, <code class="language-plaintext highlighter-rouge">RCFILE</code>, <code class="language-plaintext highlighter-rouge">ORC</code>, <code class="language-plaintext highlighter-rouge">PARQUET</code>, and <code class="language-plaintext highlighter-rouge">AVRO</code>. You can also specify your own input and output format using <code class="language-plaintext highlighter-rouge">INPUTFORMAT</code> and <code class="language-plaintext highlighter-rouge">OUTPUTFORMAT</code>.</p>
+  </li>
+  <li>
+    <p><strong>VALUES ( { value <code class="language-plaintext highlighter-rouge">|</code> NULL } [ , … ] ) [ , ( … ) ]</strong></p>
+
+    <p>Specifies the values to be inserted. Either an explicitly specified value or a NULL can be inserted.
+  A comma must be used to separate each value in the clause. More than one set of values can be specified to insert multiple rows.</p>
+  </li>
+  <li>
+    <p><strong>query</strong></p>
+
+    <p>A query that produces the rows to be inserted. It can be in one of following formats:</p>
+    <ul>
+      <li>a <a href="sql-ref-syntax-qry-select.html">SELECT</a> statement</li>
+      <li>a <a href="sql-ref-syntax-qry-select-inline-table.html">Inline Table</a> statement</li>
+      <li>a <code class="language-plaintext highlighter-rouge">FROM</code> statement</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<h4 id="hyperbatch-format">HyperBatch format</h4>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">INSERT</span> <span class="n">OVERWRITE</span> <span class="n">DIRECTORY</span> <span class="s1">'/tmp/destination'</span>
+    <span class="k">USING</span> <span class="n">parquet</span>
+    <span class="k">OPTIONS</span> <span class="p">(</span><span class="n">col1</span> <span class="mi">1</span><span class="p">,</span> <span class="n">col2</span> <span class="mi">2</span><span class="p">,</span> <span class="n">col3</span> <span class="s1">'test'</span><span class="p">)</span>
+    <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">test_table</span><span class="p">;</span>
+
+<span class="k">INSERT</span> <span class="n">OVERWRITE</span> <span class="n">DIRECTORY</span>
+    <span class="k">USING</span> <span class="n">parquet</span>
+    <span class="k">OPTIONS</span> <span class="p">(</span><span class="s1">'path'</span> <span class="s1">'/tmp/destination'</span><span class="p">,</span> <span class="n">col1</span> <span class="mi">1</span><span class="p">,</span> <span class="n">col2</span> <span class="mi">2</span><span class="p">,</span> <span class="n">col3</span> <span class="s1">'test'</span><span class="p">)</span>
+    <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">test_table</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h4 id="hive-format">Hive format</h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">INSERT</span> <span class="n">OVERWRITE</span> <span class="k">LOCAL</span> <span class="n">DIRECTORY</span> <span class="s1">'/tmp/destination'</span>
+    <span class="n">STORED</span> <span class="k">AS</span> <span class="n">orc</span>
+    <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">test_table</span><span class="p">;</span>
+
+<span class="k">INSERT</span> <span class="n">OVERWRITE</span> <span class="k">LOCAL</span> <span class="n">DIRECTORY</span> <span class="s1">'/tmp/destination'</span>
+    <span class="k">ROW</span> <span class="n">FORMAT</span> <span class="n">DELIMITED</span> <span class="n">FIELDS</span> <span class="n">TERMINATED</span> <span class="k">BY</span> <span class="s1">','</span>
+    <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">test_table</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-syntax-dml-insert-table.html">INSERT TABLE statement</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

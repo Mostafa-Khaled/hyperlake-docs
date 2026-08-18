@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LEAVE statement - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">LEAVE statement</h1>
+                        
+                    
+                    <p>Terminates the execution of an iteration of a looping statement and continues with the next iteration if the looping condition is met.</p>
+
+<p>This statement may only be used within a <a href="compound-stmt.html">compound statement</a>.</p>
+
+<h2 id="syntax">Syntax</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ITERATE label
+</code></pre></div></div>
+
+<h2 id="parameters">Parameters</h2>
+
+<ul>
+  <li>
+    <p><strong>label</strong></p>
+
+    <p>The label identifies a statement to leave that directly or indirectly contains the <code class="language-plaintext highlighter-rouge">LEAVE</code> statement.</p>
+  </li>
+</ul>
+
+<h2 id="examples">Examples</h2>
+
+<pre><code class="language-SQL">-- sum up all odd numbers from 1 through 10
+-- Iterate over even numbers and leave the loop after 10 has been reached.
+&gt; BEGIN
+    DECLARE sum INT DEFAULT 0;
+    DECLARE num INT DEFAULT 0;
+    sumNumbers: LOOP
+      SET num = num + 1;
+      IF num &gt; 10 THEN
+        LEAVE sumNumbers;
+      END IF;
+      IF num % 2 = 0 THEN
+        ITERATE sumNumbers;
+      END IF;
+      SET sum = sum + num;
+    END LOOP sumNumbers;
+    VALUES (sum);
+  END;
+25
+</code></pre>
+
+<h2 id="related-articles">Related articles</h2>
+
+<ul>
+  <li><a href="../sql-ref-scripting.html">SQL Scripting</a></li>
+  <li><a href="case-stmt.html">CASE Statement</a></li>
+  <li><a href="compound-stmt.html">Compound Statement</a></li>
+  <li><a href="for-stmt.html">FOR Statement</a></li>
+  <li><a href="loop-stmt.html">LOOP Statement</a></li>
+  <li><a href="while-stmt.html">WHILE Statement</a></li>
+  <li><a href="if-stmt.html">IF Statement</a></li>
+  <li><a href="iterate-stmt.html">ITERATE Statement</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

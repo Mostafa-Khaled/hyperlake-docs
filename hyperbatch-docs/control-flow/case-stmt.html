@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CASE statement - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">CASE statement</h1>
+                        
+                    
+                    <p>Executes <code class="language-plaintext highlighter-rouge">thenStmtN</code> for the first <code class="language-plaintext highlighter-rouge">optN</code> that equals <code class="language-plaintext highlighter-rouge">expr</code> or <code class="language-plaintext highlighter-rouge">elseStmt</code> if no <code class="language-plaintext highlighter-rouge">optN</code> matches <code class="language-plaintext highlighter-rouge">expr</code>.
+This is called a <em>simple case statement</em>.</p>
+
+<p>Executes <code class="language-plaintext highlighter-rouge">thenStmtN</code> for the first <code class="language-plaintext highlighter-rouge">condN</code> evaluating to <code class="language-plaintext highlighter-rouge">true</code>, or <code class="language-plaintext highlighter-rouge">elseStmt</code> if no <code class="language-plaintext highlighter-rouge">condN</code> evaluates to <code class="language-plaintext highlighter-rouge">true</code>.
+This is called a <em>searched case statement</em>.</p>
+
+<p>For case expressions that yield result values, see <code class="language-plaintext highlighter-rouge">CASE expression</code>)</p>
+
+<p>This statement may only be used within a <a href="compound-stmt.html">compound statement</a>.</p>
+
+<h2 id="syntax">Syntax</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CASE expr
+  { WHEN opt THEN { thenStmt ; } [...] } [...]
+  [ ELSE { elseStmt ; } [...] ]
+END CASE
+
+CASE
+  { WHEN cond THEN { thenStmt ; } [...] } [...]
+  [ ELSE { elseStmt ; } [...] ]
+END CASE
+</code></pre></div></div>
+
+<h2 id="parameters">Parameters</h2>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">expr</code></strong>: Any expression for which a comparison is defined.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">opt</code></strong>: An expression with a least common type with <code class="language-plaintext highlighter-rouge">expr</code> and all other <code class="language-plaintext highlighter-rouge">optN</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">thenStmt</code></strong>: A SQL Statement to execute if preceding condition is <code class="language-plaintext highlighter-rouge">true</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">elseStmt</code></strong>: A SQL Statement to execute if no condition is <code class="language-plaintext highlighter-rouge">true</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">cond</code></strong>: A <code class="language-plaintext highlighter-rouge">BOOLEAN</code> expression.</li>
+</ul>
+
+<p>Conditions are evaluated in order, and only the first set of <code class="language-plaintext highlighter-rouge">stmt</code> for which <code class="language-plaintext highlighter-rouge">opt</code> or <code class="language-plaintext highlighter-rouge">cond</code> evaluate to true will be executed.</p>
+
+<h2 id="examples">Examples</h2>
+
+<pre><code class="language-SQL">-- a simple case statement
+&gt; BEGIN
+    DECLARE choice INT DEFAULT 3;
+    DECLARE result STRING;
+    CASE choice
+      WHEN 1 THEN
+        VALUES ('one fish');
+      WHEN 2 THEN
+        VALUES ('two fish');
+      WHEN 3 THEN
+        VALUES ('red fish');
+      WHEN 4 THEN
+        VALUES ('blue fish');
+      ELSE
+        VALUES ('no fish');
+    END CASE;
+  END;
+ red fish
+
+-- A searched case statement
+&gt; BEGIN
+    DECLARE choice DOUBLE DEFAULT 3.9;
+    DECLARE result STRING;
+    CASE
+      WHEN choice &lt; 2 THEN
+        VALUES ('one fish');
+      WHEN choice &lt; 3 THEN
+        VALUES ('two fish');
+      WHEN choice &lt; 4 THEN
+        VALUES ('red fish');
+      WHEN choice &lt; 5 OR choice IS NULL THEN
+        VALUES ('blue fish');
+      ELSE
+        VALUES ('no fish');
+    END CASE;
+  END;
+ red fish
+</code></pre>
+
+<h2 id="related-articles">Related articles</h2>
+
+<ul>
+  <li><a href="../sql-ref-scripting.html">SQL Scripting</a></li>
+  <li><a href="compound-stmt.html">compound statement</a></li>
+  <li><a href="if-stmt.html">IF statement</a></li>
+</ul>
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

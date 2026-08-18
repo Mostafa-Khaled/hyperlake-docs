@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MLlib: Main Guide - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="ml-guide.html">MLlib: Main Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="ml-statistics.html">
+            
+                Basic statistics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="ml-datasource.html">
+            
+                Data sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="ml-pipeline.html">
+            
+                Pipelines
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="ml-features.html">
+            
+                Extracting, transforming and selecting features
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="ml-classification-regression.html">
+            
+                Classification and Regression
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="ml-clustering.html">
+            
+                Clustering
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="ml-collaborative-filtering.html">
+            
+                Collaborative filtering
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="ml-frequent-pattern-mining.html">
+            
+                Frequent Pattern Mining
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="ml-tuning.html">
+            
+                Model selection and tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="ml-advanced.html">
+            
+                Advanced topics
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+        <h3><a href="mllib-guide.html">MLlib: RDD-based API Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="mllib-data-types.html">
+            
+                Data types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="mllib-statistics.html">
+            
+                Basic statistics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="mllib-classification-regression.html">
+            
+                Classification and regression
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="mllib-collaborative-filtering.html">
+            
+                Collaborative filtering
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="mllib-clustering.html">
+            
+                Clustering
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="mllib-dimensionality-reduction.html">
+            
+                Dimensionality reduction
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="mllib-feature-extraction.html">
+            
+                Feature extraction and transformation
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="mllib-frequent-pattern-mining.html">
+            
+                Frequent pattern mining
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="mllib-evaluation-metrics.html">
+            
+                Evaluation metrics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="mllib-pmml-model-export.html">
+            
+                PMML model export
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="mllib-optimization.html">
+            
+                Optimization (developer)
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+        <h3><a href="ml-security.html">ML Model Security</a></h3>
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">Machine Learning Library (MLlib) Guide</h1>
+                    
+
+                    <p>MLlib is HyperBatch’s machine learning (ML) library.
+Its goal is to make practical machine learning scalable and easy.
+At a high level, it provides tools such as:</p>
+
+<ul>
+  <li>ML Algorithms: common learning algorithms such as classification, regression, clustering, and collaborative filtering</li>
+  <li>Featurization: feature extraction, transformation, dimensionality reduction, and selection</li>
+  <li>Pipelines: tools for constructing, evaluating, and tuning ML Pipelines</li>
+  <li>Persistence: saving and load algorithms, models, and Pipelines</li>
+  <li>Utilities: linear algebra, statistics, data handling, etc.</li>
+</ul>
+
+<h1 id="announcement-dataframe-based-api-is-primary-api">Announcement: DataFrame-based API is primary API</h1>
+
+<p><strong>The MLlib RDD-based API is now in maintenance mode.</strong></p>
+
+<p>As of HyperBatch 2.0, the <a href="rdd-programming-guide.html#resilient-distributed-datasets-rdds">RDD</a>-based APIs in the <code class="language-plaintext highlighter-rouge">hyperbatch.mllib</code> package have entered maintenance mode.
+The primary Machine Learning API for HyperBatch is now the <a href="sql-programming-guide.html">DataFrame</a>-based API in the <code class="language-plaintext highlighter-rouge">hyperbatch.ml</code> package.</p>
+
+<p><em>What are the implications?</em></p>
+
+<ul>
+  <li>MLlib will still support the RDD-based API in <code class="language-plaintext highlighter-rouge">hyperbatch.mllib</code> with bug fixes.</li>
+  <li>MLlib will not add new features to the RDD-based API.</li>
+  <li>In the HyperBatch 2.x releases, MLlib will add features to the DataFrames-based API to reach feature parity with the RDD-based API.</li>
+</ul>
+
+<p><em>Why is MLlib switching to the DataFrame-based API?</em></p>
+
+<ul>
+  <li>DataFrames provide a more user-friendly API than RDDs.  The many benefits of DataFrames include HyperBatch Datasources, SQL/DataFrame queries, Tungsten and Catalyst optimizations, and uniform APIs across languages.</li>
+  <li>The DataFrame-based API for MLlib provides a uniform API across ML algorithms and across multiple languages.</li>
+  <li>DataFrames facilitate practical ML Pipelines, particularly feature transformations.  See the <a href="ml-pipeline.html">Pipelines guide</a> for details.</li>
+</ul>
+
+<p><em>What is “HyperBatch ML”?</em></p>
+
+<ul>
+  <li>“HyperBatch ML” is not an official name but occasionally used to refer to the MLlib DataFrame-based API.
+This is majorly due to the <code class="language-plaintext highlighter-rouge">org.apache.hyperbatch.ml</code> Scala package name used by the DataFrame-based API, 
+and the “HyperBatch ML Pipelines” term we used initially to emphasize the pipeline concept.</li>
+</ul>
+
+<p><em>Is MLlib deprecated?</em></p>
+
+<ul>
+  <li>No. MLlib includes both the RDD-based API and the DataFrame-based API.
+The RDD-based API is now in maintenance mode.
+But neither API is deprecated, nor MLlib as a whole.</li>
+</ul>
+
+<h1 id="dependencies">Dependencies</h1>
+
+<p>MLlib uses linear algebra packages <a href="http://www.scalanlp.org/">Breeze</a> and <a href="https://github.com/luhenry/netlib">dev.ludovic.netlib</a> for optimised numerical processing<sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>. Those packages may call native acceleration libraries such as <a href="https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library.html">Intel MKL</a> or <a href="http://www.openblas.net">OpenBLAS</a> if they are available as system libraries or in runtime library paths.</p>
+
+<p>However, native acceleration libraries can’t be distributed with HyperBatch. See <a href="ml-linalg-guide.html">MLlib Linear Algebra Acceleration Guide</a> for how to enable accelerated linear algebra processing. If accelerated native libraries are not enabled, you will see a warning message like below and a pure JVM implementation will be used instead:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WARNING: Failed to load implementation from:dev.ludovic.netlib.blas.JNIBLAS
+</code></pre></div></div>
+
+<p>To use MLlib in Python, you will need <a href="http://www.numpy.org">NumPy</a> version 1.21 or newer.</p>
+
+<h1 id="highlights-in-30">Highlights in 3.0</h1>
+
+<p>The list below highlights some of the new features and enhancements added to MLlib in the <code class="language-plaintext highlighter-rouge">3.0</code>
+release of HyperBatch:</p>
+
+<ul>
+  <li>Multiple columns support was added to <code class="language-plaintext highlighter-rouge">Binarizer</code> (<a href="https://issues.apache.org/jira/browse/SPARK-23578">HYPERBATCH-23578</a>), <code class="language-plaintext highlighter-rouge">StringIndexer</code> (<a href="https://issues.apache.org/jira/browse/SPARK-11215">HYPERBATCH-11215</a>), <code class="language-plaintext highlighter-rouge">StopWordsRemover</code> (<a href="https://issues.apache.org/jira/browse/SPARK-29808">HYPERBATCH-29808</a>) and PyHyperBatch <code class="language-plaintext highlighter-rouge">QuantileDiscretizer</code> (<a href="https://issues.apache.org/jira/browse/SPARK-22796">HYPERBATCH-22796</a>).</li>
+  <li>Tree-Based Feature Transformation was added
+(<a href="https://issues.apache.org/jira/browse/SPARK-13677">HYPERBATCH-13677</a>).</li>
+  <li>Two new evaluators <code class="language-plaintext highlighter-rouge">MultilabelClassificationEvaluator</code> (<a href="https://issues.apache.org/jira/browse/SPARK-16692">HYPERBATCH-16692</a>) and <code class="language-plaintext highlighter-rouge">RankingEvaluator</code> (<a href="https://issues.apache.org/jira/browse/SPARK-28045">HYPERBATCH-28045</a>) were added.</li>
+  <li>Sample weights support was added in <code class="language-plaintext highlighter-rouge">DecisionTreeClassifier/Regressor</code> (<a href="https://issues.apache.org/jira/browse/SPARK-19591">HYPERBATCH-19591</a>), <code class="language-plaintext highlighter-rouge">RandomForestClassifier/Regressor</code> (<a href="https://issues.apache.org/jira/browse/SPARK-9478">HYPERBATCH-9478</a>), <code class="language-plaintext highlighter-rouge">GBTClassifier/Regressor</code> (<a href="https://issues.apache.org/jira/browse/SPARK-9612">HYPERBATCH-9612</a>),  <code class="language-plaintext highlighter-rouge">MulticlassClassificationEvaluator</code> (<a href="https://issues.apache.org/jira/browse/SPARK-24101">HYPERBATCH-24101</a>), <code class="language-plaintext highlighter-rouge">RegressionEvaluator</code> (<a href="https://issues.apache.org/jira/browse/SPARK-24102">HYPERBATCH-24102</a>), <code class="language-plaintext highlighter-rouge">BinaryClassificationEvaluator</code> (<a href="https://issues.apache.org/jira/browse/SPARK-24103">HYPERBATCH-24103</a>), <code class="language-plaintext highlighter-rouge">BisectingKMeans</code> (<a href="https://issues.apache.org/jira/browse/SPARK-30351">HYPERBATCH-30351</a>), <code class="language-plaintext highlighter-rouge">KMeans</code> (<a href="https://issues.apache.org/jira/browse/SPARK-29967">HYPERBATCH-29967</a>) and <code class="language-plaintext highlighter-rouge">GaussianMixture</code> (<a href="https://issues.apache.org/jira/browse/SPARK-30102">HYPERBATCH-30102</a>).</li>
+  <li>R API for <code class="language-plaintext highlighter-rouge">PowerIterationClustering</code> was added
+(<a href="https://issues.apache.org/jira/browse/SPARK-19827">HYPERBATCH-19827</a>).</li>
+  <li>Added HyperBatch ML listener for tracking ML pipeline status
+(<a href="https://issues.apache.org/jira/browse/SPARK-23674">HYPERBATCH-23674</a>).</li>
+  <li>Fit with validation set was added to Gradient Boosted Trees in Python
+(<a href="https://issues.apache.org/jira/browse/SPARK-24333">HYPERBATCH-24333</a>).</li>
+  <li><a href="ml-features.html#robustscaler"><code class="language-plaintext highlighter-rouge">RobustScaler</code></a> transformer was added
+(<a href="https://issues.apache.org/jira/browse/SPARK-28399">HYPERBATCH-28399</a>).</li>
+  <li><a href="ml-classification-regression.html#factorization-machines"><code class="language-plaintext highlighter-rouge">Factorization Machines</code></a> classifier and regressor were added
+(<a href="https://issues.apache.org/jira/browse/SPARK-29224">HYPERBATCH-29224</a>).</li>
+  <li>Gaussian Naive Bayes Classifier (<a href="https://issues.apache.org/jira/browse/SPARK-16872">HYPERBATCH-16872</a>) and Complement Naive Bayes Classifier (<a href="https://issues.apache.org/jira/browse/SPARK-29942">HYPERBATCH-29942</a>) were added.</li>
+  <li>ML function parity between Scala and Python
+(<a href="https://issues.apache.org/jira/browse/SPARK-28958">HYPERBATCH-28958</a>).</li>
+  <li><code class="language-plaintext highlighter-rouge">predictRaw</code> is made public in all the Classification models. <code class="language-plaintext highlighter-rouge">predictProbability</code> is made public in all the Classification models except <code class="language-plaintext highlighter-rouge">LinearSVCModel</code>
+(<a href="https://issues.apache.org/jira/browse/SPARK-30358">HYPERBATCH-30358</a>).</li>
+</ul>
+
+<h1 id="migration-guide">Migration Guide</h1>
+
+<p>The migration guide is now archived <a href="ml-migration-guide.html">on this page</a>.</p>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1">
+      <p>To learn more about the benefits and background of system optimised natives, you may wish to
+watch Sam Halliday’s ScalaX talk on <a href="http://fommil.github.io/scalax14/">High Performance Linear Algebra in Scala</a>.&nbsp;<a href="#fnref:1" class="reversefootnote" role="doc-backlink">↩</a></p>
+    </li>
+  </ol>
+</div>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

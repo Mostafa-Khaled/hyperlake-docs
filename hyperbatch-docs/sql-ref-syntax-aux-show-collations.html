@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SHOW COLLATIONS - HyperBatch 4.2.0 Documentation — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                
+                    <div class="left-menu-wrapper">
+    <div class="left-menu">
+        <h3><a href="sql-programming-guide.html">HyperBatch SQL Guide</a></h3>
+        
+<ul>
+
+    <li>
+        <a href="sql-getting-started.html">
+            
+                Getting Started
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources.html">
+            
+                Data Sources
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-data-sources-v2.html">
+            
+                Data Source V2
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-performance-tuning.html">
+            
+                Performance Tuning
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-distributed-sql-engine.html">
+            
+                Distributed SQL Engine
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pyhyperbatch-pandas-with-arrow.html">
+            
+                PyHyperBatch Usage Guide for Pandas with Apache Arrow
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-migration-guide.html">
+            
+                Migration Guide
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref.html">
+            
+                SQL Reference
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-ansi-compliance.html">
+            
+                ANSI Compliance
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datatypes.html">
+            
+                Data Types
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-datetime-pattern.html">
+            
+                Datetime Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-number-pattern.html">
+            
+                Number Pattern
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-operators.html">
+            
+                Operators
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-functions.html">
+            
+                Functions
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier.html">
+            
+                Identifiers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-identifier-clause.html">
+            
+                IDENTIFIER clause
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-literals.html">
+            
+                Literals
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-null-semantics.html">
+            
+                Null Semantics
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-parameter-markers.html">
+            
+                Parameter Markers
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-name-resolution.html">
+            
+                Name Resolution
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-scripting.html">
+            
+                SQL Scripting
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html">
+            
+                SQL Syntax
+            
+        </a>
+    </li>
+    
+    
+        
+<ul>
+
+    <li>
+        <a href="sql-ref-syntax.html#ddl-statements">
+            
+                Data Definition Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#dml-statements">
+            
+                Data Manipulation Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#data-retrieval-statements">
+            
+                Data Retrieval(Queries)
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#sql-scripting-statements">
+            
+                SQL Scripting Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-ref-syntax.html#auxiliary-statements">
+            
+                Auxiliary Statements
+            
+        </a>
+    </li>
+    
+    
+
+    <li>
+        <a href="sql-pipe-syntax.html">
+            
+                Pipe Syntax
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    
+
+</ul>
+
+    
+
+    <li>
+        <a href="sql-error-conditions.html">
+            
+                Error Conditions
+            
+        </a>
+    </li>
+    
+    
+
+</ul>
+
+    </div>
+</div>
+                
+                <input id="nav-trigger" class="nav-trigger" checked="" type="checkbox">
+                <label for="nav-trigger"></label>
+                <div class="content-with-sidebar mr-3" id="content">
+                    
+                        <h1 class="title">SHOW COLLATIONS</h1>
+                    
+
+                    <h3 id="description">Description</h3>
+
+<p>Returns the list of collations supported by HyperBatch. An optional pattern may be used to filter
+the results. The <code class="language-plaintext highlighter-rouge">LIKE</code> clause is optional.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SHOW</span> <span class="n">COLLATIONS</span> <span class="p">[</span> <span class="k">LIKE</span> <span class="n">regex_pattern</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<ul>
+  <li>
+    <p><strong>regex_pattern</strong></p>
+
+    <p>Specifies the regular expression pattern that is used to filter the results of the statement.</p>
+
+    <ul>
+      <li>Except for <code class="language-plaintext highlighter-rouge">*</code> and <code class="language-plaintext highlighter-rouge">|</code> character, the pattern works like a regular expression.</li>
+      <li><code class="language-plaintext highlighter-rouge">*</code> alone matches 0 or more characters and <code class="language-plaintext highlighter-rouge">|</code> is used to separate multiple different regular expressions,
+any of which can match.</li>
+      <li>The leading and trailing blanks are trimmed in the input pattern before processing. The pattern match is case-insensitive.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="output">Output</h3>
+
+<p>The output has the following columns:</p>
+
+<div class="table-container"><table>
+  <thead>
+    <tr>
+      <th>Column</th>
+      <th>Type</th>
+      <th>Nullable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NAME</td>
+      <td>STRING</td>
+      <td>No</td>
+      <td>The name of the collation.</td>
+    </tr>
+    <tr>
+      <td>LANGUAGE</td>
+      <td>STRING</td>
+      <td>Yes</td>
+      <td>The display language of the locale, or <code class="language-plaintext highlighter-rouge">null</code> for locale-independent collations.</td>
+    </tr>
+    <tr>
+      <td>COUNTRY</td>
+      <td>STRING</td>
+      <td>Yes</td>
+      <td>The display country of the locale, or <code class="language-plaintext highlighter-rouge">null</code> for locale-independent collations.</td>
+    </tr>
+    <tr>
+      <td>ACCENT_SENSITIVITY</td>
+      <td>STRING</td>
+      <td>No</td>
+      <td>Whether the collation is accent-sensitive (<code class="language-plaintext highlighter-rouge">ACCENT_SENSITIVE</code>) or accent-insensitive (<code class="language-plaintext highlighter-rouge">ACCENT_INSENSITIVE</code>).</td>
+    </tr>
+    <tr>
+      <td>CASE_SENSITIVITY</td>
+      <td>STRING</td>
+      <td>No</td>
+      <td>Whether the collation is case-sensitive (<code class="language-plaintext highlighter-rouge">CASE_SENSITIVE</code>) or case-insensitive (<code class="language-plaintext highlighter-rouge">CASE_INSENSITIVE</code>).</td>
+    </tr>
+    <tr>
+      <td>PAD_ATTRIBUTE</td>
+      <td>STRING</td>
+      <td>No</td>
+      <td>The pad attribute of the collation: <code class="language-plaintext highlighter-rouge">NO_PAD</code> or <code class="language-plaintext highlighter-rouge">RTRIM</code>.</td>
+    </tr>
+    <tr>
+      <td>ICU_VERSION</td>
+      <td>STRING</td>
+      <td>Yes</td>
+      <td>The ICU library version used for the collation, or <code class="language-plaintext highlighter-rouge">null</code> for non-ICU collations such as <code class="language-plaintext highlighter-rouge">UTF8_BINARY</code> and <code class="language-plaintext highlighter-rouge">UTF8_LCASE</code>.</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<h3 id="examples">Examples</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- List all supported collations (results truncated)</span>
+<span class="k">SHOW</span> <span class="n">COLLATIONS</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----------------+--------+-------+------------------+----------------+-------------+-----------+</span>
+<span class="o">|</span>             <span class="n">NAME</span><span class="o">|</span><span class="k">LANGUAGE</span><span class="o">|</span><span class="n">COUNTRY</span><span class="o">|</span><span class="n">ACCENT_SENSITIVITY</span><span class="o">|</span><span class="n">CASE_SENSITIVITY</span><span class="o">|</span><span class="n">PAD_ATTRIBUTE</span><span class="o">|</span><span class="n">ICU_VERSION</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----------------+--------+-------+------------------+----------------+-------------+-----------+</span>
+<span class="o">|</span>      <span class="n">UTF8_BINARY</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>  <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span>  <span class="n">CASE_SENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>       <span class="n">UTF8_LCASE</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>  <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span><span class="n">CASE_INSENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>          <span class="n">UNICODE</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>  <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span>  <span class="n">CASE_SENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span>       <span class="n">UNICODE_CI</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>  <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span><span class="n">CASE_INSENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span>           <span class="n">en_USA</span><span class="o">|</span>  <span class="n">English</span><span class="o">|</span> <span class="n">United</span> <span class="n">States</span><span class="o">|</span><span class="n">ACCENT_SENSITIVE</span><span class="o">|</span><span class="n">CASE_SENSITIVE</span><span class="o">|</span>  <span class="n">NO_PAD</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span>        <span class="n">en_USA_CI</span><span class="o">|</span>  <span class="n">English</span><span class="o">|</span> <span class="n">United</span> <span class="n">States</span><span class="o">|</span><span class="n">ACCENT_SENSITIVE</span><span class="o">|</span><span class="n">CASE_INSENSITIVE</span><span class="o">|</span> <span class="n">NO_PAD</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span>              <span class="p">...</span><span class="o">|</span>     <span class="p">...</span><span class="o">|</span>    <span class="p">...</span><span class="o">|</span>               <span class="p">...</span><span class="o">|</span>             <span class="p">...</span><span class="o">|</span>         <span class="p">...</span><span class="o">|</span>        <span class="p">...</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----------------+--------+-------+------------------+----------------+-------------+-----------+</span>
+
+<span class="c1">-- List all collations matching `UTF8_BINARY*`</span>
+<span class="k">SHOW</span> <span class="n">COLLATIONS</span> <span class="k">LIKE</span> <span class="s1">'UTF8_BINARY*'</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----------------+--------+-------+------------------+----------------+-------------+-----------+</span>
+<span class="o">|</span>             <span class="n">NAME</span><span class="o">|</span><span class="k">LANGUAGE</span><span class="o">|</span><span class="n">COUNTRY</span><span class="o">|</span><span class="n">ACCENT_SENSITIVITY</span><span class="o">|</span><span class="n">CASE_SENSITIVITY</span><span class="o">|</span><span class="n">PAD_ATTRIBUTE</span><span class="o">|</span><span class="n">ICU_VERSION</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----------------+--------+-------+------------------+----------------+-------------+-----------+</span>
+<span class="o">|</span>      <span class="n">UTF8_BINARY</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>  <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span>  <span class="n">CASE_SENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">UTF8_BINARY_RTRIM</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>  <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span>  <span class="n">CASE_SENSITIVE</span><span class="o">|</span>        <span class="n">RTRIM</span><span class="o">|</span>       <span class="k">null</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----------------+--------+-------+------------------+----------------+-------------+-----------+</span>
+
+<span class="c1">-- List all collations matching `UNICODE*`</span>
+<span class="k">SHOW</span> <span class="n">COLLATIONS</span> <span class="k">LIKE</span> <span class="s1">'UNICODE*'</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">--------------+--------+-------+-------------------+----------------+-------------+-----------+</span>
+<span class="o">|</span>          <span class="n">NAME</span><span class="o">|</span><span class="k">LANGUAGE</span><span class="o">|</span><span class="n">COUNTRY</span><span class="o">|</span> <span class="n">ACCENT_SENSITIVITY</span><span class="o">|</span><span class="n">CASE_SENSITIVITY</span><span class="o">|</span><span class="n">PAD_ATTRIBUTE</span><span class="o">|</span><span class="n">ICU_VERSION</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------------+--------+-------+-------------------+----------------+-------------+-----------+</span>
+<span class="o">|</span>       <span class="n">UNICODE</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>   <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span>  <span class="n">CASE_SENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span>    <span class="n">UNICODE_AI</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span> <span class="n">ACCENT_INSENSITIVE</span><span class="o">|</span>  <span class="n">CASE_SENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">UNICODE_AI_RTRIM</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span><span class="n">ACCENT_INSENSITIVE</span><span class="o">|</span><span class="n">CASE_SENSITIVE</span><span class="o">|</span>        <span class="n">RTRIM</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span>    <span class="n">UNICODE_CI</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>   <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span><span class="n">CASE_INSENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">UNICODE_CI_AI</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span> <span class="n">ACCENT_INSENSITIVE</span><span class="o">|</span><span class="n">CASE_INSENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span><span class="n">UNICODE_CI_AI_RTRIM</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span><span class="n">ACCENT_INSENSITIVE</span><span class="o">|</span><span class="n">CASE_INSENSITIVE</span><span class="o">|</span>      <span class="n">RTRIM</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span> <span class="n">UNICODE_CI_RTRIM</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>  <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span><span class="n">CASE_INSENSITIVE</span><span class="o">|</span>       <span class="n">RTRIM</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">|</span>  <span class="n">UNICODE_RTRIM</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>   <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span>  <span class="n">CASE_SENSITIVE</span><span class="o">|</span>        <span class="n">RTRIM</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">--------------+--------+-------+-------------------+----------------+-------------+-----------+</span>
+
+<span class="c1">-- List all collations matching `UNICODE` or `UTF8_BINARY`</span>
+<span class="k">SHOW</span> <span class="n">COLLATIONS</span> <span class="k">LIKE</span> <span class="s1">'UNICODE|UTF8_BINARY'</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">-----------+--------+-------+------------------+----------------+-------------+-----------+</span>
+<span class="o">|</span>       <span class="n">NAME</span><span class="o">|</span><span class="k">LANGUAGE</span><span class="o">|</span><span class="n">COUNTRY</span><span class="o">|</span><span class="n">ACCENT_SENSITIVITY</span><span class="o">|</span><span class="n">CASE_SENSITIVITY</span><span class="o">|</span><span class="n">PAD_ATTRIBUTE</span><span class="o">|</span><span class="n">ICU_VERSION</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----------+--------+-------+------------------+----------------+-------------+-----------+</span>
+<span class="o">|</span><span class="n">UTF8_BINARY</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>  <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span>  <span class="n">CASE_SENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="k">null</span><span class="o">|</span>
+<span class="o">|</span>    <span class="n">UNICODE</span><span class="o">|</span>    <span class="k">null</span><span class="o">|</span>   <span class="k">null</span><span class="o">|</span>  <span class="n">ACCENT_SENSITIVE</span><span class="o">|</span>  <span class="n">CASE_SENSITIVE</span><span class="o">|</span>       <span class="n">NO_PAD</span><span class="o">|</span>       <span class="mi">78</span><span class="p">.</span><span class="mi">2</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">-----------+--------+-------+------------------+----------------+-------------+-----------+</span>
+</code></pre></div></div>
+
+<h3 id="related-statements">Related Statements</h3>
+
+<ul>
+  <li><a href="sql-ref-datatypes.html">STRING TYPE</a></li>
+</ul>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>
