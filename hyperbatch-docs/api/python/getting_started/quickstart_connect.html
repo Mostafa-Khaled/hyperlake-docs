@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quickstart: HyperBatch Connect — HyperBatch</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="Quickstart:-HyperBatch-Connect">
+<h1>Quickstart: HyperBatch Connect<a class="headerlink" href="#Quickstart:-HyperBatch-Connect" title="Permalink to this headline">#</a></h1>
+<p>HyperBatch Connect introduced a decoupled client-server architecture for HyperBatch that allows remote connectivity to HyperBatch clusters using the <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.html?highlight=dataframe#pyspark.sql.DataFrame">DataFrame API</a>.</p>
+<p>This notebook walks through a simple step-by-step example of how to use HyperBatch Connect to build any type of application that needs to leverage the power of HyperBatch when working with data.</p>
+<p>HyperBatch Connect includes both client and server components and we will show you how to set up and use both.</p>
+<section id="Launch-HyperBatch-server-with-HyperBatch-Connect">
+<h2>Launch HyperBatch server with HyperBatch Connect<a class="headerlink" href="#Launch-HyperBatch-server-with-HyperBatch-Connect" title="Permalink to this headline">#</a></h2>
+<p>To launch HyperBatch with support for HyperBatch Connect sessions, run the <code class="docutils literal notranslate"><span class="pre">start-connect-server.sh</span></code> script.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="nb">source</span><span class="w"> </span>~/.profile<span class="w"> </span><span class="c1"># Make sure environment variables are loaded.</span>
+<span class="nv">$HOME</span>/sbin/start-connect-server.sh
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Connect-to-HyperBatch-Connect-server">
+<h2>Connect to HyperBatch Connect server<a class="headerlink" href="#Connect-to-HyperBatch-Connect-server" title="Permalink to this headline">#</a></h2>
+<p>Now that the HyperBatch server is running, we can connect to it remotely using HyperBatch Connect. We do this by creating a remote HyperBatch session on the client where our application runs. Before we can do that, we need to make sure to stop the existing regular HyperBatch session because it cannot coexist with the remote HyperBatch Connect session we are about to create.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">HyperBatchSession</span>
+
+<span class="n">HyperBatchSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">master</span><span class="p">(</span><span class="s2">"local[*]"</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>The command we used above to launch the server configured HyperBatch to run as <code class="docutils literal notranslate"><span class="pre">localhost:15002</span></code>. So now we can create a remote HyperBatch session on the client using the following command.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hyperbatch</span> <span class="o">=</span> <span class="n">HyperBatchSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="s2">"sc://localhost:15002"</span><span class="p">)</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Create-DataFrame">
+<h2>Create DataFrame<a class="headerlink" href="#Create-DataFrame" title="Permalink to this headline">#</a></h2>
+<p>Once the remote HyperBatch session is created successfully, it can be used the same way as a regular HyperBatch session. Therefore, you can create a DataFrame with the following command.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">date</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">Row</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([</span>
+    <span class="n">Row</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'string1'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">e</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+    <span class="n">Row</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'string2'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">e</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+    <span class="n">Row</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'string3'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">e</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+---+---+-------+----------+-------------------+
+|  a|  b|      c|         d|                  e|
++---+---+-------+----------+-------------------+
+|  1|2.0|string1|2000-01-01|2000-01-01 12:00:00|
+|  2|3.0|string2|2000-02-01|2000-01-02 12:00:00|
+|  4|5.0|string3|2000-03-01|2000-01-03 12:00:00|
++---+---+-------+----------+-------------------+
+
+</pre></div></div>
+</div>
+<p>See ‘Live Notebook: DataFrame’ at <a class="reference external" href="index.html">the quickstart page</a> for more detail usage of DataFrame API.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/getting_started/quickstart_connect.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

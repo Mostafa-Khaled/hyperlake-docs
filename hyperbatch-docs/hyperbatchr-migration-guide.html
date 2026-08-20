@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Migration Guide: HyperBatchR (R on HyperBatch) — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">Migration Guide: HyperBatchR (R on HyperBatch)</h1>
+                        
+                    
+                    <ul id="markdown-toc">
+  <li><a href="#upgrading-from-hyperbatchr-35-to-40" id="markdown-toc-upgrading-from-hyperbatchr-35-to-40">Upgrading from HyperBatchR 3.5 to 4.0</a></li>
+  <li><a href="#upgrading-from-hyperbatchr-31-to-32" id="markdown-toc-upgrading-from-hyperbatchr-31-to-32">Upgrading from HyperBatchR 3.1 to 3.2</a></li>
+  <li><a href="#upgrading-from-hyperbatchr-24-to-30" id="markdown-toc-upgrading-from-hyperbatchr-24-to-30">Upgrading from HyperBatchR 2.4 to 3.0</a></li>
+  <li><a href="#upgrading-from-hyperbatchr-23-to-24" id="markdown-toc-upgrading-from-hyperbatchr-23-to-24">Upgrading from HyperBatchR 2.3 to 2.4</a></li>
+  <li><a href="#upgrading-from-hyperbatchr-23-to-231-and-above" id="markdown-toc-upgrading-from-hyperbatchr-23-to-231-and-above">Upgrading from HyperBatchR 2.3 to 2.3.1 and above</a></li>
+  <li><a href="#upgrading-from-hyperbatchr-22-to-23" id="markdown-toc-upgrading-from-hyperbatchr-22-to-23">Upgrading from HyperBatchR 2.2 to 2.3</a></li>
+  <li><a href="#upgrading-from-hyperbatchr-21-to-22" id="markdown-toc-upgrading-from-hyperbatchr-21-to-22">Upgrading from HyperBatchR 2.1 to 2.2</a></li>
+  <li><a href="#upgrading-from-hyperbatchr-20-to-31" id="markdown-toc-upgrading-from-hyperbatchr-20-to-31">Upgrading from HyperBatchR 2.0 to 3.1</a></li>
+  <li><a href="#upgrading-from-hyperbatchr-16-to-20" id="markdown-toc-upgrading-from-hyperbatchr-16-to-20">Upgrading from HyperBatchR 1.6 to 2.0</a></li>
+  <li><a href="#upgrading-from-hyperbatchr-15-to-16" id="markdown-toc-upgrading-from-hyperbatchr-15-to-16">Upgrading from HyperBatchR 1.5 to 1.6</a></li>
+</ul>
+
+<p>Note that this migration guide describes the items specific to HyperBatchR.
+Many items of SQL migration can be applied when migrating HyperBatchR to higher versions.
+Please refer <a href="sql-migration-guide.html">Migration Guide: SQL, Datasets and DataFrame</a>.</p>
+
+<h2 id="upgrading-from-hyperbatchr-35-to-40">Upgrading from HyperBatchR 3.5 to 4.0</h2>
+
+<ul>
+  <li>In HyperBatch 4.0, HyperBatchR is deprecated and will be removed in a future version.</li>
+</ul>
+
+<h2 id="upgrading-from-hyperbatchr-31-to-32">Upgrading from HyperBatchR 3.1 to 3.2</h2>
+
+<ul>
+  <li>Previously, HyperBatchR automatically downloaded and installed the HyperBatch distribution in user’s cache directory to complete HyperBatchR installation when HyperBatchR runs in a plain R shell or Rscript, and the HyperBatch distribution cannot be found. Now, it asks if users want to download and install or not. To restore the previous behavior, set <code class="language-plaintext highlighter-rouge">HYPERBATCHR_ASK_INSTALLATION</code> environment variable to <code class="language-plaintext highlighter-rouge">FALSE</code>.</li>
+</ul>
+
+<h2 id="upgrading-from-hyperbatchr-24-to-30">Upgrading from HyperBatchR 2.4 to 3.0</h2>
+
+<ul>
+  <li>The deprecated methods <code class="language-plaintext highlighter-rouge">parquetFile</code>, <code class="language-plaintext highlighter-rouge">saveAsParquetFile</code>, <code class="language-plaintext highlighter-rouge">jsonFile</code>, <code class="language-plaintext highlighter-rouge">jsonRDD</code> have been removed. Use <code class="language-plaintext highlighter-rouge">read.parquet</code>, <code class="language-plaintext highlighter-rouge">write.parquet</code>, <code class="language-plaintext highlighter-rouge">read.json</code> instead.</li>
+</ul>
+
+<h2 id="upgrading-from-hyperbatchr-23-to-24">Upgrading from HyperBatchR 2.3 to 2.4</h2>
+
+<ul>
+  <li>Previously, we don’t check the validity of the size of the last layer in <code class="language-plaintext highlighter-rouge">hyperbatch.mlp</code>. For example, if the training data only has two labels, a <code class="language-plaintext highlighter-rouge">layers</code> param like <code class="language-plaintext highlighter-rouge">c(1, 3)</code> doesn’t cause an error previously, now it does.</li>
+</ul>
+
+<h2 id="upgrading-from-hyperbatchr-23-to-231-and-above">Upgrading from HyperBatchR 2.3 to 2.3.1 and above</h2>
+
+<ul>
+  <li>In HyperBatchR 2.3.0 and earlier, the <code class="language-plaintext highlighter-rouge">start</code> parameter of <code class="language-plaintext highlighter-rouge">substr</code> method was wrongly subtracted by one and considered as 0-based. This can lead to inconsistent substring results and also does not match with the behaviour with <code class="language-plaintext highlighter-rouge">substr</code> in R. In version 2.3.1 and later, it has been fixed so the <code class="language-plaintext highlighter-rouge">start</code> parameter of <code class="language-plaintext highlighter-rouge">substr</code> method is now 1-based. As an example, <code class="language-plaintext highlighter-rouge">substr(lit('abcdef'), 2, 4))</code> would result to <code class="language-plaintext highlighter-rouge">abc</code> in HyperBatchR 2.3.0, and the result would be <code class="language-plaintext highlighter-rouge">bcd</code> in HyperBatchR 2.3.1.</li>
+</ul>
+
+<h2 id="upgrading-from-hyperbatchr-22-to-23">Upgrading from HyperBatchR 2.2 to 2.3</h2>
+
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">stringsAsFactors</code> parameter was previously ignored with <code class="language-plaintext highlighter-rouge">collect</code>, for example, in <code class="language-plaintext highlighter-rouge">collect(createDataFrame(iris), stringsAsFactors = TRUE))</code>. It has been corrected.</li>
+  <li>For <code class="language-plaintext highlighter-rouge">summary</code>, option for statistics to compute has been added. Its output is changed from that from <code class="language-plaintext highlighter-rouge">describe</code>.</li>
+  <li>A warning can be raised if versions of HyperBatchR package and the HyperBatch JVM do not match.</li>
+</ul>
+
+<h2 id="upgrading-from-hyperbatchr-21-to-22">Upgrading from HyperBatchR 2.1 to 2.2</h2>
+
+<ul>
+  <li>A <code class="language-plaintext highlighter-rouge">numPartitions</code> parameter has been added to <code class="language-plaintext highlighter-rouge">createDataFrame</code> and <code class="language-plaintext highlighter-rouge">as.DataFrame</code>. When splitting the data, the partition position calculation has been made to match the one in Scala.</li>
+  <li>The method <code class="language-plaintext highlighter-rouge">createExternalTable</code> has been deprecated to be replaced by <code class="language-plaintext highlighter-rouge">createTable</code>. Either methods can be called to create external or managed table. Additional catalog methods have also been added.</li>
+  <li>By default, derby.log is now saved to <code class="language-plaintext highlighter-rouge">tempdir()</code>. This will be created when instantiating the HyperBatchSession with <code class="language-plaintext highlighter-rouge">enableHiveSupport</code> set to <code class="language-plaintext highlighter-rouge">TRUE</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">hyperbatch.lda</code> was not setting the optimizer correctly. It has been corrected.</li>
+  <li>Several model summary outputs are updated to have <code class="language-plaintext highlighter-rouge">coefficients</code> as <code class="language-plaintext highlighter-rouge">matrix</code>. This includes <code class="language-plaintext highlighter-rouge">hyperbatch.logit</code>, <code class="language-plaintext highlighter-rouge">hyperbatch.kmeans</code>, <code class="language-plaintext highlighter-rouge">hyperbatch.glm</code>. Model summary outputs for <code class="language-plaintext highlighter-rouge">hyperbatch.gaussianMixture</code> have added log-likelihood as <code class="language-plaintext highlighter-rouge">loglik</code>.</li>
+</ul>
+
+<h2 id="upgrading-from-hyperbatchr-20-to-31">Upgrading from HyperBatchR 2.0 to 3.1</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">join</code> no longer performs Cartesian Product by default, use <code class="language-plaintext highlighter-rouge">crossJoin</code> instead.</li>
+</ul>
+
+<h2 id="upgrading-from-hyperbatchr-16-to-20">Upgrading from HyperBatchR 1.6 to 2.0</h2>
+
+<ul>
+  <li>The method <code class="language-plaintext highlighter-rouge">table</code> has been removed and replaced by <code class="language-plaintext highlighter-rouge">tableToDF</code>.</li>
+  <li>The class <code class="language-plaintext highlighter-rouge">DataFrame</code> has been renamed to <code class="language-plaintext highlighter-rouge">HyperBatchDataFrame</code> to avoid name conflicts.</li>
+  <li>HyperBatch’s <code class="language-plaintext highlighter-rouge">SQLContext</code> and <code class="language-plaintext highlighter-rouge">HiveContext</code> have been deprecated to be replaced by <code class="language-plaintext highlighter-rouge">HyperBatchSession</code>. Instead of <code class="language-plaintext highlighter-rouge">hyperbatchR.init()</code>, call <code class="language-plaintext highlighter-rouge">hyperbatchR.session()</code> in its place to instantiate the HyperBatchSession. Once that is done, that currently active HyperBatchSession will be used for HyperBatchDataFrame operations.</li>
+  <li>The parameter <code class="language-plaintext highlighter-rouge">hyperbatchExecutorEnv</code> is not supported by <code class="language-plaintext highlighter-rouge">hyperbatchR.session</code>. To set environment for the executors, set HyperBatch config properties with the prefix “hyperbatch.executorEnv.VAR_NAME”, for example, “hyperbatch.executorEnv.PATH”</li>
+  <li>The <code class="language-plaintext highlighter-rouge">sqlContext</code> parameter is no longer required for these functions: <code class="language-plaintext highlighter-rouge">createDataFrame</code>, <code class="language-plaintext highlighter-rouge">as.DataFrame</code>, <code class="language-plaintext highlighter-rouge">read.json</code>, <code class="language-plaintext highlighter-rouge">jsonFile</code>, <code class="language-plaintext highlighter-rouge">read.parquet</code>, <code class="language-plaintext highlighter-rouge">parquetFile</code>, <code class="language-plaintext highlighter-rouge">read.text</code>, <code class="language-plaintext highlighter-rouge">sql</code>, <code class="language-plaintext highlighter-rouge">tables</code>, <code class="language-plaintext highlighter-rouge">tableNames</code>, <code class="language-plaintext highlighter-rouge">cacheTable</code>, <code class="language-plaintext highlighter-rouge">uncacheTable</code>, <code class="language-plaintext highlighter-rouge">clearCache</code>, <code class="language-plaintext highlighter-rouge">dropTempTable</code>, <code class="language-plaintext highlighter-rouge">read.df</code>, <code class="language-plaintext highlighter-rouge">loadDF</code>, <code class="language-plaintext highlighter-rouge">createExternalTable</code>.</li>
+  <li>The method <code class="language-plaintext highlighter-rouge">registerTempTable</code> has been deprecated to be replaced by <code class="language-plaintext highlighter-rouge">createOrReplaceTempView</code>.</li>
+  <li>The method <code class="language-plaintext highlighter-rouge">dropTempTable</code> has been deprecated to be replaced by <code class="language-plaintext highlighter-rouge">dropTempView</code>.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">sc</code> HyperBatchContext parameter is no longer required for these functions: <code class="language-plaintext highlighter-rouge">setJobGroup</code>, <code class="language-plaintext highlighter-rouge">clearJobGroup</code>, <code class="language-plaintext highlighter-rouge">cancelJobGroup</code></li>
+</ul>
+
+<h2 id="upgrading-from-hyperbatchr-15-to-16">Upgrading from HyperBatchR 1.5 to 1.6</h2>
+
+<ul>
+  <li>Before HyperBatch 1.6.0, the default mode for writes was <code class="language-plaintext highlighter-rouge">append</code>. It was changed in HyperBatch 1.6.0 to <code class="language-plaintext highlighter-rouge">error</code> to match the Scala API.</li>
+  <li>HyperBatchSQL converts <code class="language-plaintext highlighter-rouge">NA</code> in R to <code class="language-plaintext highlighter-rouge">null</code> and vice-versa.</li>
+  <li>Since 1.6.1, withColumn method in HyperBatchR supports adding a new column to or replacing existing columns
+of the same name of a DataFrame.</li>
+</ul>
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

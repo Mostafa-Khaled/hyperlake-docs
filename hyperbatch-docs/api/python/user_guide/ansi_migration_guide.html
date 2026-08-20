@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ANSI Migration Guide - Pandas API on HyperBatch — HyperBatch</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="ANSI-Migration-Guide---Pandas-API-on-HyperBatch">
+<h1>ANSI Migration Guide - Pandas API on HyperBatch<a class="headerlink" href="#ANSI-Migration-Guide---Pandas-API-on-HyperBatch" title="Permalink to this headline">#</a></h1>
+<p>ANSI mode is now on by default for Pandas API on HyperBatch. This guide helps you understand the key behavior differences you’ll see. In short, with ANSI mode on, Pandas API on HyperBatch behavior matches native pandas in cases where Pandas API on HyperBatch with ANSI off did not.</p>
+<section id="Behavior-Change">
+<h2>Behavior Change<a class="headerlink" href="#Behavior-Change" title="Permalink to this headline">#</a></h2>
+<section id="String-Number-Comparison">
+<h3>String Number Comparison<a class="headerlink" href="#String-Number-Comparison" title="Permalink to this headline">#</a></h3>
+<p><strong>ANSI off:</strong> HyperBatch implicitly casts numbers and strings, so <code class="docutils literal notranslate"><span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">'1'</span></code> are considered equal.</p>
+<p><strong>ANSI on:</strong> behaves like pandas, <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">==</span> <span class="pre">'1'</span></code> is False.</p>
+<p>Examples are as shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"int"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s2">"str"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"2"</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>
+
+<span class="go"># ANSI on</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.ansi.enabled"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="p">[</span><span class="s2">"int"</span><span class="p">]</span> <span class="o">==</span> <span class="n">psdf</span><span class="p">[</span><span class="s2">"str"</span><span class="p">]</span>
+<span class="go">0    False</span>
+<span class="go">1    False</span>
+<span class="go">dtype: bool</span>
+
+<span class="go"># ANSI off</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.ansi.enabled"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="p">[</span><span class="s2">"int"</span><span class="p">]</span> <span class="o">==</span> <span class="n">psdf</span><span class="p">[</span><span class="s2">"str"</span><span class="p">]</span>
+<span class="go">0    True</span>
+<span class="go">1    True</span>
+<span class="go">dtype: bool</span>
+
+<span class="go"># Pandas</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span><span class="p">[</span><span class="s2">"int"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">"str"</span><span class="p">]</span>
+<span class="go">0    False</span>
+<span class="go">1    False</span>
+<span class="go">dtype: bool</span>
+</pre></div>
+</div>
+</section>
+<section id="Strict-Casting">
+<h3>Strict Casting<a class="headerlink" href="#Strict-Casting" title="Permalink to this headline">#</a></h3>
+<p><strong>ANSI off:</strong> invalid casts (e.g., <code class="docutils literal notranslate"><span class="pre">'a'</span> <span class="pre">→</span> <span class="pre">int</span></code>) quietly became NULL.</p>
+<p><strong>ANSI on:</strong> the same casts raise errors.</p>
+<p>Examples are as shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"str"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"a"</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>
+
+<span class="go"># ANSI on</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.ansi.enabled"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="p">[</span><span class="s2">"str"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">pyhyperbatch.errors.exceptions.captured.NumberFormatException</span>: <span class="n">[CAST_INVALID_INPUT] ...</span>
+
+<span class="x"># ANSI off</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.ansi.enabled"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="p">[</span><span class="s2">"str"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="go">0   NaN</span>
+<span class="go">Name: str, dtype: float64</span>
+
+<span class="go"># Pandas</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span><span class="p">[</span><span class="s2">"str"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">invalid literal for int() with base 10: 'a'</span>
+</pre></div>
+</div>
+</section>
+<section id="MultiIndex.to_series-Return">
+<h3>MultiIndex.to_series Return<a class="headerlink" href="#MultiIndex.to_series-Return" title="Permalink to this headline">#</a></h3>
+<p><strong>ANSI off:</strong> Each row is returned as an <code class="docutils literal notranslate"><span class="pre">ArrayType</span></code> value, e.g. <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">red]</span></code>.</p>
+<p><strong>ANSI on:</strong> Each row is returned as a <code class="docutils literal notranslate"><span class="pre">StructType</span></code> value, which appears as a tuple (e.g., <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">red)</span></code>) if the Runtime SQL Configuration <code class="docutils literal notranslate"><span class="pre">hyperbatch.sql.execution.pandas.structHandlingMode</span></code> is set to <code class="docutils literal notranslate"><span class="pre">'row'</span></code>. Otherwise, the result may vary depending on whether Arrow is used. See more in the <a class="reference external" href="../../../configuration.html#runtime-sql-configuration">HyperBatch Runtime SQL Configuration docs</a>.</p>
+<p>Examples are as shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">arrays</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="s2">"red"</span><span class="p">,</span> <span class="s2">"blue"</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pidx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">arrays</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s2">"number"</span><span class="p">,</span> <span class="s2">"color"</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psidx</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pidx</span><span class="p">)</span>
+
+<span class="go"># ANSI on</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.ansi.enabled"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.execution.pandas.structHandlingMode"</span><span class="p">,</span> <span class="s2">"row"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psidx</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span>
+<span class="go">number  color</span>
+<span class="go">1       red       (1, red)</span>
+<span class="go">2       blue     (2, blue)</span>
+<span class="go">dtype: object</span>
+
+<span class="go"># ANSI off</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.ansi.enabled"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psidx</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span>
+<span class="go">number  color</span>
+<span class="go">1       red       [1, red]</span>
+<span class="go">2       blue     [2, blue]</span>
+<span class="go">dtype: object</span>
+
+<span class="go"># Pandas</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pidx</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span>
+<span class="go">number  color</span>
+<span class="go">1       red       (1, red)</span>
+<span class="go">2       blue     (2, blue)</span>
+<span class="go">dtype: object</span>
+</pre></div>
+</div>
+</section>
+<section id="Invalid-Mixed-Type-Operations">
+<h3>Invalid Mixed-Type Operations<a class="headerlink" href="#Invalid-Mixed-Type-Operations" title="Permalink to this headline">#</a></h3>
+<p><strong>ANSI off:</strong> HyperBatch implicitly coerces so these operations succeed.</p>
+<p><strong>ANSI on:</strong> Behaves like pandas, such operations are disallowed and raise errors.</p>
+<p>Operation types that show behavior changes under ANSI mode:</p>
+<ul class="simple">
+<li><p><strong>Decimal–Float Arithmetic</strong>: <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">//</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">%</span></code></p></li>
+<li><p><strong>Boolean vs. None</strong>: <code class="docutils literal notranslate"><span class="pre">|</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">^</span></code></p></li>
+</ul>
+<p>Example: Decimal–Float Arithmetic</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">decimal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pser</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psser</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pser</span><span class="p">)</span>
+
+<span class="go"># ANSI on</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.ansi.enabled"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psser</span> <span class="o">*</span> <span class="mf">0.1</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">Multiplication can not be applied to given types.</span>
+
+<span class="x"># ANSI off</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.ansi.enabled"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psser</span> <span class="o">*</span> <span class="mf">0.1</span>
+<span class="go">0    0.1</span>
+<span class="go">1    0.2</span>
+<span class="go">dtype: float64</span>
+
+<span class="go"># Pandas</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pser</span> <span class="o">*</span> <span class="mf">0.1</span>
+<span class="gp">...</span>
+<span class="go">TypeError: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'</span>
+</pre></div>
+</div>
+<p>Example: Boolean vs. None</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ANSI on</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.ansi.enabled"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ps</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="o">...</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">OR</span> <span class="n">can</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">applied</span> <span class="n">to</span> <span class="n">given</span> <span class="n">types</span><span class="o">.</span>
+
+<span class="c1"># ANSI off</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.ansi.enabled"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ps</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="mi">0</span>    <span class="kc">False</span>
+<span class="mi">1</span>    <span class="kc">False</span>
+<span class="n">dtype</span><span class="p">:</span> <span class="nb">bool</span>
+
+<span class="c1"># Pandas</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="o">...</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">unsupported</span> <span class="n">operand</span> <span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="o">|</span><span class="p">:</span> <span class="s1">'bool'</span> <span class="ow">and</span> <span class="s1">'NoneType'</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="Related-Configurations">
+<h2>Related Configurations<a class="headerlink" href="#Related-Configurations" title="Permalink to this headline">#</a></h2>
+<section id="hyperbatch.sql.ansi.enabled-(HyperBatch-config)">
+<h3><code class="docutils literal notranslate"><span class="pre">hyperbatch.sql.ansi.enabled</span></code> (HyperBatch config)<a class="headerlink" href="#hyperbatch.sql.ansi.enabled-(HyperBatch-config)" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Native HyperBatch setting that controls ANSI mode.</p></li>
+<li><p>The most powerful config to control both SQL and pandas API behavior.</p></li>
+<li><p>If set to <strong>False</strong>, HyperBatch reverts to the old behavior, and the other configs are not effective.</p></li>
+</ul>
+</section>
+<section id="compute.ansi_mode_support-(Pandas-API-on-HyperBatch-option)">
+<h3><code class="docutils literal notranslate"><span class="pre">compute.ansi_mode_support</span></code> (Pandas API on HyperBatch option)<a class="headerlink" href="#compute.ansi_mode_support-(Pandas-API-on-HyperBatch-option)" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Indicates whether ANSI mode is fully supported.</p></li>
+<li><p>Effective only when ANSI is enabled.</p></li>
+<li><p>If set to <strong>False</strong>, pandas API on HyperBatch may hit unexpected results or errors.</p></li>
+<li><p>Default is <strong>True</strong>.</p></li>
+</ul>
+</section>
+<section id="compute.fail_on_ansi_mode-(Pandas-API-on-HyperBatch-option)">
+<h3><code class="docutils literal notranslate"><span class="pre">compute.fail_on_ansi_mode</span></code> (Pandas API on HyperBatch option)<a class="headerlink" href="#compute.fail_on_ansi_mode-(Pandas-API-on-HyperBatch-option)" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Controls whether pandas API on HyperBatch fails immediately when ANSI mode is enabled.</p></li>
+<li><p>Effective only when ANSI is enabled and <code class="docutils literal notranslate"><span class="pre">compute.ansi_mode_support</span></code> is <strong>False</strong>.</p></li>
+<li><p>If set to <strong>False</strong>, forces pandas API on HyperBatch to work with the old behavior even when ANSI is enabled.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/user_guide/ansi_migration_guide.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

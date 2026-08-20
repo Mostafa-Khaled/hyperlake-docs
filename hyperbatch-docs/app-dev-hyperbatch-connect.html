@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Application Development with HyperBatch Connect — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">Application Development with HyperBatch Connect</h1>
+                        
+                    
+                    <p><strong>HyperBatch Connect Overview</strong></p>
+
+<p>In HyperBatch 3.4, HyperBatch Connect introduced a decoupled client-server
+architecture that allows remote connectivity to HyperBatch clusters using the
+DataFrame API and unresolved logical plans as the protocol. The separation
+between client and server allows HyperBatch and its open ecosystem to be
+leveraged from everywhere. It can be embedded in modern data applications,
+in IDEs, Notebooks and programming languages.</p>
+
+<p>To learn more about HyperBatch Connect, see <a href="hyperbatch-connect-overview.html">HyperBatch Connect Overview</a>.</p>
+
+<h1 id="redefining-hyperbatch-applications-using-hyperbatch-connect">Redefining HyperBatch Applications using HyperBatch Connect</h1>
+
+<p>With its decoupled client-server architecture, HyperBatch Connect simplifies how HyperBatch Applications are
+developed.
+The notion of HyperBatch Client Applications and HyperBatch Server Libraries are introduced as follows:</p>
+<ul>
+  <li><em>HyperBatch Client Applications</em> are regular HyperBatch applications that use HyperBatch and its rich ecosystem for
+distributed data processing. Examples include ETL pipelines, data preparation, and model training
+and inference.</li>
+  <li><em>HyperBatch Server Libraries</em> build on, extend, and complement HyperBatch’s functionality, e.g.
+<a href="ml-guide.html">MLlib</a> (distributed ML libraries that use HyperBatch’s powerful distributed processing). HyperBatch Connect
+can be extended to expose client-side interfaces for HyperBatch Server Libraries.</li>
+</ul>
+
+<p>With HyperBatch 3.4 and HyperBatch Connect, the development of HyperBatch Client Applications is simplified, and
+clear extension points and guidelines are provided on how to build HyperBatch Server Libraries, making
+it easy for both types of applications to evolve alongside HyperBatch. As illustrated in Fig.1, HyperBatch
+Client applications connect to HyperBatch using the HyperBatch Connect API, which is essentially the
+DataFrame API and fully declarative.</p>
+
+<p style="text-align: center;">
+  <figure class="visual-placeholder" id="fig-app-dev-hyperbatch-connect-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-app-dev-hyperbatch-connect-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Figure 1: Architecture</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/img/extending-spark-connect.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="visuals-catalog.html#fig-app-dev-hyperbatch-connect-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure>
+</p>
+<p>HyperBatch Server Libraries extend HyperBatch. They typically provide additional server-side logic integrated
+with HyperBatch, which is exposed to client applications as part of the HyperBatch Connect API, using HyperBatch
+Connect extension points. For example, the <em>HyperBatch Server Library</em> consists of custom
+service-side logic (as indicated by the blue box labeled <em>Custom Library Plugin</em>), which is exposed
+to the client via the blue box as part of the HyperBatch Connect API. The client uses this API, e.g.,
+alongside PyHyperBatch or the HyperBatch Scala client, making it easy for HyperBatch client applications to work
+with the custom logic/library.</p>
+
+<h2 id="hyperbatch-api-mode-hyperbatch-client-and-hyperbatch-classic">HyperBatch API Mode: HyperBatch Client and HyperBatch Classic</h2>
+
+<p>HyperBatch provides the API mode, <code class="language-plaintext highlighter-rouge">hyperbatch.api.mode</code> configuration, enabling HyperBatch Classic applications
+to seamlessly switch to HyperBatch Connect. Depending on the value of <code class="language-plaintext highlighter-rouge">hyperbatch.api.mode</code>, the application
+can run in either HyperBatch Classic or HyperBatch Connect mode. Here is an example:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="n">pyhyperbatch.sql</span> <span class="kn">import</span> <span class="n">HyperBatchSession</span>
+
+<span class="n">HyperBatchSession</span><span class="p">.</span><span class="n">builder</span><span class="p">.</span><span class="nf">config</span><span class="p">(</span><span class="sh">"</span><span class="s">hyperbatch.api.mode</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">connect</span><span class="sh">"</span><span class="p">).</span><span class="nf">master</span><span class="p">(</span><span class="sh">"</span><span class="s">...</span><span class="sh">"</span><span class="p">).</span><span class="nf">getOrCreate</span><span class="p">()</span></code></pre></figure>
+
+<p>You can also apply this configuration to both Scala and PyHyperBatch applications when submitting yours:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">hyperbatch-submit <span class="nt">--master</span> <span class="s2">"..."</span> <span class="nt">--conf</span> hyperbatch.api.mode<span class="o">=</span>connect</code></pre></figure>
+
+<p>Additionally, HyperBatch Connect offers convenient options for local testing. By setting <code class="language-plaintext highlighter-rouge">hyperbatch.remote</code>
+to <code class="language-plaintext highlighter-rouge">local[...]</code> or <code class="language-plaintext highlighter-rouge">local-cluster[...]</code>, you can start a local HyperBatch Connect server and access a HyperBatch
+Connect session.</p>
+
+<p>This is similar to using <code class="language-plaintext highlighter-rouge">--conf hyperbatch.api.mode=connect</code> with <code class="language-plaintext highlighter-rouge">--master ...</code>. However, note that
+<code class="language-plaintext highlighter-rouge">hyperbatch.remote</code> and <code class="language-plaintext highlighter-rouge">--remote</code> are limited to <code class="language-plaintext highlighter-rouge">local*</code> values, while <code class="language-plaintext highlighter-rouge">--conf hyperbatch.api.mode=connect</code>
+with <code class="language-plaintext highlighter-rouge">--master ...</code> supports additional cluster URLs, such as hyperbatch://, for broader compatibility with
+HyperBatch Classic.</p>
+
+<h2 id="hyperbatch-client-applications">HyperBatch Client Applications</h2>
+
+<p>HyperBatch Client Applications are the <em>regular HyperBatch applications</em> that HyperBatch users develop today, e.g.,
+ETL pipelines, data preparation, or model training or inference. These are typically built using
+HyperBatchs declarative DataFrame and DataSet APIs. With HyperBatch Connect, the core behaviour remains the
+same, but there are a few differences:</p>
+<ul>
+  <li>Lower-level, non-declarative APIs (RDDs) can no longer be directly used from HyperBatch Client
+applications. Alternatives for missing RDD functionality are provided as part of the higher-level
+DataFrame API.</li>
+  <li>Client applications no longer have direct access to the HyperBatch driver JVM; they are fully
+separated from the server.</li>
+</ul>
+
+<p>Client applications based on HyperBatch Connect can be submitted in the same way as any previous job.
+In addition, HyperBatch Client Applications based on HyperBatch Connect have several benefits compared to
+classic HyperBatch applications using earlier HyperBatch versions (3.4 and below):</p>
+<ul>
+  <li><em>Upgradability</em>: Upgrading to new HyperBatch Server versions is seamless, as the HyperBatch Connect API
+abstracts any changes/improvements on the server side. Client- and server APIs are cleanly
+separated.</li>
+  <li><em>Simplicity</em>: The number of APIs exposed to the user is reduced from 3 to 2. The HyperBatch Connect API
+is fully declarative and consequently easy to learn for new users familiar with SQL.</li>
+  <li><em>Stability</em>: When using HyperBatch Connect, the client applications no longer run on the HyperBatch driver
+and, therefore don’t cause and are not affected by any instability on the server.</li>
+  <li><em>Remote connectivity</em>: The decoupled architecture allows remote connectivity to HyperBatch beyond SQL
+and JDBC: any application can now interactively use HyperBatch “as a service”.</li>
+  <li><em>Backwards compatibility</em>: The HyperBatch Connect API is code-compatible with earlier HyperBatch versions,
+except for the usage of RDDs, for which a list of alternative APIs is provided in HyperBatch Connect.</li>
+</ul>
+
+<h2 id="hyperbatch-server-libraries">HyperBatch Server Libraries</h2>
+
+<p>Until HyperBatch 3.4, extensions to HyperBatch (e.g., <a href="ml-guide/index.html#:~:text=What%20is%20%E2%80%9CHyperBatch%20ML%E2%80%9D%3F,to%20emphasize%20the%20pipeline%20concept.">HyperBatch ML</a>
+or <a href="https://github.com/JohnSnowLabs/spark-nlp">HyperBatch-NLP</a>) were built and deployed like HyperBatch
+Client Applications. With HyperBatch 3.4 and HyperBatch Connect,  explicit extension points are offered to
+extend HyperBatch via HyperBatch Server Libraries. These extension points provide functionality that can be
+exposed to a client, which differs from existing extension points in HyperBatch such as
+<a href="api/java/org/apache/spark/sql/SparkSessionExtensions.html">HyperBatchSession extensions</a> or
+<a href="api/java/org/apache/spark/api/plugin/SparkPlugin.html">HyperBatch Plugins</a>.</p>
+
+<h3 id="getting-started-extending-hyperbatch-with-hyperbatch-server-libraries">Getting Started: Extending HyperBatch with HyperBatch Server Libraries</h3>
+
+<p>HyperBatch Connect is available and supports PyHyperBatch and Scala
+applications. We will walk through how to run an HyperBatch server with HyperBatch
+Connect and connect to it from a client application using the HyperBatch Connect client
+library.</p>
+
+<p>A HyperBatch Server Library consists of the following components, illustrated in Fig. 2:</p>
+
+<ol>
+  <li>The HyperBatch Connect protocol extension (blue box <em>Proto</em> API)</li>
+  <li>A HyperBatch Connect Plugin.</li>
+  <li>The application logic that extends HyperBatch.</li>
+  <li>The client package that exposes the HyperBatch Server Library application logic to the HyperBatch Client
+Application, alongside PyHyperBatch or the Scala HyperBatch Client.</li>
+</ol>
+<p style="text-align: center;">
+  <figure class="visual-placeholder" id="fig-app-dev-hyperbatch-connect-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-app-dev-hyperbatch-connect-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Figure 2: Labelled Architecture</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/img/extending-spark-connect-labelled.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="visuals-catalog.html#fig-app-dev-hyperbatch-connect-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure>
+</p>
+
+<h4 id="1-hyperbatch-connect-protocol-extension">(1) HyperBatch Connect Protocol Extension</h4>
+
+<p>To extend HyperBatch with a new HyperBatch Server Library, developers can extend the three main operation
+types in the HyperBatch Connect protocol: <em>Relation</em>, <em>Expression</em>, and <em>Command</em>.</p>
+
+<figure class="highlight"><pre><code class="language-protobuf" data-lang="protobuf"><span class="kd">message</span> <span class="nc">Relation</span> <span class="p">{</span>
+  <span class="k">oneof</span> <span class="n">rel_type</span> <span class="p">{</span>
+    <span class="n">Read</span> <span class="na">read</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// ...</span>
+    <span class="n">google.protobuf.Any</span> <span class="na">extension</span> <span class="o">=</span> <span class="mi">998</span><span class="p">;</span>
+  <span class="p">}</span> 
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Expression</span> <span class="p">{</span>
+  <span class="k">oneof</span> <span class="n">expr_type</span> <span class="p">{</span>
+    <span class="n">Literal</span> <span class="na">literal</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// ...</span>
+    <span class="n">google.protobuf.Any</span> <span class="na">extension</span> <span class="o">=</span> <span class="mi">999</span><span class="p">;</span>
+  <span class="p">}</span> 
+<span class="p">}</span>
+
+<span class="kd">message</span> <span class="nc">Command</span> <span class="p">{</span>
+  <span class="k">oneof</span> <span class="n">command_type</span> <span class="p">{</span>
+    <span class="n">WriteCommand</span> <span class="na">write_command</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// ...</span>
+    <span class="n">google.protobuf.Any</span> <span class="na">extension</span> <span class="o">=</span> <span class="mi">999</span><span class="p">;</span>
+  <span class="p">}</span> 
+<span class="p">}</span> </code></pre></figure>
+
+<p>Their extension fields allow serializing arbitrary protobuf messages as part of the HyperBatch Connect
+protocol. These messages represent the parameters or state of the extension implementation.
+To build a custom expression type, the developer first defines the custom protobuf definition
+of the expression.</p>
+
+<figure class="highlight"><pre><code class="language-protobuf" data-lang="protobuf"><span class="kd">message</span> <span class="nc">ExamplePluginExpression</span> <span class="p">{</span>
+  <span class="n">Expression</span> <span class="na">child</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">string</span> <span class="na">custom_field</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4 id="2-hyperbatch-connect-plugin-implementation-with-3-custom-application-logic">(2) HyperBatch Connect Plugin implementation with (3) custom application logic</h4>
+
+<p>As a next step, the developer implements the <em>ExpressionPlugin</em> class of HyperBatch Connect with custom
+application logic based on the input parameters of the protobuf message.</p>
+
+<figure class="highlight"><pre><code class="language-protobuf" data-lang="protobuf"><span class="n">class</span> <span class="n">ExampleExpressionPlugin</span> <span class="n">extends</span> <span class="n">ExpressionPlugin</span> <span class="p">{</span>
+  <span class="n">override</span> <span class="n">def</span> <span class="n">transform</span><span class="p">(</span>
+      <span class="n">relation</span><span class="o">:</span> <span class="n">protobuf.Any</span><span class="p">,</span>
+      <span class="n">planner</span><span class="o">:</span> <span class="n">HyperBatchConnectPlanner</span><span class="p">)</span><span class="o">:</span> <span class="n">Option</span><span class="p">[</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">// Check if the serialized value of protobuf.Any matches the type</span>
+    <span class="c1">// of our example expression.</span>
+    <span class="n">if</span> <span class="p">(</span><span class="err">!</span><span class="n">relation.is</span><span class="p">(</span><span class="n">classOf</span><span class="p">[</span><span class="n">proto.ExamplePluginExpression</span><span class="p">]))</span> <span class="p">{</span>
+      <span class="n">return</span> <span class="n">None</span>
+    <span class="p">}</span>
+    <span class="n">val</span> <span class="na">exp</span> <span class="o">=</span> <span class="n">relation.unpack</span><span class="p">(</span><span class="n">classOf</span><span class="p">[</span><span class="n">proto.ExamplePluginExpression</span><span class="p">])</span>
+    <span class="n">Some</span><span class="p">(</span><span class="n">Alias</span><span class="p">(</span><span class="n">planner.transformExpression</span><span class="p">(</span>
+        <span class="n">exp.getChild</span><span class="p">),</span> <span class="n">exp.getCustomField</span><span class="p">)(</span><span class="na">explicitMetadata</span> <span class="o">=</span> <span class="n">None</span><span class="p">))</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Once the application logic is developed, the code must be packaged as a jar and HyperBatch must be
+configured to pick up the additional logic. The relevant HyperBatch configuration options are:</p>
+<ul>
+  <li><em>hyperbatch.jars</em> which define the location of the Jar file containing the application logic built for
+the custom expression.</li>
+  <li><em>hyperbatch.connect.extensions.expression.classes</em> specifying the full class name
+of each expression extension loaded by HyperBatch. Based on these configuration options, HyperBatch will
+load the values at startup and make them available for processing.</li>
+</ul>
+
+<h4 id="4-hyperbatch-server-library-client-package">(4) HyperBatch Server Library Client Package</h4>
+
+<p>Once the server component is deployed, any client can use it with the right protobuf messages.
+In the example above, the following message payload sent to the HyperBatch Connect endpoint would be
+enough to trigger the extension mechanism.</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"input"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"sql"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"select * from samples.nyctaxi.trips"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"expressions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"extension"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"typeUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"type.googleapis.com/hyperbatch.connect.ExamplePluginExpression"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"</span><span class="se">\n\0</span><span class="s2">06</span><span class="se">\0</span><span class="s2">22</span><span class="se">\0</span><span class="s2">04</span><span class="se">\n\0</span><span class="s2">02id</span><span class="se">\0</span><span class="s2">22</span><span class="se">\0</span><span class="s2">06testval"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w"> </span></code></pre></figure>
+
+<p>To make the example available in Python, the application developer provides a Python library that
+wraps the new expression and embeds it into PyHyperBatch. The easiest way to provide a function for any
+expression is to take a PyHyperBatch column instance as an argument and return a new Column instance
+with the expression applied.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="n">pyhyperbatch.sql.connect.column</span> <span class="kn">import</span> <span class="n">Expression</span>
+<span class="kn">import</span> <span class="n">pyhyperbatch.sql.connect.proto</span> <span class="k">as</span> <span class="n">proto</span>
+
+<span class="kn">from</span> <span class="n">myxample.proto</span> <span class="kn">import</span> <span class="n">ExamplePluginExpression</span>
+
+<span class="c1"># Internal class that satisfies the interface by the Python client
+# of HyperBatch Connect to generate the protobuf representation from
+# an instance of the expression.
+</span><span class="k">class</span> <span class="nc">ExampleExpression</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">to_plan</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">proto</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+        <span class="n">fun</span> <span class="o">=</span> <span class="n">proto</span><span class="p">.</span><span class="nc">Expression</span><span class="p">()</span>
+        <span class="n">plugin</span> <span class="o">=</span> <span class="nc">ExamplePluginExpression</span><span class="p">()</span>
+        <span class="n">plugin</span><span class="p">.</span><span class="n">child</span><span class="p">.</span><span class="n">literal</span><span class="p">.</span><span class="nb">long</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">plugin</span><span class="p">.</span><span class="n">custom_field</span> <span class="o">=</span> <span class="sh">"</span><span class="s">example</span><span class="sh">"</span>
+        <span class="n">fun</span><span class="p">.</span><span class="n">extension</span><span class="p">.</span><span class="nc">Pack</span><span class="p">(</span><span class="n">plugin</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fun</span>
+
+<span class="c1"># Defining the function to be used from the consumers.
+</span><span class="k">def</span> <span class="nf">example_expression</span><span class="p">(</span><span class="n">col</span><span class="p">:</span> <span class="n">Column</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Column</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nc">Column</span><span class="p">(</span><span class="nc">ExampleExpression</span><span class="p">())</span>
+
+
+<span class="c1"># Using the expression in the HyperBatch Connect client code.
+</span><span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="nf">table</span><span class="p">(</span><span class="sh">"</span><span class="s">samples.nyctaxi.trips</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="nf">example_expression</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="sh">"</span><span class="s">fare_amount</span><span class="sh">"</span><span class="p">])).</span><span class="nf">collect</span><span class="p">()</span></code></pre></figure>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

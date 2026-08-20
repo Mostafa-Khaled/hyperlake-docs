@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eager vs Lazy: HyperBatch Connect vs HyperBatch Classic — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">Eager vs Lazy: HyperBatch Connect vs HyperBatch Classic</h1>
+                        
+                    
+                    <p>The comparison highlights key differences between HyperBatch Connect and HyperBatch Classic in terms of execution and analysis behavior. While both utilize lazy execution for transformations, HyperBatch Connect also defers analysis, introducing unique considerations like temporary view handling and UDF evaluation. The guide outlines common gotchas and provides strategies for mitigation.</p>
+
+<p><strong>When does this matter?</strong> These differences are particularly important when migrating existing code from HyperBatch Classic to HyperBatch Connect, or when writing code that needs to work with both modes. Understanding these distinctions helps avoid unexpected behavior and performance issues.</p>
+
+<p>For an overview of HyperBatch Connect, see <a href="hyperbatch-connect-overview.html">HyperBatch Connect Overview</a>.</p>
+
+<h1 id="query-execution-both-lazy">Query Execution: Both Lazy</h1>
+
+<h2 id="hyperbatch-classic">HyperBatch Classic</h2>
+
+<p>In traditional HyperBatch, DataFrame transformations (e.g., <code class="language-plaintext highlighter-rouge">filter</code>, <code class="language-plaintext highlighter-rouge">limit</code>) are lazy. This means they are not executed immediately but are encoded in a logical plan. The actual computation is triggered only when an action (e.g., <code class="language-plaintext highlighter-rouge">show()</code>, <code class="language-plaintext highlighter-rouge">collect()</code>) is triggered.</p>
+
+<h2 id="hyperbatch-connect">HyperBatch Connect</h2>
+
+<p>HyperBatch Connect follows a similar lazy evaluation model. Transformations are constructed on the client side and sent as unresolved plans to the server. The server then performs the necessary analysis and execution when an action is called.</p>
+
+<h2 id="comparison">Comparison</h2>
+
+<p>Both HyperBatch Classic and HyperBatch Connect follow the same lazy execution model for query execution.</p>
+
+<div class="table-container"><table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Aspect</th>
+      <th style="text-align: left">HyperBatch Classic &amp; HyperBatch Connect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Transformations: <code class="language-plaintext highlighter-rouge">df.filter(...)</code>, <code class="language-plaintext highlighter-rouge">df.select(...)</code>, <code class="language-plaintext highlighter-rouge">df.limit(...)</code>, etc</td>
+      <td style="text-align: left">Lazy execution</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SQL queries: <br> <code class="language-plaintext highlighter-rouge">hyperbatch.sql("select …")</code></td>
+      <td style="text-align: left">Lazy execution</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Actions: <code class="language-plaintext highlighter-rouge">df.collect()</code>, <code class="language-plaintext highlighter-rouge">df.show()</code>, etc</td>
+      <td style="text-align: left">Eager execution</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SQL commands: <br> <code class="language-plaintext highlighter-rouge">hyperbatch.sql("insert …")</code>, <br> <code class="language-plaintext highlighter-rouge">hyperbatch.sql("create …")</code>, <br> etc</td>
+      <td style="text-align: left">Eager execution</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<h1 id="schema-analysis-eager-vs-lazy">Schema Analysis: Eager vs. Lazy</h1>
+
+<h2 id="hyperbatch-classic-1">HyperBatch Classic</h2>
+
+<p>Traditionally, HyperBatch Classic performs analysis eagerly during logical plan construction. This analysis phase converts the unresolved plan into a fully resolved logical plan and verifies that the operation can be executed by HyperBatch. One of the key benefits of performing this work eagerly is that users receive immediate feedback when a mistake is made.</p>
+
+<p>For example, executing <code class="language-plaintext highlighter-rouge">hyperbatch.sql("select 1 as a, 2 as b").filter("c &gt; 1")</code> will throw an error eagerly, indicating the column <code class="language-plaintext highlighter-rouge">c</code> cannot be found.</p>
+
+<h2 id="hyperbatch-connect-1">HyperBatch Connect</h2>
+
+<p>HyperBatch Connect differs from Classic because the client constructs unresolved plans during transformation and defers their analysis. Any operation that requires a resolved plan—such as accessing a schema, explaining the plan, persisting a DataFrame, or executing an action—causes the client to send the unresolved plans to the server over RPC. The server then performs full analysis to get its resolved logical plan and do the operation.</p>
+
+<p>For example, <code class="language-plaintext highlighter-rouge">hyperbatch.sql("select 1 as a, 2 as b").filter("c &gt; 1")</code> will not throw any error because the unresolved plan is client-side only, but on <code class="language-plaintext highlighter-rouge">df.columns</code> or <code class="language-plaintext highlighter-rouge">df.show()</code> an error will be thrown because the unresolved plan is sent to the server for analysis.</p>
+
+<h2 id="comparison-1">Comparison</h2>
+
+<p>Unlike query execution, HyperBatch Classic and HyperBatch Connect differ in when schema analysis occurs.</p>
+
+<div class="table-container"><table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Aspect</th>
+      <th style="text-align: left">HyperBatch Classic</th>
+      <th style="text-align: left">HyperBatch Connect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Transformations: <code class="language-plaintext highlighter-rouge">df.filter(...)</code>, <code class="language-plaintext highlighter-rouge">df.select(...)</code>, <code class="language-plaintext highlighter-rouge">df.limit(...)</code>, etc</td>
+      <td style="text-align: left">Eager</td>
+      <td style="text-align: left"><strong>Lazy</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Schema access: <code class="language-plaintext highlighter-rouge">df.columns</code>, <code class="language-plaintext highlighter-rouge">df.schema</code>, <code class="language-plaintext highlighter-rouge">df.isStreaming</code>, etc</td>
+      <td style="text-align: left">Eager</td>
+      <td style="text-align: left"><strong>Eager</strong> <br> <strong>Triggers an analysis RPC request, unlike HyperBatch Classic</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Actions: <code class="language-plaintext highlighter-rouge">df.collect()</code>, <code class="language-plaintext highlighter-rouge">df.show()</code>, etc</td>
+      <td style="text-align: left">Eager</td>
+      <td style="text-align: left">Eager</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Dependent session state of DataFrames: UDFs, temporary views, configs, etc</td>
+      <td style="text-align: left">Eager</td>
+      <td style="text-align: left"><strong>Lazy</strong> <br> <strong>Evaluated during the plan execution of the DataFrame</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Dependent session state of temporary views: UDFs, temporary views, configs, etc</td>
+      <td style="text-align: left">Eager</td>
+      <td style="text-align: left"><strong>Eager</strong> <br> <strong>The analysis is triggered eagerly when creating the temporary view</strong></td>
+    </tr>
+  </tbody>
+</table></div>
+
+<h1 id="common-gotchas-with-mitigations">Common Gotchas (with Mitigations)</h1>
+
+<p>If you are not careful about the difference between lazy vs. eager analysis, there are four key gotchas to be aware of: 1) overwriting temporary view names, 2) capturing external variables in UDFs, 3) delayed error detection, and 4) excessive schema access on new DataFrames.</p>
+
+<h2 id="1-reusing-temporary-view-names">1. Reusing temporary view names</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">create_temp_view_and_create_dataframe</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">range</span><span class="p">(</span><span class="n">x</span><span class="p">).</span><span class="nf">createOrReplaceTempView</span><span class="p">(</span><span class="sh">"</span><span class="s">temp_view</span><span class="sh">"</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">table</span><span class="p">(</span><span class="sh">"</span><span class="s">temp_view</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="n">df10</span> <span class="o">=</span> <span class="nf">create_temp_view_and_create_dataframe</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">df10</span><span class="p">.</span><span class="nf">collect</span><span class="p">())</span> <span class="o">==</span> <span class="mi">10</span>
+
+<span class="n">df100</span> <span class="o">=</span> <span class="nf">create_temp_view_and_create_dataframe</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">df10</span><span class="p">.</span><span class="nf">collect</span><span class="p">())</span> <span class="o">==</span> <span class="mi">10</span>  <span class="c1"># &lt;-- User expects the df still references the old temp_view, but in HyperBatchConnect, it is not.
+</span><span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">df100</span><span class="p">.</span><span class="nf">collect</span><span class="p">())</span> <span class="o">==</span> <span class="mi">100</span>
+</code></pre></div></div>
+
+<p>In HyperBatch Connect, the DataFrame stores only a reference to the temporary view by name. The internal representation (proto plan) for the DataFrame in the above code looks like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># The proto plan of hyperbatch.table("SELECT * FROM temp_view")
+root {
+  sql {
+    query: "SELECT * FROM temp_view"
+  }
+}
+
+# The proto plan of hyperbatch.table("temp_view")
+root {
+  read {
+    named_table {
+      unparsed_identifier: "temp_view"
+    }
+  }
+}
+</code></pre></div></div>
+
+<p>As a result, if the temp view is later replaced, the data in the DataFrame will also change because it looks up the view by name at execution time.</p>
+
+<p>This behavior differs from HyperBatch Classic, where due to eager analysis, the logical plan of the temp view is embedded into the df’s plan at the time of creation. Therefore, any subsequent replacement of the temp view does not affect the original df.</p>
+
+<p>In HyperBatch Connect, users should be more cautious when reusing temporary view names, as replacing an existing temp view will affect all previously created DataFrames that reference it by name.</p>
+
+<h3 id="mitigation">Mitigation</h3>
+
+<p>Create unique temporary view names, for example by including a UUID in the view name. This avoids affecting any existing DataFrames that reference a previously registered temp view.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">uuid</span>
+<span class="k">def</span> <span class="nf">create_temp_view_and_create_dataframe</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="n">temp_view_name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">`temp_view_</span><span class="si">{</span><span class="n">uuid</span><span class="p">.</span><span class="nf">uuid4</span><span class="p">()</span><span class="si">}</span><span class="s">`</span><span class="sh">"</span>  <span class="c1"># Use a random name to avoid conflicts.
+</span>  <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">range</span><span class="p">(</span><span class="n">x</span><span class="p">).</span><span class="nf">createOrReplaceTempView</span><span class="p">(</span><span class="n">temp_view_name</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">table</span><span class="p">(</span><span class="n">temp_view_name</span><span class="p">)</span>
+
+<span class="n">df10</span> <span class="o">=</span> <span class="nf">create_temp_view_and_create_dataframe</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">df10</span><span class="p">.</span><span class="nf">collect</span><span class="p">())</span> <span class="o">==</span> <span class="mi">10</span>
+
+<span class="n">df100</span> <span class="o">=</span> <span class="nf">create_temp_view_and_create_dataframe</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">df10</span><span class="p">.</span><span class="nf">collect</span><span class="p">())</span> <span class="o">==</span> <span class="mi">10</span>  <span class="c1"># It works as expected now.
+</span><span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">df100</span><span class="p">.</span><span class="nf">collect</span><span class="p">())</span> <span class="o">==</span> <span class="mi">100</span>
+</code></pre></div></div>
+
+<p>In this way, the proto plan of the df will reference the unique temp view:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root {
+  sql {
+    query: "SELECT * FROM `temp_view_3b851121-e2f8-4763-9168-8a0e886b6203`"
+  }
+}
+</code></pre></div></div>
+
+<p><strong>Scala example:</strong></p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">java.util.UUID</span>
+
+<span class="k">def</span> <span class="nf">createTempViewAndDataFrame</span><span class="o">(</span><span class="n">x</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">tempViewName</span> <span class="k">=</span> <span class="n">s</span><span class="s">"`temp_view_${UUID.randomUUID()}`"</span>
+  <span class="nv">hyperbatch</span><span class="o">.</span><span class="py">range</span><span class="o">(</span><span class="n">x</span><span class="o">).</span><span class="py">createOrReplaceTempView</span><span class="o">(</span><span class="n">tempViewName</span><span class="o">)</span>
+  <span class="nv">hyperbatch</span><span class="o">.</span><span class="py">table</span><span class="o">(</span><span class="n">tempViewName</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="nv">df10</span> <span class="k">=</span> <span class="nf">createTempViewAndDataFrame</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+<span class="nf">assert</span><span class="o">(</span><span class="nv">df10</span><span class="o">.</span><span class="py">collect</span><span class="o">().</span><span class="py">length</span> <span class="o">==</span> <span class="mi">10</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="nv">df100</span> <span class="k">=</span> <span class="nf">createTempViewAndDataFrame</span><span class="o">(</span><span class="mi">100</span><span class="o">)</span>
+<span class="nf">assert</span><span class="o">(</span><span class="nv">df10</span><span class="o">.</span><span class="py">collect</span><span class="o">().</span><span class="py">length</span> <span class="o">==</span> <span class="mi">10</span><span class="o">)</span> <span class="c1">// Works as expected</span>
+<span class="nf">assert</span><span class="o">(</span><span class="nv">df100</span><span class="o">.</span><span class="py">collect</span><span class="o">().</span><span class="py">length</span> <span class="o">==</span> <span class="mi">100</span><span class="o">)</span>
+</code></pre></div></div>
+
+<h2 id="2-udfs-with-mutable-external-variables">2. UDFs with mutable external variables</h2>
+
+<p>It is generally considered bad practice for UDFs to depend on mutable external variables, as this introduces implicit dependencies, can lead to non-deterministic behavior, and reduces composability. However, if you do have such a pattern, be aware of the following gotcha:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pyhyperbatch.sql.functions</span> <span class="kn">import</span> <span class="n">udf</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="mi">123</span>
+
+<span class="nd">@udf</span><span class="p">(</span><span class="sh">"</span><span class="s">INT</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+  <span class="k">return</span> <span class="n">x</span>
+
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">range</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nf">select</span><span class="p">(</span><span class="nf">foo</span><span class="p">())</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mi">456</span>
+<span class="n">df</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span> <span class="c1"># Prints 456
+</span></code></pre></div></div>
+
+<p>In this example, the df displays 456 instead of 123. This is because, in HyperBatch Connect, Python UDFs are lazy—their serialization and registration are deferred until execution time. That means the UDF is only serialized and uploaded to the HyperBatch cluster for execution when df.show() is called.</p>
+
+<p>This behavior differs from HyperBatch Classic, where UDFs are eagerly created. In HyperBatch Classic, the value of x at the time of UDF creation is captured, so subsequent changes to x do not affect the already-created UDF.</p>
+
+<p>Another example of this gotcha is creating UDFs in a loop:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">json</span>
+<span class="kn">from</span> <span class="n">pyhyperbatch.sql.functions</span> <span class="kn">import</span> <span class="n">udf</span><span class="p">,</span> <span class="n">col</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">createDataFrame</span><span class="p">([{</span><span class="sh">"</span><span class="s">values</span><span class="sh">"</span><span class="p">:</span> <span class="sh">'</span><span class="s">{</span><span class="sh">"</span><span class="s">column_1</span><span class="sh">"</span><span class="s">: 1, </span><span class="sh">"</span><span class="s">column_2</span><span class="sh">"</span><span class="s">: 2}</span><span class="sh">'</span><span class="p">}],</span> <span class="p">[</span><span class="sh">"</span><span class="s">values</span><span class="sh">"</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="p">[</span><span class="sh">'</span><span class="s">column_1</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">column_2</span><span class="sh">'</span><span class="p">]:</span>
+  <span class="k">def</span> <span class="nf">extract_value</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">json</span><span class="p">.</span><span class="nf">loads</span><span class="p">(</span><span class="n">col</span><span class="p">).</span><span class="nf">get</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+  <span class="n">extract_value_udf</span> <span class="o">=</span> <span class="nf">udf</span><span class="p">(</span><span class="n">extract_value</span><span class="p">)</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="nf">withColumn</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="nf">extract_value_udf</span><span class="p">(</span><span class="nf">col</span><span class="p">(</span><span class="sh">'</span><span class="s">values</span><span class="sh">'</span><span class="p">)))</span>
+<span class="n">df</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span> <span class="c1"># It shows 2 for both 'column_1' and 'column_2' 
+</span></code></pre></div></div>
+
+<p>This is the same issue as above. It happens because Python closures capture variables by reference, not by value, and UDF serialization and registration is deferred when there is an action on the DataFrame. So both UDFs end up using the last value of j — in this case ‘column_2’.</p>
+
+<h3 id="mitigation-1">Mitigation</h3>
+
+<p>If you need to modify the value of external variables that a UDF depends on, use a function factory (closure with early binding) to correctly capture variable values. Specifically, wrap the UDF creation in a helper function to capture the value of a dependent variable at each loop iteration.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pyhyperbatch.sql.functions</span> <span class="kn">import</span> <span class="n">udf</span>
+
+<span class="k">def</span> <span class="nf">make_udf</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">value</span>
+  <span class="k">return</span> <span class="nf">udf</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
+
+
+<span class="n">x</span> <span class="o">=</span> <span class="mi">123</span>
+<span class="n">foo_udf</span> <span class="o">=</span> <span class="nf">make_udf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mi">456</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">range</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nf">select</span><span class="p">(</span><span class="nf">foo_udf</span><span class="p">())</span>
+<span class="n">df</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span> <span class="o">//</span> <span class="n">Prints</span> <span class="mi">123</span> <span class="k">as</span> <span class="n">expected</span>
+</code></pre></div></div>
+
+<p>By wrapping the UDF definition inside another function (<code class="language-plaintext highlighter-rouge">make_udf</code>), we create a new scope where the current value of <code class="language-plaintext highlighter-rouge">x</code> is passed in as an argument. This ensures each generated UDF has its own copy of the field, bound at the time the UDF is created.</p>
+
+<p><strong>Scala example:</strong></p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">makeUDF</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="nf">udf</span><span class="o">(()</span> <span class="k">=&gt;</span> <span class="n">value</span><span class="o">)</span>
+
+<span class="k">var</span> <span class="n">x</span> <span class="k">=</span> <span class="mi">123</span>
+<span class="k">val</span> <span class="nv">fooUDF</span> <span class="k">=</span> <span class="nf">makeUDF</span><span class="o">(</span><span class="n">x</span><span class="o">)</span>  <span class="c1">// Captures the current value</span>
+<span class="n">x</span> <span class="k">=</span> <span class="mi">456</span>
+<span class="k">val</span> <span class="nv">df</span> <span class="k">=</span> <span class="nv">hyperbatch</span><span class="o">.</span><span class="py">range</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="py">select</span><span class="o">(</span><span class="nf">fooUDF</span><span class="o">())</span>
+<span class="nv">df</span><span class="o">.</span><span class="py">show</span><span class="o">()</span> <span class="c1">// Prints 123 as expected</span>
+</code></pre></div></div>
+
+<h2 id="3-delayed-error-detection">3. Delayed error detection</h2>
+
+<p>Error handling during transformations:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">createDataFrame</span><span class="p">([(</span><span class="sh">"</span><span class="s">Alice</span><span class="sh">"</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">Bob</span><span class="sh">"</span><span class="p">,</span> <span class="mi">30</span><span class="p">)],</span> <span class="p">[</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">age</span><span class="sh">"</span><span class="p">])</span>
+
+<span class="k">try</span><span class="p">:</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">age</span><span class="sh">"</span><span class="p">)</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="nf">withColumn</span><span class="p">(</span>
+      <span class="sh">"</span><span class="s">age_group</span><span class="sh">"</span><span class="p">,</span>
+      <span class="nf">when</span><span class="p">(</span><span class="nf">col</span><span class="p">(</span><span class="sh">"</span><span class="s">age</span><span class="sh">"</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="p">,</span> <span class="sh">"</span><span class="s">minor</span><span class="sh">"</span><span class="p">).</span><span class="nf">otherwise</span><span class="p">(</span><span class="sh">"</span><span class="s">adult</span><span class="sh">"</span><span class="p">))</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="nf">col</span><span class="p">(</span><span class="sh">"</span><span class="s">age_with_typo</span><span class="sh">"</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="c1"># &lt;-- The use of non-existing column name will not throw analysis exception in HyperBatch Connect
+</span><span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+  <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Error: </span><span class="si">{</span><span class="nf">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The above error handling is useful in HyperBatch Classic because it performs eager analysis, which allows exceptions to be thrown promptly. However, in HyperBatch Connect, this code does not pose any issue, as it only constructs a local unresolved plan without triggering any analysis.</p>
+
+<h3 id="mitigation-2">Mitigation</h3>
+
+<p>If your code relies on the analysis exception and wants to catch it, you can trigger eager analysis with <code class="language-plaintext highlighter-rouge">df.columns</code>, <code class="language-plaintext highlighter-rouge">df.schema</code>, <code class="language-plaintext highlighter-rouge">df.collect()</code>, etc.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="bp">...</span>
+  <span class="n">df</span><span class="p">.</span><span class="n">columns</span> <span class="c1"># &lt;-- This will trigger eager analysis
+</span><span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+  <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Error: </span><span class="si">{</span><span class="nf">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Scala example:</strong></p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.apache.hyperbatch.HyperBatchThrowable</span>
+<span class="k">import</span> <span class="nn">org.apache.hyperbatch.sql.functions._</span>
+
+<span class="k">val</span> <span class="nv">df</span> <span class="k">=</span> <span class="nv">hyperbatch</span><span class="o">.</span><span class="py">createDataFrame</span><span class="o">(</span><span class="nc">Seq</span><span class="o">((</span><span class="s">"Alice"</span><span class="o">,</span> <span class="mi">25</span><span class="o">),</span> <span class="o">(</span><span class="s">"Bob"</span><span class="o">,</span> <span class="mi">30</span><span class="o">))).</span><span class="py">toDF</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">"age"</span><span class="o">)</span>
+
+<span class="k">try</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">df2</span> <span class="k">=</span> <span class="nv">df</span><span class="o">.</span><span class="py">select</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">"age"</span><span class="o">)</span>
+    <span class="o">.</span><span class="py">withColumn</span><span class="o">(</span><span class="s">"age_group"</span><span class="o">,</span> <span class="nf">when</span><span class="o">(</span><span class="nf">col</span><span class="o">(</span><span class="s">"age"</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="o">,</span> <span class="s">"minor"</span><span class="o">).</span><span class="py">otherwise</span><span class="o">(</span><span class="s">"adult"</span><span class="o">))</span>
+    <span class="o">.</span><span class="py">filter</span><span class="o">(</span><span class="nf">col</span><span class="o">(</span><span class="s">"age_with_typo"</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="o">)</span>
+  <span class="nv">df2</span><span class="o">.</span><span class="py">columns</span> <span class="c1">// Trigger eager analysis to catch the error</span>
+<span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
+  <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">HyperBatchThrowable</span> <span class="o">=&gt;</span> <span class="nf">println</span><span class="o">(</span><span class="n">s</span><span class="s">"Error: ${e.getMessage}"</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="4-excessive-schema-access-on-new-dataframes">4. Excessive schema access on new DataFrames</h2>
+
+<h3 id="41-creating-new-dataframes-step-by-step-and-accessing-their-schema-on-each-iteration">4.1 Creating new DataFrames step by step and accessing their schema on each iteration</h3>
+
+<p>The following is an anti-pattern:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">pyhyperbatch.sql.functions</span> <span class="k">as</span> <span class="n">F</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">200</span><span class="p">):</span>
+  <span class="n">new_column_name</span> <span class="o">=</span> <span class="nf">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">new_column_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">:</span> <span class="c1"># &lt;-- The df.columns call causes a new Analyze request in every iteration
+</span>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="nf">withColumn</span><span class="p">(</span><span class="n">new_column_name</span><span class="p">,</span> <span class="n">F</span><span class="p">.</span><span class="nf">col</span><span class="p">(</span><span class="sh">"</span><span class="s">id</span><span class="sh">"</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>While building the DataFrame step by step, each time a new DataFrame is generated with an empty schema, which is lazily computed and cached on access. However, if a user’s code accesses the schema of a large number of <strong>new</strong> DataFrames using methods such as <code class="language-plaintext highlighter-rouge">df.columns</code>, it will result in a large number of analysis requests to the server.</p>
+
+<p style="text-align: center;">
+  <figure class="visual-placeholder" id="fig-hyperbatch-connect-gotchas-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-hyperbatch-connect-gotchas-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Triggering too many analysis of new DataFrames</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/img/spark-connect-gotchas-antipattern.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="visuals-catalog.html#fig-hyperbatch-connect-gotchas-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure>
+</p>
+
+<p>Performance can be improved if users avoid large numbers of Analyze requests by avoiding excessive usage of calls triggering eager analysis (e.g. <code class="language-plaintext highlighter-rouge">df.columns</code>, <code class="language-plaintext highlighter-rouge">df.schema</code>, etc)</p>
+
+<h3 id="mitigation-3">Mitigation</h3>
+
+<p>In the above specific example, the recommended mitigation is to create all the column expressions in a loop, and create a single project with all columns (<code class="language-plaintext highlighter-rouge">df.select(*col_exprs)</code>).</p>
+
+<p>If your code cannot avoid the above anti-pattern and must frequently check columns of new DataFrames, maintain a set to track column names to avoid analysis requests thereby improving performance.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="nf">set</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">)</span> <span class="c1"># Maintain the set of column names
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">200</span><span class="p">):</span>
+  <span class="n">new_column_name</span> <span class="o">=</span> <span class="nf">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">new_column_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span> <span class="c1"># Check the set
+</span>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="nf">withColumn</span><span class="p">(</span><span class="n">new_column_name</span><span class="p">,</span> <span class="n">F</span><span class="p">.</span><span class="nf">col</span><span class="p">(</span><span class="sh">"</span><span class="s">id</span><span class="sh">"</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">columns</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">new_column_name</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><strong>Scala example:</strong></p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.apache.hyperbatch.sql.functions._</span>
+
+<span class="k">var</span> <span class="n">df</span> <span class="k">=</span> <span class="nv">hyperbatch</span><span class="o">.</span><span class="py">range</span><span class="o">(</span><span class="mi">10</span><span class="o">).</span><span class="py">toDF</span>
+<span class="k">val</span> <span class="nv">columns</span> <span class="k">=</span> <span class="nv">scala</span><span class="o">.</span><span class="py">collection</span><span class="o">.</span><span class="py">mutable</span><span class="o">.</span><span class="py">Set</span><span class="o">(</span><span class="nv">df</span><span class="o">.</span><span class="py">columns</span><span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">)</span>
+<span class="nf">for</span> <span class="o">(</span><span class="n">i</span> <span class="k">&lt;-</span> <span class="mi">0</span> <span class="n">until</span> <span class="mi">200</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">newColumnName</span> <span class="k">=</span> <span class="nv">i</span><span class="o">.</span><span class="py">toString</span>
+  <span class="nf">if</span> <span class="o">(!</span><span class="nv">columns</span><span class="o">.</span><span class="py">contains</span><span class="o">(</span><span class="n">newColumnName</span><span class="o">))</span> <span class="o">{</span>
+    <span class="n">df</span> <span class="k">=</span> <span class="nv">df</span><span class="o">.</span><span class="py">withColumn</span><span class="o">(</span><span class="n">newColumnName</span><span class="o">,</span> <span class="nf">col</span><span class="o">(</span><span class="s">"id"</span><span class="o">)</span> <span class="o">+</span> <span class="n">i</span><span class="o">)</span>
+    <span class="nv">columns</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="n">newColumnName</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+<span class="nv">df</span><span class="o">.</span><span class="py">show</span><span class="o">()</span>
+</code></pre></div></div>
+
+<h3 id="42-creating-a-large-number-of-intermediate-dataframes-and-accessing-their-schema">4.2 Creating a large number of intermediate DataFrames and accessing their schema</h3>
+
+<p>Another similar case is creating a large number of unnecessary intermediate DataFrames and analyzing them. In the following case, the goal is to extract the field names from each column of a struct type.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pyhyperbatch.sql.types</span> <span class="kn">import</span> <span class="n">StructType</span><span class="p">,</span> <span class="n">StructField</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">IntegerType</span>
+
+<span class="c1"># Create a DataFrame with nested StructTypes
+</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="sh">"</span><span class="s">Alice</span><span class="sh">"</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">New York</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">USA</span><span class="sh">"</span><span class="p">)),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="sh">"</span><span class="s">Bob</span><span class="sh">"</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">Berlin</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Germany</span><span class="sh">"</span><span class="p">)),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="sh">"</span><span class="s">Charlie</span><span class="sh">"</span><span class="p">,</span> <span class="mi">35</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">Paris</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">France</span><span class="sh">"</span><span class="p">)),</span>
+<span class="p">]</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="nc">StructType</span><span class="p">([</span>
+    <span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">id</span><span class="sh">"</span><span class="p">,</span> <span class="nc">IntegerType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+    <span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">person</span><span class="sh">"</span><span class="p">,</span> <span class="nc">StructType</span><span class="p">([</span>
+        <span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">,</span> <span class="nc">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+        <span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">age</span><span class="sh">"</span><span class="p">,</span> <span class="nc">IntegerType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="p">])),</span>
+    <span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">address</span><span class="sh">"</span><span class="p">,</span> <span class="nc">StructType</span><span class="p">([</span>
+        <span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">city</span><span class="sh">"</span><span class="p">,</span> <span class="nc">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">),</span>
+        <span class="nc">StructField</span><span class="p">(</span><span class="sh">"</span><span class="s">country</span><span class="sh">"</span><span class="p">,</span> <span class="nc">StringType</span><span class="p">(),</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="p">]))</span>
+<span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="p">.</span><span class="nf">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+
+<span class="c1"># Extract field names from each struct-type column
+</span><span class="n">struct_column_fields</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">column_schema</span><span class="p">.</span><span class="n">name</span><span class="p">:</span> <span class="n">df</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="n">column_schema</span><span class="p">.</span><span class="n">name</span> <span class="o">+</span> <span class="sh">"</span><span class="s">.*</span><span class="sh">"</span><span class="p">).</span><span class="n">columns</span>
+    <span class="k">for</span> <span class="n">column_schema</span> <span class="ow">in</span> <span class="n">df</span><span class="p">.</span><span class="n">schema</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">column_schema</span><span class="p">.</span><span class="n">dataType</span><span class="p">,</span> <span class="n">StructType</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">struct_column_fields</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>However, this code snippet can lead to poor performance when there are many columns, as it creates and analyzes a large number of new DataFrames—each call to <code class="language-plaintext highlighter-rouge">df.select(column_schema.name + ".*")</code> generates a new DataFrame, and <code class="language-plaintext highlighter-rouge">columns</code> triggers analysis on it.</p>
+
+<h3 id="mitigation-4">Mitigation</h3>
+
+<p>Obtain <code class="language-plaintext highlighter-rouge">StructType</code> field information directly from the DataFrame’s schema instead of creating intermediate DataFrames.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pyhyperbatch.sql.types</span> <span class="kn">import</span> <span class="n">StructType</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="bp">...</span>
+<span class="n">struct_column_fields</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">column_schema</span><span class="p">.</span><span class="n">name</span><span class="p">:</span> <span class="p">[</span><span class="n">f</span><span class="p">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">column_schema</span><span class="p">.</span><span class="n">dataType</span><span class="p">.</span><span class="n">fields</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">column_schema</span> <span class="ow">in</span> <span class="n">df</span><span class="p">.</span><span class="n">schema</span>
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">column_schema</span><span class="p">.</span><span class="n">dataType</span><span class="p">,</span> <span class="n">StructType</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">struct_column_fields</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Scala example:</strong></p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">org.apache.hyperbatch.sql.types.StructType</span>
+
+<span class="n">df</span> <span class="k">=</span> <span class="o">...</span>
+<span class="k">val</span> <span class="nv">structColumnFields</span> <span class="k">=</span> <span class="nv">df</span><span class="o">.</span><span class="py">schema</span><span class="o">.</span><span class="py">fields</span>
+  <span class="o">.</span><span class="py">filter</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">dataType</span><span class="o">.</span><span class="py">isInstanceOf</span><span class="o">[</span><span class="kt">StructType</span><span class="o">])</span>
+  <span class="o">.</span><span class="py">map</span> <span class="o">{</span> <span class="n">field</span> <span class="k">=&gt;</span>
+    <span class="nv">field</span><span class="o">.</span><span class="py">name</span> <span class="o">-&gt;</span> <span class="nv">field</span><span class="o">.</span><span class="py">dataType</span><span class="o">.</span><span class="py">asInstanceOf</span><span class="o">[</span><span class="kt">StructType</span><span class="o">].</span><span class="py">fields</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">name</span><span class="o">)</span>
+  <span class="o">}</span>
+  <span class="o">.</span><span class="py">toMap</span>
+<span class="nf">println</span><span class="o">(</span><span class="n">structColumnFields</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>This approach is significantly faster when dealing with a large number of columns because it avoids creating and analyzing numerous DataFrames.</p>
+
+<h1 id="summary">Summary</h1>
+
+<div class="table-container"><table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Aspect</th>
+      <th style="text-align: left">HyperBatch Classic</th>
+      <th style="text-align: left">HyperBatch Connect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>Query execution</strong></td>
+      <td style="text-align: left">Lazy</td>
+      <td style="text-align: left">Lazy</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Command execution</strong></td>
+      <td style="text-align: left">Eager</td>
+      <td style="text-align: left">Eager</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Schema analysis</strong></td>
+      <td style="text-align: left">Eager</td>
+      <td style="text-align: left">Lazy</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Schema access</strong></td>
+      <td style="text-align: left">Local</td>
+      <td style="text-align: left">Triggers RPC, and caches the schema on first access</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Temporary views</strong></td>
+      <td style="text-align: left">Plan embedded</td>
+      <td style="text-align: left">Name lookup</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>UDF serialization</strong></td>
+      <td style="text-align: left">At creation</td>
+      <td style="text-align: left">At execution</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<p>The key difference is that HyperBatch Connect defers analysis and name resolution to execution time.</p>
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

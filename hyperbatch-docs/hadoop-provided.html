@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Using HyperBatch's &quot;Hadoop Free&quot; Build — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">Using HyperBatch's "Hadoop Free" Build</h1>
+                        
+                    
+                    <p>HyperBatch uses Hadoop client libraries for HDFS and YARN. Starting in version HyperBatch 1.4, the project packages “Hadoop free” builds that lets you more easily connect a single HyperBatch binary to any Hadoop version. To use these builds, you need to modify <code class="language-plaintext highlighter-rouge">HYPERBATCH_DIST_CLASSPATH</code> to include Hadoop’s package jars. The most convenient place to do this is by adding an entry in <code class="language-plaintext highlighter-rouge">conf/hyperbatch-env.sh</code>.</p>
+
+<p>This page describes how to connect HyperBatch to Hadoop for different types of distributions.</p>
+
+<h1 id="apache-hadoop">Apache Hadoop</h1>
+<p>For Apache distributions, you can use Hadoop’s ‘classpath’ command. For instance:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">### in conf/hyperbatch-env.sh ###</span>
+
+<span class="c"># If 'hadoop' binary is on your PATH</span>
+<span class="nb">export </span><span class="nv">HYPERBATCH_DIST_CLASSPATH</span><span class="o">=</span><span class="si">$(</span>hadoop classpath<span class="si">)</span>
+
+<span class="c"># With explicit path to 'hadoop' binary</span>
+<span class="nb">export </span><span class="nv">HYPERBATCH_DIST_CLASSPATH</span><span class="o">=</span><span class="si">$(</span>/path/to/hadoop/bin/hadoop classpath<span class="si">)</span>
+
+<span class="c"># Passing a Hadoop configuration directory</span>
+<span class="nb">export </span><span class="nv">HYPERBATCH_DIST_CLASSPATH</span><span class="o">=</span><span class="si">$(</span>hadoop <span class="nt">--config</span> /path/to/configs classpath<span class="si">)</span></code></pre></figure>
+
+<h1 id="hadoop-free-build-setup-for-hyperbatch-on-kubernetes">Hadoop Free Build Setup for HyperBatch on Kubernetes</h1>
+<p>To run the Hadoop free build of HyperBatch on Kubernetes, the executor image must have the appropriate version of Hadoop binaries and the correct <code class="language-plaintext highlighter-rouge">HYPERBATCH_DIST_CLASSPATH</code> value set. See the example below for the relevant changes needed in the executor Dockerfile:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">### Set environment variables in the executor dockerfile ###</span>
+
+ENV <span class="nv">HYPERBATCH_HOME</span><span class="o">=</span><span class="s2">"/opt/hyperbatch"</span>  
+ENV <span class="nv">HADOOP_HOME</span><span class="o">=</span><span class="s2">"/opt/hadoop"</span>  
+ENV <span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HYPERBATCH_HOME</span><span class="s2">/bin:</span><span class="nv">$HADOOP_HOME</span><span class="s2">/bin:</span><span class="nv">$PATH</span><span class="s2">"</span>  
+...  
+
+<span class="c">#Copy your target hadoop binaries to the executor hadoop home   </span>
+
+COPY /opt/hadoop3  <span class="nv">$HADOOP_HOME</span>  
+...
+
+<span class="c">#Copy and use the HyperBatch provided entrypoint.sh. It sets your HYPERBATCH_DIST_CLASSPATH using the hadoop binary in $HADOOP_HOME and starts the executor. If you choose to customize the value of HYPERBATCH_DIST_CLASSPATH here, the value will be retained in entrypoint.sh</span>
+
+ENTRYPOINT <span class="o">[</span> <span class="s2">"/opt/entrypoint.sh"</span> <span class="o">]</span>
+...  </code></pre></figure>
+
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 7: Load and Behold - Data loading, storage, file formats — HyperBatch</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="Chapter-7:-Load-and-Behold---Data-loading,-storage,-file-formats">
+<h1>Chapter 7: Load and Behold - Data loading, storage, file formats<a class="headerlink" href="#Chapter-7:-Load-and-Behold---Data-loading,-storage,-file-formats" title="Permalink to this headline">#</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">pyhyperbatch</span><span class="o">==</span><span class="m">4</span>.0.0.dev2
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>Requirement already satisfied: pyhyperbatch==4.0.0.dev2 in /Users/amanda.liu/anaconda3/envs/llm-hyperbatch/lib/python3.11/site-packages (4.0.0.dev2)
+Requirement already satisfied: py4j==0.10.9.7 in /Users/amanda.liu/anaconda3/envs/llm-hyperbatch/lib/python3.11/site-packages (from pyhyperbatch==4.0.0.dev2) (0.10.9.7)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">HyperBatchSession</span>
+
+<span class="n">hyperbatch</span> <span class="o">=</span> <span class="n">HyperBatchSession</span> \
+    <span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">"Data Loading and Storage Example"</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>This section covers how to read and write data in various formats using PyHyperBatch. You’ll learn how to load data from common file types (e.g., CSV, JSON, Parquet, ORC) and store data efficiently.</p>
+<section id="Reading-Data">
+<h2>Reading Data<a class="headerlink" href="#Reading-Data" title="Permalink to this headline">#</a></h2>
+<section id="1.1-Reading-CSV-Files">
+<h3>1.1 Reading CSV Files<a class="headerlink" href="#1.1-Reading-CSV-Files" title="Permalink to this headline">#</a></h3>
+<p>CSV is one of the most common formats for data exchange. Here’s how to load a CSV file into a DataFrame:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">csv_df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">"../data/employees.csv"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inferSchema</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">csv_df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+-----------+-----------------+-----------------+
+|Employee ID|             Role|         Location|
++-----------+-----------------+-----------------+
+|      19238|     Data Analyst|      Seattle, WA|
+|      19239|Software Engineer|      Seattle, WA|
+|      19240|    IT Specialist|      Seattle, WA|
+|      19241|     Data Analyst|     New York, NY|
+|      19242|        Recruiter|San Francisco, CA|
+|      19243|  Product Manager|     New York, NY|
++-----------+-----------------+-----------------+
+
+</pre></div></div>
+</div>
+<p><strong>Explanation:</strong> - <code class="docutils literal notranslate"><span class="pre">header=True</span></code>: Treats the first line as column names. - <code class="docutils literal notranslate"><span class="pre">inferSchema=True</span></code>: Automatically infers data types of columns.</p>
+</section>
+<section id="1.2-Reading-JSON-Files">
+<h3>1.2 Reading JSON Files<a class="headerlink" href="#1.2-Reading-JSON-Files" title="Permalink to this headline">#</a></h3>
+<p>Loading JSON files is simple and allows you to handle both single-line and multi-line JSON structures:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">json_df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">"multiline"</span><span class="p">,</span> <span class="s2">"true"</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s2">"../data/employees.json"</span><span class="p">)</span>
+<span class="n">json_df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+-----------+-----------------+-----------------+
+|Employee ID|         Location|             Role|
++-----------+-----------------+-----------------+
+|      19238|      Seattle, WA|     Data Analyst|
+|      19239|      Seattle, WA|Software Engineer|
+|      19240|      Seattle, WA|    IT Specialist|
+|      19241|     New York, NY|     Data Analyst|
+|      19242|San Francisco, CA|        Recruiter|
+|      19243|     New York, NY|  Product Manager|
++-----------+-----------------+-----------------+
+
+</pre></div></div>
+</div>
+<p><strong>Explanation:</strong> - <code class="docutils literal notranslate"><span class="pre">multiline="true"</span></code>: Allows reading multi-line JSON structures.</p>
+</section>
+<section id="1.3-Reading-Parquet-Files">
+<h3>1.3 Reading Parquet Files<a class="headerlink" href="#1.3-Reading-Parquet-Files" title="Permalink to this headline">#</a></h3>
+<p>Parquet is a columnar format that supports efficient data compression and encoding:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">parquet_df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">"../data/employees.parquet"</span><span class="p">)</span>
+<span class="n">parquet_df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+-----------+-----------------+-----------------+
+|Employee ID|         Location|             Role|
++-----------+-----------------+-----------------+
+|      19239|      Seattle, WA|Software Engineer|
+|      19243|     New York, NY|  Product Manager|
+|      19242|San Francisco, CA|        Recruiter|
+|      19241|     New York, NY|     Data Analyst|
+|      19240|      Seattle, WA|    IT Specialist|
+|      19238|      Seattle, WA|     Data Analyst|
++-----------+-----------------+-----------------+
+
+</pre></div></div>
+</div>
+<p><strong>Tip:</strong> Parquet files are highly efficient for storing data due to columnar storage and compression.</p>
+</section>
+<section id="1.4-Reading-ORC-Files">
+<h3>1.4 Reading ORC Files<a class="headerlink" href="#1.4-Reading-ORC-Files" title="Permalink to this headline">#</a></h3>
+<p>ORC is another columnar file format, often used in Hadoop environments:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">orc_df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">orc</span><span class="p">(</span><span class="s2">"../data/employees.orc"</span><span class="p">)</span>
+<span class="n">orc_df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+-----------+-----------------+-----------------+
+|Employee ID|         Location|             Role|
++-----------+-----------------+-----------------+
+|      19242|San Francisco, CA|        Recruiter|
+|      19239|      Seattle, WA|Software Engineer|
+|      19240|      Seattle, WA|    IT Specialist|
+|      19243|     New York, NY|  Product Manager|
+|      19238|      Seattle, WA|     Data Analyst|
+|      19241|     New York, NY|     Data Analyst|
++-----------+-----------------+-----------------+
+
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Writing-Data">
+<h2>Writing Data<a class="headerlink" href="#Writing-Data" title="Permalink to this headline">#</a></h2>
+<section id="2.1-Writing-Data-as-CSV">
+<h3>2.1 Writing Data as CSV<a class="headerlink" href="#2.1-Writing-Data-as-CSV" title="Permalink to this headline">#</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">csv_df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">"../data/employees_out.csv"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"overwrite"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p><strong>Explanation:</strong> - <code class="docutils literal notranslate"><span class="pre">mode="overwrite"</span></code>: If the directory exists, it will be replaced. - <code class="docutils literal notranslate"><span class="pre">header=True</span></code>: Writes the column names as the first line.</p>
+</section>
+<section id="2.2-Writing-Data-as-Parquet">
+<h3>2.2 Writing Data as Parquet<a class="headerlink" href="#2.2-Writing-Data-as-Parquet" title="Permalink to this headline">#</a></h3>
+<p>Parquet format is recommended for large datasets:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">parquet_df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">"../data/employees_out.parquet"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"overwrite"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="2.3-Writing-Data-as-ORC">
+<h3>2.3 Writing Data as ORC<a class="headerlink" href="#2.3-Writing-Data-as-ORC" title="Permalink to this headline">#</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">json_df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">orc</span><span class="p">(</span><span class="s2">"../data/employees_out.orc"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"overwrite"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p><strong>Tip:</strong> Parquet and ORC formats are best for efficient storage and quick reads.</p>
+</section>
+</section>
+<section id="Additional-Options-and-Configurations">
+<h2>Additional Options and Configurations<a class="headerlink" href="#Additional-Options-and-Configurations" title="Permalink to this headline">#</a></h2>
+<p>You can customize how data is read and written by using additional options. Here are a few examples:</p>
+<section id="Custom-Delimiter-in-CSV:">
+<h3>Custom Delimiter in CSV:<a class="headerlink" href="#Custom-Delimiter-in-CSV:" title="Permalink to this headline">#</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">"delimiter"</span><span class="p">,</span> <span class="s2">";"</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">"../data/employees.csv"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+-------------------------------------+
+|_c0                                  |
++-------------------------------------+
+|Employee ID,Role,Location            |
+|19238,Data Analyst,"Seattle, WA"     |
+|19239,Software Engineer,"Seattle, WA"|
+|19240,IT Specialist,"Seattle, WA"    |
+|19241,Data Analyst,"New York, NY"    |
+|19242,Recruiter,"San Francisco, CA"  |
+|19243,Product Manager,"New York, NY" |
++-------------------------------------+
+
+</pre></div></div>
+</div>
+</section>
+<section id="Handling-Null-Values:">
+<h3>Handling Null Values:<a class="headerlink" href="#Handling-Null-Values:" title="Permalink to this headline">#</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">"nullValue"</span><span class="p">,</span> <span class="s2">"NULL"</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">"../data/employees.csv"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">truncate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+-----------+-----------------+-----------------+
+|_c0        |_c1              |_c2              |
++-----------+-----------------+-----------------+
+|Employee ID|Role             |Location         |
+|19238      |Data Analyst     |Seattle, WA      |
+|19239      |Software Engineer|Seattle, WA      |
+|19240      |IT Specialist    |Seattle, WA      |
+|19241      |Data Analyst     |New York, NY     |
+|19242      |Recruiter        |San Francisco, CA|
+|19243      |Product Manager  |New York, NY     |
++-----------+-----------------+-----------------+
+
+</pre></div></div>
+</div>
+</section>
+<section id="Compression-Options:">
+<h3>Compression Options:<a class="headerlink" href="#Compression-Options:" title="Permalink to this headline">#</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">parquet_df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">"compression"</span><span class="p">,</span> <span class="s2">"gzip"</span><span class="p">)</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">"../data/employees_out.parquet"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"overwrite"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>See the <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/io.html">PyHyperBatch API reference</a> for Input/Output to check all supported functions and options.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/user_guide/loadandbehold.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Options and settings — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="options-and-settings">
+<span id="user-guide-options"></span><h1>Options and settings<a class="headerlink" href="#options-and-settings" title="Permalink to this headline">#</a></h1>
+<p>Pandas API on HyperBatch has an options system that lets you customize some aspects of its behaviour,
+display-related options being those the user is most likely to adjust.</p>
+<p>Options have a full “dotted-style”, case-insensitive name (e.g. <code class="docutils literal notranslate"><span class="pre">display.max_rows</span></code>).
+You can get/set options directly as attributes of the top-level <code class="docutils literal notranslate"><span class="pre">options</span></code> attribute:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">max_rows</span>
+<span class="go">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">max_rows</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">max_rows</span>
+<span class="go">10</span>
+</pre></div>
+</div>
+<p>The API is composed of 3 relevant functions, available directly from the <code class="docutils literal notranslate"><span class="pre">pandas_on_hyperbatch</span></code>
+namespace:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.get_option.html#pyspark.pandas.get_option" title="pyspark.pandas.get_option"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_option()</span></code></a> / <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.set_option.html#pyspark.pandas.set_option" title="pyspark.pandas.set_option"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_option()</span></code></a> - get/set the value of a single option.</p></li>
+<li><p><a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.reset_option.html#pyspark.pandas.reset_option" title="pyspark.pandas.reset_option"><code class="xref py py-func docutils literal notranslate"><span class="pre">reset_option()</span></code></a> - reset one or more options to their default value.</p></li>
+</ul>
+<p><strong>Note:</strong> Developers can check out <a class="reference external" href="https://github.com/apache/spark/blob/master/python/pyspark/pandas/config.py">pyhyperbatch.pandas/config.py</a> for more information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">)</span>
+<span class="go">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">)</span>
+<span class="go">101</span>
+</pre></div>
+</div>
+<section id="getting-and-setting-options">
+<h2>Getting and setting options<a class="headerlink" href="#getting-and-setting-options" title="Permalink to this headline">#</a></h2>
+<p>As described above, <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.get_option.html#pyspark.pandas.get_option" title="pyspark.pandas.get_option"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_option()</span></code></a> and <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.set_option.html#pyspark.pandas.set_option" title="pyspark.pandas.set_option"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_option()</span></code></a>
+are available from the <code class="docutils literal notranslate"><span class="pre">pandas_on_hyperbatch</span></code> namespace.  To change an option, call
+<code class="docutils literal notranslate"><span class="pre">set_option('option</span> <span class="pre">name',</span> <span class="pre">new_value)</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s1">'compute.max_rows'</span><span class="p">)</span>
+<span class="go">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'compute.max_rows'</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s1">'compute.max_rows'</span><span class="p">)</span>
+<span class="go">2000</span>
+</pre></div>
+</div>
+<p>All options also have a default value, and you can use <code class="docutils literal notranslate"><span class="pre">reset_option</span></code> to do just that:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">reset_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">)</span>
+<span class="go">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">,</span> <span class="mi">999</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">)</span>
+<span class="go">999</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">reset_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">)</span>
+<span class="go">1000</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">option_context</span></code> context manager has been exposed through
+the top-level API, allowing you to execute code with given option values. Option values
+are restored automatically when you exit the <cite>with</cite> block:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">ps</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">"compute.max_rows"</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="nb">print</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">))</span>
+<span class="gp">... </span>   <span class="nb">print</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s2">"compute.max_rows"</span><span class="p">))</span>
+<span class="go">10</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">get_option</span><span class="p">(</span><span class="s2">"compute.max_rows"</span><span class="p">))</span>
+<span class="go">1000</span>
+<span class="go">1000</span>
+</pre></div>
+</div>
+</section>
+<section id="operations-on-different-dataframes">
+<h2>Operations on different DataFrames<a class="headerlink" href="#operations-on-different-dataframes" title="Permalink to this headline">#</a></h2>
+<p>Pandas API on HyperBatch disallows the operations on different DataFrames (or Series) by default to prevent expensive
+operations. It internally performs a join operation which can be expensive in general.</p>
+<p>This can be enabled by setting <cite>compute.ops_on_diff_frames</cite> to <cite>True</cite> to allow such cases.
+See the examples below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'compute.ops_on_diff_frames'</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf1</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf2</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">psdf1</span> <span class="o">-</span> <span class="n">psdf2</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+<span class="go">    id</span>
+<span class="go">0 -5.0</span>
+<span class="go">1 -3.0</span>
+<span class="go">2 -1.0</span>
+<span class="go">3  NaN</span>
+<span class="go">4  NaN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">reset_option</span><span class="p">(</span><span class="s1">'compute.ops_on_diff_frames'</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'compute.ops_on_diff_frames'</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psser_a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># 'psser_a' is not from 'psdf' DataFrame. So it is considered as a Series not from 'psdf'.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="p">[</span><span class="s1">'new_col'</span><span class="p">]</span> <span class="o">=</span> <span class="n">psser_a</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span>
+<span class="go">   id  new_col</span>
+<span class="go">0   0      1.0</span>
+<span class="go">1   1      2.0</span>
+<span class="go">3   3      4.0</span>
+<span class="go">2   2      3.0</span>
+<span class="go">4   4      NaN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">reset_option</span><span class="p">(</span><span class="s1">'compute.ops_on_diff_frames'</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="default-index-type">
+<h2>Default Index type<a class="headerlink" href="#default-index-type" title="Permalink to this headline">#</a></h2>
+<p>In the pandas API on HyperBatch, the default index is used in several cases, for instance,
+when HyperBatch DataFrame is converted into pandas-on-HyperBatch DataFrame. In this case, internally pandas API on HyperBatch attaches a
+default index into pandas-on-HyperBatch DataFrame.</p>
+<p>There are several types of the default index that can be configured by <cite>compute.default_index_type</cite> as below:</p>
+<p><strong>sequence</strong>: It implements a sequence that increases one by one, by PyHyperBatch’s Window function without
+specifying a partition. Therefore, it can end up with a whole partition in a single node.
+This index type should be avoided when the data is large. See the example below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'compute.default_index_type'</span><span class="p">,</span> <span class="s1">'sequence'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">reset_option</span><span class="p">(</span><span class="s1">'compute.default_index_type'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="o">.</span><span class="n">index</span>
+<span class="go">Index([0, 1, 2], dtype='int64')</span>
+</pre></div>
+</div>
+<p>This is conceptually equivalent to the PyHyperBatch example as below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">sf</span><span class="p">,</span> <span class="n">Window</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch_df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_hyperbatch</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sequential_index</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">row_number</span><span class="p">()</span><span class="o">.</span><span class="n">over</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">Window</span><span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">monotonically_increasing_id</span><span class="p">()</span><span class="o">.</span><span class="n">asc</span><span class="p">()))</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch_df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">sequential_index</span><span class="p">)</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+<span class="go">[0, 1, 2]</span>
+</pre></div>
+</div>
+<p><strong>distributed-sequence</strong> (default): It implements a sequence that increases one by one, by group-by and
+group-map approach in a distributed manner. It still generates the sequential index globally.
+If the default index must be the sequence in a large dataset, this
+index has to be used. See the example below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'compute.default_index_type'</span><span class="p">,</span> <span class="s1">'distributed-sequence'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">reset_option</span><span class="p">(</span><span class="s1">'compute.default_index_type'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="o">.</span><span class="n">index</span>
+<span class="go">Index([0, 1, 2], dtype='int64')</span>
+</pre></div>
+</div>
+<p>This is conceptually equivalent to the PyHyperBatch example as below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch_df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_hyperbatch</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch_df</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">zipWithIndex</span><span class="p">()</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+<span class="go">[0, 1, 2]</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Unlike <code class="docutils literal notranslate"><span class="pre">sequence</span></code>, since <code class="docutils literal notranslate"><span class="pre">distributed-sequence</span></code> is executed in a distributed environment,
+the rows corresponding to each index may vary although the index itself still remains globally sequential.</p>
+<p>This happens because the rows are distributed across multiple partitions and nodes,
+leading to indeterministic row-to-index mappings when the data is loaded.</p>
+<p>Additionally, when using operations such as <code class="docutils literal notranslate"><span class="pre">apply()</span></code>, <code class="docutils literal notranslate"><span class="pre">groupby()</span></code>, or <code class="docutils literal notranslate"><span class="pre">transform()</span></code>,
+a new <code class="docutils literal notranslate"><span class="pre">distributed-sequence</span></code> index may be generated, which does not necessarily match the original index of the DataFrame.
+This can result in misaligned row-to-index mappings, leading to incorrect calculations.</p>
+<p>To avoid this issue, see <a class="reference internal" href="best_practices.html#handling-index-misalignment-with-distributed-sequence"><span class="std std-ref">Handling index misalignment with distributed-sequence</span></a></p>
+</div>
+<p><strong>distributed</strong>: It implements a monotonically increasing sequence simply by using
+PyHyperBatch’s <cite>monotonically_increasing_id</cite> function in a fully distributed manner. The
+values are indeterministic. If the index does not have to be a sequence that increases
+one by one, this index should be used. Performance-wise, this index almost does not
+have any penalty compared to other index types. See the example below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'compute.default_index_type'</span><span class="p">,</span> <span class="s1">'distributed'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">reset_option</span><span class="p">(</span><span class="s1">'compute.default_index_type'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="o">.</span><span class="n">index</span>
+<span class="go">Index([25769803776, 60129542144, 94489280512], dtype='int64')</span>
+</pre></div>
+</div>
+<p>This is conceptually equivalent to the PyHyperBatch example as below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">sf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch_df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_hyperbatch</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch_df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">monotonically_increasing_id</span><span class="p">())</span> \
+<span class="gp">... </span>    <span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+<span class="go">[25769803776, 60129542144, 94489280512]</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is very unlikely for this type of index to be used for computing two
+different dataframes because it is not guaranteed to have the same indexes in two dataframes.
+If you use this default index and turn on <cite>compute.ops_on_diff_frames</cite>, the result
+from the operations between two different DataFrames will likely be an unexpected
+output due to the indeterministic index values.</p>
+</div>
+</section>
+<section id="available-options">
+<h2>Available options<a class="headerlink" href="#available-options" title="Permalink to this headline">#</a></h2>
+<div class="table-container"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>display.max_rows</p></td>
+<td><p>1000</p></td>
+<td><p>This sets the maximum number of rows pandas-on-HyperBatch
+should output when printing out various output. For
+example, this value determines the number of rows to
+be shown at the repr() in a dataframe. Set <cite>None</cite> to
+unlimit the input length. Default is 1000.</p></td>
+</tr>
+<tr class="row-odd"><td><p>compute.max_rows</p></td>
+<td><p>1000</p></td>
+<td><p>‘compute.max_rows’ sets the limit of the current
+pandas-on-HyperBatch DataFrame. Set <cite>None</cite> to unlimit the
+input length. When the limit is set, it is executed
+by the shortcut by collecting the data into the
+driver, and then using the pandas API. If the limit
+is unset, the operation is executed by PyHyperBatch.
+Default is 1000.</p></td>
+</tr>
+<tr class="row-even"><td><p>compute.shortcut_limit</p></td>
+<td><p>1000</p></td>
+<td><p>‘compute.shortcut_limit’ sets the limit for a
+shortcut. It computes the specified number of rows
+and uses its schema. When the dataframe length is
+larger than this limit, pandas-on-HyperBatch uses PyHyperBatch
+to compute.</p></td>
+</tr>
+<tr class="row-odd"><td><p>compute.ops_on_diff_frames</p></td>
+<td><p>True</p></td>
+<td><p>This determines whether or not to operate between two
+different dataframes. For example, ‘combine_frames’
+function internally performs a join operation which
+can be expensive in general. So, if
+<cite>compute.ops_on_diff_frames</cite> variable is not True,
+that method throws an exception.</p></td>
+</tr>
+<tr class="row-even"><td><p>compute.default_index_type</p></td>
+<td><p>‘distributed-sequence’</p></td>
+<td><p>This sets the default index type: sequence,
+distributed and distributed-sequence.</p></td>
+</tr>
+<tr class="row-odd"><td><p>compute.default_index_cache</p></td>
+<td><p>‘MEMORY_AND_DISK_SER’</p></td>
+<td><p>This sets the default storage level for temporary
+RDDs cached in distributed-sequence indexing: ‘NONE’,
+‘DISK_ONLY’, ‘DISK_ONLY_2’, ‘DISK_ONLY_3’,
+‘MEMORY_ONLY’, ‘MEMORY_ONLY_2’, ‘MEMORY_ONLY_SER’,
+‘MEMORY_ONLY_SER_2’, ‘MEMORY_AND_DISK’,
+‘MEMORY_AND_DISK_2’, ‘MEMORY_AND_DISK_SER’,
+‘MEMORY_AND_DISK_SER_2’, ‘OFF_HEAP’,
+‘LOCAL_CHECKPOINT’.</p></td>
+</tr>
+<tr class="row-even"><td><p>compute.ordered_head</p></td>
+<td><p>False</p></td>
+<td><p>‘compute.ordered_head’ sets whether or not to operate
+head with natural ordering. pandas-on-HyperBatch does not
+guarantee the row ordering so <cite>head</cite> could return
+some rows from distributed partitions. If
+‘compute.ordered_head’ is set to True, pandas-on-
+HyperBatch performs natural ordering beforehand, but it
+will cause a performance overhead.</p></td>
+</tr>
+<tr class="row-odd"><td><p>compute.eager_check</p></td>
+<td><p>True</p></td>
+<td><p>‘compute.eager_check’ sets whether or not to launch
+some HyperBatch jobs just for the sake of validation. If
+‘compute.eager_check’ is set to True, pandas-on-HyperBatch
+performs the validation beforehand, but it will cause
+a performance overhead. Otherwise, pandas-on-HyperBatch
+skip the validation and will be slightly different
+from pandas. Affected APIs: <cite>Series.dot</cite>,
+<cite>Series.asof</cite>, <cite>Series.compare</cite>,
+<cite>FractionalExtensionOps.astype</cite>,
+<cite>IntegralExtensionOps.astype</cite>,
+<cite>FractionalOps.astype</cite>, <cite>DecimalOps.astype</cite>, <cite>skipna
+of statistical functions</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p>compute.isin_limit</p></td>
+<td><p>80</p></td>
+<td><p>‘compute.isin_limit’ sets the limit for filtering by
+‘Column.isin(list)’. If the length of the ‘list’ is
+above the limit, broadcast join is used instead for
+better performance.</p></td>
+</tr>
+<tr class="row-odd"><td><p>compute.pandas_fallback</p></td>
+<td><p>False</p></td>
+<td><p>‘compute.pandas_fallback’ sets whether or not to
+fallback automatically to Pandas’ implementation.</p></td>
+</tr>
+<tr class="row-even"><td><p>compute.fail_on_ansi_mode</p></td>
+<td><p>True</p></td>
+<td><p>‘compute.fail_on_ansi_mode’ sets whether or not work
+with ANSI mode. If True, pandas API on HyperBatch raises
+an exception if the underlying HyperBatch is working with
+ANSI mode enabled and the option
+‘compute.ansi_mode_support’ is False.</p></td>
+</tr>
+<tr class="row-odd"><td><p>compute.ansi_mode_support</p></td>
+<td><p>True</p></td>
+<td><p>‘compute.ansi_mode_support’ sets whether or not to
+support the ANSI mode of the underlying HyperBatch. If
+False, pandas API on HyperBatch may hit unexpected results
+or errors. The default is True.</p></td>
+</tr>
+<tr class="row-even"><td><p>plotting.max_rows</p></td>
+<td><p>1000</p></td>
+<td><p>‘plotting.max_rows’ sets the visual limit on top-n-
+based plots such as <cite>plot.bar</cite> and <cite>plot.pie</cite>. If it
+is set to 1000, the first 1000 data points will be
+used for plotting. Default is 1000.</p></td>
+</tr>
+<tr class="row-odd"><td><p>plotting.sample_ratio</p></td>
+<td><p>None</p></td>
+<td><p>‘plotting.sample_ratio’ sets the proportion of data
+that will be plotted for sample-based plots such as
+<cite>plot.line</cite> and <cite>plot.area</cite>. If not set, it is
+derived from ‘plotting.max_rows’, by calculating the
+ratio of ‘plotting.max_rows’ to the total data size.</p></td>
+</tr>
+<tr class="row-even"><td><p>plotting.backend</p></td>
+<td><p>‘plotly’</p></td>
+<td><p>Backend to use for plotting. Default is plotly.
+Supports any package that has a top-level <cite>.plot</cite>
+method. Known options are: [matplotlib, plotly].</p></td>
+</tr>
+</tbody>
+</table></div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/pandas_on_spark/options.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

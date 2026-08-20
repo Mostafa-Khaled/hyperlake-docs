@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Python User-defined Table Functions (UDTFs) — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="python-user-defined-table-functions-udtfs">
+<h1>Python User-defined Table Functions (UDTFs)<a class="headerlink" href="#python-user-defined-table-functions-udtfs" title="Permalink to this headline">#</a></h1>
+<p>HyperBatch 3.5 introduces the Python user-defined table function (UDTF), a new type of user-defined function.
+Unlike scalar functions that return a single result value from each call, each UDTF is invoked in
+the <code class="docutils literal notranslate"><span class="pre">FROM</span></code> clause of a query and returns an entire table as output.
+Each UDTF call can accept zero or more arguments.
+These arguments can either be scalar expressions or table arguments that represent entire input tables.</p>
+<section id="implementing-a-python-udtf">
+<h2>Implementing a Python UDTF<a class="headerlink" href="#implementing-a-python-udtf" title="Permalink to this headline">#</a></h2>
+<p>To implement a Python UDTF, you first need to define a class implementing the methods:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PythonUDTF</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Initializes the user-defined table function (UDTF). This is optional.</span>
+
+<span class="sd">        This method serves as the default constructor and is called once when the</span>
+<span class="sd">        UDTF is instantiated on the executor side.</span>
+
+<span class="sd">        Any class fields assigned in this method will be available for subsequent</span>
+<span class="sd">        calls to the `eval` and `terminate` methods. This class instance will</span>
+<span class="sd">        remain alive until all rows in the current partition have been consumed</span>
+<span class="sd">        by the `eval` method.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - You cannot create or reference the HyperBatch session within the UDTF. Any</span>
+<span class="sd">          attempt to do so will result in a serialization error.</span>
+<span class="sd">        - If the below `analyze` method is implemented, it is also possible to</span>
+<span class="sd">          define this method as: `__init__(self, analyze_result: AnalyzeResult)`.</span>
+<span class="sd">          In this case, the result of the `analyze` method is passed into all</span>
+<span class="sd">          future instantiations of this UDTF class. In this way, the UDTF may</span>
+<span class="sd">          inspect the schema and metadata of the output table as needed during</span>
+<span class="sd">          execution of other methods in this class. Note that it is possible to</span>
+<span class="sd">          create a subclass of the `AnalyzeResult` class if desired for purposes</span>
+<span class="sd">          of passing custom information generated just once during UDTF analysis</span>
+<span class="sd">          to other method calls; this can be especially useful if this</span>
+<span class="sd">          initialization is expensive.</span>
+<span class="sd">        """</span>
+        <span class="o">...</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">AnalyzeArgument</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnalyzeResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Static method to compute the output schema of a particular call to this</span>
+<span class="sd">        function in response to the arguments provided.</span>
+
+<span class="sd">        This method is optional and only needed if the registration of the UDTF</span>
+<span class="sd">        did not provide a static output schema to be use for all calls to the</span>
+<span class="sd">        function. In this context, `output schema` refers to the ordered list</span>
+<span class="sd">        of the names and types of the columns in the function's result table.</span>
+
+<span class="sd">        This method accepts zero or more parameters mapping 1:1 with the</span>
+<span class="sd">        arguments provided to the particular UDTF call under consideration.</span>
+<span class="sd">        Each parameter is an instance of the `AnalyzeArgument` class.</span>
+
+<span class="sd">        `AnalyzeArgument` fields</span>
+<span class="sd">        ------------------------</span>
+<span class="sd">        dataType: DataType</span>
+<span class="sd">            Indicates the type of the provided input argument to this particular</span>
+<span class="sd">            UDTF call. For input table arguments, this is a StructType</span>
+<span class="sd">            representing the table's columns.</span>
+<span class="sd">        value: Optional[Any]</span>
+<span class="sd">            The value of the provided input argument to this particular UDTF</span>
+<span class="sd">            call. This is `None` for table arguments, or for literal scalar</span>
+<span class="sd">            arguments that are not constant.</span>
+<span class="sd">        isTable: bool</span>
+<span class="sd">            This is true if the provided input argument to this particular UDTF</span>
+<span class="sd">            call is a table argument.</span>
+<span class="sd">        isConstantExpression: bool</span>
+<span class="sd">            This is true if the provided input argument to this particular UDTF</span>
+<span class="sd">            call is either a literal or other constant-foldable scalar expression.</span>
+
+<span class="sd">        This method returns an instance of the `AnalyzeResult` class which</span>
+<span class="sd">        includes the result table's schema as a StructType. If the UDTF accepts</span>
+<span class="sd">        an input table argument, then the `AnalyzeResult` can also include a</span>
+<span class="sd">        requested way to partition and order the rows of the input table across</span>
+<span class="sd">        several UDTF calls. See below for more information about UDTF table</span>
+<span class="sd">        arguments and how to call them in SQL queries, including the WITH SINGLE</span>
+<span class="sd">        PARTITION clause (corresponding to the `withSinglePartition` field here),</span>
+<span class="sd">        PARTITION BY clause (corresponding to the `partitionBy` field here),</span>
+<span class="sd">        ORDER BY clause (corresponding to the `orderBy` field here), and passing</span>
+<span class="sd">        table subqueries as arguments (corresponding to the `select` field here).</span>
+
+<span class="sd">        `AnalyzeResult` fields</span>
+<span class="sd">        ----------------------</span>
+<span class="sd">        schema: StructType</span>
+<span class="sd">            The schema of the result table.</span>
+<span class="sd">        withSinglePartition: bool = False</span>
+<span class="sd">            If True, the query planner will arrange a repartitioning operation</span>
+<span class="sd">            from the previous execution stage such that all rows of the input</span>
+<span class="sd">            table are consumed by the `eval` method from exactly one instance</span>
+<span class="sd">            of the UDTF class.</span>
+<span class="sd">        partitionBy: Sequence[PartitioningColumn] = field(default_factory=tuple)</span>
+<span class="sd">            If non-empty, the query planner will arrange a repartitioning such</span>
+<span class="sd">            that all rows with each unique combination of values of the</span>
+<span class="sd">            partitioning expressions are consumed by a separate unique instance</span>
+<span class="sd">            of the UDTF class.</span>
+<span class="sd">        orderBy: Sequence[OrderingColumn] = field(default_factory=tuple)</span>
+<span class="sd">            If non-empty, this specifies the requested ordering of rows within</span>
+<span class="sd">            each partition.</span>
+<span class="sd">        select: Sequence[SelectedColumn] = field(default_factory=tuple)</span>
+<span class="sd">            If non-empty, this is a sequence of expressions that the UDTF is</span>
+<span class="sd">            specifying for Catalyst to evaluate against the columns in the input</span>
+<span class="sd">            TABLE argument. The UDTF then receives one input attribute for each</span>
+<span class="sd">            name in the list, in the order they are listed.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - It is possible for the `analyze` method to accept the exact arguments</span>
+<span class="sd">          expected, mapping 1:1 with the arguments provided to the UDTF call.</span>
+<span class="sd">        - The `analyze` method can instead choose to accept positional arguments</span>
+<span class="sd">          if desired (using `*args`) or keyword arguments (using `**kwargs`).</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        This is an `analyze` implementation that returns one output column for</span>
+<span class="sd">        each word in the input string argument.</span>
+
+<span class="sd">        &gt;&gt;&gt; @staticmethod</span>
+<span class="sd">        ... def analyze(text: str) -&gt; AnalyzeResult:</span>
+<span class="sd">        ...     schema = StructType()</span>
+<span class="sd">        ...     for index, word in enumerate(text.split(" ")):</span>
+<span class="sd">        ...         schema = schema.add(f"word_{index}")</span>
+<span class="sd">        ...     return AnalyzeResult(schema=schema)</span>
+
+<span class="sd">        Same as above, but using *args to accept the arguments.</span>
+
+<span class="sd">        &gt;&gt;&gt; @staticmethod</span>
+<span class="sd">        ... def analyze(*args) -&gt; AnalyzeResult:</span>
+<span class="sd">        ...     assert len(args) == 1, "This function accepts one argument only"</span>
+<span class="sd">        ...     assert args[0].dataType == StringType(), "Only string arguments are supported"</span>
+<span class="sd">        ...     text = args[0]</span>
+<span class="sd">        ...     schema = StructType()</span>
+<span class="sd">        ...     for index, word in enumerate(text.split(" ")):</span>
+<span class="sd">        ...         schema = schema.add(f"word_{index}")</span>
+<span class="sd">        ...     return AnalyzeResult(schema=schema)</span>
+
+<span class="sd">        Same as above, but using **kwargs to accept the arguments.</span>
+
+<span class="sd">        &gt;&gt;&gt; @staticmethod</span>
+<span class="sd">        ... def analyze(**kwargs) -&gt; AnalyzeResult:</span>
+<span class="sd">        ...     assert len(kwargs) == 1, "This function accepts one argument only"</span>
+<span class="sd">        ...     assert "text" in kwargs, "An argument named 'text' is required"</span>
+<span class="sd">        ...     assert kwargs["text"].dataType == StringType(), "Only strings are supported"</span>
+<span class="sd">        ...     text = args["text"]</span>
+<span class="sd">        ...     schema = StructType()</span>
+<span class="sd">        ...     for index, word in enumerate(text.split(" ")):</span>
+<span class="sd">        ...         schema = schema.add(f"word_{index}")</span>
+<span class="sd">        ...     return AnalyzeResult(schema=schema)</span>
+
+<span class="sd">        This is an `analyze` implementation that returns a constant output</span>
+<span class="sd">        schema, but add custom information in the result metadata to be consumed</span>
+<span class="sd">        by future __init__ method calls:</span>
+
+<span class="sd">        &gt;&gt;&gt; @staticmethod</span>
+<span class="sd">        ... def analyze(text: str) -&gt; AnalyzeResult:</span>
+<span class="sd">        ...     @dataclass</span>
+<span class="sd">        ...     class AnalyzeResultWithOtherMetadata(AnalyzeResult):</span>
+<span class="sd">        ...         num_words: int</span>
+<span class="sd">        ...         num_articles: int</span>
+<span class="sd">        ...     words = text.split(" ")</span>
+<span class="sd">        ...     return AnalyzeResultWithOtherMetadata(</span>
+<span class="sd">        ...         schema=StructType()</span>
+<span class="sd">        ...             .add("word", StringType())</span>
+<span class="sd">        ...             .add('total", IntegerType()),</span>
+<span class="sd">        ...         num_words=len(words),</span>
+<span class="sd">        ...         num_articles=len((</span>
+<span class="sd">        ...             word for word in words</span>
+<span class="sd">        ...             if word == 'a' or word == 'an' or word == 'the')))</span>
+
+<span class="sd">        This is an `analyze` implementation that returns a constant output</span>
+<span class="sd">        schema, and also requests to select a subset of columns from the input</span>
+<span class="sd">        table and for the input table to be partitioned across several UDTF</span>
+<span class="sd">        calls based on the values of the `date` column. A SQL query may this</span>
+<span class="sd">        UDTF passing a table argument like "SELECT * FROM udtf(TABLE(t))".</span>
+<span class="sd">        Then this `analyze` method specifies additional constraints on the</span>
+<span class="sd">        input table:</span>
+<span class="sd">        (1) The input table must be partitioned across several UDTF calls</span>
+<span class="sd">            based on the values of the month value of each `date` column.</span>
+<span class="sd">        (2) The rows within each partition will arrive ordered by the `date`</span>
+<span class="sd">            column.</span>
+<span class="sd">        (3) The UDTF will only receive the `date` and `word` columns from</span>
+<span class="sd">            the input table.</span>
+
+<span class="sd">        &gt;&gt;&gt; @staticmethod</span>
+<span class="sd">        ... def analyze(*args) -&gt; AnalyzeResult:</span>
+<span class="sd">        ...     assert len(args) == 1, "This function accepts one argument only"</span>
+<span class="sd">        ...     assert args[0].isTable, "Only table arguments are supported"</span>
+<span class="sd">        ...     return AnalyzeResult(</span>
+<span class="sd">        ...         schema=StructType()</span>
+<span class="sd">        ...             .add("month", DateType())</span>
+<span class="sd">        ...             .add('longest_word", IntegerType()),</span>
+<span class="sd">        ...         partitionBy=[</span>
+<span class="sd">        ...             PartitioningColumn("extract(month from date)")],</span>
+<span class="sd">        ...         orderBy=[</span>
+<span class="sd">        ...             OrderingColumn("date")],</span>
+<span class="sd">        ...         select=[</span>
+<span class="sd">        ...             SelectedColumn("date"),</span>
+<span class="sd">        ...             SelectedColumn(</span>
+<span class="sd">        ...               name="length(word),</span>
+<span class="sd">        ...               alias="length_word")])</span>
+<span class="sd">        """</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Evaluates the function using the given input arguments.</span>
+
+<span class="sd">        This method is required and must be implemented.</span>
+
+<span class="sd">        Argument Mapping:</span>
+<span class="sd">        - Each provided scalar expression maps to exactly one value in the</span>
+<span class="sd">          `*args` list.</span>
+<span class="sd">        - Each provided table argument maps to a pyhyperbatch.sql.Row object containing</span>
+<span class="sd">          the columns in the order they appear in the provided input table,</span>
+<span class="sd">          and with the names computed by the query analyzer.</span>
+
+<span class="sd">        This method is called on every input row, and can produce zero or more</span>
+<span class="sd">        output rows. Each element in the output tuple corresponds to one column</span>
+<span class="sd">        specified in the return type of the UDTF.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *args : Any</span>
+<span class="sd">            Arbitrary positional arguments representing the input to the UDTF.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        tuple</span>
+<span class="sd">            A tuple, list, or pyhyperbatch.sql.Row object representing a single row</span>
+<span class="sd">            in the UDTF result table. Yield as many times as needed to produce</span>
+<span class="sd">            multiple rows.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - It is also possible for UDTFs to accept the exact arguments expected,</span>
+<span class="sd">          along with their types.</span>
+<span class="sd">        - UDTFs can instead accept keyword arguments during the function call if</span>
+<span class="sd">          needed.</span>
+<span class="sd">        - The `eval` method can raise a `SkipRestOfInputTableException` to</span>
+<span class="sd">          indicate that the UDTF wants to skip consuming all remaining rows from</span>
+<span class="sd">          the current partition of the input table. This will cause the UDTF to</span>
+<span class="sd">          proceed directly to the `terminate` method.</span>
+<span class="sd">        - The `eval` method can raise any other exception to indicate that the</span>
+<span class="sd">          UDTF should be aborted entirely. This will cause the UDTF to skip the</span>
+<span class="sd">          `terminate` method and proceed directly to the `cleanup` method, and</span>
+<span class="sd">          then the exception will be propagated to the query processor causing</span>
+<span class="sd">          the invoking query to fail.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        This `eval` method returns one row and one column for each input.</span>
+
+<span class="sd">        &gt;&gt;&gt; def eval(self, x: int):</span>
+<span class="sd">        ...     yield (x, )</span>
+
+<span class="sd">        This `eval` method returns two rows and two columns for each input.</span>
+
+<span class="sd">        &gt;&gt;&gt; def eval(self, x: int, y: int):</span>
+<span class="sd">        ...     yield (x + y, x - y)</span>
+<span class="sd">        ...     yield (y + x, y - x)</span>
+
+<span class="sd">        Same as above, but using *args to accept the arguments:</span>
+
+<span class="sd">        &gt;&gt;&gt; def eval(self, *args):</span>
+<span class="sd">        ...     assert len(args) == 2, "This function accepts two integer arguments only"</span>
+<span class="sd">        ...     x = args[0]</span>
+<span class="sd">        ...     y = args[1]</span>
+<span class="sd">        ...     yield (x + y, x - y)</span>
+<span class="sd">        ...     yield (y + x, y - x)</span>
+
+<span class="sd">        Same as above, but using **kwargs to accept the arguments:</span>
+
+<span class="sd">        &gt;&gt;&gt; def eval(self, **kwargs):</span>
+<span class="sd">        ...     assert len(kwargs) == 2, "This function accepts two integer arguments only"</span>
+<span class="sd">        ...     x = kwargs["x"]</span>
+<span class="sd">        ...     y = kwargs["y"]</span>
+<span class="sd">        ...     yield (x + y, x - y)</span>
+<span class="sd">        ...     yield (y + x, y - x)</span>
+<span class="sd">        """</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Called when the UDTF has successfully processed all input rows.</span>
+
+<span class="sd">        This method is optional to implement and is useful for performing any</span>
+<span class="sd">        finalization operations after the UDTF has finished processing</span>
+<span class="sd">        all rows. It can also be used to yield additional rows if needed.</span>
+<span class="sd">        Table functions that consume all rows in the entire input partition</span>
+<span class="sd">        and then compute and return the entire output table can do so from</span>
+<span class="sd">        this method as well (please be mindful of memory usage when doing</span>
+<span class="sd">        this).</span>
+
+<span class="sd">        If any exceptions occur during input row processing, this method</span>
+<span class="sd">        won't be called.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        tuple</span>
+<span class="sd">            A tuple representing a single row in the UDTF result table.</span>
+<span class="sd">            Yield this if you want to return additional rows during termination.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; def terminate(self) -&gt; Iterator[Any]:</span>
+<span class="sd">        &gt;&gt;&gt;     yield "done", None</span>
+<span class="sd">        """</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Invoked after the UDTF completes processing input rows.</span>
+
+<span class="sd">        This method is optional to implement and is useful for final cleanup</span>
+<span class="sd">        regardless of whether the UDTF processed all input rows successfully</span>
+<span class="sd">        or was aborted due to exceptions.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; def cleanup(self) -&gt; None:</span>
+<span class="sd">        &gt;&gt;&gt;     self.conn.close()</span>
+<span class="sd">        """</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="defining-the-output-schema">
+<h2>Defining the Output Schema<a class="headerlink" href="#defining-the-output-schema" title="Permalink to this headline">#</a></h2>
+<p>The return type of the UDTF defines the schema of the table it outputs.</p>
+<p>You can specify it either after the <code class="docutils literal notranslate"><span class="pre">@udtf</span></code> decorator or as a result from the <code class="docutils literal notranslate"><span class="pre">analyze</span></code> method.</p>
+<p>It must be either a <code class="docutils literal notranslate"><span class="pre">StructType</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">StructType</span><span class="p">()</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"c1"</span><span class="p">,</span> <span class="n">StringType</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>or a DDL string representing a struct type:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">c1</span> <span class="n">string</span>
+</pre></div>
+</div>
+</section>
+<section id="emitting-output-rows">
+<h2>Emitting Output Rows<a class="headerlink" href="#emitting-output-rows" title="Permalink to this headline">#</a></h2>
+<p>The <cite>eval</cite> and <cite>terminate</cite> methods then emit zero or more output rows conforming to this schema by
+yielding tuples, lists, or <code class="docutils literal notranslate"><span class="pre">pyhyperbatch.sql.Row</span></code> objects.</p>
+<p>For example, here we return a row by providing a tuple of three elements:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is also acceptable to omit the parentheses:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="k">yield</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span>
+</pre></div>
+</div>
+<p>Remember to add a trailing comma if returning a row with only one column!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="k">yield</span> <span class="n">x</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>It is also possible to yield a <code class="docutils literal notranslate"><span class="pre">pyhyperbatch.sql.Row</span></code> object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Row</span>
+    <span class="k">yield</span> <span class="n">Row</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is an example of yielding output rows from the <cite>terminate</cite> method using a Python list.
+Usually it makes sense to store state inside the class for this purpose from earlier steps in the
+UDTF evaluation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">yield</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="registering-and-using-python-udtfs-in-sql">
+<h2>Registering and Using Python UDTFs in SQL<a class="headerlink" href="#registering-and-using-python-udtfs-in-sql" title="Permalink to this headline">#</a></h2>
+<p>Python UDTFs can be registered and used in SQL queries.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">udtf</span>
+
+<span class="nd">@udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"word: string"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WordSplitter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">(),)</span>
+
+<span class="c1"># Register the UDTF for use in HyperBatch SQL.</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">udtf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">"split_words"</span><span class="p">,</span> <span class="n">WordSplitter</span><span class="p">)</span>
+
+<span class="c1"># Example: Using the UDTF in SQL.</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"SELECT * FROM split_words('hello world')"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-----+</span>
+<span class="c1"># | word|</span>
+<span class="c1"># +-----+</span>
+<span class="c1"># |hello|</span>
+<span class="c1"># |world|</span>
+<span class="c1"># +-----+</span>
+
+<span class="c1"># Example: Using the UDTF with a lateral join in SQL.</span>
+<span class="c1"># The lateral join allows us to reference the columns and aliases</span>
+<span class="c1"># in the previous FROM clause items as inputs to the UDTF.</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span>
+    <span class="s2">"SELECT * FROM VALUES ('Hello World'), ('HyperBatch') t(text), "</span>
+    <span class="s2">"LATERAL split_words(text)"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +------------+------+</span>
+<span class="c1"># |        text|  word|</span>
+<span class="c1"># +------------+------+</span>
+<span class="c1"># | Hello World| Hello|</span>
+<span class="c1"># | Hello World| World|</span>
+<span class="c1"># |HyperBatch|Apache|</span>
+<span class="c1"># |HyperBatch| HyperBatch|</span>
+<span class="c1"># +------------+------+</span>
+</pre></div>
+</div>
+</section>
+<section id="arrow-optimization">
+<h2>Arrow Optimization<a class="headerlink" href="#arrow-optimization" title="Permalink to this headline">#</a></h2>
+<p>Apache Arrow is an in-memory columnar data format used in HyperBatch to efficiently transfer
+data between Java and Python processes. Beginning in HyperBatch 4.2, Apache Arrow is enabled by default for Python UDTFs.
+To disable Arrow optimization, set <code class="docutils literal notranslate"><span class="pre">hyperbatch.sql.execution.pythonUDTF.arrow.enabled</span></code> to false.</p>
+<p>Arrow can improve performance when each input row generates a large result table from the UDTF.</p>
+<p>To enable Arrow optimization, set the <code class="docutils literal notranslate"><span class="pre">hyperbatch.sql.execution.pythonUDTF.arrow.enabled</span></code>
+configuration to <code class="docutils literal notranslate"><span class="pre">true</span></code>. You can also enable it by specifying the <code class="docutils literal notranslate"><span class="pre">useArrow</span></code> parameter
+when declaring the UDTF.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">udtf</span>
+
+<span class="nd">@udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"c1: int, c2: int"</span><span class="p">,</span> <span class="n">useArrow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlusOne</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>For more details, please see <a class="reference internal" href="../arrow_pandas.html"><span class="doc">Apache Arrow in PyHyperBatch</span></a>.</p>
+</section>
+<section id="udtf-examples-with-scalar-arguments">
+<h2>UDTF Examples with Scalar Arguments<a class="headerlink" href="#udtf-examples-with-scalar-arguments" title="Permalink to this headline">#</a></h2>
+<p>Here is a simple example of a UDTF class implementation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the UDTF class and implement the required `eval` method.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SquareNumbers</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num</span> <span class="o">*</span> <span class="n">num</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To make use of the UDTF, you’ll first need to instantiate it using the <code class="docutils literal notranslate"><span class="pre">@udtf</span></code> decorator:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">lit</span><span class="p">,</span> <span class="n">udtf</span>
+
+<span class="c1"># Create a UDTF using the class definition and the `udtf` function.</span>
+<span class="n">square_num</span> <span class="o">=</span> <span class="n">udtf</span><span class="p">(</span><span class="n">SquareNumbers</span><span class="p">,</span> <span class="n">returnType</span><span class="o">=</span><span class="s2">"num: int, squared: int"</span><span class="p">)</span>
+
+<span class="c1"># Invoke the UDTF in PyHyperBatch.</span>
+<span class="n">square_num</span><span class="p">(</span><span class="n">lit</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">lit</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># |num|squared|</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># |  1|      1|</span>
+<span class="c1"># |  2|      4|</span>
+<span class="c1"># |  3|      9|</span>
+<span class="c1"># +---+-------+</span>
+</pre></div>
+</div>
+<p>An alternative way to create a UDTF is to use the <a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.functions.udtf.html#pyspark.sql.functions.udtf" title="pyspark.sql.functions.udtf"><code class="xref py py-func docutils literal notranslate"><span class="pre">udtf()</span></code></a> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">lit</span><span class="p">,</span> <span class="n">udtf</span>
+
+<span class="c1"># Define a UDTF using the `udtf` decorator directly on the class.</span>
+<span class="nd">@udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"num: int, squared: int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SquareNumbers</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num</span> <span class="o">*</span> <span class="n">num</span><span class="p">)</span>
+
+<span class="c1"># Invoke the UDTF in PyHyperBatch using the SquareNumbers class directly.</span>
+<span class="n">SquareNumbers</span><span class="p">(</span><span class="n">lit</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">lit</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># |num|squared|</span>
+<span class="c1"># +---+-------+</span>
+<span class="c1"># |  1|      1|</span>
+<span class="c1"># |  2|      4|</span>
+<span class="c1"># |  3|      9|</span>
+<span class="c1"># +---+-------+</span>
+</pre></div>
+</div>
+<p>Here is a Python UDTF that expands date ranges into individual dates:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">lit</span><span class="p">,</span> <span class="n">udtf</span>
+
+<span class="nd">@udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"date: string"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DateExpander</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end_date</span><span class="p">,</span> <span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">current</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">current</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">'</span><span class="p">),)</span>
+            <span class="n">current</span> <span class="o">+=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">DateExpander</span><span class="p">(</span><span class="n">lit</span><span class="p">(</span><span class="s2">"2023-02-25"</span><span class="p">),</span> <span class="n">lit</span><span class="p">(</span><span class="s2">"2023-03-01"</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +----------+</span>
+<span class="c1"># |      date|</span>
+<span class="c1"># +----------+</span>
+<span class="c1"># |2023-02-25|</span>
+<span class="c1"># |2023-02-26|</span>
+<span class="c1"># |2023-02-27|</span>
+<span class="c1"># |2023-02-28|</span>
+<span class="c1"># |2023-03-01|</span>
+<span class="c1"># +----------+</span>
+</pre></div>
+</div>
+<p>Here is a Python UDTF with <code class="docutils literal notranslate"><span class="pre">__init__</span></code> and <code class="docutils literal notranslate"><span class="pre">terminate</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">udtf</span>
+
+<span class="nd">@udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"cnt: int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CountUDTF</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Initialize the counter to 0 when an instance of the class is created.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="c1"># Increment the counter by 1 for each input value received.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Yield the final count when the UDTF is done processing.</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">,</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">udtf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">"count_udtf"</span><span class="p">,</span> <span class="n">CountUDTF</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"SELECT * FROM range(0, 10, 1, 1), LATERAL count_udtf(id)"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+---+</span>
+<span class="c1"># | id|cnt|</span>
+<span class="c1"># +---+---+</span>
+<span class="c1"># |  9| 10|</span>
+<span class="c1"># +---+---+</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"SELECT * FROM range(0, 10, 1, 2), LATERAL count_udtf(id)"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+---+</span>
+<span class="c1"># | id|cnt|</span>
+<span class="c1"># +---+---+</span>
+<span class="c1"># |  4|  5|</span>
+<span class="c1"># |  9|  5|</span>
+<span class="c1"># +---+---+</span>
+</pre></div>
+</div>
+</section>
+<section id="accepting-an-input-table-argument">
+<h2>Accepting an Input Table Argument<a class="headerlink" href="#accepting-an-input-table-argument" title="Permalink to this headline">#</a></h2>
+<p>The UDTF examples above show functions that accept scalar input arguments, such as integers or
+strings.</p>
+<p>However, any Python UDTF can also accept an input table as an argument, and this can work in
+conjunction with scalar input argument(s) for the same function definition. You are allowed to
+have only one such table argument as input.</p>
+<p>Then any SQL query can provide an input table using the <code class="docutils literal notranslate"><span class="pre">TABLE</span></code> keyword followed by parentheses
+surrounding an appropriate table identifier, like <code class="docutils literal notranslate"><span class="pre">TABLE(t)</span></code>. Alternatively, you can pass a table
+subquery, like <code class="docutils literal notranslate"><span class="pre">TABLE(SELECT</span> <span class="pre">a,</span> <span class="pre">b,</span> <span class="pre">c</span> <span class="pre">FROM</span> <span class="pre">t)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">TABLE(SELECT</span> <span class="pre">t1.a,</span> <span class="pre">t2.b</span> <span class="pre">FROM</span> <span class="pre">t1</span> <span class="pre">INNER</span> <span class="pre">JOIN</span> <span class="pre">t2</span> <span class="pre">USING</span> <span class="pre">(key))</span></code>.</p>
+<p>The input table argument is then represented as a <code class="docutils literal notranslate"><span class="pre">pyhyperbatch.sql.Row</span></code> argument to the <code class="docutils literal notranslate"><span class="pre">eval</span></code>
+method, with one call to the <code class="docutils literal notranslate"><span class="pre">eval</span></code> method for each row in the input table.</p>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">udtf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Row</span>
+
+<span class="nd">@udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"id: int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FilterUDTF</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">Row</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">row</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">udtf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">"filter_udtf"</span><span class="p">,</span> <span class="n">FilterUDTF</span><span class="p">)</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"SELECT * FROM filter_udtf(TABLE(SELECT * FROM range(10)))"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+</span>
+<span class="c1"># | id|</span>
+<span class="c1"># +---+</span>
+<span class="c1"># |  6|</span>
+<span class="c1"># |  7|</span>
+<span class="c1"># |  8|</span>
+<span class="c1"># |  9|</span>
+<span class="c1"># +---+</span>
+</pre></div>
+</div>
+<p>When calling a UDTF with a table argument, any SQL query can request that the input table be
+partitioned across several UDTF calls based on the values of one or more columns of the input
+table. To do so, specify the <code class="docutils literal notranslate"><span class="pre">PARTITION</span> <span class="pre">BY</span></code> clause in the function call after the <code class="docutils literal notranslate"><span class="pre">TABLE</span></code>
+argument. This provides a guaranteee that all input rows with each unique combination of values of
+the partitioning columns will get consumed by exactly one instance of the UDTF class.</p>
+<p>Note that in addition to simple column references, the <code class="docutils literal notranslate"><span class="pre">PARTITION</span> <span class="pre">BY</span></code> clause also accepts
+arbitrary expressions based on columns of the input table. For example, you can specify the
+<code class="docutils literal notranslate"><span class="pre">LENGTH</span></code> of a string, extract a month from a date, or concatenate two values.</p>
+<p>It is also possible to specify <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">SINGLE</span> <span class="pre">PARTITION</span></code> instead of <code class="docutils literal notranslate"><span class="pre">PARTITION</span> <span class="pre">BY</span></code> to request
+only one partition wherein all input rows must be consumed by exactly one instance of the UDTF
+class.</p>
+<p>Within each partition, you can optionally specify a required ordering of the input rows as the
+UDTF’s <code class="docutils literal notranslate"><span class="pre">eval</span></code> method consumes them. To do so, provide an <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> clause after the
+<code class="docutils literal notranslate"><span class="pre">PARTITION</span> <span class="pre">BY</span></code> or <code class="docutils literal notranslate"><span class="pre">WITH</span> <span class="pre">SINGLE</span> <span class="pre">PARTITION</span></code> clause described above.</p>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">udtf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Row</span>
+
+<span class="c1"># Define and register a UDTF.</span>
+<span class="nd">@udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"a: string, b: int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FilterUDTF</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">Row</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">"a"</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s2">"b"</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">udtf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">"filter_udtf"</span><span class="p">,</span> <span class="n">FilterUDTF</span><span class="p">)</span>
+
+<span class="c1"># Create an input table with some example values.</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"DROP TABLE IF EXISTS values_table"</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"CREATE TABLE values_table (a STRING, b INT)"</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"INSERT INTO values_table VALUES ('abc', 2), ('abc', 4), ('def', 6), ('def', 8)"</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">"values_table"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-------+----+</span>
+<span class="c1"># |     a |  b |</span>
+<span class="c1"># +-------+----+</span>
+<span class="c1"># | "abc" | 2  |</span>
+<span class="c1"># | "abc" | 4  |</span>
+<span class="c1"># | "def" | 6  |</span>
+<span class="c1"># | "def" | 8  |</span>
+<span class="c1"># +-------+----+</span>
+
+<span class="c1"># Query the UDTF with the input table as an argument, and a directive to partition the input</span>
+<span class="c1"># rows such that all rows with each unique value of the `a` column are processed by the same</span>
+<span class="c1"># instance of the UDTF class. Within each partition, the rows are ordered by the `b` column.</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"""</span>
+<span class="s2">    SELECT * FROM filter_udtf(TABLE(values_table) PARTITION BY a ORDER BY b) ORDER BY 1</span>
+<span class="s2">    """</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-------+----+</span>
+<span class="c1"># |     a |  b |</span>
+<span class="c1"># +-------+----+</span>
+<span class="c1"># | "abc" | 4  |</span>
+<span class="c1"># | "def" | 8  |</span>
+<span class="c1"># +-------+----+</span>
+
+<span class="c1"># Query the UDTF with the input table as an argument, and a directive to partition the input</span>
+<span class="c1"># rows such that all rows with each unique result of evaluating the "LENGTH(a)" expression are</span>
+<span class="c1"># processed by the same instance of the UDTF class. Within each partition, the rows are ordered</span>
+<span class="c1"># by the `b` column.</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"""</span>
+<span class="s2">    SELECT * FROM filter_udtf(TABLE(values_table) PARTITION BY LENGTH(a) ORDER BY b) ORDER BY 1</span>
+<span class="s2">    """</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-------+---+</span>
+<span class="c1"># |     a | b |</span>
+<span class="c1"># +-------+---+</span>
+<span class="c1"># | "def" | 8 |</span>
+<span class="c1"># +-------+---+</span>
+
+<span class="c1"># Query the UDTF with the input table as an argument, and a directive to consider all the input</span>
+<span class="c1"># rows in one single partition such that exactly once instance of the UDTF class consumes all of</span>
+<span class="c1"># the input rows. Within each partition, the rows are ordered by the `b` column.</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"""</span>
+<span class="s2">    SELECT * FROM filter_udtf(TABLE(values_table) WITH SINGLE PARTITION ORDER BY b) ORDER BY 1</span>
+<span class="s2">    """</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-------+----+</span>
+<span class="c1"># |     a |  b |</span>
+<span class="c1"># +-------+----+</span>
+<span class="c1"># | "def" | 8 |</span>
+<span class="c1"># +-------+----+</span>
+
+<span class="c1"># Clean up.</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"DROP TABLE values_table"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that in for each of these ways of partitioning the input table when calling UDTFs in SQL
+queries, there is a corresponding way for the UDTF’s <code class="docutils literal notranslate"><span class="pre">analyze</span></code> method to specify the same
+partitioning method automatically instead.</p>
+<p>For example, instead of calling a UDTF as <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">udtf(TABLE(t)</span> <span class="pre">PARTITION</span> <span class="pre">BY</span> <span class="pre">a)</span></code>, you can
+update the <code class="docutils literal notranslate"><span class="pre">analyze</span></code> method to set the field <code class="docutils literal notranslate"><span class="pre">partitionBy=[PartitioningColumn("a")]</span></code> and simply
+call the function like <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">udtf(TABLE(t))</span></code>.</p>
+<p>By the same token, instead of specifying <code class="docutils literal notranslate"><span class="pre">TABLE(t)</span> <span class="pre">WITH</span> <span class="pre">SINGLE</span> <span class="pre">PARTITION</span></code> in the SQL query,
+make <code class="docutils literal notranslate"><span class="pre">analyze</span></code> set the field <code class="docutils literal notranslate"><span class="pre">withSinglePartition=true</span></code> and then just pass <code class="docutils literal notranslate"><span class="pre">TABLE(t)</span></code>.</p>
+<p>Instead of passing <code class="docutils literal notranslate"><span class="pre">TABLE(t)</span> <span class="pre">ORDER</span> <span class="pre">BY</span> <span class="pre">b</span></code> in the SQL query, you can make <code class="docutils literal notranslate"><span class="pre">analyze</span></code> set
+<code class="docutils literal notranslate"><span class="pre">orderBy=[OrderingColumn("b")]</span></code> and then just pass <code class="docutils literal notranslate"><span class="pre">TABLE(t)</span></code>.</p>
+<p>Instead of passing <code class="docutils literal notranslate"><span class="pre">TABLE(SELECT</span> <span class="pre">a</span> <span class="pre">FROM</span> <span class="pre">t)</span></code> in the SQL query, you can make <code class="docutils literal notranslate"><span class="pre">analyze</span></code> set
+<code class="docutils literal notranslate"><span class="pre">select=[SelectedColumn("a")]</span></code> and then just pass <code class="docutils literal notranslate"><span class="pre">TABLE(t)</span></code>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/sql/python_udtf.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

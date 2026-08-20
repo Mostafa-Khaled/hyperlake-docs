@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arrow Python UDFs — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="arrow-python-udfs">
+<h1>Arrow Python UDFs<a class="headerlink" href="#arrow-python-udfs" title="Permalink to this headline">#</a></h1>
+<p>Native Arrow UDFs operate directly on <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code> objects without converting to Pandas or
+row-by-row Python objects. This preserves the columnar layout end-to-end, avoids unnecessary data
+copies, and enables vectorized processing using Arrow’s native compute functions.</p>
+<p>A Native Arrow UDF is defined using <a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.functions.arrow_udf.html#pyspark.sql.functions.arrow_udf" title="pyspark.sql.functions.arrow_udf"><code class="xref py py-func docutils literal notranslate"><span class="pre">arrow_udf()</span></code></a> as a decorator or wrapper, and no additional
+configuration is required.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Native Arrow UDFs can also be defined via <a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.functions.udf.html#pyspark.sql.functions.udf" title="pyspark.sql.functions.udf"><code class="xref py py-func docutils literal notranslate"><span class="pre">udf()</span></code></a> with <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code> type hints.
+The type hints in the function signature determine which kind of Arrow UDF is created
+(e.g., returning <code class="docutils literal notranslate"><span class="pre">pa.Array</span></code> creates an array-to-array UDF, while returning <code class="docutils literal notranslate"><span class="pre">float</span></code>
+creates an aggregate UDF).</p>
+</div>
+<section id="native-arrow-udf-types">
+<h2>Native Arrow UDF Types<a class="headerlink" href="#native-arrow-udf-types" title="Permalink to this headline">#</a></h2>
+<section id="arrays-to-array">
+<h3>Arrays to Array<a class="headerlink" href="#arrays-to-array" title="Permalink to this headline">#</a></h3>
+<p>The type hint can be expressed as <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code>, … -&gt; <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code>.</p>
+<p>The function takes one or more <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code> and outputs one <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code>.
+The output should always be of the same length as the input.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udf</span>
+
+<span class="nd">@arrow_udf</span><span class="p">(</span><span class="s2">"string"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_upper</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">ascii_upper</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="s2">"John Doe"</span><span class="p">,)],</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">to_upper</span><span class="p">(</span><span class="s2">"name"</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +--------------+</span>
+<span class="c1"># |to_upper(name)|</span>
+<span class="c1"># +--------------+</span>
+<span class="c1"># |      JOHN DOE|</span>
+<span class="c1"># +--------------+</span>
+</pre></div>
+</div>
+<p>When the <code class="docutils literal notranslate"><span class="pre">returnType</span></code> is a struct type, the function returns a <code class="docutils literal notranslate"><span class="pre">pa.StructArray</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udf</span>
+
+<span class="nd">@arrow_udf</span><span class="p">(</span><span class="s2">"first string, last string"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_expand</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">:</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">ascii_split_whitespace</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">s0</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">b</span><span class="p">])</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">b</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">StructArray</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">([</span><span class="n">s0</span><span class="p">,</span> <span class="n">s1</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">"first"</span><span class="p">,</span> <span class="s2">"last"</span><span class="p">])</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="s2">"John Doe"</span><span class="p">,)],</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">split_expand</span><span class="p">(</span><span class="s2">"name"</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +------------------+</span>
+<span class="c1"># |split_expand(name)|</span>
+<span class="c1"># +------------------+</span>
+<span class="c1"># |       {John, Doe}|</span>
+<span class="c1"># +------------------+</span>
+</pre></div>
+</div>
+<p>Arrow UDFs support keyword arguments:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">sf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntegerType</span>
+
+<span class="nd">@arrow_udf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="n">IntegerType</span><span class="p">())</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calc</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">calc</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">sf</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-----------------------------+</span>
+<span class="c1"># |calc(b =&gt; (id * 10), a =&gt; id)|</span>
+<span class="c1"># +-----------------------------+</span>
+<span class="c1"># |                            0|</span>
+<span class="c1"># |                          101|</span>
+<span class="c1"># +-----------------------------+</span>
+</pre></div>
+</div>
+</section>
+<section id="iterator-of-arrays-to-iterator-of-arrays">
+<h3>Iterator of Arrays to Iterator of Arrays<a class="headerlink" href="#iterator-of-arrays-to-iterator-of-arrays" title="Permalink to this headline">#</a></h3>
+<p>The type hint can be expressed as <code class="docutils literal notranslate"><span class="pre">Iterator[pyarrow.Array]</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Iterator[pyarrow.Array]</span></code>.</p>
+<p>The function takes an iterator of <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code> and outputs an iterator of <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code>.
+The length of the entire output should be the same as the entire input.
+This is useful when the UDF execution requires expensive initialization.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+
+<span class="nd">@arrow_udf</span><span class="p">(</span><span class="s2">"long"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plus_one</span><span class="p">(</span><span class="n">iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="mi">1</span><span class="p">,),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,)],</span> <span class="p">[</span><span class="s2">"v"</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">plus_one</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">v</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +-----------+</span>
+<span class="c1"># |plus_one(v)|</span>
+<span class="c1"># +-----------+</span>
+<span class="c1"># |          2|</span>
+<span class="c1"># |          3|</span>
+<span class="c1"># |          4|</span>
+<span class="c1"># +-----------+</span>
+</pre></div>
+</div>
+</section>
+<section id="iterator-of-multiple-arrays-to-iterator-of-arrays">
+<h3>Iterator of Multiple Arrays to Iterator of Arrays<a class="headerlink" href="#iterator-of-multiple-arrays-to-iterator-of-arrays" title="Permalink to this headline">#</a></h3>
+<p>The type hint can be expressed as <code class="docutils literal notranslate"><span class="pre">Iterator[Tuple[pyarrow.Array,</span> <span class="pre">...]]</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Iterator[pyarrow.Array]</span></code>.</p>
+<p>The function takes an iterator of a tuple of multiple <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code> and outputs an
+iterator of <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code>. Use this when the UDF requires multiple input columns.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">sf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="nd">@arrow_udf</span><span class="p">(</span><span class="s2">"long"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span>
+    <span class="n">iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">"v"</span><span class="p">))</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="mi">1</span><span class="p">,),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,)],</span> <span class="p">[</span><span class="s2">"v"</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span>
+    <span class="s1">'output'</span><span class="p">,</span> <span class="n">multiply</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"v"</span><span class="p">),</span> <span class="n">sf</span><span class="o">.</span><span class="n">struct</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"v"</span><span class="p">)))</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+------+</span>
+<span class="c1"># |  v|output|</span>
+<span class="c1"># +---+------+</span>
+<span class="c1"># |  1|     1|</span>
+<span class="c1"># |  2|     4|</span>
+<span class="c1"># |  3|     9|</span>
+<span class="c1"># +---+------+</span>
+</pre></div>
+</div>
+</section>
+<section id="arrays-to-scalar">
+<h3>Arrays to Scalar<a class="headerlink" href="#arrays-to-scalar" title="Permalink to this headline">#</a></h3>
+<p>The type hint can be expressed as <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code>, … -&gt; <code class="docutils literal notranslate"><span class="pre">Any</span></code>.</p>
+<p>The function takes one or more <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code> and returns a scalar value. The return type
+annotation can be any type other than <code class="docutils literal notranslate"><span class="pre">pa.Array</span></code>, <code class="docutils literal notranslate"><span class="pre">Iterator</span></code>, or <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>, which match the
+array-to-array or iterator patterns above. The returned scalar can be
+a Python primitive type (e.g., <code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">float</span></code>), a NumPy data type, or a <code class="docutils literal notranslate"><span class="pre">pyarrow.Scalar</span></code>
+instance which supports complex return types.</p>
+<p>This type of UDF can be used with <a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.GroupedData.agg.html#pyspark.sql.GroupedData.agg" title="pyspark.sql.GroupedData.agg"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GroupedData.agg</span></code></a> and
+<code class="docutils literal notranslate"><span class="pre">Window</span></code> operations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udf</span>
+
+<span class="nd">@arrow_udf</span><span class="p">(</span><span class="s2">"double"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mean_udf</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">as_py</span><span class="p">()</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)],</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"v"</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">mean_udf</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'v'</span><span class="p">]))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+-----------+</span>
+<span class="c1"># | id|mean_udf(v)|</span>
+<span class="c1"># +---+-----------+</span>
+<span class="c1"># |  1|        1.5|</span>
+<span class="c1"># |  2|        6.0|</span>
+<span class="c1"># +---+-----------+</span>
+</pre></div>
+</div>
+<p>The return type can also be a complex type such as struct:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udf</span>
+
+<span class="nd">@arrow_udf</span><span class="p">(</span><span class="s2">"struct&lt;m1: double, m2: double&gt;"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">min_max_udf</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pa</span><span class="o">.</span><span class="n">Scalar</span><span class="p">:</span>
+    <span class="n">m1</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">m2</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">struct</span><span class="p">([</span><span class="n">pa</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">"m1"</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">()),</span> <span class="n">pa</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">"m2"</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">())])</span>
+    <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">scalar</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">{</span><span class="s2">"m1"</span><span class="p">:</span> <span class="n">m1</span><span class="o">.</span><span class="n">as_py</span><span class="p">(),</span> <span class="s2">"m2"</span><span class="p">:</span> <span class="n">m2</span><span class="o">.</span><span class="n">as_py</span><span class="p">()},</span> <span class="nb">type</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)],</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"v"</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">min_max_udf</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'v'</span><span class="p">]))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+--------------+</span>
+<span class="c1"># | id|min_max_udf(v)|</span>
+<span class="c1"># +---+--------------+</span>
+<span class="c1"># |  1|    {1.0, 2.0}|</span>
+<span class="c1"># |  2|   {3.0, 10.0}|</span>
+<span class="c1"># +---+--------------+</span>
+</pre></div>
+</div>
+<p>This UDF can also be used as window functions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">Window</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udf</span>
+
+<span class="nd">@arrow_udf</span><span class="p">(</span><span class="s2">"double"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mean_udf</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">as_py</span><span class="p">()</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)],</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"v"</span><span class="p">))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">Window</span><span class="o">.</span><span class="n">partitionBy</span><span class="p">(</span><span class="s1">'id'</span><span class="p">)</span><span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s1">'v'</span><span class="p">)</span><span class="o">.</span><span class="n">rowsBetween</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">'mean_v'</span><span class="p">,</span> <span class="n">mean_udf</span><span class="p">(</span><span class="s2">"v"</span><span class="p">)</span><span class="o">.</span><span class="n">over</span><span class="p">(</span><span class="n">w</span><span class="p">))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+----+------+</span>
+<span class="c1"># | id|   v|mean_v|</span>
+<span class="c1"># +---+----+------+</span>
+<span class="c1"># |  1| 1.0|   1.0|</span>
+<span class="c1"># |  1| 2.0|   1.5|</span>
+<span class="c1"># |  2| 3.0|   3.0|</span>
+<span class="c1"># |  2| 5.0|   4.0|</span>
+<span class="c1"># |  2|10.0|   7.5|</span>
+<span class="c1"># +---+----+------+</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For performance reasons, the input arrays to window functions are not copied.
+Mutating the input arrays is not allowed and will cause incorrect results.</p>
+</div>
+</section>
+<section id="iterator-of-arrays-to-scalar">
+<h3>Iterator of Arrays to Scalar<a class="headerlink" href="#iterator-of-arrays-to-scalar" title="Permalink to this headline">#</a></h3>
+<p>The type hint can be expressed as <code class="docutils literal notranslate"><span class="pre">Iterator[pyarrow.Array]</span></code> -&gt; a scalar type.</p>
+<p>The function takes an iterator of <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code> and returns a scalar value. This is useful for
+grouped aggregations where the UDF can process all batches iteratively, which is more
+memory-efficient than loading all data at once.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only a single UDF is supported per aggregation.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+
+<span class="nd">@arrow_udf</span><span class="p">(</span><span class="s2">"double"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">arrow_mean</span><span class="p">(</span><span class="n">it</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">sum_val</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
+        <span class="n">sum_val</span> <span class="o">+=</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">as_py</span><span class="p">()</span>
+        <span class="n">cnt</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sum_val</span> <span class="o">/</span> <span class="n">cnt</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)],</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"v"</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">arrow_mean</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'v'</span><span class="p">]))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+-------------+</span>
+<span class="c1"># | id|arrow_mean(v)|</span>
+<span class="c1"># +---+-------------+</span>
+<span class="c1"># |  1|          1.5|</span>
+<span class="c1"># |  2|          6.0|</span>
+<span class="c1"># +---+-------------+</span>
+</pre></div>
+</div>
+</section>
+<section id="iterator-of-multiple-arrays-to-scalar">
+<h3>Iterator of Multiple Arrays to Scalar<a class="headerlink" href="#iterator-of-multiple-arrays-to-scalar" title="Permalink to this headline">#</a></h3>
+<p>The type hint can be expressed as <code class="docutils literal notranslate"><span class="pre">Iterator[Tuple[pyarrow.Array,</span> <span class="pre">...]]</span></code> -&gt; a scalar type.</p>
+<p>The function takes an iterator of a tuple of multiple <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code> and returns a scalar value.
+This is useful for grouped aggregations with multiple input columns.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only a single UDF is supported per aggregation.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="nd">@arrow_udf</span><span class="p">(</span><span class="s2">"double"</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">arrow_weighted_mean</span><span class="p">(</span>
+    <span class="n">it</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">weighted_sum</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
+        <span class="n">weighted_sum</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">weight</span> <span class="o">+=</span> <span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">as_py</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">weighted_sum</span> <span class="o">/</span> <span class="n">weight</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)],</span>
+    <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"v"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">arrow_weighted_mean</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"v"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">"w"</span><span class="p">]))</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+-------------------------+</span>
+<span class="c1"># | id|arrow_weighted_mean(v, w)|</span>
+<span class="c1"># +---+-------------------------+</span>
+<span class="c1"># |  1|       1.6666666666666...|</span>
+<span class="c1"># |  2|        7.166666666666...|</span>
+<span class="c1"># +---+-------------------------+</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="arrow-function-apis">
+<h2>Arrow Function APIs<a class="headerlink" href="#arrow-function-apis" title="Permalink to this headline">#</a></h2>
+<p>Arrow Function APIs apply Python native functions directly on Arrow data at the DataFrame level.
+They work similarly to Pandas Function APIs but use <code class="docutils literal notranslate"><span class="pre">pyarrow.RecordBatch</span></code> and <code class="docutils literal notranslate"><span class="pre">pyarrow.Table</span></code>
+instead of Pandas DataFrames.</p>
+<section id="map">
+<h3>Map<a class="headerlink" href="#map" title="Permalink to this headline">#</a></h3>
+<p><a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.DataFrame.mapInArrow.html#pyspark.sql.DataFrame.mapInArrow" title="pyspark.sql.DataFrame.mapInArrow"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DataFrame.mapInArrow()</span></code></a> maps an iterator of <code class="docutils literal notranslate"><span class="pre">pyarrow.RecordBatch</span></code> to another iterator of
+<code class="docutils literal notranslate"><span class="pre">pyarrow.RecordBatch</span></code>. The input and output can have different lengths.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">)],</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">filter_func</span><span class="p">(</span><span class="n">iterator</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">batch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pa</span><span class="o">.</span><span class="n">compute</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">mapInArrow</span><span class="p">(</span><span class="n">filter_func</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+---+</span>
+<span class="c1"># | id|age|</span>
+<span class="c1"># +---+---+</span>
+<span class="c1"># |  1| 21|</span>
+<span class="c1"># +---+---+</span>
+</pre></div>
+</div>
+<p>For detailed usage, please see <a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.DataFrame.mapInArrow.html#pyspark.sql.DataFrame.mapInArrow" title="pyspark.sql.DataFrame.mapInArrow"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DataFrame.mapInArrow()</span></code></a>.</p>
+</section>
+<section id="grouped-map">
+<h3>Grouped Map<a class="headerlink" href="#grouped-map" title="Permalink to this headline">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">DataFrame.groupBy().applyInArrow()</span></code> maps each group using a function that takes a
+<code class="docutils literal notranslate"><span class="pre">pyarrow.Table</span></code> and returns a <code class="docutils literal notranslate"><span class="pre">pyarrow.Table</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.compute</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pc</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)],</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"v"</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize</span><span class="p">(</span><span class="n">table</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="s2">"v"</span><span class="p">)</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">pc</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">pc</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">v</span><span class="p">)),</span> <span class="n">pc</span><span class="o">.</span><span class="n">stddev</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">table</span><span class="o">.</span><span class="n">set_column</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">"v"</span><span class="p">,</span> <span class="n">norm</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span><span class="o">.</span><span class="n">applyInArrow</span><span class="p">(</span>
+    <span class="n">normalize</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="s2">"id long, v double"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"v"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+-------------------+</span>
+<span class="c1"># | id|                  v|</span>
+<span class="c1"># +---+-------------------+</span>
+<span class="c1"># |  1|-0.7071067811865...|</span>
+<span class="c1"># |  1| 0.7071067811865...|</span>
+<span class="c1"># |  2|-0.8320502943378...|</span>
+<span class="c1"># |  2|-0.2773500981126...|</span>
+<span class="c1"># |  2| 1.1094003924504...|</span>
+<span class="c1"># +---+-------------------+</span>
+</pre></div>
+</div>
+<p>The function can also accept grouping keys as the first argument:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mean_func</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="s2">"v"</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pydict</span><span class="p">({</span><span class="s2">"id"</span><span class="p">:</span> <span class="p">[</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">as_py</span><span class="p">()],</span> <span class="s2">"v"</span><span class="p">:</span> <span class="p">[</span><span class="n">mean</span><span class="o">.</span><span class="n">as_py</span><span class="p">()]})</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'id'</span><span class="p">)</span><span class="o">.</span><span class="n">applyInArrow</span><span class="p">(</span>
+    <span class="n">mean_func</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="s2">"id long, v double"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+---+</span>
+<span class="c1"># | id|  v|</span>
+<span class="c1"># +---+---+</span>
+<span class="c1"># |  1|1.5|</span>
+<span class="c1"># |  2|6.0|</span>
+<span class="c1"># +---+---+</span>
+</pre></div>
+</div>
+<p>For detailed usage, please see <a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.GroupedData.applyInArrow.html#pyspark.sql.GroupedData.applyInArrow" title="pyspark.sql.GroupedData.applyInArrow"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GroupedData.applyInArrow()</span></code></a>.</p>
+</section>
+<section id="co-grouped-map">
+<h3>Co-grouped Map<a class="headerlink" href="#co-grouped-map" title="Permalink to this headline">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">DataFrame.groupBy().cogroup().applyInArrow()</span></code> allows two DataFrames to be cogrouped by a
+common key and then a Python function applied to each cogroup. The function takes two
+<code class="docutils literal notranslate"><span class="pre">pyarrow.Table</span></code> and returns a <code class="docutils literal notranslate"><span class="pre">pyarrow.Table</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+
+<span class="n">df1</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)],</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"v1"</span><span class="p">))</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">)],</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"v2"</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">summarize</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pydict</span><span class="p">({</span>
+        <span class="s2">"left"</span><span class="p">:</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">num_rows</span><span class="p">],</span>
+        <span class="s2">"right"</span><span class="p">:</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">num_rows</span><span class="p">]</span>
+    <span class="p">})</span>
+
+<span class="n">df1</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span><span class="o">.</span><span class="n">cogroup</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"id"</span><span class="p">))</span><span class="o">.</span><span class="n">applyInArrow</span><span class="p">(</span>
+    <span class="n">summarize</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="s2">"left long, right long"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +----+-----+</span>
+<span class="c1"># |left|right|</span>
+<span class="c1"># +----+-----+</span>
+<span class="c1"># |   2|    1|</span>
+<span class="c1"># |   2|    1|</span>
+<span class="c1"># +----+-----+</span>
+</pre></div>
+</div>
+<p>The function can also accept grouping keys as the first argument:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">summarize</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pydict</span><span class="p">({</span>
+        <span class="s2">"key"</span><span class="p">:</span> <span class="p">[</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">as_py</span><span class="p">()],</span>
+        <span class="s2">"left"</span><span class="p">:</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">num_rows</span><span class="p">],</span>
+        <span class="s2">"right"</span><span class="p">:</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">num_rows</span><span class="p">]</span>
+    <span class="p">})</span>
+
+<span class="n">df1</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span><span class="o">.</span><span class="n">cogroup</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"id"</span><span class="p">))</span><span class="o">.</span><span class="n">applyInArrow</span><span class="p">(</span>
+    <span class="n">summarize</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="s2">"key long, left long, right long"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">"key"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># +---+----+-----+</span>
+<span class="c1"># |key|left|right|</span>
+<span class="c1"># +---+----+-----+</span>
+<span class="c1"># |  1|   2|    1|</span>
+<span class="c1"># |  2|   2|    1|</span>
+<span class="c1"># +---+----+-----+</span>
+</pre></div>
+</div>
+<p>For detailed usage, please see <a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.PandasCogroupedOps.applyInArrow.html#pyspark.sql.PandasCogroupedOps.applyInArrow" title="pyspark.sql.PandasCogroupedOps.applyInArrow"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PandasCogroupedOps.applyInArrow()</span></code></a>.</p>
+</section>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">#</a></h2>
+<p>SQL boolean expressions do not short-circuit: in <code class="docutils literal notranslate"><span class="pre">WHERE</span> <span class="pre">cond</span> <span class="pre">AND</span> <span class="pre">udf(x)</span></code>, the UDF may be
+called on all rows regardless of <code class="docutils literal notranslate"><span class="pre">cond</span></code>. If the function can fail on certain input values
+(e.g., division by zero), handle those cases inside the function itself.</p>
+<p>The Arrow data type of the returned <code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code> should match the declared <code class="docutils literal notranslate"><span class="pre">returnType</span></code>.
+When there is a mismatch, HyperBatch will attempt to convert the returned data to the expected type
+using Arrow’s safe casting, which raises an error on overflow or precision loss.</p>
+<p>Supported SQL types are the same as for Arrow-based conversion. See
+<a class="reference internal" href="arrow_pandas.html#supported-sql-types"><span class="std std-ref">Supported SQL Types</span></a> for details.</p>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.functions.udf.html#pyspark.sql.functions.udf" title="pyspark.sql.functions.udf"><code class="xref py py-func docutils literal notranslate"><span class="pre">udf()</span></code></a> – Create a Python UDF (with optional Arrow optimization)</p></li>
+<li><p><a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.functions.arrow_udtf.html#pyspark.sql.functions.arrow_udtf" title="pyspark.sql.functions.arrow_udtf"><code class="xref py py-func docutils literal notranslate"><span class="pre">arrow_udtf()</span></code></a> – Create a vectorized Arrow UDTF (see <a class="reference internal" href="arrow_python_udtf.html"><span class="doc">Arrow Python UDTFs</span></a>)</p></li>
+<li><p><a class="reference internal" href="../../reference/pyspark.sql/api/pyspark.sql.functions.pandas_udf.html#pyspark.sql.functions.pandas_udf" title="pyspark.sql.functions.pandas_udf"><code class="xref py py-func docutils literal notranslate"><span class="pre">pandas_udf()</span></code></a> – Create a Pandas UDF</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/sql/arrow_python_udf.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

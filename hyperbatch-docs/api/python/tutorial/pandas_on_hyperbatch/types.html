@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Type Support in Pandas API on HyperBatch — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="type-support-in-pandas-api-on-hyperbatch">
+<h1>Type Support in Pandas API on HyperBatch<a class="headerlink" href="#type-support-in-pandas-api-on-hyperbatch" title="Permalink to this headline">#</a></h1>
+<p>In this chapter, we will briefly show you how data types change when converting pandas-on-HyperBatch DataFrame from/to PyHyperBatch DataFrame or pandas DataFrame.</p>
+<section id="type-casting-between-pyhyperbatch-and-pandas-api-on-hyperbatch">
+<h2>Type casting between PyHyperBatch and pandas API on HyperBatch<a class="headerlink" href="#type-casting-between-pyhyperbatch-and-pandas-api-on-hyperbatch" title="Permalink to this headline">#</a></h2>
+<p>When converting a pandas-on-HyperBatch DataFrame from/to PyHyperBatch DataFrame, the data types are automatically casted to the appropriate type.</p>
+<p>The example below shows how data types are casted from PyHyperBatch DataFrame to pandas-on-HyperBatch DataFrame.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Create a PyHyperBatch DataFrame</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sdf</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([</span>
+<span class="o">...</span>     <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">27</span><span class="p">),</span> <span class="s2">"1"</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">27</span><span class="p">)),</span>
+<span class="o">...</span> <span class="p">],</span> <span class="s1">'tinyint tinyint, decimal decimal, float float, double double, integer integer, long long, short short, timestamp timestamp, string string, boolean boolean, date date'</span><span class="p">)</span>
+
+<span class="c1"># 2. Check the PyHyperBatch data types</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sdf</span>
+<span class="n">DataFrame</span><span class="p">[</span><span class="n">tinyint</span><span class="p">:</span> <span class="n">tinyint</span><span class="p">,</span> <span class="n">decimal</span><span class="p">:</span> <span class="n">decimal</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="nb">float</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">double</span><span class="p">:</span> <span class="n">double</span><span class="p">,</span> <span class="n">integer</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">long</span><span class="p">:</span> <span class="n">bigint</span><span class="p">,</span> <span class="n">short</span><span class="p">:</span> <span class="n">smallint</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span> <span class="n">boolean</span><span class="p">:</span> <span class="n">boolean</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">date</span><span class="p">]</span>
+
+<span class="c1"># 3. Convert PyHyperBatch DataFrame to pandas-on-HyperBatch DataFrame</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">psdf</span> <span class="o">=</span> <span class="n">sdf</span><span class="o">.</span><span class="n">pandas_api</span><span class="p">()</span>
+
+<span class="c1"># 4. Check the pandas-on-HyperBatch data types</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">psdf</span><span class="o">.</span><span class="n">dtypes</span>
+<span class="n">tinyint</span>                <span class="n">int8</span>
+<span class="n">decimal</span>              <span class="nb">object</span>
+<span class="nb">float</span>               <span class="n">float32</span>
+<span class="n">double</span>              <span class="n">float64</span>
+<span class="n">integer</span>               <span class="n">int32</span>
+<span class="n">long</span>                  <span class="n">int64</span>
+<span class="n">short</span>                 <span class="n">int16</span>
+<span class="n">timestamp</span>    <span class="n">datetime64</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+<span class="n">string</span>               <span class="nb">object</span>
+<span class="n">boolean</span>                <span class="nb">bool</span>
+<span class="n">date</span>                 <span class="nb">object</span>
+<span class="n">dtype</span><span class="p">:</span> <span class="nb">object</span>
+</pre></div>
+</div>
+<p>The example below shows how data types are casted from pandas-on-HyperBatch DataFrame to PyHyperBatch DataFrame.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Create a pandas-on-HyperBatch DataFrame</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"int8"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"bool"</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">],</span> <span class="s2">"float32"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="s2">"float64"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="s2">"int32"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"int64"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"int16"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"datetime"</span><span class="p">:</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">27</span><span class="p">)],</span> <span class="s2">"object_string"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1"</span><span class="p">],</span> <span class="s2">"object_decimal"</span><span class="p">:</span> <span class="p">[</span><span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">"1.1"</span><span class="p">)],</span> <span class="s2">"object_date"</span><span class="p">:</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">27</span><span class="p">)]})</span>
+
+<span class="c1"># 2. Type casting by using `astype`</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">psdf</span><span class="p">[</span><span class="s1">'int8'</span><span class="p">]</span> <span class="o">=</span> <span class="n">psdf</span><span class="p">[</span><span class="s1">'int8'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'int8'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">psdf</span><span class="p">[</span><span class="s1">'int16'</span><span class="p">]</span> <span class="o">=</span> <span class="n">psdf</span><span class="p">[</span><span class="s1">'int16'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'int16'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">psdf</span><span class="p">[</span><span class="s1">'int32'</span><span class="p">]</span> <span class="o">=</span> <span class="n">psdf</span><span class="p">[</span><span class="s1">'int32'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'int32'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">psdf</span><span class="p">[</span><span class="s1">'float32'</span><span class="p">]</span> <span class="o">=</span> <span class="n">psdf</span><span class="p">[</span><span class="s1">'float32'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'float32'</span><span class="p">)</span>
+
+<span class="c1"># 3. Check the pandas-on-HyperBatch data types</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">psdf</span><span class="o">.</span><span class="n">dtypes</span>
+<span class="n">int8</span>                        <span class="n">int8</span>
+<span class="nb">bool</span>                        <span class="nb">bool</span>
+<span class="n">float32</span>                  <span class="n">float32</span>
+<span class="n">float64</span>                  <span class="n">float64</span>
+<span class="n">int32</span>                      <span class="n">int32</span>
+<span class="n">int64</span>                      <span class="n">int64</span>
+<span class="n">int16</span>                      <span class="n">int16</span>
+<span class="n">datetime</span>          <span class="n">datetime64</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+<span class="n">object_string</span>             <span class="nb">object</span>
+<span class="n">object_decimal</span>            <span class="nb">object</span>
+<span class="n">object_date</span>               <span class="nb">object</span>
+<span class="n">dtype</span><span class="p">:</span> <span class="nb">object</span>
+
+<span class="c1"># 4. Convert pandas-on-HyperBatch DataFrame to PyHyperBatch DataFrame</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sdf</span> <span class="o">=</span> <span class="n">psdf</span><span class="o">.</span><span class="n">to_hyperbatch</span><span class="p">()</span>
+
+<span class="c1"># 5. Check the PyHyperBatch data types</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sdf</span>
+<span class="n">DataFrame</span><span class="p">[</span><span class="n">int8</span><span class="p">:</span> <span class="n">tinyint</span><span class="p">,</span> <span class="nb">bool</span><span class="p">:</span> <span class="n">boolean</span><span class="p">,</span> <span class="n">float32</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">float64</span><span class="p">:</span> <span class="n">double</span><span class="p">,</span> <span class="n">int32</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">int64</span><span class="p">:</span> <span class="n">bigint</span><span class="p">,</span> <span class="n">int16</span><span class="p">:</span> <span class="n">smallint</span><span class="p">,</span> <span class="n">datetime</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">object_string</span><span class="p">:</span> <span class="n">string</span><span class="p">,</span> <span class="n">object_decimal</span><span class="p">:</span> <span class="n">decimal</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">object_date</span><span class="p">:</span> <span class="n">date</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="type-casting-between-pandas-and-pandas-api-on-hyperbatch">
+<h2>Type casting between pandas and pandas API on HyperBatch<a class="headerlink" href="#type-casting-between-pandas-and-pandas-api-on-hyperbatch" title="Permalink to this headline">#</a></h2>
+<p>When converting pandas-on-HyperBatch DataFrame to pandas DataFrame, the data types are basically the same as pandas.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert pandas-on-HyperBatch DataFrame to pandas DataFrame</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pdf</span> <span class="o">=</span> <span class="n">psdf</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+
+<span class="c1"># Check the pandas data types</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pdf</span><span class="o">.</span><span class="n">dtypes</span>
+<span class="n">int8</span>                        <span class="n">int8</span>
+<span class="nb">bool</span>                        <span class="nb">bool</span>
+<span class="n">float32</span>                  <span class="n">float32</span>
+<span class="n">float64</span>                  <span class="n">float64</span>
+<span class="n">int32</span>                      <span class="n">int32</span>
+<span class="n">int64</span>                      <span class="n">int64</span>
+<span class="n">int16</span>                      <span class="n">int16</span>
+<span class="n">datetime</span>          <span class="n">datetime64</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+<span class="n">object_string</span>             <span class="nb">object</span>
+<span class="n">object_decimal</span>            <span class="nb">object</span>
+<span class="n">object_date</span>               <span class="nb">object</span>
+<span class="n">dtype</span><span class="p">:</span> <span class="nb">object</span>
+</pre></div>
+</div>
+<p>However, there are several data types only provided by pandas.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># pd.Catrgorical type is not supported in pandas API on HyperBatch yet.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ps</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])])</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="o">...</span>
+<span class="n">pyarrow</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">ArrowInvalid</span><span class="p">:</span> <span class="n">Could</span> <span class="ow">not</span> <span class="n">convert</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">Categories</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">int64</span><span class="p">):</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="k">with</span> <span class="nb">type</span> <span class="n">Categorical</span><span class="p">:</span> <span class="n">did</span> <span class="ow">not</span> <span class="n">recognize</span> <span class="n">Python</span> <span class="n">value</span> <span class="nb">type</span> <span class="n">when</span> <span class="n">inferring</span> <span class="n">an</span> <span class="n">Arrow</span> <span class="n">data</span> <span class="nb">type</span>
+</pre></div>
+</div>
+<p>These kinds of pandas specific data types below are not currently supported in the pandas API on HyperBatch but planned to be supported.</p>
+<ul class="simple">
+<li><p>pd.Timedelta</p></li>
+<li><p>pd.Categorical</p></li>
+<li><p>pd.CategoricalDtype</p></li>
+</ul>
+<p>The pandas specific data types below are not planned to be supported in the pandas API on HyperBatch yet.</p>
+<ul class="simple">
+<li><p>pd.SparseDtype</p></li>
+<li><p>pd.DatetimeTZDtype</p></li>
+<li><p>pd.UInt*Dtype</p></li>
+<li><p>pd.BooleanDtype</p></li>
+<li><p>pd.StringDtype</p></li>
+</ul>
+</section>
+<section id="internal-type-mapping">
+<h2>Internal type mapping<a class="headerlink" href="#internal-type-mapping" title="Permalink to this headline">#</a></h2>
+<p>The table below shows which NumPy data types are matched to which PyHyperBatch data types internally in the pandas API on HyperBatch.</p>
+<div class="table-container"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>NumPy</p></th>
+<th class="head"><p>PyHyperBatch</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>np.character</p></td>
+<td><p>BinaryType</p></td>
+</tr>
+<tr class="row-odd"><td><p>np.bytes_</p></td>
+<td><p>BinaryType</p></td>
+</tr>
+<tr class="row-even"><td><p>np.string_</p></td>
+<td><p>BinaryType</p></td>
+</tr>
+<tr class="row-odd"><td><p>np.int8</p></td>
+<td><p>ByteType</p></td>
+</tr>
+<tr class="row-even"><td><p>np.byte</p></td>
+<td><p>ByteType</p></td>
+</tr>
+<tr class="row-odd"><td><p>np.int16</p></td>
+<td><p>ShortType</p></td>
+</tr>
+<tr class="row-even"><td><p>np.int32</p></td>
+<td><p>IntegerType</p></td>
+</tr>
+<tr class="row-odd"><td><p>np.int64</p></td>
+<td><p>LongType</p></td>
+</tr>
+<tr class="row-even"><td><p>np.float32</p></td>
+<td><p>FloatType</p></td>
+</tr>
+<tr class="row-odd"><td><p>np.float64</p></td>
+<td><p>DoubleType</p></td>
+</tr>
+<tr class="row-even"><td><p>np.unicode_</p></td>
+<td><p>StringType</p></td>
+</tr>
+<tr class="row-odd"><td><p>np.datetime64</p></td>
+<td><p>TimestampType</p></td>
+</tr>
+<tr class="row-even"><td><p>np.ndarray</p></td>
+<td><p>ArrayType(StringType())</p></td>
+</tr>
+</tbody>
+</table></div>
+<p>The table below shows which Python data types are matched to which PyHyperBatch data types internally in pandas API on HyperBatch.</p>
+<div class="table-container"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Python</p></th>
+<th class="head"><p>PyHyperBatch</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bytes</p></td>
+<td><p>BinaryType</p></td>
+</tr>
+<tr class="row-odd"><td><p>int</p></td>
+<td><p>LongType</p></td>
+</tr>
+<tr class="row-even"><td><p>float</p></td>
+<td><p>DoubleType</p></td>
+</tr>
+<tr class="row-odd"><td><p>str</p></td>
+<td><p>StringType</p></td>
+</tr>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>BooleanType</p></td>
+</tr>
+<tr class="row-odd"><td><p>datetime.datetime</p></td>
+<td><p>TimestampType</p></td>
+</tr>
+<tr class="row-even"><td><p>datetime.date</p></td>
+<td><p>DateType</p></td>
+</tr>
+<tr class="row-odd"><td><p>decimal.Decimal</p></td>
+<td><p>DecimalType(38, 18)</p></td>
+</tr>
+</tbody>
+</table></div>
+<p>For decimal type, pandas API on HyperBatch uses HyperBatch’s system default precision and scale.</p>
+<p>You can check this mapping by using the <cite>as_hyperbatch_type</cite> function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas.typedef</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_hyperbatch_type</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">as_hyperbatch_type</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="go">LongType</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">as_hyperbatch_type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="go">IntegerType</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">as_hyperbatch_type</span><span class="p">(</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span>
+<span class="go">ArrayType(DoubleType,true)</span>
+</pre></div>
+</div>
+<p>You can also check the underlying PyHyperBatch data type of <cite>Series</cite> or schema of <cite>DataFrame</cite> by using HyperBatch accessor.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span><span class="o">.</span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">data_type</span>
+<span class="go">DoubleType</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s2">"welcome"</span><span class="p">,</span> <span class="s2">"to"</span><span class="p">,</span> <span class="s2">"pandas-on-HyperBatch"</span><span class="p">])</span><span class="o">.</span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">data_type</span>
+<span class="go">StringType</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">Series</span><span class="p">([[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]])</span><span class="o">.</span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">data_type</span>
+<span class="go">ArrayType(BooleanType,true)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"d"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="s2">"s"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"welcome"</span><span class="p">,</span> <span class="s2">"to"</span><span class="p">,</span> <span class="s2">"pandas-on-HyperBatch"</span><span class="p">],</span> <span class="s2">"b"</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]})</span><span class="o">.</span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">print_schema</span><span class="p">()</span>
+<span class="go">root</span>
+<span class="go"> |-- d: double (nullable = false)</span>
+<span class="go"> |-- s: string (nullable = false)</span>
+<span class="go"> |-- b: boolean (nullable = false)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pandas API on HyperBatch currently does not support multiple types of data in a single column.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">])</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">an integer is required (got type str)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/pandas_on_spark/types.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

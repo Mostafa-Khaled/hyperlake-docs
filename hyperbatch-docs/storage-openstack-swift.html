@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Accessing OpenStack Swift from HyperBatch — HyperBatch</title>
+<link rel="stylesheet" href="hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="hypercdc-print.css">
+</head>
+<body data-docs-root="./">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+        
+
+        
+
+        <div class="container">
+            
+                <div class="content mr-3" id="content">
+                    
+                        
+                            <h1 class="title">Accessing OpenStack Swift from HyperBatch</h1>
+                        
+                    
+                    <p>HyperBatch’s support for Hadoop InputFormat allows it to process data in OpenStack Swift using the
+same URI formats as in Hadoop. You can specify a path in Swift as input through a
+URI of the form <code>swift://container.PROVIDER/path</code>. You will also need to set your
+Swift security credentials, through <code>core-site.xml</code> or via
+<code>HyperBatchContext.hadoopConfiguration</code>.
+The current Swift driver requires Swift to use the Keystone authentication method, or
+its Rackspace-specific predecessor.</p>
+
+<h1 id="configuring-swift-for-better-data-locality">Configuring Swift for Better Data Locality</h1>
+
+<p>Although not mandatory, it is recommended to configure the proxy server of Swift with
+<code>list_endpoints</code> to have better data locality. More information is
+<a href="https://github.com/openstack/swift/blob/master/swift/common/middleware/list_endpoints.py">available here</a>.</p>
+
+<h1 id="dependencies">Dependencies</h1>
+
+<p>The HyperBatch application should include <code>hadoop-openstack</code> dependency, which can
+be done by including the <code class="language-plaintext highlighter-rouge">hadoop-cloud</code> module for the specific version of hyperbatch used.
+For example, for Maven support, add the following to the <code>pom.xml</code> file:</p>
+
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependencyManagement&gt;</span>
+  ...
+  <span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.apache.hyperbatch<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>hadoop-cloud_2.13<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>${hyperbatch.version}<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;/dependency&gt;</span>
+  ...
+<span class="nt">&lt;/dependencyManagement&gt;</span></code></pre></figure>
+
+<h1 id="configuration-parameters">Configuration Parameters</h1>
+
+<p>Create <code>core-site.xml</code> and place it inside HyperBatch’s <code>conf</code> directory.
+The main category of parameters that should be configured is the authentication parameters
+required by Keystone.</p>
+
+<p>The following table contains a list of Keystone mandatory parameters. <code>PROVIDER</code> can be
+any (alphanumeric) name.</p>
+
+<div class="table-container"><table>
+<thead><tr><th>Property Name</th><th>Meaning</th><th>Required</th></tr></thead>
+<tbody><tr>
+  <td><code>fs.swift.service.PROVIDER.auth.url</code></td>
+  <td>Keystone Authentication URL</td>
+  <td>Mandatory</td>
+</tr>
+<tr>
+  <td><code>fs.swift.service.PROVIDER.auth.endpoint.prefix</code></td>
+  <td>Keystone endpoints prefix</td>
+  <td>Optional</td>
+</tr>
+<tr>
+  <td><code>fs.swift.service.PROVIDER.tenant</code></td>
+  <td>Tenant</td>
+  <td>Mandatory</td>
+</tr>
+<tr>
+  <td><code>fs.swift.service.PROVIDER.username</code></td>
+  <td>Username</td>
+  <td>Mandatory</td>
+</tr>
+<tr>
+  <td><code>fs.swift.service.PROVIDER.password</code></td>
+  <td>Password</td>
+  <td>Mandatory</td>
+</tr>
+<tr>
+  <td><code>fs.swift.service.PROVIDER.http.port</code></td>
+  <td>HTTP port</td>
+  <td>Mandatory</td>
+</tr>
+<tr>
+  <td><code>fs.swift.service.PROVIDER.region</code></td>
+  <td>Keystone region</td>
+  <td>Mandatory</td>
+</tr>
+<tr>
+  <td><code>fs.swift.service.PROVIDER.public</code></td>
+  <td>Indicates whether to use the public (off cloud) or private (in cloud; no transfer fees) endpoints</td>
+  <td>Mandatory</td>
+</tr>
+</tbody></table></div>
+
+<p>For example, assume <code>PROVIDER=HyperBatchTest</code> and Keystone contains user <code>tester</code> with password <code>testing</code>
+defined for tenant <code>test</code>. Then <code>core-site.xml</code> should include:</p>
+
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;configuration&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>fs.swift.service.HyperBatchTest.auth.url<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>http://127.0.0.1:5000/v2.0/tokens<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>fs.swift.service.HyperBatchTest.auth.endpoint.prefix<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>endpoints<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>fs.swift.service.HyperBatchTest.http.port<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>8080<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>fs.swift.service.HyperBatchTest.region<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>RegionOne<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>fs.swift.service.HyperBatchTest.public<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>true<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>fs.swift.service.HyperBatchTest.tenant<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>test<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>fs.swift.service.HyperBatchTest.username<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>tester<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>fs.swift.service.HyperBatchTest.password<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>testing<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span></code></pre></figure>
+
+<p>Notice that
+<code>fs.swift.service.PROVIDER.tenant</code>,
+<code>fs.swift.service.PROVIDER.username</code>,
+<code>fs.swift.service.PROVIDER.password</code> contains sensitive information and keeping them in
+<code>core-site.xml</code> is not always a good approach.
+We suggest to keep those parameters in <code>core-site.xml</code> for testing purposes when running HyperBatch
+via <code>hyperbatch-shell</code>.
+For job submissions they should be provided via <code>hyperbatchContext.hadoopConfiguration</code>.</p>
+
+                </div>
+            
+             <!-- /container -->
+        </div>
+
+        
+        
+
+        
+        
+
+        
+        
+
+        <!-- MathJax Section -->
+        
+        
+    
+
+
+</div>
+<script src="search.js"></script>
+</body>
+</html>

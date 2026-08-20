@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Testing PyHyperBatch — HyperBatch</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="testing-pyhyperbatch">
+<h1>Testing PyHyperBatch<a class="headerlink" href="#testing-pyhyperbatch" title="Permalink to this headline">#</a></h1>
+<p>In order to run PyHyperBatch tests, you should build HyperBatch itself first via Maven or SBT. For example,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>build/mvn<span class="w"> </span>-DskipTests<span class="w"> </span>clean<span class="w"> </span>package
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>build/sbt<span class="w"> </span>-Phive<span class="w"> </span>clean<span class="w"> </span>package
+</pre></div>
+</div>
+<p>After that, the PyHyperBatch test cases can be run via using <code class="docutils literal notranslate"><span class="pre">python/run-tests</span></code>. For example,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python/run-tests<span class="w"> </span>--python-executable<span class="o">=</span>python3
+</pre></div>
+</div>
+<p>Note that you may set <code class="docutils literal notranslate"><span class="pre">OBJC_DISABLE_INITIALIZE_FORK_SAFETY</span></code> environment variable to <code class="docutils literal notranslate"><span class="pre">YES</span></code> if you are running tests on Mac OS.</p>
+<p>Please see the guidance on how to <a class="reference external" href="https://spark.apache.org/docs/4.2.0/building-spark.html">Building HyperBatch</a>,
+<a class="reference external" href="https://spark.apache.org/developer-tools.html">run tests for a module, or individual tests</a>.</p>
+<section id="running-individual-pyhyperbatch-tests">
+<h2>Running Individual PyHyperBatch Tests<a class="headerlink" href="#running-individual-pyhyperbatch-tests" title="Permalink to this headline">#</a></h2>
+<p>You can run a specific test via using <code class="docutils literal notranslate"><span class="pre">python/run-tests</span></code>, for example, as below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python/run-tests<span class="w"> </span>--testnames<span class="w"> </span>pyhyperbatch.sql.tests.test_arrow
+</pre></div>
+</div>
+<p>Please refer to <a class="reference external" href="https://spark.apache.org/developer-tools.html">Testing PyHyperBatch</a> for more details.</p>
+</section>
+<section id="breakpoint-support-in-pyhyperbatch-tests">
+<h2><code class="docutils literal notranslate"><span class="pre">breakpoint()</span></code> Support in PyHyperBatch Tests<a class="headerlink" href="#breakpoint-support-in-pyhyperbatch-tests" title="Permalink to this headline">#</a></h2>
+<p>To debug a certain test, you can add <code class="docutils literal notranslate"><span class="pre">breakpoint()</span></code> in the test code, and run the test with
+<code class="docutils literal notranslate"><span class="pre">python/run-tests</span></code> as usual. The script will stop at the <code class="docutils literal notranslate"><span class="pre">breakpoint()</span></code> line and open an
+interactive <code class="docutils literal notranslate"><span class="pre">pdb</span></code> debugging session.</p>
+</section>
+<section id="running-tests-using-github-actions">
+<h2>Running Tests using GitHub Actions<a class="headerlink" href="#running-tests-using-github-actions" title="Permalink to this headline">#</a></h2>
+<p>You can run the full PyHyperBatch tests by using GitHub Actions in your own forked GitHub
+repository with a few clicks. Please refer to
+<a class="reference external" href="https://spark.apache.org/developer-tools.html">Running tests in your forked repository using GitHub Actions</a> for more details.</p>
+</section>
+<section id="running-tests-for-hyperbatch-connect">
+<h2>Running Tests for HyperBatch Connect<a class="headerlink" href="#running-tests-for-hyperbatch-connect" title="Permalink to this headline">#</a></h2>
+<section id="running-tests-for-python-client">
+<h3>Running Tests for Python Client<a class="headerlink" href="#running-tests-for-python-client" title="Permalink to this headline">#</a></h3>
+<p>In order to test the changes in Protobuf definitions, for example, at
+<a class="reference external" href="https://github.com/apache/spark/tree/master/sql/connect/common/src/main/protobuf/spark/connect">hyperbatch/sql/connect/common/src/main/protobuf/hyperbatch/connect</a>,
+you should regenerate Python Protobuf client first by running <code class="docutils literal notranslate"><span class="pre">dev/connect-gen-protos.sh</span></code>.</p>
+</section>
+<section id="running-pyhyperbatch-shell-with-python-client">
+<h3>Running PyHyperBatch Shell with Python Client<a class="headerlink" href="#running-pyhyperbatch-shell-with-python-client" title="Permalink to this headline">#</a></h3>
+<p>The command below starts HyperBatch Connect server automatically locally, and creates a HyperBatch Connect client connected to the server.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bin/pyhyperbatch<span class="w"> </span>--remote<span class="w"> </span><span class="s2">"local[*]"</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/development/testing.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

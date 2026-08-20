@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pandas API on HyperBatch — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="pandas-api-on-hyperbatch">
+<h1>Pandas API on HyperBatch<a class="headerlink" href="#pandas-api-on-hyperbatch" title="Permalink to this headline">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="options.html">Options and settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="options.html#getting-and-setting-options">Getting and setting options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html#operations-on-different-dataframes">Operations on different DataFrames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html#default-index-type">Default Index type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html#available-options">Available options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pandas_pyhyperbatch.html">From/to pandas and PyHyperBatch DataFrames</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pandas_pyhyperbatch.html#pandas">pandas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pandas_pyhyperbatch.html#pyhyperbatch">PyHyperBatch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transform_apply.html">Transform and apply a function</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="transform_apply.html#transform-and-apply"><code class="docutils literal notranslate"><span class="pre">transform</span></code> and <code class="docutils literal notranslate"><span class="pre">apply</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="transform_apply.html#pandas-on-hyperbatch-transform-batch-and-pandas-on-hyperbatch-apply-batch"><code class="docutils literal notranslate"><span class="pre">pandas_on_hyperbatch.transform_batch</span></code> and <code class="docutils literal notranslate"><span class="pre">pandas_on_hyperbatch.apply_batch</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="types.html">Type Support in Pandas API on HyperBatch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="types.html#type-casting-between-pyhyperbatch-and-pandas-api-on-hyperbatch">Type casting between PyHyperBatch and pandas API on HyperBatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#type-casting-between-pandas-and-pandas-api-on-hyperbatch">Type casting between pandas and pandas API on HyperBatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html#internal-type-mapping">Internal type mapping</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="typehints.html">Type Hints in Pandas API on HyperBatch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typehints.html#pandas-on-hyperbatch-dataframe-and-pandas-dataframe">pandas-on-HyperBatch DataFrame and Pandas DataFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typehints.html#type-hinting-with-names">Type Hinting with Names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typehints.html#type-hinting-with-index">Type Hinting with Index</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="from_to_dbms.html">From/to other DBMSes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="from_to_dbms.html#reading-and-writing-dataframes">Reading and writing DataFrames</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="best_practices.html">Best Practices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#leverage-pyhyperbatch-apis">Leverage PyHyperBatch APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#check-execution-plans">Check execution plans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#use-checkpoint">Use checkpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#avoid-shuffling">Avoid shuffling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#avoid-computation-on-single-partition">Avoid computation on single partition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#avoid-reserved-column-names">Avoid reserved column names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#do-not-use-duplicated-column-names">Do not use duplicated column names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#specify-the-index-column-in-conversion-from-hyperbatch-dataframe-to-pandas-on-hyperbatch-dataframe">Specify the index column in conversion from HyperBatch DataFrame to pandas-on-HyperBatch DataFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#use-distributed-or-distributed-sequence-default-index">Use <code class="docutils literal notranslate"><span class="pre">distributed</span></code> or <code class="docutils literal notranslate"><span class="pre">distributed-sequence</span></code> default index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#handling-index-misalignment-with-distributed-sequence">Handling index misalignment with <code class="docutils literal notranslate"><span class="pre">distributed-sequence</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#reduce-the-operations-on-different-dataframe-series">Reduce the operations on different DataFrame/Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#use-pandas-api-on-hyperbatch-directly-whenever-possible">Use pandas API on HyperBatch directly whenever possible</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supported_pandas_api.html">Supported pandas API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#categoricalindex-api">CategoricalIndex API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#dataframe-api">DataFrame API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#datetimeindex-api">DatetimeIndex API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#index-api">Index API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#multiindex-api">MultiIndex API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#series-api">Series API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#timedeltaindex-api">TimedeltaIndex API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#general-function-api">General Function API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#expanding-api">Expanding API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#expandinggroupby-api">ExpandingGroupby API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#rolling-api">Rolling API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#rollinggroupby-api">RollingGroupby API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#window-api">Window API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#dataframegroupby-api">DataFrameGroupBy API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#groupby-api">GroupBy API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="supported_pandas_api.html#seriesgroupby-api">SeriesGroupBy API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#should-i-use-pyhyperbatch-s-dataframe-api-or-pandas-api-on-hyperbatch">Should I use PyHyperBatch’s DataFrame API or pandas API on HyperBatch?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#does-pandas-api-on-hyperbatch-support-structured-streaming">Does pandas API on HyperBatch support Structured Streaming?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-is-pandas-api-on-hyperbatch-different-from-dask">How is pandas API on HyperBatch different from Dask?</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/pandas_on_spark/index.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

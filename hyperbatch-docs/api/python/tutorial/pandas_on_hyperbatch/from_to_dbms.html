@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>From/to other DBMSes — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="from-to-other-dbmses">
+<h1>From/to other DBMSes<a class="headerlink" href="#from-to-other-dbmses" title="Permalink to this headline">#</a></h1>
+<p>The APIs interacting with other DBMSes in pandas API on HyperBatch are slightly different from the ones in pandas
+because pandas API on HyperBatch leverages JDBC APIs in PyHyperBatch to read and write from/to other DBMSes.</p>
+<p>The APIs to read/write from/to external DBMSes are as follows:</p>
+<div class="table-container"><table class="autosummary longtable table autosummary">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.read_sql_table.html#pyspark.pandas.read_sql_table" title="pyspark.pandas.read_sql_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sql_table</span></code></a>(table_name,&nbsp;con[,&nbsp;schema,&nbsp;...])</p></td>
+<td><p>Read SQL database table into a DataFrame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.read_sql_query.html#pyspark.pandas.read_sql_query" title="pyspark.pandas.read_sql_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sql_query</span></code></a>(sql,&nbsp;con[,&nbsp;index_col])</p></td>
+<td><p>Read SQL query into a DataFrame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.read_sql.html#pyspark.pandas.read_sql" title="pyspark.pandas.read_sql"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_sql</span></code></a>(sql,&nbsp;con[,&nbsp;index_col,&nbsp;columns])</p></td>
+<td><p>Read SQL query or database table into a DataFrame.</p></td>
+</tr>
+</tbody>
+</table></div>
+<p>pandas-on-HyperBatch needs a canonical JDBC URL for <code class="docutils literal notranslate"><span class="pre">con</span></code>, and is able to take extra keyword arguments for <a class="reference external" href="../../../../sql-data-sources-jdbc.html">the options in PyHyperBatch JDBC APIs</a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ps</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">dbtable</span><span class="o">=</span><span class="s2">"..."</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">keytab</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="reading-and-writing-dataframes">
+<h2>Reading and writing DataFrames<a class="headerlink" href="#reading-and-writing-dataframes" title="Permalink to this headline">#</a></h2>
+<p>In the example below, you will read and write a table in SQLite.</p>
+<p>Firstly, create the <code class="docutils literal notranslate"><span class="pre">example</span></code> database as below via Python’s SQLite library. This will be read to pandas-on-HyperBatch later:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+
+<span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">'example.db'</span><span class="p">)</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="c1"># Create table</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">'''CREATE TABLE stocks</span>
+<span class="sd">       (date text, trans text, symbol text, qty real, price real)'''</span><span class="p">)</span>
+<span class="c1"># Insert a row of data</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)"</span><span class="p">)</span>
+<span class="c1"># Save (commit) the changes</span>
+<span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="n">con</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Pandas API on HyperBatch requires a JDBC driver to read so it requires the driver for your particular database to be on the HyperBatch’s classpath. For SQLite JDBC driver, you can download it, for example, as below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-O<span class="w"> </span>https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.34.0/sqlite-jdbc-3.34.0.jar
+</pre></div>
+</div>
+<p>After that, you should add it into your HyperBatch session first. Once you add it, pandas API on HyperBatch will automatically detect the HyperBatch session and leverage it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">HyperBatchSession</span>
+
+<span class="p">(</span><span class="n">HyperBatchSession</span><span class="o">.</span><span class="n">builder</span>
+    <span class="o">.</span><span class="n">master</span><span class="p">(</span><span class="s2">"local"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">"SQLite JDBC"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span>
+        <span class="s2">"hyperbatch.jars"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">{}</span><span class="s2">/sqlite-jdbc-3.34.0.jar"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span>
+        <span class="s2">"hyperbatch.driver.extraClassPath"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">{}</span><span class="s2">/sqlite-jdbc-3.34.0.jar"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Now, you’re ready to read the table:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s2">"stocks"</span><span class="p">,</span> <span class="n">con</span><span class="o">=</span><span class="s2">"jdbc:sqlite:</span><span class="si">{}</span><span class="s2">/example.db"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
+<span class="n">df</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>         date trans symbol    qty  price
+0  2006-01-05   BUY   RHAT  100.0  35.14
+</pre></div>
+</div>
+<p>You can also write it back to the <code class="docutils literal notranslate"><span class="pre">stocks</span></code> table as below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">price</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">df</span><span class="o">.</span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">to_hyperbatch_io</span><span class="p">(</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">"jdbc"</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"append"</span><span class="p">,</span>
+    <span class="n">dbtable</span><span class="o">=</span><span class="s2">"stocks"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">"jdbc:sqlite:</span><span class="si">{}</span><span class="s2">/example.db"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s2">"stocks"</span><span class="p">,</span> <span class="n">con</span><span class="o">=</span><span class="s2">"jdbc:sqlite:</span><span class="si">{}</span><span class="s2">/example.db"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>         date trans symbol    qty  price
+0  2006-01-05   BUY   RHAT  100.0  35.14
+1  2006-01-05   BUY   RHAT  100.0  36.14
+</pre></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/pandas_on_spark/from_to_dbms.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vectorized Python User-defined Table Functions (UDTFs) — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="vectorized-python-user-defined-table-functions-udtfs">
+<h1>Vectorized Python User-defined Table Functions (UDTFs)<a class="headerlink" href="#vectorized-python-user-defined-table-functions-udtfs" title="Permalink to this headline">#</a></h1>
+<p>HyperBatch 4.1 introduces the Vectorized Python user-defined table function (UDTF), a new type of user-defined table-valued function.
+It can be used via the <code class="docutils literal notranslate"><span class="pre">@arrow_udtf</span></code> decorator.
+Unlike scalar functions that return a single result value from each call, each UDTF is invoked in
+the <code class="docutils literal notranslate"><span class="pre">FROM</span></code> clause of a query and returns an entire table as output.
+Unlike the traditional Python UDTF that evaluates row by row, the Vectorized Python UDTF lets you directly operate on top of Apache Arrow arrays and column batches.
+This allows you to leverage vectorized operations and improve the performance of your UDTF.</p>
+<section id="vectorized-python-udtf-interface">
+<h2>Vectorized Python UDTF Interface<a class="headerlink" href="#vectorized-python-udtf-interface" title="Permalink to this headline">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">NameYourArrowPythonUDTF</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Initializes the user-defined table function (UDTF). This is optional.</span>
+
+<span class="sd">        This method serves as the default constructor and is called once when the</span>
+<span class="sd">        UDTF is instantiated on the executor side.</span>
+
+<span class="sd">        Any class fields assigned in this method will be available for subsequent</span>
+<span class="sd">        calls to the `eval`, `terminate` and `cleanup` methods.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - You cannot create or reference the HyperBatch session within the UDTF. Any</span>
+<span class="sd">          attempt to do so will result in a serialization error.</span>
+<span class="sd">        """</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span> <span class="o">|</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Evaluates the function using the given input arguments.</span>
+
+<span class="sd">        This method is required and must be implemented.</span>
+
+<span class="sd">        Argument Mapping:</span>
+<span class="sd">        - Each provided scalar expression maps to exactly one value in the</span>
+<span class="sd">          `*args` list with type `pa.Array`.</span>
+<span class="sd">        - Each provided table argument maps to a `pa.RecordBatch` object containing</span>
+<span class="sd">          the columns in the order they appear in the provided input table,</span>
+<span class="sd">          and with the names computed by the query analyzer.</span>
+
+<span class="sd">        This method is called on every batch of input rows, and can produce zero or more</span>
+<span class="sd">        output pyarrow record batches or pyarrow tables. Each element in the output tuple</span>
+<span class="sd">        corresponds to one column specified in the return type of the UDTF.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *args : Any</span>
+<span class="sd">            Arbitrary positional arguments representing the input to the UDTF.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        iterator</span>
+<span class="sd">            An iterator of `pa.RecordBatch` or `pa.Table` objects representing a batch of rows</span>
+<span class="sd">            in the UDTF result table. Yield as many times as needed to produce multiple batches.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - UDTFs can instead accept keyword arguments during the function call if needed.</span>
+<span class="sd">        - The `eval` method can raise a `SkipRestOfInputTableException` to indicate that the</span>
+<span class="sd">          UDTF wants to skip consuming all remaining rows from the current partition of the</span>
+<span class="sd">          input table. This will cause the UDTF to proceed directly to the `terminate` method.</span>
+<span class="sd">        - The `eval` method can raise any other exception to indicate that the UDTF should be</span>
+<span class="sd">          aborted entirely. This will cause the UDTF to skip the `terminate` method and proceed</span>
+<span class="sd">          directly to the `cleanup` method, and then the exception will be propagated to the</span>
+<span class="sd">          query processor causing the invoking query to fail.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        This `eval` method takes a table argument and returns an arrow record batch for each input batch.</span>
+
+<span class="sd">        &gt;&gt;&gt; def eval(self, batch: pa.RecordBatch):</span>
+<span class="sd">        ...     yield batch</span>
+
+<span class="sd">        This `eval` method takes a table argument and returns a pyarrow table for each input batch.</span>
+
+<span class="sd">        &gt;&gt;&gt; def eval(self, batch: pa.RecordBatch):</span>
+<span class="sd">        ...     yield pa.table({"x": batch.column(0), "y": batch.column(1)})</span>
+
+<span class="sd">        This `eval` method takes both table and scalar arguments and returns a pyarrow table for each input batch.</span>
+
+<span class="sd">        &gt;&gt;&gt; def eval(self, batch: pa.RecordBatch, x: pa.Array):</span>
+<span class="sd">        ...     yield pa.table({"x": x, "y": batch.column(0)})</span>
+<span class="sd">        """</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span> <span class="o">|</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Called when the UDTF has successfully processed all input rows.</span>
+
+<span class="sd">        This method is optional to implement and is useful for performing any</span>
+<span class="sd">        finalization operations after the UDTF has finished processing</span>
+<span class="sd">        all rows. It can also be used to yield additional rows if needed.</span>
+<span class="sd">        Table functions that consume all rows in the entire input partition</span>
+<span class="sd">        and then compute and return the entire output table can do so from</span>
+<span class="sd">        this method as well (please be mindful of memory usage when doing</span>
+<span class="sd">        this).</span>
+
+<span class="sd">        If any exceptions occur during input row processing, this method</span>
+<span class="sd">        won't be called.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        iterator</span>
+<span class="sd">            An iterator of `pa.RecordBatch` or `pa.Table` objects representing a batch of rows</span>
+<span class="sd">            in the UDTF result table. Yield as many times as needed to produce multiple batches.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; def terminate(self) -&gt; Iterator[pa.RecordBatch | pa.Table]:</span>
+<span class="sd">        &gt;&gt;&gt;     yield pa.table({"x": pa.array([1, 2, 3])})</span>
+<span class="sd">        """</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Invoked after the UDTF completes processing input rows.</span>
+
+<span class="sd">        This method is optional to implement and is useful for final cleanup</span>
+<span class="sd">        regardless of whether the UDTF processed all input rows successfully</span>
+<span class="sd">        or was aborted due to exceptions.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; def cleanup(self) -&gt; None:</span>
+<span class="sd">        &gt;&gt;&gt;     self.conn.close()</span>
+<span class="sd">        """</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="defining-the-output-schema">
+<h2>Defining the Output Schema<a class="headerlink" href="#defining-the-output-schema" title="Permalink to this headline">#</a></h2>
+<p>The return type of the UDTF defines the schema of the table it outputs.
+You can specify it in the <code class="docutils literal notranslate"><span class="pre">@arrow_udtf</span></code> decorator.</p>
+<p>It must be either a <code class="docutils literal notranslate"><span class="pre">StructType</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="n">StructType</span><span class="p">()</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"c1"</span><span class="p">,</span> <span class="n">StringType</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"c2"</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">()))</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YourArrowPythonUDTF</span><span class="p">:</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>or a DDL string representing a struct type:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"c1 string, c2 int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YourArrowPythonUDTF</span><span class="p">:</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="emitting-output-rows">
+<h2>Emitting Output Rows<a class="headerlink" href="#emitting-output-rows" title="Permalink to this headline">#</a></h2>
+<p>The <cite>eval</cite> and <cite>terminate</cite> methods then emit zero or more output batches conforming to this schema by
+yielding <code class="docutils literal notranslate"><span class="pre">pa.RecordBatch</span></code> or <code class="docutils literal notranslate"><span class="pre">pa.Table</span></code> objects.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"c1 int, c2 int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YourArrowPythonUDTF</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span><span class="s2">"c1"</span><span class="p">:</span> <span class="n">batch</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s2">"c2"</span><span class="p">:</span> <span class="n">batch</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="mi">1</span><span class="p">)})</span>
+</pre></div>
+</div>
+<p>You can also yield multiple pyarrow tables in the <cite>eval</cite> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"c1 int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YourArrowPythonUDTF</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span><span class="s2">"c1"</span><span class="p">:</span> <span class="n">batch</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="mi">0</span><span class="p">)})</span>
+        <span class="k">yield</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span><span class="s2">"c1"</span><span class="p">:</span> <span class="n">batch</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="mi">1</span><span class="p">)})</span>
+</pre></div>
+</div>
+<p>You can also yield multiple pyarrow record batches in the <cite>eval</cite> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"c1 int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">YourArrowPythonUDTF</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span><span class="p">):</span>
+        <span class="n">new_batch</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">record_batch</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">"c1"</span><span class="p">:</span> <span class="n">batch</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)})</span>
+        <span class="k">yield</span> <span class="n">new_batch</span>
+</pre></div>
+</div>
+</section>
+<section id="usage-examples">
+<h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">#</a></h2>
+<p>Here’s how to use these UDTFs in DataFrame:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udtf</span>
+
+<span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"c1 string"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyArrowPythonUDTF</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span><span class="s2">"c1"</span><span class="p">:</span> <span class="n">batch</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)})</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">selectExpr</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"cast(id as string) as value"</span><span class="p">)</span>
+<span class="n">MyArrowPythonUDTF</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">asTable</span><span class="p">())</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># Result:</span>
+<span class="c1"># +---+</span>
+<span class="c1"># | c1|</span>
+<span class="c1"># +---+</span>
+<span class="c1"># |  0|</span>
+<span class="c1"># |  1|</span>
+<span class="c1"># |  2|</span>
+<span class="c1"># |  3|</span>
+<span class="c1"># |  4|</span>
+<span class="c1"># |  5|</span>
+<span class="c1"># |  6|</span>
+<span class="c1"># |  7|</span>
+<span class="c1"># |  8|</span>
+<span class="c1"># |  9|</span>
+<span class="c1"># +---+</span>
+
+<span class="c1"># Register the UDTF</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">udtf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">"my_arrow_udtf"</span><span class="p">,</span> <span class="n">MyArrowPythonUDTF</span><span class="p">)</span>
+
+<span class="c1"># Use in SQL queries</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"""</span>
+<span class="s2">    SELECT * FROM my_arrow_udtf(TABLE(SELECT id, cast(id as string) as value FROM range(10)))</span>
+<span class="s2">"""</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="table-argument">
+<h2>TABLE Argument<a class="headerlink" href="#table-argument" title="Permalink to this headline">#</a></h2>
+<p>Arrow UDTFs can take a TABLE argument. When your UDTF receives a TABLE argument,
+its <code class="docutils literal notranslate"><span class="pre">eval</span></code> method is called with a <code class="docutils literal notranslate"><span class="pre">pyarrow.RecordBatch</span></code> containing the input
+table’s columns, and any additional scalar/struct expressions are passed as
+<code class="docutils literal notranslate"><span class="pre">pyarrow.Array</span></code> values.</p>
+<p>Key points:
+- The TABLE argument is a single <code class="docutils literal notranslate"><span class="pre">pa.RecordBatch</span></code>; access columns by name or index.
+- Scalar arguments (including structs) are <code class="docutils literal notranslate"><span class="pre">pa.Array</span></code> values, not <code class="docutils literal notranslate"><span class="pre">RecordBatch</span></code>.
+- Named and positional arguments are both supported in SQL.</p>
+<p>Example (DataFrame API):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.compute</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udtf</span><span class="p">,</span> <span class="n">SkipRestOfInputTableException</span>
+
+<span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"value int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EchoTable</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+        <span class="c1"># Return the input column named "value" as-is</span>
+        <span class="k">yield</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span><span class="s2">"value"</span><span class="p">:</span> <span class="n">batch</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)})</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">selectExpr</span><span class="p">(</span><span class="s2">"id as value"</span><span class="p">)</span>
+<span class="n">EchoTable</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">asTable</span><span class="p">())</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Result:</span>
+<span class="c1"># +-----+</span>
+<span class="c1"># |value|</span>
+<span class="c1"># +-----+</span>
+<span class="c1"># |    0|</span>
+<span class="c1"># |    1|</span>
+<span class="c1"># |    2|</span>
+<span class="c1"># |    3|</span>
+<span class="c1"># |    4|</span>
+<span class="c1"># +-----+</span>
+</pre></div>
+</div>
+<p>Example (SQL): TABLE plus a scalar threshold</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.compute</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udtf</span>
+
+<span class="c1"># Keep rows with value &gt; threshold; works with SQL using TABLE + scalar argument</span>
+<span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"partition_key int, value int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ThresholdFilter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+        <span class="n">tbl</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="n">thr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">threshold</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">as_py</span><span class="p">())</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">greater</span><span class="p">(</span><span class="n">tbl</span><span class="p">[</span><span class="s2">"value"</span><span class="p">],</span> <span class="n">thr</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">tbl</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">udtf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">"threshold_filter"</span><span class="p">,</span> <span class="n">ThresholdFilter</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)],</span> <span class="s2">"partition_key int, value int"</span><span class="p">)</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">"v"</span><span class="p">)</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    SELECT *</span>
+<span class="sd">    FROM threshold_filter(</span>
+<span class="sd">      TABLE(v),</span>
+<span class="sd">      10</span>
+<span class="sd">    )</span>
+<span class="sd">    ORDER BY partition_key, value</span>
+<span class="sd">    """</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Result:</span>
+<span class="c1"># +-------------+-----+</span>
+<span class="c1"># |partition_key|value|</span>
+<span class="c1"># +-------------+-----+</span>
+<span class="c1"># |            1|   30|</span>
+<span class="c1"># +-------------+-----+</span>
+</pre></div>
+</div>
+</section>
+<section id="partition-by-and-order-by">
+<h2>PARTITION BY and ORDER BY<a class="headerlink" href="#partition-by-and-order-by" title="Permalink to this headline">#</a></h2>
+<p>Arrow UDTFs support <code class="docutils literal notranslate"><span class="pre">TABLE(...)</span> <span class="pre">PARTITION</span> <span class="pre">BY</span> <span class="pre">...</span> <span class="pre">ORDER</span> <span class="pre">BY</span> <span class="pre">...</span></code>. Think of it as
+“process rows group by group, and in a specific order within each group”.</p>
+<p>Semantics:</p>
+<ul class="simple">
+<li><p>PARTITION BY groups rows by the given keys; your UDTF runs for each group independently.</p></li>
+<li><p>ORDER BY controls the row order within each group as seen by <code class="docutils literal notranslate"><span class="pre">eval</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eval</span></code> may be called multiple times per group; accumulate state and typically emit the group’s result in <code class="docutils literal notranslate"><span class="pre">terminate</span></code>.</p></li>
+</ul>
+<section id="example-aggregation-per-key-with-terminate">
+<h3>Example: Aggregation per key with terminate<a class="headerlink" href="#example-aggregation-per-key-with-terminate" title="Permalink to this headline">#</a></h3>
+<p>PARTITION BY is especially useful for per-group aggregation. <code class="docutils literal notranslate"><span class="pre">eval</span></code> may be called
+multiple times for the same group as rows arrive in batches, so keep running totals in
+the UDTF instance and emit the final row in <code class="docutils literal notranslate"><span class="pre">terminate</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.compute</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udtf</span>
+
+<span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"user_id int, total_amount int, rows int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SumPerUser</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_user</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+        <span class="n">tbl</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="c1"># All rows in this batch belong to the same user within a partition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_user</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">tbl</span><span class="p">[</span><span class="s2">"user_id"</span><span class="p">])</span><span class="o">.</span><span class="n">to_pylist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sum</span> <span class="o">+=</span> <span class="n">pc</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tbl</span><span class="p">[</span><span class="s2">"amount"</span><span class="p">])</span><span class="o">.</span><span class="n">as_py</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">+=</span> <span class="n">tbl</span><span class="o">.</span><span class="n">num_rows</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(())</span>  <span class="c1"># emit once in terminate</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span>
+                <span class="s2">"user_id"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span>
+                <span class="s2">"total_amount"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_sum</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span>
+                <span class="s2">"rows"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_count</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span>
+            <span class="p">})</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">udtf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">"sum_per_user"</span><span class="p">,</span> <span class="n">SumPerUser</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">)],</span>
+    <span class="s2">"user_id int, amount int"</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">"purchases"</span><span class="p">)</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    SELECT *</span>
+<span class="sd">    FROM sum_per_user(</span>
+<span class="sd">      TABLE(purchases)</span>
+<span class="sd">      PARTITION BY user_id</span>
+<span class="sd">    )</span>
+<span class="sd">    ORDER BY user_id</span>
+<span class="sd">    """</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Result:</span>
+<span class="c1"># +-------+------------+----+</span>
+<span class="c1"># |user_id|total_amount|rows|</span>
+<span class="c1"># +-------+------------+----+</span>
+<span class="c1"># |      1|          30|   2|</span>
+<span class="c1"># |      2|          20|   2|</span>
+<span class="c1"># |      3|           7|   1|</span>
+<span class="c1"># +-------+------------+----+</span>
+</pre></div>
+</div>
+<p>Why terminate? <code class="docutils literal notranslate"><span class="pre">eval</span></code> may run multiple times per group if the input is split into
+several batches. Emitting the aggregated row in <code class="docutils literal notranslate"><span class="pre">terminate</span></code> guarantees exactly one
+output row per group after all its rows have been processed.</p>
+</section>
+<section id="example-top-reviews-per-product-using-order-by">
+<h3>Example: Top reviews per product using ORDER BY<a class="headerlink" href="#example-top-reviews-per-product-using-order-by" title="Permalink to this headline">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.compute</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udtf</span><span class="p">,</span> <span class="n">SkipRestOfInputTableException</span>
+
+<span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"product_id int, review_id int, rating int, review string"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TopReviewsPerProduct</span><span class="p">:</span>
+    <span class="n">TOP_K</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_product</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seen</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_batches</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_top</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+        <span class="n">tbl</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tbl</span><span class="o">.</span><span class="n">num_rows</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">iter</span><span class="p">(())</span>
+
+        <span class="n">products</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">tbl</span><span class="p">[</span><span class="s2">"product_id"</span><span class="p">])</span><span class="o">.</span><span class="n">to_pylist</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">products</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Expected one product per batch, saw </span><span class="si">{</span><span class="n">products</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">product</span> <span class="o">=</span> <span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_product</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_product</span> <span class="o">=</span> <span class="n">product</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_product</span> <span class="o">==</span> <span class="n">product</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Mixed products </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_product</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">product</span><span class="si">}</span><span class="s2">"</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_batches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tbl</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seen</span> <span class="o">+=</span> <span class="n">tbl</span><span class="o">.</span><span class="n">num_rows</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seen</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOP_K</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_top</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">combined</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">concat_tables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_batches</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_top</span> <span class="o">=</span> <span class="n">combined</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOP_K</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SkipRestOfInputTableException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Collected top </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">TOP_K</span><span class="si">}</span><span class="s2"> reviews for product </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_product</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_product</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">iter</span><span class="p">(())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_top</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">combined</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">concat_tables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_batches</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_batches</span> <span class="k">else</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({})</span>
+            <span class="n">limit</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TOP_K</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seen</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_top</span> <span class="o">=</span> <span class="n">combined</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_top</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">udtf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">"top_reviews_per_product"</span><span class="p">,</span> <span class="n">TopReviewsPerProduct</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">"Amazing battery life"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">"Still great after a month"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">"Solid build"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"Average sound"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">202</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">"My go-to lens"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">202</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">"Sharp and bright"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">202</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">"Great value"</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="s2">"product_id int, review_id int, rating int, review string"</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">"reviews"</span><span class="p">)</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    SELECT *</span>
+<span class="sd">    FROM top_reviews_per_product(</span>
+<span class="sd">      TABLE(reviews)</span>
+<span class="sd">      PARTITION BY (product_id)</span>
+<span class="sd">      ORDER BY (rating DESC, review_id)</span>
+<span class="sd">    )</span>
+<span class="sd">    ORDER BY product_id, rating DESC, review_id</span>
+<span class="sd">    """</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Result:</span>
+<span class="c1"># +----------+---------+------+--------------------------+</span>
+<span class="c1"># |product_id|review_id|rating|review                    |</span>
+<span class="c1"># +----------+---------+------+--------------------------+</span>
+<span class="c1"># |       101|        1|     5|Amazing battery life      |</span>
+<span class="c1"># |       101|        2|     5|Still great after a month |</span>
+<span class="c1"># |       101|        3|     4|Solid build               |</span>
+<span class="c1"># |       202|        5|     5|My go-to lens             |</span>
+<span class="c1"># |       202|        6|     4|Sharp and bright          |</span>
+<span class="c1"># |       202|        7|     4|Great value               |</span>
+<span class="c1"># +----------+---------+------+--------------------------+</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Stream work from <code class="xref py py-meth docutils literal notranslate"><span class="pre">eval()</span></code> when possible. Yielding one <code class="docutils literal notranslate"><span class="pre">pa.Table</span></code> per Arrow batch keeps
+memory bounded and shortens feedback loops; reserve <code class="xref py py-meth docutils literal notranslate"><span class="pre">terminate()</span></code> for true per-partition
+operations.</p></li>
+<li><p>Keep per-partition state tiny and reset it promptly. If you only need the first <em>N</em> rows, raise
+<code class="xref py py-class docutils literal notranslate"><span class="pre">SkipRestOfInputTableException</span></code> after collecting them so HyperBatch
+skips the rest of the partition.</p></li>
+<li><p>Guard external calls with short timeouts and operate on the current batch instead of deferring to
+<code class="docutils literal notranslate"><span class="pre">terminate</span></code>; this avoids giant buffers and keeps retries narrow.</p></li>
+</ul>
+<section id="when-to-use-arrow-udtfs-vs-other-udtfs">
+<h3>When to use Arrow UDTFs vs Other UDTFs<a class="headerlink" href="#when-to-use-arrow-udtfs-vs-other-udtfs" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>Prefer <code class="docutils literal notranslate"><span class="pre">arrow_udtf</span></code> when the logic is naturally vectorised, you can stay within Python, and the
+input/output schema is Arrow-friendly. You gain batch-friendly
+performance and native interoperability with PyHyperBatch DataFrames.</p></li>
+<li><p>Stick with the classic (row-based) Python UDTF when you only need simple per-row expansion, or when
+your logic depends on Python objects that Arrow cannot represent cleanly.</p></li>
+<li><p>Use SQL UDTFs if the functionality is performance critical and the logic can be represented in SQL.</p></li>
+</ul>
+</section>
+</section>
+<section id="more-examples">
+<h2>More Examples<a class="headerlink" href="#more-examples" title="Permalink to this headline">#</a></h2>
+<section id="example-simple-anomaly-detection-per-device">
+<h3>Example: Simple anomaly detection per device<a class="headerlink" href="#example-simple-anomaly-detection-per-device" title="Permalink to this headline">#</a></h3>
+<p>Compute simple per-device stats and return them from <code class="docutils literal notranslate"><span class="pre">terminate</span></code>; this pattern is
+useful for anomaly detection workflows that first summarize distributions by key.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.compute</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udtf</span>
+
+<span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"device_id int, count int, mean double, stddev double, max_value int"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DeviceStats</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sum</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sumsq</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+        <span class="n">tbl</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">tbl</span><span class="p">[</span><span class="s2">"device_id"</span><span class="p">])</span><span class="o">.</span><span class="n">to_pylist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">tbl</span><span class="p">[</span><span class="s2">"reading"</span><span class="p">]</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sum</span> <span class="o">+=</span> <span class="n">pc</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span><span class="o">.</span><span class="n">as_py</span><span class="p">()</span> <span class="ow">or</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sumsq</span> <span class="o">+=</span> <span class="n">pc</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pc</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">vals</span><span class="p">))</span><span class="o">.</span><span class="n">as_py</span><span class="p">()</span> <span class="ow">or</span> <span class="mf">0.0</span>
+        <span class="n">cur_max</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span><span class="o">.</span><span class="n">as_py</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">=</span> <span class="n">cur_max</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">,</span> <span class="n">cur_max</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sum</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sumsq</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">-</span> <span class="n">mean</span> <span class="o">*</span> <span class="n">mean</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="n">var</span> <span class="o">**</span> <span class="mf">0.5</span>
+            <span class="c1"># Round to 2 decimal places for display</span>
+            <span class="n">mean_rounded</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">std_rounded</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">std</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span>
+                <span class="s2">"device_id"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span>
+                <span class="s2">"count"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_count</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span>
+                <span class="s2">"mean"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mean_rounded</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">()),</span>
+                <span class="s2">"stddev"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">std_rounded</span><span class="p">],</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">()),</span>
+                <span class="s2">"max_value"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">)],</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span>
+            <span class="p">})</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">udtf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">"device_stats"</span><span class="p">,</span> <span class="n">DeviceStats</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">)],</span>
+    <span class="s2">"device_id int, reading int"</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">"readings"</span><span class="p">)</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    SELECT *</span>
+<span class="sd">    FROM device_stats(</span>
+<span class="sd">      TABLE(readings)</span>
+<span class="sd">      PARTITION BY device_id</span>
+<span class="sd">    )</span>
+<span class="sd">    ORDER BY device_id</span>
+<span class="sd">    """</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Result:</span>
+<span class="c1"># +---------+-----+-----+------+---------+</span>
+<span class="c1"># |device_id|count| mean|stddev|max_value|</span>
+<span class="c1"># +---------+-----+-----+------+---------+</span>
+<span class="c1"># |        1|    3|40.67| 41.96|      100|</span>
+<span class="c1"># |        2|    2|  6.0|   1.0|        7|</span>
+<span class="c1"># +---------+-----+-----+------+---------+</span>
+</pre></div>
+</div>
+</section>
+<section id="example-arrow-udtfs-as-rdd-map-style-transforms">
+<h3>Example: Arrow UDTFs as RDD map-style transforms<a class="headerlink" href="#example-arrow-udtfs-as-rdd-map-style-transforms" title="Permalink to this headline">#</a></h3>
+<p>Arrow UDTFs can replace many <code class="docutils literal notranslate"><span class="pre">RDD.map</span></code>/<code class="docutils literal notranslate"><span class="pre">flatMap</span></code>-style transforms with better
+performance and first-class SQL integration. Instead of mapping row-by-row in Python,
+you work on Arrow batches and return a table.</p>
+<p>Example: tokenize text into words (flatMap-like)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.compute</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrow_udtf</span>
+
+<span class="nd">@arrow_udtf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="s2">"doc_id int, word string"</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Tokenize</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">RecordBatch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="p">]:</span>
+        <span class="n">tbl</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="c1"># Split on whitespace; build flat arrays for (doc_id, word)</span>
+        <span class="n">doc_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">words</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">text</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tbl</span><span class="p">[</span><span class="s2">"doc_id"</span><span class="p">]</span><span class="o">.</span><span class="n">to_pylist</span><span class="p">(),</span> <span class="n">tbl</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]</span><span class="o">.</span><span class="n">to_pylist</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="p">(</span><span class="n">text</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+                <span class="n">doc_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span>
+                <span class="n">words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">doc_ids</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">({</span><span class="s2">"doc_id"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span> <span class="s2">"word"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">words</span><span class="p">)})</span>
+
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">udtf</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">"tokenize"</span><span class="p">,</span> <span class="n">Tokenize</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">"hyperbatch is fast"</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">"arrow udtf"</span><span class="p">)],</span> <span class="s2">"doc_id int, text string"</span><span class="p">)</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">"docs"</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s2">"SELECT * FROM tokenize(TABLE(docs)) ORDER BY doc_id, word"</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Result:</span>
+<span class="c1"># +------+-----+</span>
+<span class="c1"># |doc_id| word|</span>
+<span class="c1"># +------+-----+</span>
+<span class="c1"># |     1| fast|</span>
+<span class="c1"># |     1|   is|</span>
+<span class="c1"># |     1|hyperbatch|</span>
+<span class="c1"># |     2|arrow|</span>
+<span class="c1"># |     2| udtf|</span>
+<span class="c1"># +------+-----+</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/sql/arrow_python_udtf.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

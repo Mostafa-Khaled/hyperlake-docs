@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperBatch SQL — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="hyperbatch-sql">
+<h1>HyperBatch SQL<a class="headerlink" href="#hyperbatch-sql" title="Permalink to this headline">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arrow_pandas.html">Apache Arrow in PyHyperBatch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="arrow_pandas.html#ensure-pyarrow-installed">Ensure PyArrow Installed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_pandas.html#conversion-to-from-arrow-table">Conversion to/from Arrow Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_pandas.html#enabling-for-conversion-to-from-pandas">Enabling for Conversion to/from Pandas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_pandas.html#pandas-udfs-a-k-a-vectorized-udfs">Pandas UDFs (a.k.a. Vectorized UDFs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_pandas.html#pandas-function-apis">Pandas Function APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_pandas.html#arrow-python-udfs">Arrow Python UDFs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_pandas.html#usage-notes">Usage Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="arrow_python_udf.html">Arrow Python UDFs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udf.html#native-arrow-udf-types">Native Arrow UDF Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udf.html#arrow-function-apis">Arrow Function APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udf.html#notes">Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udf.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="arrow_python_udtf.html">Vectorized Python User-defined Table Functions (UDTFs)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udtf.html#vectorized-python-udtf-interface">Vectorized Python UDTF Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udtf.html#defining-the-output-schema">Defining the Output Schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udtf.html#emitting-output-rows">Emitting Output Rows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udtf.html#usage-examples">Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udtf.html#table-argument">TABLE Argument</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udtf.html#partition-by-and-order-by">PARTITION BY and ORDER BY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udtf.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow_python_udtf.html#more-examples">More Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="python_udtf.html">Python User-defined Table Functions (UDTFs)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="python_udtf.html#implementing-a-python-udtf">Implementing a Python UDTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_udtf.html#defining-the-output-schema">Defining the Output Schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_udtf.html#emitting-output-rows">Emitting Output Rows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_udtf.html#registering-and-using-python-udtfs-in-sql">Registering and Using Python UDTFs in SQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_udtf.html#arrow-optimization">Arrow Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_udtf.html#udtf-examples-with-scalar-arguments">UDTF Examples with Scalar Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_udtf.html#accepting-an-input-table-argument">Accepting an Input Table Argument</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="python_data_source.html">Python Data Source API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="python_data_source.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_data_source.html#simple-example-data-source-with-batch-reader">Simple Example: Data Source with Batch Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_data_source.html#comprehensive-example-data-source-with-batch-and-streaming-readers-and-writers">Comprehensive Example: Data Source with Batch and Streaming Readers and Writers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_data_source.html#serialization-requirement">Serialization Requirement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_data_source.html#using-a-python-data-source">Using a Python Data Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_data_source.html#python-data-source-reader-with-direct-arrow-batch-support-for-improved-performance">Python Data Source Reader with direct Arrow Batch support for improved performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_data_source.html#usage-notes">Usage Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="type_conversions.html">Python to HyperBatch Type Conversions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="type_conversions.html#browsing-type-conversions">Browsing Type Conversions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type_conversions.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type_conversions.html#all-conversions">All Conversions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type_conversions.html#conversions-in-practice-udfs">Conversions in Practice - UDFs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type_conversions.html#conversions-in-practice-creating-dataframes">Conversions in Practice - Creating DataFrames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type_conversions.html#conversions-in-practice-nested-data-types">Conversions in Practice - Nested Data Types</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/sql/index.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

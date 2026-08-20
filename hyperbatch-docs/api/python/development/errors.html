@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Error classes in PyHyperBatch — HyperBatch</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="error-classes-in-pyhyperbatch">
+<h1>Error classes in PyHyperBatch<a class="headerlink" href="#error-classes-in-pyhyperbatch" title="Permalink to this headline">#</a></h1>
+<p>This is a list of common, named error classes returned by PyHyperBatch which are defined at <a class="reference external" href="https://github.com/apache/spark/blob/master/python/pyspark/errors/error-conditions.json">error-conditions.json</a>.</p>
+<p>When writing PyHyperBatch errors, developers must use an error class from the list. If an appropriate error class is not available, add a new one into the list. For more information, please refer to <a class="reference internal" href="contributing.html#contributing-error-and-exception"><span class="std std-ref">Contributing Error and Exception</span></a>.</p>
+<section id="application-name-not-set">
+<h2>APPLICATION_NAME_NOT_SET<a class="headerlink" href="#application-name-not-set" title="Permalink to this headline">#</a></h2>
+<p>An application name must be set in your configuration.</p>
+</section>
+<section id="argument-required">
+<h2>ARGUMENT_REQUIRED<a class="headerlink" href="#argument-required" title="Permalink to this headline">#</a></h2>
+<p>Argument <cite>&lt;arg_name&gt;</cite> is required when &lt;condition&gt;.</p>
+</section>
+<section id="arrow-legacy-ipc-format">
+<h2>ARROW_LEGACY_IPC_FORMAT<a class="headerlink" href="#arrow-legacy-ipc-format" title="Permalink to this headline">#</a></h2>
+<p>Arrow legacy IPC format is not supported in PyHyperBatch, please unset ARROW_PRE_0_15_IPC_FORMAT.</p>
+</section>
+<section id="attribute-not-callable">
+<h2>ATTRIBUTE_NOT_CALLABLE<a class="headerlink" href="#attribute-not-callable" title="Permalink to this headline">#</a></h2>
+<p>Attribute <cite>&lt;attr_name&gt;</cite> in provided object <cite>&lt;obj_name&gt;</cite> is not callable.</p>
+</section>
+<section id="attribute-not-supported">
+<h2>ATTRIBUTE_NOT_SUPPORTED<a class="headerlink" href="#attribute-not-supported" title="Permalink to this headline">#</a></h2>
+<p>Attribute <cite>&lt;attr_name&gt;</cite> is not supported.</p>
+</section>
+<section id="axis-length-mismatch">
+<h2>AXIS_LENGTH_MISMATCH<a class="headerlink" href="#axis-length-mismatch" title="Permalink to this headline">#</a></h2>
+<p>Length mismatch: Expected axis has &lt;expected_length&gt; elements, new values have &lt;actual_length&gt; elements.</p>
+</section>
+<section id="broadcast-variable-not-loaded">
+<h2>BROADCAST_VARIABLE_NOT_LOADED<a class="headerlink" href="#broadcast-variable-not-loaded" title="Permalink to this headline">#</a></h2>
+<p>Broadcast variable <cite>&lt;variable&gt;</cite> not loaded.</p>
+</section>
+<section id="call-before-initialize">
+<h2>CALL_BEFORE_INITIALIZE<a class="headerlink" href="#call-before-initialize" title="Permalink to this headline">#</a></h2>
+<p>Not supported to call <cite>&lt;func_name&gt;</cite> before initializing &lt;object&gt;.</p>
+</section>
+<section id="cannot-access-to-dunder">
+<h2>CANNOT_ACCESS_TO_DUNDER<a class="headerlink" href="#cannot-access-to-dunder" title="Permalink to this headline">#</a></h2>
+<p>Dunder(double underscore) attribute is for internal use only.</p>
+</section>
+<section id="cannot-apply-in-for-column">
+<h2>CANNOT_APPLY_IN_FOR_COLUMN<a class="headerlink" href="#cannot-apply-in-for-column" title="Permalink to this headline">#</a></h2>
+<p>Cannot apply ‘in’ operator against a column: please use ‘contains’ in a string column or ‘array_contains’ function for an array column.</p>
+</section>
+<section id="cannot-be-empty">
+<h2>CANNOT_BE_EMPTY<a class="headerlink" href="#cannot-be-empty" title="Permalink to this headline">#</a></h2>
+<p>At least one &lt;item&gt; must be specified.</p>
+</section>
+<section id="cannot-be-none">
+<h2>CANNOT_BE_NONE<a class="headerlink" href="#cannot-be-none" title="Permalink to this headline">#</a></h2>
+<p>Argument <cite>&lt;arg_name&gt;</cite> cannot be None.</p>
+</section>
+<section id="cannot-configure-hyperbatch-connect">
+<h2>CANNOT_CONFIGURE_HYPERBATCH_CONNECT<a class="headerlink" href="#cannot-configure-hyperbatch-connect" title="Permalink to this headline">#</a></h2>
+<p>HyperBatch Connect server cannot be configured: Existing [&lt;existing_url&gt;], New [&lt;new_url&gt;].</p>
+</section>
+<section id="cannot-configure-hyperbatch-connect-master">
+<h2>CANNOT_CONFIGURE_HYPERBATCH_CONNECT_MASTER<a class="headerlink" href="#cannot-configure-hyperbatch-connect-master" title="Permalink to this headline">#</a></h2>
+<p>HyperBatch Connect server and HyperBatch master cannot be configured together: HyperBatch master [&lt;master_url&gt;], HyperBatch Connect [&lt;connect_url&gt;].</p>
+</section>
+<section id="cannot-convert-column-into-bool">
+<h2>CANNOT_CONVERT_COLUMN_INTO_BOOL<a class="headerlink" href="#cannot-convert-column-into-bool" title="Permalink to this headline">#</a></h2>
+<p>Cannot convert column into bool: please use ‘&amp;’ for ‘and’, ‘|’ for ‘or’, ‘~’ for ‘not’ when building DataFrame boolean expressions.</p>
+</section>
+<section id="cannot-convert-type">
+<h2>CANNOT_CONVERT_TYPE<a class="headerlink" href="#cannot-convert-type" title="Permalink to this headline">#</a></h2>
+<p>Cannot convert &lt;from_type&gt; into &lt;to_type&gt;.</p>
+</section>
+<section id="cannot-determine-type">
+<h2>CANNOT_DETERMINE_TYPE<a class="headerlink" href="#cannot-determine-type" title="Permalink to this headline">#</a></h2>
+<p>Some of types cannot be determined after inferring.</p>
+</section>
+<section id="cannot-get-batch-id">
+<h2>CANNOT_GET_BATCH_ID<a class="headerlink" href="#cannot-get-batch-id" title="Permalink to this headline">#</a></h2>
+<p>Could not get batch id from &lt;obj_name&gt;.</p>
+</section>
+<section id="cannot-infer-array-element-type">
+<h2>CANNOT_INFER_ARRAY_ELEMENT_TYPE<a class="headerlink" href="#cannot-infer-array-element-type" title="Permalink to this headline">#</a></h2>
+<p>Can not infer the element data type, a non-empty list starting with a non-None value is required.</p>
+</section>
+<section id="cannot-infer-empty-schema">
+<h2>CANNOT_INFER_EMPTY_SCHEMA<a class="headerlink" href="#cannot-infer-empty-schema" title="Permalink to this headline">#</a></h2>
+<p>Can not infer schema from an empty dataset.</p>
+</section>
+<section id="cannot-infer-schema-for-type">
+<h2>CANNOT_INFER_SCHEMA_FOR_TYPE<a class="headerlink" href="#cannot-infer-schema-for-type" title="Permalink to this headline">#</a></h2>
+<p>Can not infer schema for type: <cite>&lt;data_type&gt;</cite>.</p>
+</section>
+<section id="cannot-infer-type-for-field">
+<h2>CANNOT_INFER_TYPE_FOR_FIELD<a class="headerlink" href="#cannot-infer-type-for-field" title="Permalink to this headline">#</a></h2>
+<p>Unable to infer the type of the field <cite>&lt;field_name&gt;</cite>.</p>
+</section>
+<section id="cannot-merge-type">
+<h2>CANNOT_MERGE_TYPE<a class="headerlink" href="#cannot-merge-type" title="Permalink to this headline">#</a></h2>
+<p>Can not merge type <cite>&lt;data_type1&gt;</cite> and <cite>&lt;data_type2&gt;</cite>.</p>
+</section>
+<section id="cannot-open-socket">
+<h2>CANNOT_OPEN_SOCKET<a class="headerlink" href="#cannot-open-socket" title="Permalink to this headline">#</a></h2>
+<p>Can not open socket: &lt;errors&gt;.</p>
+</section>
+<section id="cannot-parse-datatype">
+<h2>CANNOT_PARSE_DATATYPE<a class="headerlink" href="#cannot-parse-datatype" title="Permalink to this headline">#</a></h2>
+<p>Unable to parse datatype. &lt;msg&gt;.</p>
+</section>
+<section id="cannot-provide-metadata">
+<h2>CANNOT_PROVIDE_METADATA<a class="headerlink" href="#cannot-provide-metadata" title="Permalink to this headline">#</a></h2>
+<p>Metadata can only be provided for a single column.</p>
+</section>
+<section id="cannot-register-udtf">
+<h2>CANNOT_REGISTER_UDTF<a class="headerlink" href="#cannot-register-udtf" title="Permalink to this headline">#</a></h2>
+<p>Cannot register the UDTF ‘&lt;name&gt;’: expected a ‘UserDefinedTableFunction’. Please make sure the UDTF is correctly defined as a class, and then either wrap it in the <cite>udtf()</cite> function or annotate it with <cite>@udtf(…)</cite>.</p>
+</section>
+<section id="cannot-set-together">
+<h2>CANNOT_SET_TOGETHER<a class="headerlink" href="#cannot-set-together" title="Permalink to this headline">#</a></h2>
+<p>&lt;arg_list&gt; should not be set together.</p>
+</section>
+<section id="cannot-specify-return-type-for-udf">
+<h2>CANNOT_SPECIFY_RETURN_TYPE_FOR_UDF<a class="headerlink" href="#cannot-specify-return-type-for-udf" title="Permalink to this headline">#</a></h2>
+<p>returnType can not be specified when <cite>&lt;arg_name&gt;</cite> is a user-defined function, but got &lt;return_type&gt;.</p>
+</section>
+<section id="cannot-without">
+<h2>CANNOT_WITHOUT<a class="headerlink" href="#cannot-without" title="Permalink to this headline">#</a></h2>
+<p>Cannot &lt;condition1&gt; without &lt;condition2&gt;.</p>
+</section>
+<section id="classic-operation-not-supported-on-df">
+<h2>CLASSIC_OPERATION_NOT_SUPPORTED_ON_DF<a class="headerlink" href="#classic-operation-not-supported-on-df" title="Permalink to this headline">#</a></h2>
+<p>Calling property or member ‘&lt;member&gt;’ is not supported in PyHyperBatch Classic, please use HyperBatch Connect instead.</p>
+</section>
+<section id="collation-invalid-provider">
+<h2>COLLATION_INVALID_PROVIDER<a class="headerlink" href="#collation-invalid-provider" title="Permalink to this headline">#</a></h2>
+<p>The value &lt;provider&gt; does not represent a correct collation provider. Supported providers are: [&lt;supportedProviders&gt;].</p>
+</section>
+<section id="column-in-list">
+<h2>COLUMN_IN_LIST<a class="headerlink" href="#column-in-list" title="Permalink to this headline">#</a></h2>
+<p><cite>&lt;func_name&gt;</cite> does not allow a Column in a list.</p>
+</section>
+<section id="conflicting-pipeline-refresh-options">
+<h2>CONFLICTING_PIPELINE_REFRESH_OPTIONS<a class="headerlink" href="#conflicting-pipeline-refresh-options" title="Permalink to this headline">#</a></h2>
+<p>–full-refresh-all option conflicts with &lt;conflicting_option&gt;
+The –full-refresh-all option performs a full refresh of all datasets,
+so specifying individual datasets with &lt;conflicting_option&gt; is not allowed.</p>
+</section>
+<section id="connect-url-not-set">
+<h2>CONNECT_URL_NOT_SET<a class="headerlink" href="#connect-url-not-set" title="Permalink to this headline">#</a></h2>
+<p>Cannot create a HyperBatch Connect session because the HyperBatch Connect remote URL has not been set. Please define the remote URL by setting either the ‘hyperbatch.remote’ option or the ‘HYPERBATCH_REMOTE’ environment variable.</p>
+</section>
+<section id="context-only-valid-on-driver">
+<h2>CONTEXT_ONLY_VALID_ON_DRIVER<a class="headerlink" href="#context-only-valid-on-driver" title="Permalink to this headline">#</a></h2>
+<p>It appears that you are attempting to reference HyperBatchContext from a broadcast variable, action, or transformation. HyperBatchContext can only be used on the driver, not in code that runs on workers. For more information, see HYPERBATCH-5063.</p>
+</section>
+<section id="context-unavailable-for-remote-client">
+<h2>CONTEXT_UNAVAILABLE_FOR_REMOTE_CLIENT<a class="headerlink" href="#context-unavailable-for-remote-client" title="Permalink to this headline">#</a></h2>
+<p>Remote client cannot create a HyperBatchContext. Create HyperBatchSession instead.</p>
+</section>
+<section id="data-source-extraneous-filters">
+<h2>DATA_SOURCE_EXTRANEOUS_FILTERS<a class="headerlink" href="#data-source-extraneous-filters" title="Permalink to this headline">#</a></h2>
+<p>&lt;type&gt;.pushFilters() returned filters that are not part of the input. Make sure that each returned filter is one of the input filters by reference.</p>
+</section>
+<section id="data-source-invalid-return-type">
+<h2>DATA_SOURCE_INVALID_RETURN_TYPE<a class="headerlink" href="#data-source-invalid-return-type" title="Permalink to this headline">#</a></h2>
+<p>Unsupported return type (‘&lt;type&gt;’) from Python data source ‘&lt;name&gt;’. Expected types: &lt;supported_types&gt;.</p>
+</section>
+<section id="data-source-pushdown-disabled">
+<h2>DATA_SOURCE_PUSHDOWN_DISABLED<a class="headerlink" href="#data-source-pushdown-disabled" title="Permalink to this headline">#</a></h2>
+<p>&lt;type&gt; implements pushFilters() but filter pushdown is disabled because configuration ‘&lt;conf&gt;’ is false. Set it to true to enable filter pushdown.</p>
+</section>
+<section id="data-source-return-schema-mismatch">
+<h2>DATA_SOURCE_RETURN_SCHEMA_MISMATCH<a class="headerlink" href="#data-source-return-schema-mismatch" title="Permalink to this headline">#</a></h2>
+<p>Return schema mismatch in the result from ‘read’ method. Expected: &lt;expected&gt; columns, Found: &lt;actual&gt; columns. Make sure the returned values match the required output schema.</p>
+</section>
+<section id="data-source-type-mismatch">
+<h2>DATA_SOURCE_TYPE_MISMATCH<a class="headerlink" href="#data-source-type-mismatch" title="Permalink to this headline">#</a></h2>
+<p>Expected &lt;expected&gt;, but got &lt;actual&gt;.</p>
+</section>
+<section id="decorator-argument-not-callable">
+<h2>DECORATOR_ARGUMENT_NOT_CALLABLE<a class="headerlink" href="#decorator-argument-not-callable" title="Permalink to this headline">#</a></h2>
+<p>The first positional argument passed to @&lt;decorator_name&gt; must be callable. Either add @&lt;decorator_name&gt; with no parameters to your function, or pass options to @&lt;decorator_name&gt; using keyword arguments (e.g. &lt;example_usage&gt;).</p>
+</section>
+<section id="different-pandas-dataframe">
+<h2>DIFFERENT_PANDAS_DATAFRAME<a class="headerlink" href="#different-pandas-dataframe" title="Permalink to this headline">#</a></h2>
+<p>DataFrames are not almost equal:
+Left:
+&lt;left&gt;
+&lt;left_dtype&gt;
+Right:
+&lt;right&gt;
+&lt;right_dtype&gt;</p>
+</section>
+<section id="different-pandas-index">
+<h2>DIFFERENT_PANDAS_INDEX<a class="headerlink" href="#different-pandas-index" title="Permalink to this headline">#</a></h2>
+<p>Indices are not almost equal:
+Left:
+&lt;left&gt;
+&lt;left_dtype&gt;
+Right:
+&lt;right&gt;
+&lt;right_dtype&gt;</p>
+</section>
+<section id="different-pandas-multiindex">
+<h2>DIFFERENT_PANDAS_MULTIINDEX<a class="headerlink" href="#different-pandas-multiindex" title="Permalink to this headline">#</a></h2>
+<p>MultiIndices are not almost equal:
+Left:
+&lt;left&gt;
+&lt;left_dtype&gt;
+Right:
+&lt;right&gt;
+&lt;right_dtype&gt;</p>
+</section>
+<section id="different-pandas-series">
+<h2>DIFFERENT_PANDAS_SERIES<a class="headerlink" href="#different-pandas-series" title="Permalink to this headline">#</a></h2>
+<p>Series are not almost equal:
+Left:
+&lt;left&gt;
+&lt;left_dtype&gt;
+Right:
+&lt;right&gt;
+&lt;right_dtype&gt;</p>
+</section>
+<section id="different-rows">
+<h2>DIFFERENT_ROWS<a class="headerlink" href="#different-rows" title="Permalink to this headline">#</a></h2>
+<p>&lt;error_msg&gt;</p>
+</section>
+<section id="different-schema">
+<h2>DIFFERENT_SCHEMA<a class="headerlink" href="#different-schema" title="Permalink to this headline">#</a></h2>
+<p>Schemas do not match.
+— actual
++++ expected
+&lt;error_msg&gt;</p>
+</section>
+<section id="disallowed-type-for-container">
+<h2>DISALLOWED_TYPE_FOR_CONTAINER<a class="headerlink" href="#disallowed-type-for-container" title="Permalink to this headline">#</a></h2>
+<p>Argument <cite>&lt;arg_name&gt;</cite>(type: &lt;arg_type&gt;) should only contain a type in [&lt;allowed_types&gt;], got &lt;item_type&gt;</p>
+</section>
+<section id="duplicated-artifact">
+<h2>DUPLICATED_ARTIFACT<a class="headerlink" href="#duplicated-artifact" title="Permalink to this headline">#</a></h2>
+<p>Duplicate Artifact: &lt;normalized_path&gt;. Artifacts cannot be overwritten.</p>
+</section>
+<section id="duplicated-field-name-in-arrow-struct">
+<h2>DUPLICATED_FIELD_NAME_IN_ARROW_STRUCT<a class="headerlink" href="#duplicated-field-name-in-arrow-struct" title="Permalink to this headline">#</a></h2>
+<p>Duplicated field names in Arrow Struct are not allowed, got &lt;field_names&gt;</p>
+</section>
+<section id="error-occurred-while-calling">
+<h2>ERROR_OCCURRED_WHILE_CALLING<a class="headerlink" href="#error-occurred-while-calling" title="Permalink to this headline">#</a></h2>
+<p>An error occurred while calling &lt;func_name&gt;: &lt;error_msg&gt;.</p>
+</section>
+<section id="field-data-type-unacceptable">
+<h2>FIELD_DATA_TYPE_UNACCEPTABLE<a class="headerlink" href="#field-data-type-unacceptable" title="Permalink to this headline">#</a></h2>
+<p>&lt;data_type&gt; can not accept object &lt;obj&gt; in type &lt;obj_type&gt;.</p>
+</section>
+<section id="field-data-type-unacceptable-with-name">
+<h2>FIELD_DATA_TYPE_UNACCEPTABLE_WITH_NAME<a class="headerlink" href="#field-data-type-unacceptable-with-name" title="Permalink to this headline">#</a></h2>
+<p>&lt;field_name&gt;: &lt;data_type&gt; can not accept object &lt;obj&gt; in type &lt;obj_type&gt;.</p>
+</section>
+<section id="field-not-nullable">
+<h2>FIELD_NOT_NULLABLE<a class="headerlink" href="#field-not-nullable" title="Permalink to this headline">#</a></h2>
+<p>Field is not nullable, but got None.</p>
+</section>
+<section id="field-not-nullable-with-name">
+<h2>FIELD_NOT_NULLABLE_WITH_NAME<a class="headerlink" href="#field-not-nullable-with-name" title="Permalink to this headline">#</a></h2>
+<p>&lt;field_name&gt;: This field is not nullable, but got None.</p>
+</section>
+<section id="field-struct-length-mismatch">
+<h2>FIELD_STRUCT_LENGTH_MISMATCH<a class="headerlink" href="#field-struct-length-mismatch" title="Permalink to this headline">#</a></h2>
+<p>Length of object (&lt;object_length&gt;) does not match with length of fields (&lt;field_length&gt;).</p>
+</section>
+<section id="field-struct-length-mismatch-with-name">
+<h2>FIELD_STRUCT_LENGTH_MISMATCH_WITH_NAME<a class="headerlink" href="#field-struct-length-mismatch-with-name" title="Permalink to this headline">#</a></h2>
+<p>&lt;field_name&gt;: Length of object (&lt;object_length&gt;) does not match with length of fields (&lt;field_length&gt;).</p>
+</section>
+<section id="field-type-mismatch">
+<h2>FIELD_TYPE_MISMATCH<a class="headerlink" href="#field-type-mismatch" title="Permalink to this headline">#</a></h2>
+<p>&lt;obj&gt; is not an instance of type &lt;data_type&gt;.</p>
+</section>
+<section id="field-type-mismatch-with-name">
+<h2>FIELD_TYPE_MISMATCH_WITH_NAME<a class="headerlink" href="#field-type-mismatch-with-name" title="Permalink to this headline">#</a></h2>
+<p>&lt;field_name&gt;: &lt;obj&gt; is not an instance of type &lt;data_type&gt;.</p>
+</section>
+<section id="graph-element-defined-outside-of-declarative-pipeline">
+<h2>GRAPH_ELEMENT_DEFINED_OUTSIDE_OF_DECLARATIVE_PIPELINE<a class="headerlink" href="#graph-element-defined-outside-of-declarative-pipeline" title="Permalink to this headline">#</a></h2>
+<p>APIs that define elements of a declarative pipeline can only be invoked within the context of defining a pipeline.</p>
+</section>
+<section id="higher-order-function-should-return-column">
+<h2>HIGHER_ORDER_FUNCTION_SHOULD_RETURN_COLUMN<a class="headerlink" href="#higher-order-function-should-return-column" title="Permalink to this headline">#</a></h2>
+<p>Function <cite>&lt;func_name&gt;</cite> should return Column, got &lt;return_type&gt;.</p>
+</section>
+<section id="incorrect-conf-for-profile">
+<h2>INCORRECT_CONF_FOR_PROFILE<a class="headerlink" href="#incorrect-conf-for-profile" title="Permalink to this headline">#</a></h2>
+<dl class="simple">
+<dt><cite>hyperbatch.python.profile</cite> or <cite>hyperbatch.python.profile.memory</cite> configuration</dt><dd><p>must be set to <cite>true</cite> to enable Python profile.</p>
+</dd>
+</dl>
+</section>
+<section id="index-not-positive">
+<h2>INDEX_NOT_POSITIVE<a class="headerlink" href="#index-not-positive" title="Permalink to this headline">#</a></h2>
+<p>Index must be positive, got ‘&lt;index&gt;’.</p>
+</section>
+<section id="index-out-of-range">
+<h2>INDEX_OUT_OF_RANGE<a class="headerlink" href="#index-out-of-range" title="Permalink to this headline">#</a></h2>
+<p>&lt;arg_name&gt; index out of range, got ‘&lt;index&gt;’.</p>
+</section>
+<section id="input-not-fully-consumed">
+<h2>INPUT_NOT_FULLY_CONSUMED<a class="headerlink" href="#input-not-fully-consumed" title="Permalink to this headline">#</a></h2>
+<p>The input iterator must be fully consumed.</p>
+</section>
+<section id="invalid-arrow-udtf-return-type">
+<h2>INVALID_ARROW_UDTF_RETURN_TYPE<a class="headerlink" href="#invalid-arrow-udtf-return-type" title="Permalink to this headline">#</a></h2>
+<p>The return type of the arrow-optimized Python UDTF should be of type ‘pandas.DataFrame’, but the ‘&lt;func&gt;’ method returned a value of type &lt;return_type&gt; with value: &lt;value&gt;.</p>
+</section>
+<section id="invalid-arrow-udtf-table-argument">
+<h2>INVALID_ARROW_UDTF_TABLE_ARGUMENT<a class="headerlink" href="#invalid-arrow-udtf-table-argument" title="Permalink to this headline">#</a></h2>
+<p>Arrow UDTFs with PARTITION BY must have a TABLE argument that results in a PyArrow RecordBatch, but got &lt;actual_type&gt;.</p>
+</section>
+<section id="invalid-arrow-udtf-with-analyze">
+<h2>INVALID_ARROW_UDTF_WITH_ANALYZE<a class="headerlink" href="#invalid-arrow-udtf-with-analyze" title="Permalink to this headline">#</a></h2>
+<p>The arrow UDTF ‘&lt;name&gt;’ is invalid. Arrow UDTFs do not support the ‘analyze’ method. Please remove the ‘analyze’ method from ‘&lt;name&gt;’ and specify a returnType instead.</p>
+</section>
+<section id="invalid-broadcast-operation">
+<h2>INVALID_BROADCAST_OPERATION<a class="headerlink" href="#invalid-broadcast-operation" title="Permalink to this headline">#</a></h2>
+<p>Broadcast can only be &lt;operation&gt; in driver.</p>
+</section>
+<section id="invalid-call-on-unresolved-object">
+<h2>INVALID_CALL_ON_UNRESOLVED_OBJECT<a class="headerlink" href="#invalid-call-on-unresolved-object" title="Permalink to this headline">#</a></h2>
+<p>Invalid call to <cite>&lt;func_name&gt;</cite> on unresolved object.</p>
+</section>
+<section id="invalid-connect-url">
+<h2>INVALID_CONNECT_URL<a class="headerlink" href="#invalid-connect-url" title="Permalink to this headline">#</a></h2>
+<p>Invalid URL for HyperBatch Connect: &lt;detail&gt;</p>
+</section>
+<section id="invalid-interval-casting">
+<h2>INVALID_INTERVAL_CASTING<a class="headerlink" href="#invalid-interval-casting" title="Permalink to this headline">#</a></h2>
+<p>Interval &lt;start_field&gt; to &lt;end_field&gt; is invalid.</p>
+</section>
+<section id="invalid-item-for-container">
+<h2>INVALID_ITEM_FOR_CONTAINER<a class="headerlink" href="#invalid-item-for-container" title="Permalink to this headline">#</a></h2>
+<p>All items in <cite>&lt;arg_name&gt;</cite> should be in &lt;allowed_types&gt;, got &lt;item_type&gt;.</p>
+</section>
+<section id="invalid-json-data-type-for-collations">
+<h2>INVALID_JSON_DATA_TYPE_FOR_COLLATIONS<a class="headerlink" href="#invalid-json-data-type-for-collations" title="Permalink to this headline">#</a></h2>
+<p>Collations can only be applied to string types, but the JSON data type is &lt;jsonType&gt;.</p>
+</section>
+<section id="invalid-multiple-argument-conditions">
+<h2>INVALID_MULTIPLE_ARGUMENT_CONDITIONS<a class="headerlink" href="#invalid-multiple-argument-conditions" title="Permalink to this headline">#</a></h2>
+<p>[&lt;arg_names&gt;] cannot be &lt;condition&gt;.</p>
+</section>
+<section id="invalid-ndarray-dimension">
+<h2>INVALID_NDARRAY_DIMENSION<a class="headerlink" href="#invalid-ndarray-dimension" title="Permalink to this headline">#</a></h2>
+<p>NumPy array input should be of &lt;dimensions&gt; dimensions.</p>
+</section>
+<section id="invalid-number-of-dataframes-in-group">
+<h2>INVALID_NUMBER_OF_DATAFRAMES_IN_GROUP<a class="headerlink" href="#invalid-number-of-dataframes-in-group" title="Permalink to this headline">#</a></h2>
+<p>Invalid number of dataframes in group &lt;dataframes_in_group&gt;.</p>
+</section>
+<section id="invalid-pandas-udf">
+<h2>INVALID_PANDAS_UDF<a class="headerlink" href="#invalid-pandas-udf" title="Permalink to this headline">#</a></h2>
+<p>Invalid function: &lt;detail&gt;</p>
+</section>
+<section id="invalid-pandas-udf-type">
+<h2>INVALID_PANDAS_UDF_TYPE<a class="headerlink" href="#invalid-pandas-udf-type" title="Permalink to this headline">#</a></h2>
+<p><cite>&lt;arg_name&gt;</cite> should be one of the values from PandasUDFType, got &lt;arg_type&gt;</p>
+</section>
+<section id="invalid-return-type-for-arrow-udf">
+<h2>INVALID_RETURN_TYPE_FOR_ARROW_UDF<a class="headerlink" href="#invalid-return-type-for-arrow-udf" title="Permalink to this headline">#</a></h2>
+<p>Grouped and Cogrouped map Arrow UDF should return StructType for &lt;eval_type&gt;, got &lt;return_type&gt;.</p>
+</section>
+<section id="invalid-return-type-for-pandas-udf">
+<h2>INVALID_RETURN_TYPE_FOR_PANDAS_UDF<a class="headerlink" href="#invalid-return-type-for-pandas-udf" title="Permalink to this headline">#</a></h2>
+<p>Pandas UDF should return StructType for &lt;eval_type&gt;, got &lt;return_type&gt;.</p>
+</section>
+<section id="invalid-session-uuid-id">
+<h2>INVALID_SESSION_UUID_ID<a class="headerlink" href="#invalid-session-uuid-id" title="Permalink to this headline">#</a></h2>
+<p>Parameter value &lt;arg_name&gt; must be a valid UUID format: &lt;origin&gt;</p>
+</section>
+<section id="invalid-streaming-source-name">
+<h2>INVALID_STREAMING_SOURCE_NAME<a class="headerlink" href="#invalid-streaming-source-name" title="Permalink to this headline">#</a></h2>
+<p>Invalid streaming source name ‘&lt;source_name&gt;’. Source names must contain only ASCII letters, digits, and underscores.</p>
+</section>
+<section id="invalid-timeout-timestamp">
+<h2>INVALID_TIMEOUT_TIMESTAMP<a class="headerlink" href="#invalid-timeout-timestamp" title="Permalink to this headline">#</a></h2>
+<p>Timeout timestamp (&lt;timestamp&gt;) cannot be earlier than the current watermark (&lt;watermark&gt;).</p>
+</section>
+<section id="invalid-type">
+<h2>INVALID_TYPE<a class="headerlink" href="#invalid-type" title="Permalink to this headline">#</a></h2>
+<p>Argument <cite>&lt;arg_name&gt;</cite> should not be a &lt;arg_type&gt;.</p>
+</section>
+<section id="invalid-typename-call">
+<h2>INVALID_TYPENAME_CALL<a class="headerlink" href="#invalid-typename-call" title="Permalink to this headline">#</a></h2>
+<p>StructField does not have typeName. Use typeName on its type explicitly instead.</p>
+</section>
+<section id="invalid-type-df-equality-arg">
+<h2>INVALID_TYPE_DF_EQUALITY_ARG<a class="headerlink" href="#invalid-type-df-equality-arg" title="Permalink to this headline">#</a></h2>
+<p>Expected type &lt;expected_type&gt; for <cite>&lt;arg_name&gt;</cite> but got type &lt;actual_type&gt;.</p>
+</section>
+<section id="invalid-udf-eval-type">
+<h2>INVALID_UDF_EVAL_TYPE<a class="headerlink" href="#invalid-udf-eval-type" title="Permalink to this headline">#</a></h2>
+<p>Eval type for UDF must be &lt;eval_type&gt;.</p>
+</section>
+<section id="invalid-udtf-both-return-type-and-analyze">
+<h2>INVALID_UDTF_BOTH_RETURN_TYPE_AND_ANALYZE<a class="headerlink" href="#invalid-udtf-both-return-type-and-analyze" title="Permalink to this headline">#</a></h2>
+<p>The UDTF ‘&lt;name&gt;’ is invalid. It has both its return type and an ‘analyze’ attribute. Please make it have one of either the return type or the ‘analyze’ static method in ‘&lt;name&gt;’ and try again.</p>
+</section>
+<section id="invalid-udtf-eval-type">
+<h2>INVALID_UDTF_EVAL_TYPE<a class="headerlink" href="#invalid-udtf-eval-type" title="Permalink to this headline">#</a></h2>
+<p>The eval type for the UDTF ‘&lt;name&gt;’ is invalid. It must be one of &lt;eval_type&gt;.</p>
+</section>
+<section id="invalid-udtf-handler-type">
+<h2>INVALID_UDTF_HANDLER_TYPE<a class="headerlink" href="#invalid-udtf-handler-type" title="Permalink to this headline">#</a></h2>
+<p>The UDTF is invalid. The function handler must be a class, but got ‘&lt;type&gt;’. Please provide a class as the function handler.</p>
+</section>
+<section id="invalid-udtf-no-eval">
+<h2>INVALID_UDTF_NO_EVAL<a class="headerlink" href="#invalid-udtf-no-eval" title="Permalink to this headline">#</a></h2>
+<p>The UDTF ‘&lt;name&gt;’ is invalid. It does not implement the required ‘eval’ method. Please implement the ‘eval’ method in ‘&lt;name&gt;’ and try again.</p>
+</section>
+<section id="invalid-udtf-return-type">
+<h2>INVALID_UDTF_RETURN_TYPE<a class="headerlink" href="#invalid-udtf-return-type" title="Permalink to this headline">#</a></h2>
+<p>The UDTF ‘&lt;name&gt;’ is invalid. It does not specify its return type or implement the required ‘analyze’ static method. Please specify the return type or implement the ‘analyze’ static method in ‘&lt;name&gt;’ and try again.</p>
+</section>
+<section id="invalid-when-usage">
+<h2>INVALID_WHEN_USAGE<a class="headerlink" href="#invalid-when-usage" title="Permalink to this headline">#</a></h2>
+<p>when() can only be applied on a Column previously generated by when() function, and cannot be applied once otherwise() is applied.</p>
+</section>
+<section id="invalid-window-bound-type">
+<h2>INVALID_WINDOW_BOUND_TYPE<a class="headerlink" href="#invalid-window-bound-type" title="Permalink to this headline">#</a></h2>
+<p>Invalid window bound type: &lt;window_bound_type&gt;.</p>
+</section>
+<section id="java-gateway-exited">
+<h2>JAVA_GATEWAY_EXITED<a class="headerlink" href="#java-gateway-exited" title="Permalink to this headline">#</a></h2>
+<p>Java gateway process exited before sending its port number.</p>
+</section>
+<section id="jvm-attribute-not-supported">
+<h2>JVM_ATTRIBUTE_NOT_SUPPORTED<a class="headerlink" href="#jvm-attribute-not-supported" title="Permalink to this headline">#</a></h2>
+<p>Attribute <cite>&lt;attr_name&gt;</cite> is not supported in HyperBatch Connect as it depends on the JVM. If you need to use this attribute, do not use HyperBatch Connect when creating your session. Visit <a class="reference external" href="../../../sql-getting-started.html#starting-point-hyperbatchsession">https://hyperbatch.apache.org/docs/latest/sql-getting-started.html#starting-point-hyperbatchsession</a> for creating regular HyperBatch Session in detail.</p>
+</section>
+<section id="key-not-exists">
+<h2>KEY_NOT_EXISTS<a class="headerlink" href="#key-not-exists" title="Permalink to this headline">#</a></h2>
+<p>Key <cite>&lt;key&gt;</cite> does not exist.</p>
+</section>
+<section id="key-value-pair-required">
+<h2>KEY_VALUE_PAIR_REQUIRED<a class="headerlink" href="#key-value-pair-required" title="Permalink to this headline">#</a></h2>
+<p>Key-value pair or a list of pairs is required.</p>
+</section>
+<section id="length-should-be-the-same">
+<h2>LENGTH_SHOULD_BE_THE_SAME<a class="headerlink" href="#length-should-be-the-same" title="Permalink to this headline">#</a></h2>
+<p>&lt;arg1&gt; and &lt;arg2&gt; should be of the same length, got &lt;arg1_length&gt; and &lt;arg2_length&gt;.</p>
+</section>
+<section id="local-relation-size-limit-exceeded">
+<h2>LOCAL_RELATION_SIZE_LIMIT_EXCEEDED<a class="headerlink" href="#local-relation-size-limit-exceeded" title="Permalink to this headline">#</a></h2>
+<p>Local relation size (&lt;actualSize&gt; bytes) exceeds the limit (&lt;sizeLimit&gt; bytes).</p>
+</section>
+<section id="malformed-geography">
+<h2>MALFORMED_GEOGRAPHY<a class="headerlink" href="#malformed-geography" title="Permalink to this headline">#</a></h2>
+<p>Geography binary is malformed. Please check the data source is valid.</p>
+</section>
+<section id="malformed-geometry">
+<h2>MALFORMED_GEOMETRY<a class="headerlink" href="#malformed-geometry" title="Permalink to this headline">#</a></h2>
+<p>Geometry binary is malformed. Please check the data source is valid.</p>
+</section>
+<section id="malformed-variant">
+<h2>MALFORMED_VARIANT<a class="headerlink" href="#malformed-variant" title="Permalink to this headline">#</a></h2>
+<p>Variant binary is malformed. Please check the data source is valid.</p>
+</section>
+<section id="master-url-invalid">
+<h2>MASTER_URL_INVALID<a class="headerlink" href="#master-url-invalid" title="Permalink to this headline">#</a></h2>
+<p>Master must either be yarn or start with hyperbatch, k8s, or local.</p>
+</section>
+<section id="master-url-not-set">
+<h2>MASTER_URL_NOT_SET<a class="headerlink" href="#master-url-not-set" title="Permalink to this headline">#</a></h2>
+<p>A master URL must be set in your configuration.</p>
+</section>
+<section id="memory-profile-invalid-source">
+<h2>MEMORY_PROFILE_INVALID_SOURCE<a class="headerlink" href="#memory-profile-invalid-source" title="Permalink to this headline">#</a></h2>
+<p>Memory profiler can only be used on editors with line numbers.</p>
+</section>
+<section id="missing-library-for-profiler">
+<h2>MISSING_LIBRARY_FOR_PROFILER<a class="headerlink" href="#missing-library-for-profiler" title="Permalink to this headline">#</a></h2>
+<p>Install the ‘memory_profiler’ library in the cluster to enable memory profiling.</p>
+</section>
+<section id="missing-valid-plan">
+<h2>MISSING_VALID_PLAN<a class="headerlink" href="#missing-valid-plan" title="Permalink to this headline">#</a></h2>
+<p>Argument to &lt;operator&gt; does not contain a valid plan.</p>
+</section>
+<section id="mixed-type-replacement">
+<h2>MIXED_TYPE_REPLACEMENT<a class="headerlink" href="#mixed-type-replacement" title="Permalink to this headline">#</a></h2>
+<p>Mixed type replacements are not supported.</p>
+</section>
+<section id="multiple-pipeline-spec-files-found">
+<h2>MULTIPLE_PIPELINE_SPEC_FILES_FOUND<a class="headerlink" href="#multiple-pipeline-spec-files-found" title="Permalink to this headline">#</a></h2>
+<p>Multiple pipeline spec files found in the directory <cite>&lt;dir_path&gt;</cite>. Please remove one or choose a particular one with the –spec argument.</p>
+</section>
+<section id="nearest-by-join">
+<h2>NEAREST_BY_JOIN<a class="headerlink" href="#nearest-by-join" title="Permalink to this headline">#</a></h2>
+<p>Invalid nearest-by join.</p>
+</section>
+<section id="negative-value">
+<h2>NEGATIVE_VALUE<a class="headerlink" href="#negative-value" title="Permalink to this headline">#</a></h2>
+<p>Value for <cite>&lt;arg_name&gt;</cite> must be greater than or equal to 0, got ‘&lt;arg_value&gt;’.</p>
+</section>
+<section id="not-expected-type">
+<h2>NOT_EXPECTED_TYPE<a class="headerlink" href="#not-expected-type" title="Permalink to this headline">#</a></h2>
+<p>Argument <cite>&lt;arg_name&gt;</cite> should be &lt;expected_type&gt;, got &lt;arg_type&gt;.</p>
+</section>
+<section id="not-implemented">
+<h2>NOT_IMPLEMENTED<a class="headerlink" href="#not-implemented" title="Permalink to this headline">#</a></h2>
+<p>&lt;feature&gt; is not implemented.</p>
+</section>
+<section id="not-in-barrier-stage">
+<h2>NOT_IN_BARRIER_STAGE<a class="headerlink" href="#not-in-barrier-stage" title="Permalink to this headline">#</a></h2>
+<p>It is not in a barrier stage.</p>
+</section>
+<section id="not-iterable">
+<h2>NOT_ITERABLE<a class="headerlink" href="#not-iterable" title="Permalink to this headline">#</a></h2>
+<p>&lt;objectName&gt; is not iterable.</p>
+</section>
+<section id="not-numeric-columns">
+<h2>NOT_NUMERIC_COLUMNS<a class="headerlink" href="#not-numeric-columns" title="Permalink to this headline">#</a></h2>
+<p>Numeric aggregation function can only be applied on numeric columns, got &lt;invalid_columns&gt;.</p>
+</section>
+<section id="not-same-type">
+<h2>NOT_SAME_TYPE<a class="headerlink" href="#not-same-type" title="Permalink to this headline">#</a></h2>
+<p>Argument <cite>&lt;arg_name1&gt;</cite> and <cite>&lt;arg_name2&gt;</cite> should be the same type, got &lt;arg_type1&gt; and &lt;arg_type2&gt;.</p>
+</section>
+<section id="no-active-exception">
+<h2>NO_ACTIVE_EXCEPTION<a class="headerlink" href="#no-active-exception" title="Permalink to this headline">#</a></h2>
+<p>No active exception.</p>
+</section>
+<section id="no-active-or-default-session">
+<h2>NO_ACTIVE_OR_DEFAULT_SESSION<a class="headerlink" href="#no-active-or-default-session" title="Permalink to this headline">#</a></h2>
+<p>No active or default HyperBatch session found. Please create a new HyperBatch session before running the code.</p>
+</section>
+<section id="no-active-session">
+<h2>NO_ACTIVE_SESSION<a class="headerlink" href="#no-active-session" title="Permalink to this headline">#</a></h2>
+<p>No active HyperBatch session found. Please create a new HyperBatch session before running the code.</p>
+</section>
+<section id="no-observe-before-get">
+<h2>NO_OBSERVE_BEFORE_GET<a class="headerlink" href="#no-observe-before-get" title="Permalink to this headline">#</a></h2>
+<p>Should observe by calling <cite>DataFrame.observe</cite> before <cite>get</cite>.</p>
+</section>
+<section id="no-schema-and-driver-default-scheme">
+<h2>NO_SCHEMA_AND_DRIVER_DEFAULT_SCHEME<a class="headerlink" href="#no-schema-and-driver-default-scheme" title="Permalink to this headline">#</a></h2>
+<p>Only allows &lt;arg_name&gt; to be a path without scheme, and HyperBatch Driver should use the default scheme to determine the destination file system.</p>
+</section>
+<section id="only-allowed-for-single-column">
+<h2>ONLY_ALLOWED_FOR_SINGLE_COLUMN<a class="headerlink" href="#only-allowed-for-single-column" title="Permalink to this headline">#</a></h2>
+<p>Argument <cite>&lt;arg_name&gt;</cite> can only be provided for a single column.</p>
+</section>
+<section id="only-allow-single-trigger">
+<h2>ONLY_ALLOW_SINGLE_TRIGGER<a class="headerlink" href="#only-allow-single-trigger" title="Permalink to this headline">#</a></h2>
+<p>Only a single trigger is allowed.</p>
+</section>
+<section id="only-supported-with-hyperbatch-connect">
+<h2>ONLY_SUPPORTED_WITH_HYPERBATCH_CONNECT<a class="headerlink" href="#only-supported-with-hyperbatch-connect" title="Permalink to this headline">#</a></h2>
+<p>&lt;feature&gt; is only supported with HyperBatch Connect; however, the current HyperBatch session does not use HyperBatch Connect.</p>
+</section>
+<section id="output-exceeds-input-rows">
+<h2>OUTPUT_EXCEEDS_INPUT_ROWS<a class="headerlink" href="#output-exceeds-input-rows" title="Permalink to this headline">#</a></h2>
+<p>The number of output rows must not exceed the number of input rows.</p>
+</section>
+<section id="package-not-installed">
+<h2>PACKAGE_NOT_INSTALLED<a class="headerlink" href="#package-not-installed" title="Permalink to this headline">#</a></h2>
+<p>&lt;package_name&gt; &gt;= &lt;minimum_version&gt; must be installed; however, it was not found.</p>
+</section>
+<section id="pandas-api-on-hyperbatch-fail-on-ansi-mode">
+<h2>PANDAS_API_ON_HYPERBATCH_FAIL_ON_ANSI_MODE<a class="headerlink" href="#pandas-api-on-hyperbatch-fail-on-ansi-mode" title="Permalink to this headline">#</a></h2>
+<p>Pandas API on HyperBatch does not properly work on ANSI mode.
+Please set a HyperBatch config ‘hyperbatch.sql.ansi.enabled’ to <cite>false</cite>.
+Alternatively set a pandas-on-hyperbatch option ‘compute.fail_on_ansi_mode’ to <cite>False</cite> to force it to work, although it can cause unexpected behavior.</p>
+</section>
+<section id="pipeline-spec-dict-key-not-string">
+<h2>PIPELINE_SPEC_DICT_KEY_NOT_STRING<a class="headerlink" href="#pipeline-spec-dict-key-not-string" title="Permalink to this headline">#</a></h2>
+<p>For pipeline spec field <cite>&lt;field_name&gt;</cite>, key should be a string, got &lt;key_type&gt;.</p>
+</section>
+<section id="pipeline-spec-dict-value-not-string">
+<h2>PIPELINE_SPEC_DICT_VALUE_NOT_STRING<a class="headerlink" href="#pipeline-spec-dict-value-not-string" title="Permalink to this headline">#</a></h2>
+<p>For pipeline spec field <cite>&lt;field_name&gt;</cite>, value for key <cite>&lt;key_name&gt;</cite> should be a string, got &lt;value_type&gt;.</p>
+</section>
+<section id="pipeline-spec-field-not-dict">
+<h2>PIPELINE_SPEC_FIELD_NOT_DICT<a class="headerlink" href="#pipeline-spec-field-not-dict" title="Permalink to this headline">#</a></h2>
+<p>Pipeline spec field <cite>&lt;field_name&gt;</cite> should be a dict, got &lt;field_type&gt;.</p>
+</section>
+<section id="pipeline-spec-file-does-not-exist">
+<h2>PIPELINE_SPEC_FILE_DOES_NOT_EXIST<a class="headerlink" href="#pipeline-spec-file-does-not-exist" title="Permalink to this headline">#</a></h2>
+<p>The pipeline spec file <cite>&lt;spec_path&gt;</cite> does not exist.</p>
+</section>
+<section id="pipeline-spec-file-not-found">
+<h2>PIPELINE_SPEC_FILE_NOT_FOUND<a class="headerlink" href="#pipeline-spec-file-not-found" title="Permalink to this headline">#</a></h2>
+<p>No hyperbatch-pipeline.yaml or hyperbatch-pipeline.yml file provided in arguments or found in directory <cite>&lt;dir_path&gt;</cite> or readable ancestor directories.</p>
+</section>
+<section id="pipeline-spec-invalid-glob-pattern">
+<h2>PIPELINE_SPEC_INVALID_GLOB_PATTERN<a class="headerlink" href="#pipeline-spec-invalid-glob-pattern" title="Permalink to this headline">#</a></h2>
+<p>Invalid glob pattern <cite>&lt;glob_pattern&gt;</cite> in libraries. Only file paths, or folder paths ending with /** are allowed.</p>
+</section>
+<section id="pipeline-spec-missing-required-field">
+<h2>PIPELINE_SPEC_MISSING_REQUIRED_FIELD<a class="headerlink" href="#pipeline-spec-missing-required-field" title="Permalink to this headline">#</a></h2>
+<p>Pipeline spec missing required field <cite>&lt;field_name&gt;</cite>.</p>
+</section>
+<section id="pipeline-spec-unexpected-field">
+<h2>PIPELINE_SPEC_UNEXPECTED_FIELD<a class="headerlink" href="#pipeline-spec-unexpected-field" title="Permalink to this headline">#</a></h2>
+<p>Pipeline spec field <cite>&lt;field_name&gt;</cite> is unexpected.</p>
+</section>
+<section id="pipeline-unsupported-definitions-file-extension">
+<h2>PIPELINE_UNSUPPORTED_DEFINITIONS_FILE_EXTENSION<a class="headerlink" href="#pipeline-unsupported-definitions-file-extension" title="Permalink to this headline">#</a></h2>
+<p>Pipeline definitions file <cite>&lt;file_path&gt;</cite> has an unsupported extension. Supported extensions are <cite>.py</cite> and <cite>.sql</cite>.</p>
+</section>
+<section id="pipe-function-exited">
+<h2>PIPE_FUNCTION_EXITED<a class="headerlink" href="#pipe-function-exited" title="Permalink to this headline">#</a></h2>
+<p>Pipe function <cite>&lt;func_name&gt;</cite> exited with error code &lt;error_code&gt;.</p>
+</section>
+<section id="plot-invalid-type-column">
+<h2>PLOT_INVALID_TYPE_COLUMN<a class="headerlink" href="#plot-invalid-type-column" title="Permalink to this headline">#</a></h2>
+<p>Column &lt;col_name&gt; must be one of &lt;valid_types&gt; for plotting, got &lt;col_type&gt;.</p>
+</section>
+<section id="protocol-error">
+<h2>PROTOCOL_ERROR<a class="headerlink" href="#protocol-error" title="Permalink to this headline">#</a></h2>
+<p>&lt;failure&gt;. This usually indicates that the message does not conform to the protocol.</p>
+</section>
+<section id="python-hash-seed-not-set">
+<h2>PYTHON_HASH_SEED_NOT_SET<a class="headerlink" href="#python-hash-seed-not-set" title="Permalink to this headline">#</a></h2>
+<p>Randomness of hash of string should be disabled via PYTHONHASHSEED.</p>
+</section>
+<section id="python-streaming-data-source-runtime-error">
+<h2>PYTHON_STREAMING_DATA_SOURCE_RUNTIME_ERROR<a class="headerlink" href="#python-streaming-data-source-runtime-error" title="Permalink to this headline">#</a></h2>
+<p>Failed when running Python streaming data source: &lt;msg&gt;</p>
+</section>
+<section id="python-version-mismatch">
+<h2>PYTHON_VERSION_MISMATCH<a class="headerlink" href="#python-version-mismatch" title="Permalink to this headline">#</a></h2>
+<p>Python in worker has different version: &lt;worker_version&gt; than that in driver: &lt;driver_version&gt;, PyHyperBatch cannot run with different minor versions.
+Please check environment variables PYHYPERBATCH_PYTHON and PYHYPERBATCH_DRIVER_PYTHON are correctly set.</p>
+</section>
+<section id="rdd-transform-only-valid-on-driver">
+<h2>RDD_TRANSFORM_ONLY_VALID_ON_DRIVER<a class="headerlink" href="#rdd-transform-only-valid-on-driver" title="Permalink to this headline">#</a></h2>
+<p>It appears that you are attempting to broadcast an RDD or reference an RDD from an
+action or transformation. RDD transformations and actions can only be invoked by the
+driver, not inside of other transformations; for example,
+rdd1.map(lambda x: rdd2.values.count() * x) is invalid because the values
+transformation and count action cannot be performed inside of the rdd1.map
+transformation. For more information, see HYPERBATCH-5063.</p>
+</section>
+<section id="read-only">
+<h2>READ_ONLY<a class="headerlink" href="#read-only" title="Permalink to this headline">#</a></h2>
+<p>&lt;object&gt; is read-only.</p>
+</section>
+<section id="response-already-received">
+<h2>RESPONSE_ALREADY_RECEIVED<a class="headerlink" href="#response-already-received" title="Permalink to this headline">#</a></h2>
+<p>&lt;error_type&gt; on the server but responses were already received from it.</p>
+</section>
+<section id="result-column-names-mismatch">
+<h2>RESULT_COLUMN_NAMES_MISMATCH<a class="headerlink" href="#result-column-names-mismatch" title="Permalink to this headline">#</a></h2>
+<p>Column names of the returned data do not match specified schema.&lt;missing&gt;&lt;extra&gt;</p>
+</section>
+<section id="result-column-schema-mismatch">
+<h2>RESULT_COLUMN_SCHEMA_MISMATCH<a class="headerlink" href="#result-column-schema-mismatch" title="Permalink to this headline">#</a></h2>
+<p>Number of columns of the returned data doesn’t match specified schema. Expected: &lt;expected&gt; Actual: &lt;actual&gt;</p>
+</section>
+<section id="result-column-types-mismatch">
+<h2>RESULT_COLUMN_TYPES_MISMATCH<a class="headerlink" href="#result-column-types-mismatch" title="Permalink to this headline">#</a></h2>
+<p>Column types of the returned data do not match specified schema. Mismatch: &lt;mismatch&gt;.</p>
+</section>
+<section id="result-rows-mismatch">
+<h2>RESULT_ROWS_MISMATCH<a class="headerlink" href="#result-rows-mismatch" title="Permalink to this headline">#</a></h2>
+<p>The number of output rows (&lt;output_length&gt;) must match the number of input rows (&lt;input_length&gt;).</p>
+</section>
+<section id="reuse-observation">
+<h2>REUSE_OBSERVATION<a class="headerlink" href="#reuse-observation" title="Permalink to this headline">#</a></h2>
+<p>An Observation can be used with a DataFrame only once.</p>
+</section>
+<section id="schema-mismatch-for-pandas-udf">
+<h2>SCHEMA_MISMATCH_FOR_PANDAS_UDF<a class="headerlink" href="#schema-mismatch-for-pandas-udf" title="Permalink to this headline">#</a></h2>
+<p>Result vector from &lt;udf_type&gt; was not the required length: expected &lt;expected&gt;, got &lt;actual&gt;.</p>
+</section>
+<section id="session-already-exist">
+<h2>SESSION_ALREADY_EXIST<a class="headerlink" href="#session-already-exist" title="Permalink to this headline">#</a></h2>
+<p>Cannot start a remote HyperBatch session because there is a regular HyperBatch session already running.</p>
+</section>
+<section id="session-mutation-in-declarative-pipeline">
+<h2>SESSION_MUTATION_IN_DECLARATIVE_PIPELINE<a class="headerlink" href="#session-mutation-in-declarative-pipeline" title="Permalink to this headline">#</a></h2>
+<p>Session mutation &lt;method&gt; is not allowed in declarative pipelines.</p>
+</section>
+<section id="session-need-conn-str-or-builder">
+<h2>SESSION_NEED_CONN_STR_OR_BUILDER<a class="headerlink" href="#session-need-conn-str-or-builder" title="Permalink to this headline">#</a></h2>
+<p>Needs either connection string or channelBuilder (mutually exclusive) to create a new HyperBatchSession.</p>
+</section>
+<section id="session-not-same">
+<h2>SESSION_NOT_SAME<a class="headerlink" href="#session-not-same" title="Permalink to this headline">#</a></h2>
+<p>Both Datasets must belong to the same HyperBatchSession.</p>
+</section>
+<section id="session-or-context-exists">
+<h2>SESSION_OR_CONTEXT_EXISTS<a class="headerlink" href="#session-or-context-exists" title="Permalink to this headline">#</a></h2>
+<p>There should not be an existing HyperBatch Session or HyperBatch Context.</p>
+</section>
+<section id="session-or-context-not-exists">
+<h2>SESSION_OR_CONTEXT_NOT_EXISTS<a class="headerlink" href="#session-or-context-not-exists" title="Permalink to this headline">#</a></h2>
+<p>HyperBatchContext or HyperBatchSession should be created first.</p>
+</section>
+<section id="simple-stream-reader-offset-did-not-advance">
+<h2>SIMPLE_STREAM_READER_OFFSET_DID_NOT_ADVANCE<a class="headerlink" href="#simple-stream-reader-offset-did-not-advance" title="Permalink to this headline">#</a></h2>
+<p>SimpleDataSourceStreamReader.read() returned a non-empty batch but the end offset: &lt;end_offset&gt; did not advance past the start offset: &lt;start_offset&gt;. The end offset must represent the position after the last record returned.</p>
+</section>
+<section id="slice-with-step">
+<h2>SLICE_WITH_STEP<a class="headerlink" href="#slice-with-step" title="Permalink to this headline">#</a></h2>
+<p>Slice with step is not supported.</p>
+</section>
+<section id="state-not-exists">
+<h2>STATE_NOT_EXISTS<a class="headerlink" href="#state-not-exists" title="Permalink to this headline">#</a></h2>
+<p>State is either not defined or has already been removed.</p>
+</section>
+<section id="stop-iteration-occurred">
+<h2>STOP_ITERATION_OCCURRED<a class="headerlink" href="#stop-iteration-occurred" title="Permalink to this headline">#</a></h2>
+<p>Caught StopIteration thrown from user’s code; failing the task: &lt;exc&gt;</p>
+</section>
+<section id="streaming-connect-serialization-error">
+<h2>STREAMING_CONNECT_SERIALIZATION_ERROR<a class="headerlink" href="#streaming-connect-serialization-error" title="Permalink to this headline">#</a></h2>
+<p>Cannot serialize the function <cite>&lt;name&gt;</cite>. If you accessed the HyperBatch session, or a DataFrame defined outside of the function, or any object that contains a HyperBatch session, please be aware that they are not allowed in HyperBatch Connect. For <cite>foreachBatch</cite>, please access the HyperBatch session using <cite>df.hyperbatchSession</cite>, where <cite>df</cite> is the first parameter in your <cite>foreachBatch</cite> function. For <cite>StreamingQueryListener</cite>, please access the HyperBatch session using <cite>self.hyperbatch</cite>. For details please check out the PyHyperBatch doc for <cite>foreachBatch</cite> and <cite>StreamingQueryListener</cite>.</p>
+</section>
+<section id="st-invalid-algorithm-value">
+<h2>ST_INVALID_ALGORITHM_VALUE<a class="headerlink" href="#st-invalid-algorithm-value" title="Permalink to this headline">#</a></h2>
+<p>Invalid or unsupported edge interpolation algorithm value: ‘&lt;alg&gt;’.</p>
+</section>
+<section id="st-invalid-crs-value">
+<h2>ST_INVALID_CRS_VALUE<a class="headerlink" href="#st-invalid-crs-value" title="Permalink to this headline">#</a></h2>
+<p>Invalid or unsupported CRS (coordinate reference system) value: ‘&lt;crs&gt;’.</p>
+</section>
+<section id="st-invalid-endianness-value">
+<h2>ST_INVALID_ENDIANNESS_VALUE<a class="headerlink" href="#st-invalid-endianness-value" title="Permalink to this headline">#</a></h2>
+<p>Endianness ‘&lt;endianness&gt;’ must be either ‘NDR’ (little-endian) or ‘XDR’ (big-endian).</p>
+</section>
+<section id="st-invalid-srid-value">
+<h2>ST_INVALID_SRID_VALUE<a class="headerlink" href="#st-invalid-srid-value" title="Permalink to this headline">#</a></h2>
+<p>Invalid or unsupported SRID (spatial reference identifier) value: &lt;srid&gt;.</p>
+</section>
+<section id="test-class-not-compiled">
+<h2>TEST_CLASS_NOT_COMPILED<a class="headerlink" href="#test-class-not-compiled" title="Permalink to this headline">#</a></h2>
+<p>&lt;test_class_path&gt; doesn’t exist. HyperBatch sql test classes are not compiled.</p>
+</section>
+<section id="too-many-values">
+<h2>TOO_MANY_VALUES<a class="headerlink" href="#too-many-values" title="Permalink to this headline">#</a></h2>
+<p>Expected &lt;expected&gt; values for <cite>&lt;item&gt;</cite>, got &lt;actual&gt;.</p>
+</section>
+<section id="type-hint-should-be-specified">
+<h2>TYPE_HINT_SHOULD_BE_SPECIFIED<a class="headerlink" href="#type-hint-should-be-specified" title="Permalink to this headline">#</a></h2>
+<p>Type hints for &lt;target&gt; should be specified; however, got &lt;sig&gt;.</p>
+</section>
+<section id="udf-return-type">
+<h2>UDF_RETURN_TYPE<a class="headerlink" href="#udf-return-type" title="Permalink to this headline">#</a></h2>
+<p>Return type of the user-defined function should be &lt;expected&gt;, but is &lt;actual&gt;.</p>
+</section>
+<section id="udtf-arrow-data-conversion-error">
+<h2>UDTF_ARROW_DATA_CONVERSION_ERROR<a class="headerlink" href="#udtf-arrow-data-conversion-error" title="Permalink to this headline">#</a></h2>
+<p>Cannot convert UDTF output to Arrow. Data: &lt;data&gt;. Schema: &lt;schema&gt;. Arrow Schema: &lt;arrow_schema&gt;.</p>
+</section>
+<section id="udtf-arrow-type-conversion-error">
+<h2>UDTF_ARROW_TYPE_CONVERSION_ERROR<a class="headerlink" href="#udtf-arrow-type-conversion-error" title="Permalink to this headline">#</a></h2>
+<p>PyArrow UDTF must return an iterator of pyarrow.Table or pyarrow.RecordBatch objects.</p>
+</section>
+<section id="udtf-constructor-invalid-implements-analyze-method">
+<h2>UDTF_CONSTRUCTOR_INVALID_IMPLEMENTS_ANALYZE_METHOD<a class="headerlink" href="#udtf-constructor-invalid-implements-analyze-method" title="Permalink to this headline">#</a></h2>
+<p>Failed to evaluate the user-defined table function ‘&lt;name&gt;’ because its constructor is invalid: the function implements the ‘analyze’ method, but its constructor has more than two arguments (including the ‘self’ reference). Please update the table function so that its constructor accepts exactly one ‘self’ argument, or one ‘self’ argument plus another argument for the result of the ‘analyze’ method, and try the query again.</p>
+</section>
+<section id="udtf-constructor-invalid-no-analyze-method">
+<h2>UDTF_CONSTRUCTOR_INVALID_NO_ANALYZE_METHOD<a class="headerlink" href="#udtf-constructor-invalid-no-analyze-method" title="Permalink to this headline">#</a></h2>
+<p>Failed to evaluate the user-defined table function ‘&lt;name&gt;’ because its constructor is invalid: the function does not implement the ‘analyze’ method, and its constructor has more than one argument (including the ‘self’ reference). Please update the table function so that its constructor accepts exactly one ‘self’ argument, and try the query again.</p>
+</section>
+<section id="udtf-eval-method-arguments-do-not-match-signature">
+<h2>UDTF_EVAL_METHOD_ARGUMENTS_DO_NOT_MATCH_SIGNATURE<a class="headerlink" href="#udtf-eval-method-arguments-do-not-match-signature" title="Permalink to this headline">#</a></h2>
+<p>Failed to evaluate the user-defined table function ‘&lt;name&gt;’ because the function arguments did not match the expected signature of the ‘eval’ method (&lt;reason&gt;). Please update the query so that this table function call provides arguments matching the expected signature, or else update the table function so that its ‘eval’ method accepts the provided arguments, and then try the query again.</p>
+</section>
+<section id="udtf-exec-error">
+<h2>UDTF_EXEC_ERROR<a class="headerlink" href="#udtf-exec-error" title="Permalink to this headline">#</a></h2>
+<p>User defined table function encountered an error in the ‘&lt;method_name&gt;’ method: &lt;error&gt;</p>
+</section>
+<section id="udtf-invalid-output-row-type">
+<h2>UDTF_INVALID_OUTPUT_ROW_TYPE<a class="headerlink" href="#udtf-invalid-output-row-type" title="Permalink to this headline">#</a></h2>
+<p>The type of an individual output row in the ‘&lt;func&gt;’ method of the UDTF is invalid. Each row should be a tuple, list, or dict, but got ‘&lt;type&gt;’. Please make sure that the output rows are of the correct type.</p>
+</section>
+<section id="udtf-return-not-iterable">
+<h2>UDTF_RETURN_NOT_ITERABLE<a class="headerlink" href="#udtf-return-not-iterable" title="Permalink to this headline">#</a></h2>
+<p>The return value of the ‘&lt;func&gt;’ method of the UDTF is invalid. It should be an iterable (e.g., generator or list), but got ‘&lt;type&gt;’. Please make sure that the UDTF returns one of these types.</p>
+</section>
+<section id="udtf-return-schema-mismatch">
+<h2>UDTF_RETURN_SCHEMA_MISMATCH<a class="headerlink" href="#udtf-return-schema-mismatch" title="Permalink to this headline">#</a></h2>
+<p>The number of columns in the result does not match the specified schema. Expected column count: &lt;expected&gt;, Actual column count: &lt;actual&gt;. Please make sure the values returned by the ‘&lt;func&gt;’ method have the same number of columns as specified in the output schema.</p>
+</section>
+<section id="udtf-return-type-mismatch">
+<h2>UDTF_RETURN_TYPE_MISMATCH<a class="headerlink" href="#udtf-return-type-mismatch" title="Permalink to this headline">#</a></h2>
+<p>Mismatch in return type for the UDTF ‘&lt;name&gt;’. Expected a ‘StructType’, but got ‘&lt;return_type&gt;’. Please ensure the return type is a correctly formatted StructType.</p>
+</section>
+<section id="udtf-serialization-error">
+<h2>UDTF_SERIALIZATION_ERROR<a class="headerlink" href="#udtf-serialization-error" title="Permalink to this headline">#</a></h2>
+<p>Cannot serialize the UDTF ‘&lt;name&gt;’: &lt;message&gt;</p>
+</section>
+<section id="unexpected-response-from-server">
+<h2>UNEXPECTED_RESPONSE_FROM_SERVER<a class="headerlink" href="#unexpected-response-from-server" title="Permalink to this headline">#</a></h2>
+<p>Unexpected response from iterator server.</p>
+</section>
+<section id="unexpected-tuple-with-struct">
+<h2>UNEXPECTED_TUPLE_WITH_STRUCT<a class="headerlink" href="#unexpected-tuple-with-struct" title="Permalink to this headline">#</a></h2>
+<p>Unexpected tuple &lt;tuple&gt; with StructType.</p>
+</section>
+<section id="unknown-explain-mode">
+<h2>UNKNOWN_EXPLAIN_MODE<a class="headerlink" href="#unknown-explain-mode" title="Permalink to this headline">#</a></h2>
+<p>Unknown explain mode: ‘&lt;explain_mode&gt;’. Accepted explain modes are ‘simple’, ‘extended’, ‘codegen’, ‘cost’, ‘formatted’.</p>
+</section>
+<section id="unknown-interrupt-type">
+<h2>UNKNOWN_INTERRUPT_TYPE<a class="headerlink" href="#unknown-interrupt-type" title="Permalink to this headline">#</a></h2>
+<p>Unknown interrupt type: ‘&lt;interrupt_type&gt;’. Accepted interrupt types are ‘all’.</p>
+</section>
+<section id="unknown-response">
+<h2>UNKNOWN_RESPONSE<a class="headerlink" href="#unknown-response" title="Permalink to this headline">#</a></h2>
+<p>Unknown response: &lt;response&gt;.</p>
+</section>
+<section id="unknown-value-for">
+<h2>UNKNOWN_VALUE_FOR<a class="headerlink" href="#unknown-value-for" title="Permalink to this headline">#</a></h2>
+<p>Unknown value for <cite>&lt;var&gt;</cite>.</p>
+</section>
+<section id="unsupported-data-type">
+<h2>UNSUPPORTED_DATA_TYPE<a class="headerlink" href="#unsupported-data-type" title="Permalink to this headline">#</a></h2>
+<p>Unsupported DataType <cite>&lt;data_type&gt;</cite>.</p>
+</section>
+<section id="unsupported-data-type-for-arrow">
+<h2>UNSUPPORTED_DATA_TYPE_FOR_ARROW<a class="headerlink" href="#unsupported-data-type-for-arrow" title="Permalink to this headline">#</a></h2>
+<p>Single data type &lt;data_type&gt; is not supported with Arrow.</p>
+</section>
+<section id="unsupported-data-type-for-arrow-conversion">
+<h2>UNSUPPORTED_DATA_TYPE_FOR_ARROW_CONVERSION<a class="headerlink" href="#unsupported-data-type-for-arrow-conversion" title="Permalink to this headline">#</a></h2>
+<p>&lt;data_type&gt; is not supported in conversion to Arrow.</p>
+</section>
+<section id="unsupported-join-type">
+<h2>UNSUPPORTED_JOIN_TYPE<a class="headerlink" href="#unsupported-join-type" title="Permalink to this headline">#</a></h2>
+<p>Unsupported join type: ‘&lt;typ&gt;’. Supported join types include: &lt;supported&gt;.</p>
+</section>
+<section id="unsupported-literal">
+<h2>UNSUPPORTED_LITERAL<a class="headerlink" href="#unsupported-literal" title="Permalink to this headline">#</a></h2>
+<p>Unsupported Literal ‘&lt;literal&gt;’.</p>
+</section>
+<section id="unsupported-local-connection-string">
+<h2>UNSUPPORTED_LOCAL_CONNECTION_STRING<a class="headerlink" href="#unsupported-local-connection-string" title="Permalink to this headline">#</a></h2>
+<p>Creating new HyperBatchSessions with <cite>local</cite> connection string is not supported.</p>
+</section>
+<section id="unsupported-numpy-array-scalar">
+<h2>UNSUPPORTED_NUMPY_ARRAY_SCALAR<a class="headerlink" href="#unsupported-numpy-array-scalar" title="Permalink to this headline">#</a></h2>
+<p>The type of array scalar ‘&lt;dtype&gt;’ is not supported.</p>
+</section>
+<section id="unsupported-operation">
+<h2>UNSUPPORTED_OPERATION<a class="headerlink" href="#unsupported-operation" title="Permalink to this headline">#</a></h2>
+<p>&lt;operation&gt; is not supported.</p>
+</section>
+<section id="unsupported-package-version">
+<h2>UNSUPPORTED_PACKAGE_VERSION<a class="headerlink" href="#unsupported-package-version" title="Permalink to this headline">#</a></h2>
+<p>&lt;package_name&gt; &gt;= &lt;minimum_version&gt; must be installed; however, your version is &lt;current_version&gt;.</p>
+</section>
+<section id="unsupported-param-type-for-higher-order-function">
+<h2>UNSUPPORTED_PARAM_TYPE_FOR_HIGHER_ORDER_FUNCTION<a class="headerlink" href="#unsupported-param-type-for-higher-order-function" title="Permalink to this headline">#</a></h2>
+<p>Function <cite>&lt;func_name&gt;</cite> should use only POSITIONAL or POSITIONAL OR KEYWORD arguments.</p>
+</section>
+<section id="unsupported-pie-plot-param">
+<h2>UNSUPPORTED_PIE_PLOT_PARAM<a class="headerlink" href="#unsupported-pie-plot-param" title="Permalink to this headline">#</a></h2>
+<p>Pie plot requires either a <cite>y</cite> column or <cite>subplots=True</cite>.</p>
+</section>
+<section id="unsupported-pipelines-dataset-type">
+<h2>UNSUPPORTED_PIPELINES_DATASET_TYPE<a class="headerlink" href="#unsupported-pipelines-dataset-type" title="Permalink to this headline">#</a></h2>
+<p>Unsupported pipelines dataset type: &lt;dataset_type&gt;.</p>
+</section>
+<section id="unsupported-plot-backend">
+<h2>UNSUPPORTED_PLOT_BACKEND<a class="headerlink" href="#unsupported-plot-backend" title="Permalink to this headline">#</a></h2>
+<p><cite>&lt;backend&gt;</cite> is not supported, it should be one of the values from &lt;supported_backends&gt;</p>
+</section>
+<section id="unsupported-plot-backend-param">
+<h2>UNSUPPORTED_PLOT_BACKEND_PARAM<a class="headerlink" href="#unsupported-plot-backend-param" title="Permalink to this headline">#</a></h2>
+<p><cite>&lt;backend&gt;</cite> does not support <cite>&lt;param&gt;</cite> set to &lt;value&gt;, it should be one of the values from &lt;supported_values&gt;</p>
+</section>
+<section id="unsupported-plot-kind">
+<h2>UNSUPPORTED_PLOT_KIND<a class="headerlink" href="#unsupported-plot-kind" title="Permalink to this headline">#</a></h2>
+<p><cite>&lt;plot_type&gt;</cite> is not supported, it should be one of the values from &lt;supported_plot_types&gt;</p>
+</section>
+<section id="unsupported-signature">
+<h2>UNSUPPORTED_SIGNATURE<a class="headerlink" href="#unsupported-signature" title="Permalink to this headline">#</a></h2>
+<p>Unsupported signature: &lt;signature&gt;.</p>
+</section>
+<section id="value-allowed">
+<h2>VALUE_ALLOWED<a class="headerlink" href="#value-allowed" title="Permalink to this headline">#</a></h2>
+<p>Value for <cite>&lt;arg_name&gt;</cite> does not allow &lt;disallowed_value&gt;.</p>
+</section>
+<section id="value-not-accessible">
+<h2>VALUE_NOT_ACCESSIBLE<a class="headerlink" href="#value-not-accessible" title="Permalink to this headline">#</a></h2>
+<p>Value <cite>&lt;value&gt;</cite> cannot be accessed inside tasks.</p>
+</section>
+<section id="value-not-allowed">
+<h2>VALUE_NOT_ALLOWED<a class="headerlink" href="#value-not-allowed" title="Permalink to this headline">#</a></h2>
+<p>Value for <cite>&lt;arg_name&gt;</cite> has to be amongst the following values: &lt;allowed_values&gt;.</p>
+</section>
+<section id="value-not-any-or-all">
+<h2>VALUE_NOT_ANY_OR_ALL<a class="headerlink" href="#value-not-any-or-all" title="Permalink to this headline">#</a></h2>
+<p>Value for <cite>&lt;arg_name&gt;</cite> must be ‘any’ or ‘all’, got ‘&lt;arg_value&gt;’.</p>
+</section>
+<section id="value-not-between">
+<h2>VALUE_NOT_BETWEEN<a class="headerlink" href="#value-not-between" title="Permalink to this headline">#</a></h2>
+<p>Value for <cite>&lt;arg_name&gt;</cite> must be between &lt;min&gt; and &lt;max&gt;.</p>
+</section>
+<section id="value-not-non-empty-str">
+<h2>VALUE_NOT_NON_EMPTY_STR<a class="headerlink" href="#value-not-non-empty-str" title="Permalink to this headline">#</a></h2>
+<p>Value for <cite>&lt;arg_name&gt;</cite> must be a non-empty string, got ‘&lt;arg_value&gt;’.</p>
+</section>
+<section id="value-not-pearson">
+<h2>VALUE_NOT_PEARSON<a class="headerlink" href="#value-not-pearson" title="Permalink to this headline">#</a></h2>
+<p>Value for <cite>&lt;arg_name&gt;</cite> only supports ‘pearson’, got ‘&lt;arg_value&gt;’.</p>
+</section>
+<section id="value-not-plain-column-reference">
+<h2>VALUE_NOT_PLAIN_COLUMN_REFERENCE<a class="headerlink" href="#value-not-plain-column-reference" title="Permalink to this headline">#</a></h2>
+<p>Value <cite>&lt;val&gt;</cite> in <cite>&lt;field_name&gt;</cite> should be a plain column reference such as <cite>df.col</cite> or <cite>col(‘column’)</cite>.</p>
+</section>
+<section id="value-not-positive">
+<h2>VALUE_NOT_POSITIVE<a class="headerlink" href="#value-not-positive" title="Permalink to this headline">#</a></h2>
+<p>Value for <cite>&lt;arg_name&gt;</cite> must be positive, got ‘&lt;arg_value&gt;’.</p>
+</section>
+<section id="value-not-true">
+<h2>VALUE_NOT_TRUE<a class="headerlink" href="#value-not-true" title="Permalink to this headline">#</a></h2>
+<p>Value for <cite>&lt;arg_name&gt;</cite> must be True, got ‘&lt;arg_value&gt;’.</p>
+</section>
+<section id="value-out-of-bounds">
+<h2>VALUE_OUT_OF_BOUNDS<a class="headerlink" href="#value-out-of-bounds" title="Permalink to this headline">#</a></h2>
+<p>Value for <cite>&lt;arg_name&gt;</cite> must be between &lt;lower_bound&gt; and &lt;upper_bound&gt; (inclusive), got &lt;actual&gt;</p>
+</section>
+<section id="wkb-parse-error">
+<h2>WKB_PARSE_ERROR<a class="headerlink" href="#wkb-parse-error" title="Permalink to this headline">#</a></h2>
+<p>Error parsing WKB: &lt;parseError&gt; at position &lt;pos&gt;</p>
+</section>
+<section id="wrong-num-args-for-higher-order-function">
+<h2>WRONG_NUM_ARGS_FOR_HIGHER_ORDER_FUNCTION<a class="headerlink" href="#wrong-num-args-for-higher-order-function" title="Permalink to this headline">#</a></h2>
+<p>Function <cite>&lt;func_name&gt;</cite> should take between 1 and 3 arguments, but the provided function takes &lt;num_args&gt;.</p>
+</section>
+<section id="wrong-num-columns">
+<h2>WRONG_NUM_COLUMNS<a class="headerlink" href="#wrong-num-columns" title="Permalink to this headline">#</a></h2>
+<p>Function <cite>&lt;func_name&gt;</cite> should take at least &lt;num_cols&gt; columns.</p>
+</section>
+<section id="zero-index">
+<h2>ZERO_INDEX<a class="headerlink" href="#zero-index" title="Permalink to this headline">#</a></h2>
+<p>Index must be non-zero.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/development/errors.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

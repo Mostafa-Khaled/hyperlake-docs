@@ -1,0 +1,1920 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quickstart: Pandas API on HyperBatch — HyperBatch</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="Quickstart:-Pandas-API-on-HyperBatch">
+<h1>Quickstart: Pandas API on HyperBatch<a class="headerlink" href="#Quickstart:-Pandas-API-on-HyperBatch" title="Permalink to this headline">#</a></h1>
+<p>This is a short introduction to pandas API on HyperBatch, geared mainly for new users. This notebook shows you some key differences between pandas and pandas API on HyperBatch. You can run this examples by yourself in ‘Live Notebook: pandas API on HyperBatch’ at <a class="reference external" href="index.html">the quickstart page</a>.</p>
+<p>Customarily, we import pandas API on HyperBatch as follows:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">HyperBatchSession</span>
+</pre></div>
+</div>
+</div>
+<section id="Object-Creation">
+<h2>Object Creation<a class="headerlink" href="#Object-Creation" title="Permalink to this headline">#</a></h2>
+<p>Creating a pandas-on-HyperBatch Series by passing a list of values, letting pandas API on HyperBatch create a default integer index:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>0    1.0
+1    3.0
+2    5.0
+3    NaN
+4    6.0
+5    8.0
+dtype: float64
+</pre></div></div>
+</div>
+<p>Creating a pandas-on-HyperBatch DataFrame by passing a dict of objects that can be converted to series-like.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">'a'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+     <span class="s1">'b'</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span>
+     <span class="s1">'c'</span><span class="p">:</span> <span class="p">[</span><span class="s2">"one"</span><span class="p">,</span> <span class="s2">"two"</span><span class="p">,</span> <span class="s2">"three"</span><span class="p">,</span> <span class="s2">"four"</span><span class="p">,</span> <span class="s2">"five"</span><span class="p">,</span> <span class="s2">"six"</span><span class="p">]},</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>a</th>
+      <th>b</th>
+      <th>c</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>10</th>
+      <td>1</td>
+      <td>100</td>
+      <td>one</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>2</td>
+      <td>200</td>
+      <td>two</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>3</td>
+      <td>300</td>
+      <td>three</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>4</td>
+      <td>400</td>
+      <td>four</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>5</td>
+      <td>500</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>60</th>
+      <td>6</td>
+      <td>600</td>
+      <td>six</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Creating a pandas DataFrame by passing a numpy array, with a datetime index and labeled columns:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s1">'20130101'</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dates</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>DatetimeIndex(['2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04',
+               '2013-01-05', '2013-01-06'],
+              dtype='datetime64[ns]', freq='D')
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">dates</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="s1">'ABCD'</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pdf</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2013-01-01</th>
+      <td>0.912558</td>
+      <td>-0.795645</td>
+      <td>-0.289115</td>
+      <td>0.187606</td>
+    </tr>
+    <tr>
+      <th>2013-01-02</th>
+      <td>-0.059703</td>
+      <td>-1.233897</td>
+      <td>0.316625</td>
+      <td>-1.226828</td>
+    </tr>
+    <tr>
+      <th>2013-01-03</th>
+      <td>0.332871</td>
+      <td>-1.262010</td>
+      <td>-0.434844</td>
+      <td>-0.579920</td>
+    </tr>
+    <tr>
+      <th>2013-01-04</th>
+      <td>0.924016</td>
+      <td>-1.022019</td>
+      <td>-0.405249</td>
+      <td>-1.036021</td>
+    </tr>
+    <tr>
+      <th>2013-01-05</th>
+      <td>-0.772209</td>
+      <td>-1.228099</td>
+      <td>0.068901</td>
+      <td>0.896679</td>
+    </tr>
+    <tr>
+      <th>2013-01-06</th>
+      <td>1.485582</td>
+      <td>-0.709306</td>
+      <td>-0.202637</td>
+      <td>-0.248766</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Now, this pandas DataFrame can be converted to a pandas-on-HyperBatch DataFrame</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">psdf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>pyhyperbatch.pandas.frame.DataFrame
+</pre></div></div>
+</div>
+<p>It looks and behaves the same as a pandas DataFrame.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2013-01-01</th>
+      <td>0.912558</td>
+      <td>-0.795645</td>
+      <td>-0.289115</td>
+      <td>0.187606</td>
+    </tr>
+    <tr>
+      <th>2013-01-02</th>
+      <td>-0.059703</td>
+      <td>-1.233897</td>
+      <td>0.316625</td>
+      <td>-1.226828</td>
+    </tr>
+    <tr>
+      <th>2013-01-03</th>
+      <td>0.332871</td>
+      <td>-1.262010</td>
+      <td>-0.434844</td>
+      <td>-0.579920</td>
+    </tr>
+    <tr>
+      <th>2013-01-04</th>
+      <td>0.924016</td>
+      <td>-1.022019</td>
+      <td>-0.405249</td>
+      <td>-1.036021</td>
+    </tr>
+    <tr>
+      <th>2013-01-05</th>
+      <td>-0.772209</td>
+      <td>-1.228099</td>
+      <td>0.068901</td>
+      <td>0.896679</td>
+    </tr>
+    <tr>
+      <th>2013-01-06</th>
+      <td>1.485582</td>
+      <td>-0.709306</td>
+      <td>-0.202637</td>
+      <td>-0.248766</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Also, it is possible to create a pandas-on-HyperBatch DataFrame from HyperBatch DataFrame easily.</p>
+<p>Creating a HyperBatch DataFrame from pandas DataFrame</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hyperbatch</span> <span class="o">=</span> <span class="n">HyperBatchSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sdf</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+--------------------+-------------------+--------------------+--------------------+
+|                   A|                  B|                   C|                   D|
++--------------------+-------------------+--------------------+--------------------+
+|    0.91255803205208|-0.7956452608556638|-0.28911463069772175| 0.18760566615081622|
+|-0.05970271470242...| -1.233896949308984|  0.3166246451758431| -1.2268284000402265|
+| 0.33287106947536615|-1.2620100816441786| -0.4348444277082644| -0.5799199651437185|
+|  0.9240158461589916|-1.0220190956326003| -0.4052488880650239| -1.0360212104348547|
+| -0.7722090016558953|-1.2280986385313222|  0.0689011451939635|  0.8966790729426755|
+|  1.4855822995785612|-0.7093056426018517| -0.2026366848847041|-0.24876619876451092|
++--------------------+-------------------+--------------------+--------------------+
+
+</pre></div></div>
+</div>
+<p>Creating pandas-on-HyperBatch DataFrame from HyperBatch DataFrame.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span> <span class="o">=</span> <span class="n">sdf</span><span class="o">.</span><span class="n">pandas_api</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.912558</td>
+      <td>-0.795645</td>
+      <td>-0.289115</td>
+      <td>0.187606</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.059703</td>
+      <td>-1.233897</td>
+      <td>0.316625</td>
+      <td>-1.226828</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.332871</td>
+      <td>-1.262010</td>
+      <td>-0.434844</td>
+      <td>-0.579920</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.924016</td>
+      <td>-1.022019</td>
+      <td>-0.405249</td>
+      <td>-1.036021</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.772209</td>
+      <td>-1.228099</td>
+      <td>0.068901</td>
+      <td>0.896679</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1.485582</td>
+      <td>-0.709306</td>
+      <td>-0.202637</td>
+      <td>-0.248766</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Having specific <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/basics.html#basics-dtypes">dtypes</a> . Types that are common to both HyperBatch and pandas are currently supported.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>A    float64
+B    float64
+C    float64
+D    float64
+dtype: object
+</pre></div></div>
+</div>
+<p>Here is how to show top rows from the frame below.</p>
+<p>Note that the data in a HyperBatch dataframe does not preserve the natural order by default. The natural order can be preserved by setting <code class="docutils literal notranslate"><span class="pre">compute.ordered_head</span></code> option but it causes a performance overhead with sorting internally.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.912558</td>
+      <td>-0.795645</td>
+      <td>-0.289115</td>
+      <td>0.187606</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.059703</td>
+      <td>-1.233897</td>
+      <td>0.316625</td>
+      <td>-1.226828</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.332871</td>
+      <td>-1.262010</td>
+      <td>-0.434844</td>
+      <td>-0.579920</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.924016</td>
+      <td>-1.022019</td>
+      <td>-0.405249</td>
+      <td>-1.036021</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.772209</td>
+      <td>-1.228099</td>
+      <td>0.068901</td>
+      <td>0.896679</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Displaying the index, columns, and the underlying numpy data.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>Index([0, 1, 2, 3, 4, 5], dtype='int64')
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>Index(['A', 'B', 'C', 'D'], dtype='object')
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>array([[ 0.91255803, -0.79564526, -0.28911463,  0.18760567],
+       [-0.05970271, -1.23389695,  0.31662465, -1.2268284 ],
+       [ 0.33287107, -1.26201008, -0.43484443, -0.57991997],
+       [ 0.92401585, -1.0220191 , -0.40524889, -1.03602121],
+       [-0.772209  , -1.22809864,  0.06890115,  0.89667907],
+       [ 1.4855823 , -0.70930564, -0.20263668, -0.2487662 ]])
+</pre></div></div>
+</div>
+<p>Showing a quick statistic summary of your data</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>6.000000</td>
+      <td>6.000000</td>
+      <td>6.000000</td>
+      <td>6.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.470519</td>
+      <td>-1.041829</td>
+      <td>-0.157720</td>
+      <td>-0.334542</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.809428</td>
+      <td>0.241511</td>
+      <td>0.294520</td>
+      <td>0.793014</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>-0.772209</td>
+      <td>-1.262010</td>
+      <td>-0.434844</td>
+      <td>-1.226828</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>-0.059703</td>
+      <td>-1.233897</td>
+      <td>-0.405249</td>
+      <td>-1.036021</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.332871</td>
+      <td>-1.228099</td>
+      <td>-0.289115</td>
+      <td>-0.579920</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.924016</td>
+      <td>-0.795645</td>
+      <td>0.068901</td>
+      <td>0.187606</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.485582</td>
+      <td>-0.709306</td>
+      <td>0.316625</td>
+      <td>0.896679</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Transposing your data</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A</th>
+      <td>0.912558</td>
+      <td>-0.059703</td>
+      <td>0.332871</td>
+      <td>0.924016</td>
+      <td>-0.772209</td>
+      <td>1.485582</td>
+    </tr>
+    <tr>
+      <th>B</th>
+      <td>-0.795645</td>
+      <td>-1.233897</td>
+      <td>-1.262010</td>
+      <td>-1.022019</td>
+      <td>-1.228099</td>
+      <td>-0.709306</td>
+    </tr>
+    <tr>
+      <th>C</th>
+      <td>-0.289115</td>
+      <td>0.316625</td>
+      <td>-0.434844</td>
+      <td>-0.405249</td>
+      <td>0.068901</td>
+      <td>-0.202637</td>
+    </tr>
+    <tr>
+      <th>D</th>
+      <td>0.187606</td>
+      <td>-1.226828</td>
+      <td>-0.579920</td>
+      <td>-1.036021</td>
+      <td>0.896679</td>
+      <td>-0.248766</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Sorting by its index</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>1.485582</td>
+      <td>-0.709306</td>
+      <td>-0.202637</td>
+      <td>-0.248766</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.772209</td>
+      <td>-1.228099</td>
+      <td>0.068901</td>
+      <td>0.896679</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.924016</td>
+      <td>-1.022019</td>
+      <td>-0.405249</td>
+      <td>-1.036021</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.332871</td>
+      <td>-1.262010</td>
+      <td>-0.434844</td>
+      <td>-0.579920</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.059703</td>
+      <td>-1.233897</td>
+      <td>0.316625</td>
+      <td>-1.226828</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>0.912558</td>
+      <td>-0.795645</td>
+      <td>-0.289115</td>
+      <td>0.187606</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Sorting by value</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">'B'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>0.332871</td>
+      <td>-1.262010</td>
+      <td>-0.434844</td>
+      <td>-0.579920</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.059703</td>
+      <td>-1.233897</td>
+      <td>0.316625</td>
+      <td>-1.226828</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.772209</td>
+      <td>-1.228099</td>
+      <td>0.068901</td>
+      <td>0.896679</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.924016</td>
+      <td>-1.022019</td>
+      <td>-0.405249</td>
+      <td>-1.036021</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>0.912558</td>
+      <td>-0.795645</td>
+      <td>-0.289115</td>
+      <td>0.187606</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1.485582</td>
+      <td>-0.709306</td>
+      <td>-0.202637</td>
+      <td>-0.248766</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+</section>
+<section id="Missing-Data">
+<h2>Missing Data<a class="headerlink" href="#Missing-Data" title="Permalink to this headline">#</a></h2>
+<p>Pandas API on HyperBatch primarily uses the value <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> to represent missing data. It is by default not included in computations.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pdf1</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">dates</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">pdf</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'E'</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pdf1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">dates</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">dates</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">'E'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf1</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pdf1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2013-01-01</th>
+      <td>0.912558</td>
+      <td>-0.795645</td>
+      <td>-0.289115</td>
+      <td>0.187606</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2013-01-02</th>
+      <td>-0.059703</td>
+      <td>-1.233897</td>
+      <td>0.316625</td>
+      <td>-1.226828</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2013-01-03</th>
+      <td>0.332871</td>
+      <td>-1.262010</td>
+      <td>-0.434844</td>
+      <td>-0.579920</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2013-01-04</th>
+      <td>0.924016</td>
+      <td>-1.022019</td>
+      <td>-0.405249</td>
+      <td>-1.036021</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>To drop any rows that have missing data.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf1</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">'any'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2013-01-01</th>
+      <td>0.912558</td>
+      <td>-0.795645</td>
+      <td>-0.289115</td>
+      <td>0.187606</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2013-01-02</th>
+      <td>-0.059703</td>
+      <td>-1.233897</td>
+      <td>0.316625</td>
+      <td>-1.226828</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Filling missing data.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf1</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>E</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2013-01-01</th>
+      <td>0.912558</td>
+      <td>-0.795645</td>
+      <td>-0.289115</td>
+      <td>0.187606</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2013-01-02</th>
+      <td>-0.059703</td>
+      <td>-1.233897</td>
+      <td>0.316625</td>
+      <td>-1.226828</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2013-01-03</th>
+      <td>0.332871</td>
+      <td>-1.262010</td>
+      <td>-0.434844</td>
+      <td>-0.579920</td>
+      <td>5.0</td>
+    </tr>
+    <tr>
+      <th>2013-01-04</th>
+      <td>0.924016</td>
+      <td>-1.022019</td>
+      <td>-0.405249</td>
+      <td>-1.036021</td>
+      <td>5.0</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+</section>
+<section id="Operations">
+<h2>Operations<a class="headerlink" href="#Operations" title="Permalink to this headline">#</a></h2>
+<section id="Stats">
+<h3>Stats<a class="headerlink" href="#Stats" title="Permalink to this headline">#</a></h3>
+<p>Performing a descriptive statistic:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>A    0.470519
+B   -1.041829
+C   -0.157720
+D   -0.334542
+dtype: float64
+</pre></div></div>
+</div>
+</section>
+<section id="HyperBatch-Configurations">
+<h3>HyperBatch Configurations<a class="headerlink" href="#HyperBatch-Configurations" title="Permalink to this headline">#</a></h3>
+<p>Various configurations in PyHyperBatch could be applied internally in pandas API on HyperBatch. For example, you can enable Arrow optimization to hugely speed up internal pandas conversion. See also PyHyperBatch Usage Guide for Pandas with Apache Arrow in PyHyperBatch documentation.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prev</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"hyperbatch.sql.execution.arrow.pyhyperbatch.enabled"</span><span class="p">)</span>  <span class="c1"># Keep its default value.</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">"compute.default_index_type"</span><span class="p">,</span> <span class="s2">"distributed"</span><span class="p">)</span>  <span class="c1"># Use default index prevent overhead.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>  <span class="c1"># Ignore warnings coming from Arrow optimizations.</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.execution.arrow.pyhyperbatch.enabled"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> ps.range(300000).to_pandas()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>900 ms ± 186 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.execution.arrow.pyhyperbatch.enabled"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="o">%</span><span class="k">timeit</span> ps.range(300000).to_pandas()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>3.08 s ± 227 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ps</span><span class="o">.</span><span class="n">reset_option</span><span class="p">(</span><span class="s2">"compute.default_index_type"</span><span class="p">)</span>
+<span class="n">hyperbatch</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"hyperbatch.sql.execution.arrow.pyhyperbatch.enabled"</span><span class="p">,</span> <span class="n">prev</span><span class="p">)</span>  <span class="c1"># Set its default value back.</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Grouping">
+<h2>Grouping<a class="headerlink" href="#Grouping" title="Permalink to this headline">#</a></h2>
+<p>By “group by” we are referring to a process involving one or more of the following steps:</p>
+<ul class="simple">
+<li><p>Splitting the data into groups based on some criteria</p></li>
+<li><p>Applying a function to each group independently</p></li>
+<li><p>Combining the results into a data structure</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'A'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">,</span> <span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">,</span>
+                          <span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">,</span> <span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'foo'</span><span class="p">],</span>
+                    <span class="s1">'B'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'one'</span><span class="p">,</span> <span class="s1">'one'</span><span class="p">,</span> <span class="s1">'two'</span><span class="p">,</span> <span class="s1">'three'</span><span class="p">,</span>
+                          <span class="s1">'two'</span><span class="p">,</span> <span class="s1">'two'</span><span class="p">,</span> <span class="s1">'one'</span><span class="p">,</span> <span class="s1">'three'</span><span class="p">],</span>
+                    <span class="s1">'C'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+                    <span class="s1">'D'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">8</span><span class="p">)})</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>foo</td>
+      <td>one</td>
+      <td>1.039632</td>
+      <td>-0.571950</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>bar</td>
+      <td>one</td>
+      <td>0.972089</td>
+      <td>1.085353</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>foo</td>
+      <td>two</td>
+      <td>-1.931621</td>
+      <td>-2.579164</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>bar</td>
+      <td>three</td>
+      <td>-0.654371</td>
+      <td>-0.340704</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>foo</td>
+      <td>two</td>
+      <td>-0.157080</td>
+      <td>0.893736</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>bar</td>
+      <td>two</td>
+      <td>0.882795</td>
+      <td>0.024978</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>foo</td>
+      <td>one</td>
+      <td>-0.149384</td>
+      <td>0.201667</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>foo</td>
+      <td>three</td>
+      <td>-1.355136</td>
+      <td>0.693883</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Grouping and then applying the <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.pandas/api/pyspark.pandas.groupby.GroupBy.sum.html">sum()</a> function to the resulting groups.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'A'</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+    <tr>
+      <th>A</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>bar</th>
+      <td>onethreetwo</td>
+      <td>1.200513</td>
+      <td>0.769627</td>
+    </tr>
+    <tr>
+      <th>foo</th>
+      <td>onetwotwoonethree</td>
+      <td>-2.553589</td>
+      <td>-1.361828</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>Grouping by multiple columns forms a hierarchical index, and again we can apply the sum function.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+    <tr>
+      <th>A</th>
+      <th>B</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="2" valign="top">foo</th>
+      <th>one</th>
+      <td>0.890248</td>
+      <td>-0.370283</td>
+    </tr>
+    <tr>
+      <th>two</th>
+      <td>-2.088701</td>
+      <td>-1.685428</td>
+    </tr>
+    <tr>
+      <th>bar</th>
+      <th>three</th>
+      <td>-0.654371</td>
+      <td>-0.340704</td>
+    </tr>
+    <tr>
+      <th>foo</th>
+      <th>three</th>
+      <td>-1.355136</td>
+      <td>0.693883</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">bar</th>
+      <th>two</th>
+      <td>0.882795</td>
+      <td>0.024978</td>
+    </tr>
+    <tr>
+      <th>one</th>
+      <td>0.972089</td>
+      <td>1.085353</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+</section>
+<section id="Plotting">
+<h2>Plotting<a class="headerlink" href="#Plotting" title="Permalink to this headline">#</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pser</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span>
+                 <span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s1">'1/1/2000'</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psser</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pser</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psser</span> <span class="o">=</span> <span class="n">psser</span><span class="o">.</span><span class="n">cummax</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psser</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+        </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>                            <div id="188c3657-3cc6-4765-b4fc-6e9c94a3ca14" class="plotly-graph-div" style="height:525px; width:100%;"></div>                    </div></div>
+</div>
+<p>On a DataFrame, the <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.pandas/api/pyspark.pandas.DataFrame.plot.html">plot()</a> method is a convenience to plot all of the columns with labels:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">pser</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                   <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span> <span class="o">=</span> <span class="n">psdf</span><span class="o">.</span><span class="n">cummax</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>                            <div id="fa5a0486-c037-44b5-af9e-13b4fd56600e" class="plotly-graph-div" style="height:525px; width:100%;"></div>                    </div></div>
+</div>
+<p>For more details, <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.pandas/frame.html#plotting">Plotting</a> documentation.</p>
+</section>
+<section id="Getting-data-in/out">
+<h2>Getting data in/out<a class="headerlink" href="#Getting-data-in/out" title="Permalink to this headline">#</a></h2>
+<section id="CSV">
+<h3>CSV<a class="headerlink" href="#CSV" title="Permalink to this headline">#</a></h3>
+<p>CSV is straightforward and easy to use. See <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.pandas/api/pyspark.pandas.DataFrame.to_csv.html">here</a> to write a CSV file and <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.pandas/api/pyspark.pandas.read_csv.html">here</a> to read a CSV file.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'foo.csv'</span><span class="p">)</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'foo.csv'</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-1.187097</td>
+      <td>-0.134645</td>
+      <td>0.377094</td>
+      <td>-0.627217</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.331741</td>
+      <td>0.166218</td>
+      <td>0.377094</td>
+      <td>-0.627217</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.331741</td>
+      <td>0.439450</td>
+      <td>0.377094</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.621620</td>
+      <td>0.439450</td>
+      <td>1.190180</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.621620</td>
+      <td>0.439450</td>
+      <td>1.190180</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2.169198</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2.755738</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>1.045868</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2.755738</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>1.045868</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2.755738</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>1.045868</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2.755738</td>
+      <td>1.508732</td>
+      <td>1.395642</td>
+      <td>1.556933</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+</section>
+<section id="Parquet">
+<h3>Parquet<a class="headerlink" href="#Parquet" title="Permalink to this headline">#</a></h3>
+<p>Parquet is an efficient and compact file format to read and write faster. See <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.pandas/api/pyspark.pandas.DataFrame.to_parquet.html">here</a> to write a Parquet file and <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.pandas/api/pyspark.pandas.read_parquet.html">here</a> to read a Parquet file.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s1">'bar.parquet'</span><span class="p">)</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s1">'bar.parquet'</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-1.187097</td>
+      <td>-0.134645</td>
+      <td>0.377094</td>
+      <td>-0.627217</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.331741</td>
+      <td>0.166218</td>
+      <td>0.377094</td>
+      <td>-0.627217</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.331741</td>
+      <td>0.439450</td>
+      <td>0.377094</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.621620</td>
+      <td>0.439450</td>
+      <td>1.190180</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.621620</td>
+      <td>0.439450</td>
+      <td>1.190180</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2.169198</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2.755738</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>1.045868</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2.755738</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>1.045868</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2.755738</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>1.045868</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2.755738</td>
+      <td>1.508732</td>
+      <td>1.395642</td>
+      <td>1.556933</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+</section>
+<section id="HyperBatch-IO">
+<h3>HyperBatch IO<a class="headerlink" href="#HyperBatch-IO" title="Permalink to this headline">#</a></h3>
+<p>In addition, pandas API on HyperBatch fully supports HyperBatch’s various datasources such as ORC and an external datasource. See <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.pandas/api/pyspark.pandas.DataFrame.to_orc.html">here</a> to write it to the specified datasource and <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.pandas/api/pyspark.pandas.read_orc.html">here</a> to read it from the datasource.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psdf</span><span class="o">.</span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">to_hyperbatch_io</span><span class="p">(</span><span class="s1">'zoo.orc'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"orc"</span><span class="p">)</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">read_hyperbatch_io</span><span class="p">(</span><span class="s1">'zoo.orc'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"orc"</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+
+<div class="table-container"><table border="1" class="dataframe" style="table-layout: auto;margin-right: auto;margin-left: 0;">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-1.187097</td>
+      <td>-0.134645</td>
+      <td>0.377094</td>
+      <td>-0.627217</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.331741</td>
+      <td>0.166218</td>
+      <td>0.377094</td>
+      <td>-0.627217</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.331741</td>
+      <td>0.439450</td>
+      <td>0.377094</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.621620</td>
+      <td>0.439450</td>
+      <td>1.190180</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.621620</td>
+      <td>0.439450</td>
+      <td>1.190180</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2.169198</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>0.365970</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2.755738</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>1.045868</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2.755738</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>1.045868</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2.755738</td>
+      <td>1.069183</td>
+      <td>1.395642</td>
+      <td>1.045868</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2.755738</td>
+      <td>1.508732</td>
+      <td>1.395642</td>
+      <td>1.556933</td>
+    </tr>
+  </tbody>
+</table></div>
+</div></div>
+</div>
+<p>See the <a class="reference external" href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.pandas/io.html">Input/Output</a> documentation for more details.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/getting_started/quickstart_ps.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

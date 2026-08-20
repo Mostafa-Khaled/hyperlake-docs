@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Transform and apply a function — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="transform-and-apply-a-function">
+<h1>Transform and apply a function<a class="headerlink" href="#transform-and-apply-a-function" title="Permalink to this headline">#</a></h1>
+<p>There are many APIs that allow users to apply a function against pandas-on-HyperBatch DataFrame such as
+<a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.transform.html#pyspark.pandas.DataFrame.transform" title="pyspark.pandas.DataFrame.transform"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.transform()</span></code></a>, <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.apply.html#pyspark.pandas.DataFrame.apply" title="pyspark.pandas.DataFrame.apply"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.apply()</span></code></a>, <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.pandas_on_spark.transform_batch.html#pyspark.pandas.DataFrame.pandas_on_spark.transform_batch" title="pyspark.pandas.DataFrame.pandas_on_spark.transform_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.pandas_on_hyperbatch.transform_batch()</span></code></a>,
+<a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.pandas_on_spark.apply_batch.html#pyspark.pandas.DataFrame.pandas_on_spark.apply_batch" title="pyspark.pandas.DataFrame.pandas_on_spark.apply_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.pandas_on_hyperbatch.apply_batch()</span></code></a>, <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.Series.pandas_on_spark.transform_batch.html#pyspark.pandas.Series.pandas_on_spark.transform_batch" title="pyspark.pandas.Series.pandas_on_spark.transform_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">Series.pandas_on_hyperbatch.transform_batch()</span></code></a>, etc. Each has a distinct
+purpose and works differently internally. This section describes the differences among
+them where users are confused often.</p>
+<section id="transform-and-apply">
+<h2><code class="docutils literal notranslate"><span class="pre">transform</span></code> and <code class="docutils literal notranslate"><span class="pre">apply</span></code><a class="headerlink" href="#transform-and-apply" title="Permalink to this headline">#</a></h2>
+<p>The main difference between <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.transform.html#pyspark.pandas.DataFrame.transform" title="pyspark.pandas.DataFrame.transform"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.transform()</span></code></a> and <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.apply.html#pyspark.pandas.DataFrame.apply" title="pyspark.pandas.DataFrame.apply"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.apply()</span></code></a> is that the former requires
+to return the same length of the input and the latter does not require this. See the example below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">'b'</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">pandas_plus</span><span class="p">(</span><span class="n">pser</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">pser</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># should always return the same length as input.</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pandas_plus</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">'b'</span><span class="p">:[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">pandas_plus</span><span class="p">(</span><span class="n">pser</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">pser</span><span class="p">[</span><span class="n">pser</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># allows an arbitrary length</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pandas_plus</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, each function takes a pandas Series, and the pandas API on HyperBatch computes the functions in a distributed manner as below.</p>
+<a class="reference internal image-reference" href="../../_images/pyspark-pandas_on_spark-transform_apply1.png"><figure class="visual-placeholder" id="fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">transform and apply</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/api/python/_images/pyspark-pandas_on_spark-transform_apply1.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a>
+<p>In the case of ‘column’ axis, the function takes each row as a pandas Series.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">'b'</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">pandas_plus</span><span class="p">(</span><span class="n">pser</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">pser</span><span class="p">)</span>  <span class="c1"># allows an arbitrary length</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pandas_plus</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">'columns'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The example above calculates the summation of each row as a pandas Series. See below:</p>
+<a class="reference internal image-reference" href="../../_images/pyspark-pandas_on_spark-transform_apply2.png"><figure class="visual-placeholder" id="fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">apply axis</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/api/python/_images/pyspark-pandas_on_spark-transform_apply2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a>
+<p>In the examples above, the type hints were not used for simplicity but it is encouraged to use them to avoid performance penalty.
+Please refer to the API documentations.</p>
+</section>
+<section id="pandas-on-hyperbatch-transform-batch-and-pandas-on-hyperbatch-apply-batch">
+<h2><code class="docutils literal notranslate"><span class="pre">pandas_on_hyperbatch.transform_batch</span></code> and <code class="docutils literal notranslate"><span class="pre">pandas_on_hyperbatch.apply_batch</span></code><a class="headerlink" href="#pandas-on-hyperbatch-transform-batch-and-pandas-on-hyperbatch-apply-batch" title="Permalink to this headline">#</a></h2>
+<p>In <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.pandas_on_spark.transform_batch.html#pyspark.pandas.DataFrame.pandas_on_spark.transform_batch" title="pyspark.pandas.DataFrame.pandas_on_spark.transform_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.pandas_on_hyperbatch.transform_batch()</span></code></a>, <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.pandas_on_spark.apply_batch.html#pyspark.pandas.DataFrame.pandas_on_spark.apply_batch" title="pyspark.pandas.DataFrame.pandas_on_spark.apply_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.pandas_on_hyperbatch.apply_batch()</span></code></a>, <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.Series.pandas_on_spark.transform_batch.html#pyspark.pandas.Series.pandas_on_spark.transform_batch" title="pyspark.pandas.Series.pandas_on_spark.transform_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">Series.pandas_on_hyperbatch.transform_batch()</span></code></a>, etc., the <code class="docutils literal notranslate"><span class="pre">batch</span></code>
+postfix means each chunk in pandas-on-HyperBatch DataFrame or Series. The APIs slice the pandas-on-HyperBatch DataFrame or Series, and
+then apply the given function with pandas DataFrame or Series as input and output. See the examples below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">'b'</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">pandas_plus</span><span class="p">(</span><span class="n">pdf</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">pdf</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># should always return the same length as input.</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="o">.</span><span class="n">pandas_on_hyperbatch</span><span class="o">.</span><span class="n">transform_batch</span><span class="p">(</span><span class="n">pandas_plus</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">'b'</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">pandas_plus</span><span class="p">(</span><span class="n">pdf</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">pdf</span><span class="p">[</span><span class="n">pdf</span><span class="o">.</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># allow arbitrary length</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="o">.</span><span class="n">pandas_on_hyperbatch</span><span class="o">.</span><span class="n">apply_batch</span><span class="p">(</span><span class="n">pandas_plus</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The functions in both examples take a pandas DataFrame as a chunk of pandas-on-HyperBatch DataFrame, and output a pandas DataFrame.
+Pandas API on HyperBatch combines the pandas DataFrames as a pandas-on-HyperBatch DataFrame.</p>
+<p>Note that <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.pandas_on_spark.transform_batch.html#pyspark.pandas.DataFrame.pandas_on_spark.transform_batch" title="pyspark.pandas.DataFrame.pandas_on_spark.transform_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.pandas_on_hyperbatch.transform_batch()</span></code></a> has the length restriction - the length of input and output should be
+the same - whereas <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.pandas_on_spark.apply_batch.html#pyspark.pandas.DataFrame.pandas_on_spark.apply_batch" title="pyspark.pandas.DataFrame.pandas_on_spark.apply_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.pandas_on_hyperbatch.apply_batch()</span></code></a> does not.  However, it is important to know that
+the output belongs to the same DataFrame when <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.pandas_on_spark.transform_batch.html#pyspark.pandas.DataFrame.pandas_on_spark.transform_batch" title="pyspark.pandas.DataFrame.pandas_on_spark.transform_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.pandas_on_hyperbatch.transform_batch()</span></code></a> returns a Series, and
+you can avoid a shuffle by the operations between different DataFrames. In case of <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.pandas_on_spark.apply_batch.html#pyspark.pandas.DataFrame.pandas_on_spark.apply_batch" title="pyspark.pandas.DataFrame.pandas_on_spark.apply_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.pandas_on_hyperbatch.apply_batch()</span></code></a>, its output is always
+treated as though it belongs to a new different DataFrame. See also
+<a class="reference internal" href="options.html#operations-on-different-dataframes"><span class="std std-ref">Operations on different DataFrames</span></a> for more details.</p>
+<a class="reference internal image-reference" href="../../_images/pyspark-pandas_on_spark-transform_apply3.png"><figure class="visual-placeholder" id="fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">pandas_on_hyperbatch.transform_batch and pandas_on_hyperbatch.apply_batch in Frame</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/api/python/_images/pyspark-pandas_on_spark-transform_apply3.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a>
+<p>In case of <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.Series.pandas_on_spark.transform_batch.html#pyspark.pandas.Series.pandas_on_spark.transform_batch" title="pyspark.pandas.Series.pandas_on_spark.transform_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">Series.pandas_on_hyperbatch.transform_batch()</span></code></a>, it is also similar with <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.pandas_on_spark.transform_batch.html#pyspark.pandas.DataFrame.pandas_on_spark.transform_batch" title="pyspark.pandas.DataFrame.pandas_on_spark.transform_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.pandas_on_hyperbatch.transform_batch()</span></code></a>; however, it takes
+a pandas Series as a chunk of pandas-on-HyperBatch Series.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">'b'</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">pandas_plus</span><span class="p">(</span><span class="n">pser</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">pser</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># should always return the same length as input.</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">pandas_on_hyperbatch</span><span class="o">.</span><span class="n">transform_batch</span><span class="p">(</span><span class="n">pandas_plus</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Under the hood, each batch of pandas-on-HyperBatch Series is split to multiple pandas Series, and each function computes on that as below:</p>
+<a class="reference internal image-reference" href="../../_images/pyspark-pandas_on_spark-transform_apply4.png"><figure class="visual-placeholder" id="fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">pandas_on_hyperbatch.transform_batch in Series</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/api/python/_images/pyspark-pandas_on_spark-transform_apply4.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-api-python-tutorial-pandas_on_hyperbatch-transform_apply-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a>
+<p>There are more details such as the type inference and preventing its performance penalty. Please refer to the API documentations.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/pandas_on_spark/transform_apply.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chapter 1: DataFrames - A view into your structured data — HyperBatch</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="Chapter-1:-DataFrames---A-view-into-your-structured-data">
+<h1>Chapter 1: DataFrames - A view into your structured data<a class="headerlink" href="#Chapter-1:-DataFrames---A-view-into-your-structured-data" title="Permalink to this headline">#</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pyhyperbatch</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>Requirement already satisfied: pyhyperbatch in /Users/amanda.liu/anaconda3/lib/python3.10/site-packages (3.5.0)
+Requirement already satisfied: py4j==0.10.9.7 in /Users/amanda.liu/anaconda3/lib/python3.10/site-packages (from pyhyperbatch) (0.10.9.7)
+Note: you may need to restart the kernel to use updated packages.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyhyperbatch.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">HyperBatchSession</span>
+
+<span class="n">hyperbatch</span> <span class="o">=</span> <span class="n">HyperBatchSession</span> \
+    <span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">"Python HyperBatch SQL basic example"</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">"hyperbatch.some.config.option"</span><span class="p">,</span> <span class="s2">"some-value"</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>This section introduces the most fundamental data structure in PyHyperBatch: the DataFrame.</p>
+<p>A DataFrame is a two-dimensional labeled data structure with columns of potentially different types. You can think of a DataFrame like a spreadsheet, a SQL table, or a dictionary of series objects. HyperBatch DataFrames support a rich set of APIs (select columns, filter, join, aggregate, etc.) that allow you to solve common data analysis problems efficiently.</p>
+<p>Compared to traditional relational databases, HyperBatch DataFrames offer several key advantages for big data processing and analytics:</p>
+<ul class="simple">
+<li><p><strong>Distributed computing</strong>: HyperBatch distributes data across multiple nodes in a cluster, allowing for parallel processing of big data</p></li>
+<li><p><strong>In-memory processing</strong>: HyperBatch performs computations in memory, which can be significantly faster than disk-based processing</p></li>
+<li><p><strong>Schema flexibility</strong>: Unlike traditional databases, PyHyperBatch DataFrames support schema evolution and dynamic typing.</p></li>
+<li><p><strong>Fault tolerance</strong>: PyHyperBatch DataFrames are built on top of Resilient Distributed Dataset (RDDs), which are inherently fault-tolerant. HyperBatch automatically handles node failures and data replication, ensuring data reliability and integrity.</p></li>
+</ul>
+<p>A note on RDDs: Direct use of RDDs are no longer supported on HyperBatch Connect as of HyperBatch 4.0. Interacting directly with HyperBatch DataFrames uses a unified planning and optimization engine, allowing us to get nearly identical performance across all supported languages on Databricks (Python, SQL, Scala, and R).</p>
+<section id="Create-a-DataFrame">
+<h2>Create a DataFrame<a class="headerlink" href="#Create-a-DataFrame" title="Permalink to this headline">#</a></h2>
+<p>There are several ways to create a DataFrame in PyHyperBatch.</p>
+<section id="From-a-list-of-dictionaries">
+<h3>From a list of dictionaries<a class="headerlink" href="#From-a-list-of-dictionaries" title="Permalink to this headline">#</a></h3>
+<p>The simplest way is to use the createDataFrame() method like so:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">employees</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"John D."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">30</span><span class="p">},</span>
+  <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Alice G."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">25</span><span class="p">},</span>
+  <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Bob T."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">35</span><span class="p">},</span>
+  <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Eve A."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">28</span><span class="p">}]</span>
+
+<span class="c1"># Create a DataFrame containing the employees data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">employees</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+---+--------+
+|age|    name|
++---+--------+
+| 30| John D.|
+| 25|Alice G.|
+| 35|  Bob T.|
+| 28|  Eve A.|
++---+--------+
+
+</pre></div></div>
+</div>
+</section>
+<section id="From-a-local-file">
+<h3>From a local file<a class="headerlink" href="#From-a-local-file" title="Permalink to this headline">#</a></h3>
+<p>We can also create a DataFrame from a local CSV file:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">"../data/employees.csv"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inferSchema</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+-----------+-----------------+-----------------+
+|Employee ID|             Role|         Location|
++-----------+-----------------+-----------------+
+|      19238|     Data Analyst|      Seattle, WA|
+|      19239|Software Engineer|      Seattle, WA|
+|      19240|    IT Specialist|      Seattle, WA|
+|      19241|     Data Analyst|     New York, NY|
+|      19242|        Recruiter|San Francisco, CA|
+|      19243|  Product Manager|     New York, NY|
++-----------+-----------------+-----------------+
+
+</pre></div></div>
+</div>
+<p>Or from a local JSON file:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">"multiline"</span><span class="p">,</span><span class="s2">"true"</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="s2">"../data/employees.json"</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+-----------+-----------------+-----------------+
+|Employee ID|         Location|             Role|
++-----------+-----------------+-----------------+
+|      19238|      Seattle, WA|     Data Analyst|
+|      19239|      Seattle, WA|Software Engineer|
+|      19240|      Seattle, WA|    IT Specialist|
+|      19241|     New York, NY|     Data Analyst|
+|      19242|San Francisco, CA|        Recruiter|
+|      19243|     New York, NY|  Product Manager|
++-----------+-----------------+-----------------+
+
+</pre></div></div>
+</div>
+</section>
+<section id="From-an-existing-DataFrame">
+<h3>From an existing DataFrame<a class="headerlink" href="#From-an-existing-DataFrame" title="Permalink to this headline">#</a></h3>
+<p>We can even create a DataFrame from another existing DataFrame, by selecting certain columns:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">employees</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"John D."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s2">"department"</span><span class="p">:</span> <span class="s2">"HR"</span><span class="p">},</span>
+  <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Alice G."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s2">"department"</span><span class="p">:</span> <span class="s2">"Finance"</span><span class="p">},</span>
+  <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Bob T."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span> <span class="s2">"department"</span><span class="p">:</span> <span class="s2">"IT"</span><span class="p">},</span>
+  <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Eve A."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span> <span class="s2">"department"</span><span class="p">:</span> <span class="s2">"Marketing"</span><span class="p">}</span>
+<span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">employees</span><span class="p">)</span>
+
+<span class="c1"># Select only the name and age columns</span>
+<span class="n">new_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="From-a-table">
+<h3>From a table<a class="headerlink" href="#From-a-table" title="Permalink to this headline">#</a></h3>
+<p>If you have an existing table <code class="docutils literal notranslate"><span class="pre">table_name</span></code> in your HyperBatch environment, you can create a DataFrame like this:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">"table_name"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="From-a-database">
+<h3>From a database<a class="headerlink" href="#From-a-database" title="Permalink to this headline">#</a></h3>
+<p>If your table is in a database, you can use JDBC to read the table into a DataFrame.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">"jdbc:mysql://localhost:3306/mydatabase"</span>
+<span class="n">table</span> <span class="o">=</span> <span class="s2">"employees"</span>
+<span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">"user"</span><span class="p">:</span> <span class="s2">"username"</span><span class="p">,</span>
+  <span class="s2">"password"</span><span class="p">:</span> <span class="s2">"password"</span>
+<span class="p">}</span>
+
+<span class="c1"># Read table into DataFrame</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">jdbc</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="View-the-DataFrame">
+<h2>View the DataFrame<a class="headerlink" href="#View-the-DataFrame" title="Permalink to this headline">#</a></h2>
+<p>We can use PyHyperBatch to view and interact with our DataFrame.</p>
+<section id="Display-the-DataFrame">
+<h3>Display the DataFrame<a class="headerlink" href="#Display-the-DataFrame" title="Permalink to this headline">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">df.show()</span></code> displays a basic visualization of the DataFrame’s contents. From our above <code class="docutils literal notranslate"><span class="pre">createDataFrame()</span></code> example:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">employees</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"John D."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">30</span><span class="p">},</span>
+  <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Alice G."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">25</span><span class="p">},</span>
+  <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Bob T."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">35</span><span class="p">},</span>
+  <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Eve A."</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mi">28</span><span class="p">}]</span>
+
+<span class="c1"># Create a DataFrame containing the employees data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">hyperbatch</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">employees</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+---+--------+
+|age|    name|
++---+--------+
+| 30| John D.|
+| 25|Alice G.|
+| 35|  Bob T.|
+| 28|  Eve A.|
++---+--------+
+
+</pre></div></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">df.show()</span></code> has 3 optional arguments: <code class="docutils literal notranslate"><span class="pre">n</span></code>, <code class="docutils literal notranslate"><span class="pre">truncate</span></code>, and <code class="docutils literal notranslate"><span class="pre">vertical</span></code>.</p>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">df.show()</span></code> displays up to the first 20 rows of the DataFrame. We can control the number of rows displayed by passing an argument to the show() method:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+---+--------+
+|age|    name|
++---+--------+
+| 30| John D.|
+| 25|Alice G.|
++---+--------+
+only showing top 2 rows
+
+</pre></div></div>
+</div>
+<p>The truncate argument controls the length of displayed column values (default value is 20):</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">truncate</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+---+----+
+|age|name|
++---+----+
+| 30| Joh|
+| 25| Ali|
+| 35| Bob|
+| 28| Eve|
++---+----+
+
+</pre></div></div>
+</div>
+<p>If we set <code class="docutils literal notranslate"><span class="pre">vertical</span></code> to True, the DataFrame will be displayed vertically with one line per value:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">vertical</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>-RECORD 0--------
+ age  | 30
+ name | John D.
+-RECORD 1--------
+ age  | 25
+ name | Alice G.
+-RECORD 2--------
+ age  | 35
+ name | Bob T.
+-RECORD 3--------
+ age  | 28
+ name | Eve A.
+
+</pre></div></div>
+</div>
+</section>
+<section id="Print-the-DataFrame-schema">
+<h3>Print the DataFrame schema<a class="headerlink" href="#Print-the-DataFrame-schema" title="Permalink to this headline">#</a></h3>
+<p>We can view information about the DataFrame schema using the <code class="docutils literal notranslate"><span class="pre">printSchema()</span></code> method:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>root
+ |-- age: long (nullable = true)
+ |-- name: string (nullable = true)
+
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="DataFrame-Manipulation">
+<h2>DataFrame Manipulation<a class="headerlink" href="#DataFrame-Manipulation" title="Permalink to this headline">#</a></h2>
+<p>Let’s look at some ways we can transform our DataFrames.</p>
+<p>For more detailed information, please see the section about data manipulation, <a class="reference external" href="dataprep.html">Chapter 3: Function Junction - Data manipulation with PyHyperBatch</a>.</p>
+<section id="Rename-columns">
+<h3>Rename columns<a class="headerlink" href="#Rename-columns" title="Permalink to this headline">#</a></h3>
+<p>We can rename DataFrame columns using the <code class="docutils literal notranslate"><span class="pre">withColumnRenamed()</span></code> method:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"full_name"</span><span class="p">)</span>
+<span class="n">df2</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+---+--------+
+|age|    name|
++---+--------+
+| 30| John D.|
+| 25|Alice G.|
+| 35|  Bob T.|
+| 28|  Eve A.|
++---+--------+
+
++---+---------+
+|age|full_name|
++---+---------+
+| 30|  John D.|
+| 25| Alice G.|
+| 35|   Bob T.|
+| 28|   Eve A.|
++---+---------+
+
+</pre></div></div>
+</div>
+</section>
+<section id="Filter-rows">
+<h3>Filter rows<a class="headerlink" href="#Filter-rows" title="Permalink to this headline">#</a></h3>
+<p>We can filter for employees within a certain age range. The following <code class="docutils literal notranslate"><span class="pre">df.filter</span></code> will create a new DataFrame with rows that match our age condition:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtered_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">((</span><span class="n">df</span><span class="p">[</span><span class="s2">"age"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">26</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"age"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">32</span><span class="p">))</span>
+<span class="n">filtered_df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+---+-------+
+|age|   name|
++---+-------+
+| 30|John D.|
+| 28| Eve A.|
++---+-------+
+
+</pre></div></div>
+</div>
+<p>We can also use <code class="docutils literal notranslate"><span class="pre">df.where</span></code> to get the same result:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">where_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">df</span><span class="p">[</span><span class="s2">"age"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">26</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"age"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">32</span><span class="p">))</span>
+<span class="n">where_df</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>+---+-------+
+|age|   name|
++---+-------+
+| 30|John D.|
+| 28| Eve A.|
++---+-------+
+
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="DataFrames-vs.-Tables">
+<h2>DataFrames vs. Tables<a class="headerlink" href="#DataFrames-vs.-Tables" title="Permalink to this headline">#</a></h2>
+<p>A DataFrame is an immutable distributed collection of data, only available in the current HyperBatch session.</p>
+<p>A table is a persistent data structure that can be accessed across multiple HyperBatch sessions.</p>
+<p>If you wish to promote a DataFrame to a table, you can use the <code class="docutils literal notranslate"><span class="pre">createOrReplaceTempView()</span></code> method:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">"employees"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Note that the lifetime of this temporary table is tied to the HyperBatchSession that was used to create this DataFrame. To persist the table beyond this HyperBatch session, you will need to save it to persistent storage.</p>
+</section>
+<section id="Save-DataFrame-to-Persistent-Storage">
+<h2>Save DataFrame to Persistent Storage<a class="headerlink" href="#Save-DataFrame-to-Persistent-Storage" title="Permalink to this headline">#</a></h2>
+<p>There are several ways to save a DataFrame to persistent storage in PyHyperBatch. For more detailed information about saving data locally, see <a class="reference external" href="loadandbehold.html">Chapter 7: Load and Behold - Data loading, storage, file formats</a>.</p>
+<section id="Save-to-file-based-data-source">
+<h3>Save to file-based data source<a class="headerlink" href="#Save-to-file-based-data-source" title="Permalink to this headline">#</a></h3>
+<p>For file-based data source (text, parquet, json, etc.), you can specify a custom table path like so:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">"path"</span><span class="p">,</span> <span class="s2">"../dataout"</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">"dataframes_savetable_example"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Even if the table is dropped, the custom table path and table data will still be there.</p>
+<p>If no custom table path is specified, HyperBatch will write data to a default table path under the warehouse directory. When the table is dropped, the default table path will be removed too.</p>
+</section>
+<section id="Save-to-Hive-metastore">
+<h3>Save to Hive metastore<a class="headerlink" href="#Save-to-Hive-metastore" title="Permalink to this headline">#</a></h3>
+<p>To save to Hive metastore, you can use the following:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="p">()</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">"overwrite"</span><span class="p">)</span><span class="o">.</span><span class="n">saveAsTable</span><span class="p">(</span><span class="s2">"schemaName.tableName"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="Native-DataFrame-Plotting">
+<h2>Native DataFrame Plotting<a class="headerlink" href="#Native-DataFrame-Plotting" title="Permalink to this headline">#</a></h2>
+<p>PyHyperBatch supports native plotting, allowing users to visualize data directly from PyHyperBatch DataFrames.</p>
+<p>The user interacts with PyHyperBatch Plotting by calling the <code class="docutils literal notranslate"><span class="pre">plot</span></code> property on a PyHyperBatch DataFrame and specifying the desired type of plot, either as a submethod or by setting the <code class="docutils literal notranslate"><span class="pre">kind</span></code> parameter. For instance:</p>
+<p><code class="docutils literal notranslate"><span class="pre">df.plot.line(x="category",</span> <span class="pre">y="int_val")</span></code></p>
+<p>or equivalently:</p>
+<p><code class="docutils literal notranslate"><span class="pre">df.plot(kind="line",</span> <span class="pre">x="category",</span> <span class="pre">y="int_val")</span></code></p>
+<p>The feature is powered by <a class="reference external" href="https://plotly.com/python/">Plotly</a> as the default visualization backend, offering rich, interactive plotting capabilities, while native <a class="reference external" href="https://pandas.pydata.org/">pandas</a> is used internally to process data for most plots.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/user_guide/dataframes.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

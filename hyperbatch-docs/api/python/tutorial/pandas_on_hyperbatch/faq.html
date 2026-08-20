@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FAQ — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="faq">
+<h1>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">#</a></h1>
+<section id="should-i-use-pyhyperbatch-s-dataframe-api-or-pandas-api-on-hyperbatch">
+<h2>Should I use PyHyperBatch’s DataFrame API or pandas API on HyperBatch?<a class="headerlink" href="#should-i-use-pyhyperbatch-s-dataframe-api-or-pandas-api-on-hyperbatch" title="Permalink to this headline">#</a></h2>
+<p>If you are already familiar with pandas and want to leverage HyperBatch for big data, we recommend using pandas API on HyperBatch.
+If you are learning HyperBatch from the ground up, we recommend you start with PyHyperBatch’s API.</p>
+</section>
+<section id="does-pandas-api-on-hyperbatch-support-structured-streaming">
+<h2>Does pandas API on HyperBatch support Structured Streaming?<a class="headerlink" href="#does-pandas-api-on-hyperbatch-support-structured-streaming" title="Permalink to this headline">#</a></h2>
+<p>No, pandas API on HyperBatch does not support Structured Streaming officially.</p>
+<p>As a workaround, you can use pandas-on-HyperBatch APIs with <cite>foreachBatch</cite> in Structured Streaming which allows batch APIs:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">batch_df</span><span class="p">,</span> <span class="n">batch_id</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">pandas_on_hyperbatch_df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">batch_df</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">pandas_on_hyperbatch_df</span><span class="p">[</span><span class="s1">'a'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">pandas_on_hyperbatch_df</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyperbatch</span><span class="o">.</span><span class="n">readStream</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"rate"</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span><span class="o">.</span><span class="n">writeStream</span><span class="o">.</span><span class="n">foreachBatch</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="go">                timestamp  value  a</span>
+<span class="go">0 2020-02-21 09:49:37.574      4  1</span>
+<span class="go">                timestamp  value  a</span>
+<span class="go">0 2020-02-21 09:49:38.574      5  1</span>
+<span class="go">...</span>
+</pre></div>
+</div>
+</section>
+<section id="how-is-pandas-api-on-hyperbatch-different-from-dask">
+<h2>How is pandas API on HyperBatch different from Dask?<a class="headerlink" href="#how-is-pandas-api-on-hyperbatch-different-from-dask" title="Permalink to this headline">#</a></h2>
+<p>Different projects have different focuses. HyperBatch is already deployed in virtually every
+organization, and often is the primary interface to the massive amount of data stored in data lakes.
+pandas API on HyperBatch was inspired by Dask, and aims to make the transition from pandas to HyperBatch easy for data
+scientists.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/pandas_on_spark/faq.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

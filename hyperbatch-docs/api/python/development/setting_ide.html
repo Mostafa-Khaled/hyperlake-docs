@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Setting up IDEs — HyperBatch</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="setting-up-ides">
+<h1>Setting up IDEs<a class="headerlink" href="#setting-up-ides" title="Permalink to this headline">#</a></h1>
+<section id="pycharm">
+<h2>PyCharm<a class="headerlink" href="#pycharm" title="Permalink to this headline">#</a></h2>
+<p>This section describes how to setup PyHyperBatch on PyCharm.
+It guides step by step to the process of downloading the source code from GitHub and running the test code successfully.</p>
+<p>Firstly, download the HyperBatch source code from GitHub using git url. You can download the source code by simply using <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> command as shown below.
+If you want to download the code from any forked repository rather than HyperBatch original repository, please change the url properly.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/apache/hyperbatch.git
+</pre></div>
+</div>
+<p>When the download is completed, go to the <code class="docutils literal notranslate"><span class="pre">hyperbatch</span></code> directory and build the package.
+SBT build is generally much faster than Maven. More details about the build are documented <a class="reference external" href="../../../building-hyperbatch.html">here</a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>build/sbt<span class="w"> </span>package
+</pre></div>
+</div>
+<p>After building is finished, run PyCharm and select the path <code class="docutils literal notranslate"><span class="pre">hyperbatch/python</span></code>.</p>
+<figure class="visual-placeholder" id="fig-api-python-development-setting_ide-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-api-python-development-setting_ide-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Select the HyperBatch path</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/api/python/_images/pycharm-with-pyspark1.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-api-python-development-setting_ide-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure>
+<p>Let’s go to the path <code class="docutils literal notranslate"><span class="pre">python/pyhyperbatch/tests</span></code> in PyCharm and try to run the any test like <code class="docutils literal notranslate"><span class="pre">test_join.py</span></code>.
+You might can see the <code class="docutils literal notranslate"><span class="pre">KeyError:</span> <span class="pre">'HYPERBATCH_HOME'</span></code> because the environment variable has not been set yet.</p>
+<p>Go <strong>Run -&gt; Edit Configurations</strong>, and set the environment variables as below.
+Please make sure to specify your own path for <code class="docutils literal notranslate"><span class="pre">HYPERBATCH_HOME</span></code> rather than <code class="docutils literal notranslate"><span class="pre">/.../hyperbatch</span></code>. After completing the variable, click <strong>OK</strong> to apply the changes.</p>
+<figure class="visual-placeholder" id="fig-api-python-development-setting_ide-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-api-python-development-setting_ide-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Setting up HYPERBATCH_HOME</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/api/python/_images/pycharm-with-pyspark2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-api-python-development-setting_ide-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure>
+<p>Once <code class="docutils literal notranslate"><span class="pre">HYPERBATCH_HOME</span></code> is set properly, you’ll be able to run the tests properly as below:</p>
+<figure class="visual-placeholder" id="fig-api-python-development-setting_ide-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-api-python-development-setting_ide-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Running tests properly</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://spark.apache.org/docs/latest/api/python/_images/pycharm-with-pyspark3.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-api-python-development-setting_ide-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/development/setting_ide.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>From/to pandas and PyHyperBatch DataFrames — HyperBatch</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperBatch</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="from-to-pandas-and-pyhyperbatch-dataframes">
+<h1>From/to pandas and PyHyperBatch DataFrames<a class="headerlink" href="#from-to-pandas-and-pyhyperbatch-dataframes" title="Permalink to this headline">#</a></h1>
+<p>Users from pandas and/or PyHyperBatch face API compatibility issue sometimes when they
+work with pandas API on HyperBatch. Since pandas API on HyperBatch does not target 100% compatibility of both pandas and
+PyHyperBatch, users need to do some workaround to port their pandas and/or PyHyperBatch codes or
+get familiar with pandas API on HyperBatch in this case. This page aims to describe it.</p>
+<section id="pandas">
+<h2>pandas<a class="headerlink" href="#pandas" title="Permalink to this headline">#</a></h2>
+<p>pandas users can access the full pandas API by calling <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.to_pandas.html#pyspark.pandas.DataFrame.to_pandas" title="pyspark.pandas.DataFrame.to_pandas"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.to_pandas()</span></code></a>.
+pandas-on-HyperBatch DataFrame and pandas DataFrame are similar. However, the former is distributed
+and the latter is in a single machine. When converting to each other, the data is
+transferred between multiple machines and the single client machine.</p>
+<p>For example, if you need to call <code class="docutils literal notranslate"><span class="pre">pandas_df.values</span></code> of pandas DataFrame, you can do
+as below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span> <span class="o">=</span> <span class="n">psdf</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span><span class="o">.</span><span class="n">values</span>
+<span class="go">array([[0],</span>
+<span class="go">       [1],</span>
+<span class="go">       [2],</span>
+<span class="go">       [3],</span>
+<span class="go">       [4],</span>
+<span class="go">       [5],</span>
+<span class="go">       [6],</span>
+<span class="go">       [7],</span>
+<span class="go">       [8],</span>
+<span class="go">       [9]])</span>
+</pre></div>
+</div>
+<p>pandas DataFrame can be a pandas-on-HyperBatch DataFrame easily as below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span>
+<span class="go">   id</span>
+<span class="go">0   0</span>
+<span class="go">1   1</span>
+<span class="go">2   2</span>
+<span class="go">3   3</span>
+<span class="go">4   4</span>
+<span class="go">5   5</span>
+<span class="go">6   6</span>
+<span class="go">7   7</span>
+<span class="go">8   8</span>
+<span class="go">9   9</span>
+</pre></div>
+</div>
+<p>Note that converting pandas-on-HyperBatch DataFrame to pandas requires to collect all the data into the client machine; therefore,
+if possible, it is recommended to use pandas API on HyperBatch or PyHyperBatch APIs instead.</p>
+</section>
+<section id="pyhyperbatch">
+<h2>PyHyperBatch<a class="headerlink" href="#pyhyperbatch" title="Permalink to this headline">#</a></h2>
+<p>PyHyperBatch users can access the full PyHyperBatch APIs by calling <a class="reference internal" href="../../reference/pyspark.pandas/api/pyspark.pandas.DataFrame.to_spark.html#pyspark.pandas.DataFrame.to_spark" title="pyspark.pandas.DataFrame.to_spark"><code class="xref py py-func docutils literal notranslate"><span class="pre">DataFrame.to_hyperbatch()</span></code></a>.
+pandas-on-HyperBatch DataFrame and HyperBatch DataFrame are virtually interchangeable.</p>
+<p>For example, if you need to call <code class="docutils literal notranslate"><span class="pre">hyperbatch_df.filter(...)</span></code> of HyperBatch DataFrame, you can do
+as below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyhyperbatch.pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">psdf</span><span class="o">.</span><span class="n">to_hyperbatch</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">"id &gt; 5"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="go">+---+</span>
+<span class="go">| id|</span>
+<span class="go">+---+</span>
+<span class="go">|  6|</span>
+<span class="go">|  7|</span>
+<span class="go">|  8|</span>
+<span class="go">|  9|</span>
+<span class="go">+---+</span>
+</pre></div>
+</div>
+<p>HyperBatch DataFrame can be a pandas-on-HyperBatch DataFrame easily as below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdf</span><span class="o">.</span><span class="n">pandas_api</span><span class="p">()</span>
+<span class="go">   id</span>
+<span class="go">0   6</span>
+<span class="go">1   7</span>
+<span class="go">2   8</span>
+<span class="go">3   9</span>
+</pre></div>
+</div>
+<p>However, note that a new default index is created when pandas-on-HyperBatch DataFrame is created from
+HyperBatch DataFrame. See <a class="reference internal" href="options.html#default-index-type"><span class="std std-ref">Default Index Type</span></a>. In order to avoid this overhead, specify the column
+to use as an index when possible.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create a pandas-on-HyperBatch DataFrame with an explicit index.</span>
+<span class="gp">... </span><span class="n">psdf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)},</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Keep the explicit index.</span>
+<span class="gp">... </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">psdf</span><span class="o">.</span><span class="n">to_hyperbatch</span><span class="p">(</span><span class="n">index_col</span><span class="o">=</span><span class="s1">'index'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Call HyperBatch APIs</span>
+<span class="gp">... </span><span class="n">sdf</span> <span class="o">=</span> <span class="n">sdf</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">"id &gt; 5"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Uses the explicit index to avoid to create default index.</span>
+<span class="gp">... </span><span class="n">sdf</span><span class="o">.</span><span class="n">pandas_api</span><span class="p">(</span><span class="n">index_col</span><span class="o">=</span><span class="s1">'index'</span><span class="p">)</span>
+<span class="go">       id</span>
+<span class="go">index</span>
+<span class="go">6       6</span>
+<span class="go">7       7</span>
+<span class="go">8       8</span>
+<span class="go">9       9</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  </div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/tutorial/pandas_on_spark/pandas_pyspark.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          
+        
+      
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>
