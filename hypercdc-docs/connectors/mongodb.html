@@ -24,6 +24,33 @@
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
     <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <div class="export-dropdown">
+      <button class="export-toggle-btn" aria-haspopup="true" aria-expanded="false" title="Print or export documentation">
+        <svg class="export-btn-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"/></svg>
+        <span>Print / Export ▾</span>
+      </button>
+      <div class="export-menu" role="menu">
+        <div class="export-menu__section">Current Page</div>
+        <a class="export-menu__item" href="javascript:void(0)" onclick="window.print()">
+          <span class="export-menu__icon">🖨️</span>
+          <span>Print Page / PDF</span>
+        </a>
+        <a class="export-menu__item" href="javascript:void(0)" onclick="window.downloadCurrentPageText && window.downloadCurrentPageText()">
+          <span class="export-menu__icon">📝</span>
+          <span>Download Page (.txt)</span>
+        </a>
+        <div class="export-menu__divider"></div>
+        <div class="export-menu__section">Whole Documentation</div>
+        <a class="export-menu__item" href="../print-all.html" target="_blank">
+          <span class="export-menu__icon">📑</span>
+          <span>Print Whole Docs (PDF)</span>
+        </a>
+        <a class="export-menu__item" href="../full-docs.txt" download="hypercdc-docs-full-docs.txt">
+          <span class="export-menu__icon">📚</span>
+          <span>Download Whole Docs (.txt)</span>
+        </a>
+      </div>
+    </div>
     <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
   </div>
 </header>
@@ -1575,7 +1602,7 @@ This field provides information about every event in the form of a composite of 
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
-  "after": "{\"_id\" : {\"$numberLong\" : \"1004\"},\"first_name\" : \"Anne\",\"last_name\" : \"Kretchmar\",\"email\" : \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="eb8a85858e80ab85848a85989c8e99c584998c">[email&nbsp;protected]</a>\"}",
+  "after": "{\"_id\" : {\"$numberLong\" : \"1004\"},\"first_name\" : \"Anne\",\"last_name\" : \"Kretchmar\",\"email\" : \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f99897979c92b9979698978a8e9c8bd7968b9e">[email&nbsp;protected]</a>\"}",
   "source": {
 ...
   },
@@ -1695,7 +1722,7 @@ The value of this field is the document’s identifier represented as a string t
   "_id": 1004,
   "first_name": "Anne",
   "last_name": "Kretchmar",
-  "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2c4d424249476c42434d425f5b495e02435e4b">[email&nbsp;protected]</a>"
+  "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="93f2fdfdf6f8d3fdfcf2fde0e4f6e1bdfce1f4">[email&nbsp;protected]</a>"
 }</code></pre>
 </div>
 </div>
@@ -1851,7 +1878,7 @@ In the preceding example, the <code>name</code> field includes the following val
   "_id": 1004,
   "first_name": "Anne",
   "last_name": "Kretchmar",
-  "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="27464949424c67494846495450425509485540">[email&nbsp;protected]</a>"
+  "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="64050a0a010f240a0b050a171301164a0b1603">[email&nbsp;protected]</a>"
 }</code></pre>
 </div>
 </div>
@@ -1994,7 +2021,7 @@ In the preceding example, the <code>name</code> field includes the following val
       "name": "dbserver1.inventory.customers.Envelope" <i class="conum" data-value="4"></i><b>(4)</b>
       },
     "payload": { <i class="conum" data-value="5"></i><b>(5)</b>
-      "after": "{\"_id\" : {\"$numberLong\" : \"1004\"},\"first_name\" : \"Anne\",\"last_name\" : \"Kretchmar\",\"email\" : \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d8b9b6b6bdb398b6b7b9b6abafbdaaf6b7aabf">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="6"></i><b>(6)</b>
+      "after": "{\"_id\" : {\"$numberLong\" : \"1004\"},\"first_name\" : \"Anne\",\"last_name\" : \"Kretchmar\",\"email\" : \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f2939c9c9799b29c9d939c81859780dc9d8095">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="6"></i><b>(6)</b>
       "source": { <i class="conum" data-value="7"></i><b>(7)</b>
         "version": "3.6.1.Final",
         "connector": "mongodb",
@@ -2207,8 +2234,8 @@ There is a new structured field <code>updateDescription</code> with a few additi
       "ts_ms": 1465491461815, <i class="conum" data-value="2"></i><b>(2)</b>
       "ts_us": 1465491461815698, <i class="conum" data-value="2"></i><b>(2)</b>
       "ts_ns": 1465491461815698142, <i class="conum" data-value="2"></i><b>(2)</b>
-      "before":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"unknown\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="88e9e6e6ede3c8e6e7e9e6fbffedfaa6e7faef">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="3"></i><b>(3)</b>
-      "after":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"Anne Marie\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8beae5e5eee0cbe5e4eae5f8fceef9a5e4f9ec">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="4"></i><b>(4)</b>
+      "before":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"unknown\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="294847474c4269474648475a5e4c5b07465b4e">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="3"></i><b>(3)</b>
+      "after":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"Anne Marie\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7a1b14141f113a14151b14090d1f085415081d">[email&nbsp;protected]</a>\"}", <i class="conum" data-value="4"></i><b>(4)</b>
       "updateDescription": {
         "removedFields": null,
         "updatedFields": "{\"first_name\": \"Anne Marie\"}", <i class="conum" data-value="5"></i><b>(5)</b>
@@ -2357,7 +2384,7 @@ It is thus possible if multiple updates are closely following one after the othe
       "ts_ms": 1465495462115, <i class="conum" data-value="2"></i><b>(2)</b>
       "ts_us": 1465495462115748, <i class="conum" data-value="2"></i><b>(2)</b>
       "ts_ns": 1465495462115748263, <i class="conum" data-value="2"></i><b>(2)</b>
-      "before":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"Anne Marie\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cbaaa5a5aea08ba5a4aaa5b8bcaeb9e5a4b9ac">[email&nbsp;protected]</a>\"}",<i class="conum" data-value="3"></i><b>(3)</b>
+      "before":"{\"_id\": {\"$numberLong\": \"1004\"},\"first_name\": \"Anne Marie\",\"last_name\": \"Kretchmar\",\"email\": \"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5a3b34343f311a34353b34292d3f287435283d">[email&nbsp;protected]</a>\"}",<i class="conum" data-value="3"></i><b>(3)</b>
       "source": { <i class="conum" data-value="4"></i><b>(4)</b>
         "version": "3.6.1.Final",
         "connector": "mongodb",

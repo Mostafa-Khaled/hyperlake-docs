@@ -24,6 +24,33 @@
   <div class="topbar__right">
     <a class="topbar__nav-link" href="index.html">Docs Index</a>
     <a class="topbar__nav-link" href="visuals-catalog.html">Visuals Catalog</a>
+    <div class="export-dropdown">
+      <button class="export-toggle-btn" aria-haspopup="true" aria-expanded="false" title="Print or export documentation">
+        <svg class="export-btn-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"/></svg>
+        <span>Print / Export ▾</span>
+      </button>
+      <div class="export-menu" role="menu">
+        <div class="export-menu__section">Current Page</div>
+        <a class="export-menu__item" href="javascript:void(0)" onclick="window.print()">
+          <span class="export-menu__icon">🖨️</span>
+          <span>Print Page / PDF</span>
+        </a>
+        <a class="export-menu__item" href="javascript:void(0)" onclick="window.downloadCurrentPageText && window.downloadCurrentPageText()">
+          <span class="export-menu__icon">📝</span>
+          <span>Download Page (.txt)</span>
+        </a>
+        <div class="export-menu__divider"></div>
+        <div class="export-menu__section">Whole Documentation</div>
+        <a class="export-menu__item" href="./print-all.html" target="_blank">
+          <span class="export-menu__icon">📑</span>
+          <span>Print Whole Docs (PDF)</span>
+        </a>
+        <a class="export-menu__item" href="./full-docs.txt" download="hypercdc-docs-full-docs.txt">
+          <span class="export-menu__icon">📚</span>
+          <span>Download Whole Docs (.txt)</span>
+        </a>
+      </div>
+    </div>
     <a class="topbar__nav-link" href="../index.html">&larr; HyperLake Portal</a>
   </div>
 </header>
@@ -609,10 +636,10 @@ mysql&gt;</code></pre>
 +------+------------+-----------+-----------------------+
 | id   | first_name | last_name | email                 |
 +------+------------+-----------+-----------------------+
-| 1001 | Sally      | Thomas    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e4978588889dca908c8b898597a485878981ca878b89">[email&nbsp;protected]</a> |
-| 1002 | George     | Bailey    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92f5f0f3fbfef7ebd2f4fdfdf0f3e0bcf1fdff">[email&nbsp;protected]</a>    |
-| 1003 | Edward     | Walker    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0c69684c7b6d6067697e226f6361">[email&nbsp;protected]</a>         |
-| 1004 | Anne       | Kretchmar | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3f5e51515a547f51505e514c485a4d11504d58">[email&nbsp;protected]</a>    |
+| 1001 | Sally      | Thomas    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1a2b0bdbda8ffa5b9bebcb0a291b0b2bcb4ffb2bebc">[email&nbsp;protected]</a> |
+| 1002 | George     | Bailey    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3a5d585b53565f437a5c5555585b4814595557">[email&nbsp;protected]</a>    |
+| 1003 | Edward     | Walker    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="badfdefacddbd6d1dfc894d9d5d7">[email&nbsp;protected]</a>         |
+| 1004 | Anne       | Kretchmar | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b7d6d9d9d2dcf7d9d8d6d9c4c0d2c599d8c5d0">[email&nbsp;protected]</a>    |
 +------+------------+-----------+-----------------------+
 4 rows in set (0.00 sec)</code></pre>
 </div>
@@ -1641,7 +1668,7 @@ and describes what it contains (in this case, the <code>id</code>, <code>first_n
       "id": 1004,
       "first_name": "Anne",
       "last_name": "Kretchmar",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c5a4ababa0ae85abaaa4abb6b2a0b7ebaab7a2">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1a7b74747f715a74757b74696d7f683475687d">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -1746,10 +1773,10 @@ In the terminal that is running the MySQL command line client, run the following
 +------+------------+-----------+-----------------------+
 | id   | first_name | last_name | email                 |
 +------+------------+-----------+-----------------------+
-| 1001 | Sally      | Thomas    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a190b060613441e0205070b192a0b09070f44090507">[email&nbsp;protected]</a> |
-| 1002 | George     | Bailey    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="30575251595c554970565f5f5251421e535f5d">[email&nbsp;protected]</a>    |
-| 1003 | Edward     | Walker    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1376775364727f7876613d707c7e">[email&nbsp;protected]</a>         |
-| 1004 | Anne       | Kretchmar | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f89996969d93b8969799968b8f9d8ad6978a9f">[email&nbsp;protected]</a>    |
+| 1001 | Sally      | Thomas    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1a2b0bdbda8ffa5b9bebcb0a291b0b2bcb4ffb2bebc">[email&nbsp;protected]</a> |
+| 1002 | George     | Bailey    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a8cfcac9c1c4cdd1e8cec7c7cac9da86cbc7c5">[email&nbsp;protected]</a>    |
+| 1003 | Edward     | Walker    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6d08092d1a0c0106081f430e0200">[email&nbsp;protected]</a>         |
+| 1004 | Anne       | Kretchmar | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="89e8e7e7ece2c9e7e6e8e7fafeecfba7e6fbee">[email&nbsp;protected]</a>    |
 +------+------------+-----------+-----------------------+
 4 rows in set (0.00 sec)</code></pre>
 </div>
@@ -1800,10 +1827,10 @@ Rows matched: 1  Changed: 1  Warnings: 0</code></pre>
 +------+------------+-----------+-----------------------+
 | id   | first_name | last_name | email                 |
 +------+------------+-----------+-----------------------+
-| 1001 | Sally      | Thomas    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aeddcfc2c2d780dac6c1c3cfddeecfcdc3cb80cdc1c3">[email&nbsp;protected]</a> |
-| 1002 | George     | Bailey    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="87e0e5e6eeebe2fec7e1e8e8e5e6f5a9e4e8ea">[email&nbsp;protected]</a>    |
-| 1003 | Edward     | Walker    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d4b1b094a3b5b8bfb1a6fab7bbb9">[email&nbsp;protected]</a>         |
-| 1004 | Anne Marie | Kretchmar | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="395857575c5279575658574a4e5c4b17564b5e">[email&nbsp;protected]</a>    |
+| 1001 | Sally      | Thomas    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7c0f1d10100552081413111d0f3c1d1f1119521f1311">[email&nbsp;protected]</a> |
+| 1002 | George     | Bailey    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ff989d9e96939a86bf9990909d9e8dd19c9092">[email&nbsp;protected]</a>    |
+| 1003 | Edward     | Walker    | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8de8e9cdfaece1e6e8ffa3eee2e0">[email&nbsp;protected]</a>         |
+| 1004 | Anne Marie | Kretchmar | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2e4f40404b456e40414f405d594b5c00415c49">[email&nbsp;protected]</a>    |
 +------+------------+-----------+-----------------------+
 4 rows in set (0.00 sec)</code></pre>
 </div>
@@ -1860,13 +1887,13 @@ There are no changes in the <code>schema</code> section, so only the <code>paylo
       "id": 1004,
       "first_name": "Anne",
       "last_name": "Kretchmar",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7b1a15151e103b15141a15080c1e095514091c">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="31505f5f545a715f5e505f424654431f5e4356">[email&nbsp;protected]</a>"
     },
     "after": {
       "id": 1004,
       "first_name": "Anne Marie",
       "last_name": "Kretchmar",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ec8d82828987ac82838d829f9b899ec2839e8b">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="67060909020c27090806091410021549081500">[email&nbsp;protected]</a>"
     },
     "source": {
       "name": "3.6.1.Final",
@@ -2037,7 +2064,7 @@ then you must remove the reference of the customer address from the <em>addresse
       "id": 1004,
       "first_name": "Anne Marie",
       "last_name": "Kretchmar",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="36575858535d76585957584541534418594451">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="debfb0b0bbb59eb0b1bfb0ada9bbacf0b1acb9">[email&nbsp;protected]</a>"
     },
     "after": null,
     "source": {
@@ -2197,8 +2224,8 @@ and then restart Kafka Connect to see the change events.</p>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-sql hljs" data-lang="sql">mysql&gt; INSERT INTO customers VALUES (default, "Sarah", "Thompson", "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9bf0f2efefdbfaf8f6feb5f8f4f6">[email&nbsp;protected]</a>");
-mysql&gt; INSERT INTO customers VALUES (default, "Kenneth", "Anderson", "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bfd4ded1dbdacdffdedcd2da91dcd0d2">[email&nbsp;protected]</a>");</code></pre>
+<pre class="highlightjs highlight nowrap"><code class="language-sql hljs" data-lang="sql">mysql&gt; INSERT INTO customers VALUES (default, "Sarah", "Thompson", "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92f9fbe6e6d2f3f1fff7bcf1fdff">[email&nbsp;protected]</a>");
+mysql&gt; INSERT INTO customers VALUES (default, "Kenneth", "Anderson", "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="86ede7e8e2e3f4c6e7e5ebe3a8e5e9eb">[email&nbsp;protected]</a>");</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2279,8 +2306,8 @@ and generated events from any changes in the MySQL database since that point in 
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{"schema":{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"}],"optional":false,"name":"dbserver1.inventory.customers.Key"},"payload":{"id":1005}}	{"schema":{"type":"struct","fields":[{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"before"},{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"after"},{"type":"struct","fields":[{"type":"string","optional":true,"field":"version"},{"type":"string","optional":false,"field":"name"},{"type":"int64","optional":false,"field":"server_id"},{"type":"int64","optional":false,"field":"ts_sec"},{"type":"string","optional":true,"field":"gtid"},{"type":"string","optional":false,"field":"file"},{"type":"int64","optional":false,"field":"pos"},{"type":"int32","optional":false,"field":"row"},{"type":"boolean","optional":true,"field":"snapshot"},{"type":"int64","optional":true,"field":"thread"},{"type":"string","optional":true,"field":"db"},{"type":"string","optional":true,"field":"table"}],"optional":false,"name":"io.hypercdc.connector.mysql.Source","field":"source"},{"type":"string","optional":false,"field":"op"},{"type":"int64","optional":true,"field":"ts_ms"},{"type":"int64","optional":true,"field":"ts_us"},{"type":"int64","optional":true,"field":"ts_ns"}],"optional":false,"name":"dbserver1.inventory.customers.Envelope","version":1},"payload":{"before":null,"after":{"id":1005,"first_name":"Sarah","last_name":"Thompson","email":"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="89e2e0fdfdc9e8eae4eca7eae6e4">[email&nbsp;protected]</a>"},"source":{"version":"3.6.1.Final","name":"dbserver1","server_id":223344,"ts_sec":1490635153,"gtid":null,"file":"mysql-bin.000003","pos":1046,"row":0,"snapshot":null,"thread":3,"db":"inventory","table":"customers"},"op":"c","ts_ms":1490635181455,"ts_us":1490635181455501,"ts_ns":1490635181455501571}}
-{"schema":{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"}],"optional":false,"name":"dbserver1.inventory.customers.Key"},"payload":{"id":1006}}	{"schema":{"type":"struct","fields":[{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"before"},{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"after"},{"type":"struct","fields":[{"type":"string","optional":true,"field":"version"},{"type":"string","optional":false,"field":"name"},{"type":"int64","optional":false,"field":"server_id"},{"type":"int64","optional":false,"field":"ts_sec"},{"type":"string","optional":true,"field":"gtid"},{"type":"string","optional":false,"field":"file"},{"type":"int64","optional":false,"field":"pos"},{"type":"int32","optional":false,"field":"row"},{"type":"boolean","optional":true,"field":"snapshot"},{"type":"int64","optional":true,"field":"thread"},{"type":"string","optional":true,"field":"db"},{"type":"string","optional":true,"field":"table"}],"optional":false,"name":"io.hypercdc.connector.mysql.Source","field":"source"},{"type":"string","optional":false,"field":"op"},{"type":"int64","optional":true,"field":"ts_ms"},{"type":"int64","optional":true,"field":"ts_us"},{"type":"int64","optional":true,"field":"ts_ns"}],"optional":false,"name":"dbserver1.inventory.customers.Envelope","version":1},"payload":{"before":null,"after":{"id":1006,"first_name":"Kenneth","last_name":"Anderson","email":"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cfa4aea1abaabd8faeaca2aae1aca0a2">[email&nbsp;protected]</a>"},"source":{"version":"3.6.1.Final","name":"dbserver1","server_id":223344,"ts_sec":1490635160,"gtid":null,"file":"mysql-bin.000003","pos":1356,"row":0,"snapshot":null,"thread":3,"db":"inventory","table":"customers"},"op":"c","ts_ms":1490635181456,"ts_us":1490635181456101,"ts_ns":1490635181456101571}}</code></pre>
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{"schema":{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"}],"optional":false,"name":"dbserver1.inventory.customers.Key"},"payload":{"id":1005}}	{"schema":{"type":"struct","fields":[{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"before"},{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"after"},{"type":"struct","fields":[{"type":"string","optional":true,"field":"version"},{"type":"string","optional":false,"field":"name"},{"type":"int64","optional":false,"field":"server_id"},{"type":"int64","optional":false,"field":"ts_sec"},{"type":"string","optional":true,"field":"gtid"},{"type":"string","optional":false,"field":"file"},{"type":"int64","optional":false,"field":"pos"},{"type":"int32","optional":false,"field":"row"},{"type":"boolean","optional":true,"field":"snapshot"},{"type":"int64","optional":true,"field":"thread"},{"type":"string","optional":true,"field":"db"},{"type":"string","optional":true,"field":"table"}],"optional":false,"name":"io.hypercdc.connector.mysql.Source","field":"source"},{"type":"string","optional":false,"field":"op"},{"type":"int64","optional":true,"field":"ts_ms"},{"type":"int64","optional":true,"field":"ts_us"},{"type":"int64","optional":true,"field":"ts_ns"}],"optional":false,"name":"dbserver1.inventory.customers.Envelope","version":1},"payload":{"before":null,"after":{"id":1005,"first_name":"Sarah","last_name":"Thompson","email":"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="254e4c515165444648400b464a48">[email&nbsp;protected]</a>"},"source":{"version":"3.6.1.Final","name":"dbserver1","server_id":223344,"ts_sec":1490635153,"gtid":null,"file":"mysql-bin.000003","pos":1046,"row":0,"snapshot":null,"thread":3,"db":"inventory","table":"customers"},"op":"c","ts_ms":1490635181455,"ts_us":1490635181455501,"ts_ns":1490635181455501571}}
+{"schema":{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"}],"optional":false,"name":"dbserver1.inventory.customers.Key"},"payload":{"id":1006}}	{"schema":{"type":"struct","fields":[{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"before"},{"type":"struct","fields":[{"type":"int32","optional":false,"field":"id"},{"type":"string","optional":false,"field":"first_name"},{"type":"string","optional":false,"field":"last_name"},{"type":"string","optional":false,"field":"email"}],"optional":true,"name":"dbserver1.inventory.customers.Value","field":"after"},{"type":"struct","fields":[{"type":"string","optional":true,"field":"version"},{"type":"string","optional":false,"field":"name"},{"type":"int64","optional":false,"field":"server_id"},{"type":"int64","optional":false,"field":"ts_sec"},{"type":"string","optional":true,"field":"gtid"},{"type":"string","optional":false,"field":"file"},{"type":"int64","optional":false,"field":"pos"},{"type":"int32","optional":false,"field":"row"},{"type":"boolean","optional":true,"field":"snapshot"},{"type":"int64","optional":true,"field":"thread"},{"type":"string","optional":true,"field":"db"},{"type":"string","optional":true,"field":"table"}],"optional":false,"name":"io.hypercdc.connector.mysql.Source","field":"source"},{"type":"string","optional":false,"field":"op"},{"type":"int64","optional":true,"field":"ts_ms"},{"type":"int64","optional":true,"field":"ts_us"},{"type":"int64","optional":true,"field":"ts_ns"}],"optional":false,"name":"dbserver1.inventory.customers.Envelope","version":1},"payload":{"before":null,"after":{"id":1006,"first_name":"Kenneth","last_name":"Anderson","email":"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f040e010b0a1d2f0e0c020a410c0002">[email&nbsp;protected]</a>"},"source":{"version":"3.6.1.Final","name":"dbserver1","server_id":223344,"ts_sec":1490635160,"gtid":null,"file":"mysql-bin.000003","pos":1356,"row":0,"snapshot":null,"thread":3,"db":"inventory","table":"customers"},"op":"c","ts_ms":1490635181456,"ts_us":1490635181456101,"ts_ns":1490635181456101571}}</code></pre>
 </div>
 </div>
 <div class="paragraph">

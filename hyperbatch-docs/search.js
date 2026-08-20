@@ -123,4 +123,32 @@
       input.select();
     }
   });
+
+  window.downloadCurrentPageText = function () {
+    const content = document.querySelector('.page-content');
+    if (!content) return;
+    const title = (document.title || 'document').split('—')[0].trim();
+    const text = title + '\n' + '='.repeat(title.length) + '\n\n' + content.innerText;
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = title.toLowerCase().replace(/[^a-z0-9_-]+/g, '-') + '.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+  };
+
+  document.addEventListener('click', e => {
+    const exportBtn = e.target.closest('.export-toggle-btn');
+    const exportMenu = document.querySelector('.export-menu');
+    if (exportBtn && exportMenu) {
+      const isOpen = exportMenu.classList.toggle('export-menu--open');
+      exportBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    } else if (exportMenu && !exportMenu.contains(e.target)) {
+      exportMenu.classList.remove('export-menu--open');
+      const btn = document.querySelector('.export-toggle-btn');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+  });
 })();

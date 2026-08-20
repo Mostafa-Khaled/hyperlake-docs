@@ -24,6 +24,33 @@
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
     <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <div class="export-dropdown">
+      <button class="export-toggle-btn" aria-haspopup="true" aria-expanded="false" title="Print or export documentation">
+        <svg class="export-btn-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"/></svg>
+        <span>Print / Export ▾</span>
+      </button>
+      <div class="export-menu" role="menu">
+        <div class="export-menu__section">Current Page</div>
+        <a class="export-menu__item" href="javascript:void(0)" onclick="window.print()">
+          <span class="export-menu__icon">🖨️</span>
+          <span>Print Page / PDF</span>
+        </a>
+        <a class="export-menu__item" href="javascript:void(0)" onclick="window.downloadCurrentPageText && window.downloadCurrentPageText()">
+          <span class="export-menu__icon">📝</span>
+          <span>Download Page (.txt)</span>
+        </a>
+        <div class="export-menu__divider"></div>
+        <div class="export-menu__section">Whole Documentation</div>
+        <a class="export-menu__item" href="../print-all.html" target="_blank">
+          <span class="export-menu__icon">📑</span>
+          <span>Print Whole Docs (PDF)</span>
+        </a>
+        <a class="export-menu__item" href="../full-docs.txt" download="hypercdc-docs-full-docs.txt">
+          <span class="export-menu__icon">📚</span>
+          <span>Download Whole Docs (.txt)</span>
+        </a>
+      </div>
+    </div>
     <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
   </div>
 </header>

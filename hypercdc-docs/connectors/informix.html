@@ -24,6 +24,33 @@
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
     <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <div class="export-dropdown">
+      <button class="export-toggle-btn" aria-haspopup="true" aria-expanded="false" title="Print or export documentation">
+        <svg class="export-btn-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"/></svg>
+        <span>Print / Export ▾</span>
+      </button>
+      <div class="export-menu" role="menu">
+        <div class="export-menu__section">Current Page</div>
+        <a class="export-menu__item" href="javascript:void(0)" onclick="window.print()">
+          <span class="export-menu__icon">🖨️</span>
+          <span>Print Page / PDF</span>
+        </a>
+        <a class="export-menu__item" href="javascript:void(0)" onclick="window.downloadCurrentPageText && window.downloadCurrentPageText()">
+          <span class="export-menu__icon">📝</span>
+          <span>Download Page (.txt)</span>
+        </a>
+        <div class="export-menu__divider"></div>
+        <div class="export-menu__section">Whole Documentation</div>
+        <a class="export-menu__item" href="../print-all.html" target="_blank">
+          <span class="export-menu__icon">📑</span>
+          <span>Print Whole Docs (PDF)</span>
+        </a>
+        <a class="export-menu__item" href="../full-docs.txt" download="hypercdc-docs-full-docs.txt">
+          <span class="export-menu__icon">📚</span>
+          <span>Download Whole Docs (.txt)</span>
+        </a>
+      </div>
+    </div>
     <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
   </div>
 </header>
@@ -2702,6 +2729,9 @@ The payload of each event value varies according to the event type:</p>
 <div class="sect2">
 <h3 id="informix-create-events"><a class="anchor" href="#informix-create-events"></a><em>create</em> events</h3>
 <div class="paragraph">
+<p>A create event represents a row-level INSERT operation, capturing the full state of the newly inserted row in the 1after` field of the event payload.</p>
+</div>
+<div class="paragraph">
 <p>The following example shows the value portion of a change event that the connector generates for an operation that creates data in the <code>customers</code> table:</p>
 </div>
 <div class="listingblock">
@@ -2875,7 +2905,7 @@ The payload of each event value varies according to the event type:</p>
       "id": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="99f3f6f1f7b7fdf6fcd9fce1f8f4e9f5fcb7f6ebfe">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8be1e4e3e5a5efe4eecbeef3eae6fbe7eea5e4f9ec">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -2967,7 +2997,7 @@ For <code>create</code> (insert) operations, this field is always <code>null</co
 <dd>
 <p>An optional field that specifies the state of the row after the event occurred.
 For create operations, this field contains the values of all columns in the newly inserted row.
-In this example, it shows the new row with <code>id</code> <code>1005</code>, <code>first_name</code> <code>john</code>, <code>last_name</code> <code>doe</code>, and <code>email</code> <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9cf6f3f4f2b2f8f3f9dcf9e4fdf1ecf0f9b2f3eefb">[email&nbsp;protected]</a></code>.</p>
+In this example, it shows the new row with <code>id</code> <code>1005</code>, <code>first_name</code> <code>john</code>, <code>last_name</code> <code>doe</code>, and <code>email</code> <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="462c292e286822292306233e272b362a2368293421">[email&nbsp;protected]</a></code>.</p>
 </dd>
 <dt class="hdlist1"><code>payload.source</code></dt>
 <dd>
@@ -3012,6 +3042,9 @@ The time is based on the system clock in the JVM that runs the Kafka Connect tas
 <div class="sect2">
 <h3 id="informix-update-events"><a class="anchor" href="#informix-update-events"></a><em>update</em> events</h3>
 <div class="paragraph">
+<p>An update event represents a row-level UPDATE operation, capturing both the row state before the change in the <code>before</code> field and the new row state after the change in the <code>after</code> field.</p>
+</div>
+<div class="paragraph">
 <p>The value of a change event for an update in the sample <code>customers</code> table has the same schema as a <em>create</em> event for that table.
 Similarly, the payload of the value of an <em>update</em> event has a structure that is mirrors the structure of the value payload in a <em>create</em> event.
 However, the <code>value</code> payloads of_update_ events and <em>create</em> events do not include the same values.
@@ -3026,13 +3059,13 @@ The following example shows the change event value for an event record that the 
       "id": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8ae0e5e2e4a4eee5efcaeff2ebe7fae6efa4e5f8ed">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fe94919690d09a919bbe9b869f938e929bd0918c99">[email&nbsp;protected]</a>"
     },
     "after": {
       "ID": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="751b1a071005190c35100d14180519105b1a0712">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f01001d0a1f03162f0a170e021f030a41001d08">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -3067,7 +3100,7 @@ The following example shows the change event value for an event record that the 
 <dd>
 <p>An optional field that represents the state of the row before an event occurs.
 When present, it contains an object with fields that represent the column values before the change.
-In this example, it shows the row state before the update, including the original email address <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d2b8bdbabcfcb6bdb792b7aab3bfa2beb7fcbda0b5">[email&nbsp;protected]</a></code>.</p>
+In this example, it shows the row state before the update, including the original email address <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d4bebbbcbafab0bbb194b1acb5b9a4b8b1fabba6b3">[email&nbsp;protected]</a></code>.</p>
 <div class="admonitionblock note">
       <div class="admonition-header">
         <span class="admonition-label">NOTE</span>
@@ -3083,7 +3116,7 @@ For <code>create</code> (insert) operations, this field is <code>null</code> bec
 <dd>
 <p>An optional field that represents the state of the row after an event occurs.
 When present, it contains an object with fields that represent the column values after the change.
-In this example, it shows the row state after the update, including the new email address <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c3adacb1a6b3afba83a6bba2aeb3afa6edacb1a4">[email&nbsp;protected]</a></code>.</p>
+In this example, it shows the row state after the update, including the new email address <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c4aaabb6a1b4a8bd84a1bca5a9b4a8a1eaabb6a3">[email&nbsp;protected]</a></code>.</p>
 <div class="admonitionblock note">
       <div class="admonition-header">
         <span class="admonition-label">NOTE</span>
@@ -3151,6 +3184,9 @@ After a key change, HyperCDC emits the following events:</p>
 <div class="sect2">
 <h3 id="informix-delete-events"><a class="anchor" href="#informix-delete-events"></a><em>delete</em> events</h3>
 <div class="paragraph">
+<p>A delete event represents a row-level DELETE operation, capturing the final state of the deleted row in the <code>before</code> field so that consumers can identify and process the removal.</p>
+</div>
+<div class="paragraph">
 <p>The <code>value</code> in a <em>delete</em> change event for a table has a <code>schema</code> portion that is similar to the <code>schema</code> element in <em>create</em> and <em>update</em> events for the same table.
 After a user performs a <em>delete</em> operation in the sample <code>customers</code> table, HyperCDC emits an event message such as the one in the following example:</p>
 </div>
@@ -3164,7 +3200,7 @@ After a user performs a <em>delete</em> operation in the sample <code>customers<
       "id": 1005,
       "first_name": "john",
       "last_name": "doe",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="711f1e0314011d08311409101c011d145f1e0316">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="85ebeaf7e0f5e9fcc5e0fde4e8f5e9e0abeaf7e2">[email&nbsp;protected]</a>"
     },
     "after": null,
     "source": {
@@ -3200,7 +3236,7 @@ After a user performs a <em>delete</em> operation in the sample <code>customers<
 <dd>
 <p>An optional field that represents the state of the row before an event occurs.
 For <code>delete</code> operations, this field contains the final state of the row before it was deleted.
-In this example, it shows the row values at the time of deletion, including <code>id</code> <code>1005</code> and <code>email</code> <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="036d6c7166736f7a43667b626e736f662d6c7164">[email&nbsp;protected]</a></code>.</p>
+In this example, it shows the row values at the time of deletion, including <code>id</code> <code>1005</code> and <code>email</code> <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e38d8c9186938f9aa3869b828e938f86cd8c9184">[email&nbsp;protected]</a></code>.</p>
 </dd>
 <dt class="hdlist1"><code>payload.after</code></dt>
 <dd>
@@ -3761,6 +3797,9 @@ For example, the <code>DATETIME</code> value "2018-06-20 15:13:16.94514" is repr
 </div>
 <div class="sect2">
 <h3 id="informix-decimal-types"><a class="anchor" href="#informix-decimal-types"></a>Decimal types</h3>
+<div class="paragraph">
+<p>The following table describes how the connector maps Informix decimal data types to Kafka Connect literal types and semantic types in change event fields.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col>

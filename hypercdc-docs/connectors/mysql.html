@@ -24,6 +24,33 @@
   <div class="topbar__right">
     <a class="topbar__nav-link" href="../index.html">Docs Index</a>
     <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <div class="export-dropdown">
+      <button class="export-toggle-btn" aria-haspopup="true" aria-expanded="false" title="Print or export documentation">
+        <svg class="export-btn-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd"/></svg>
+        <span>Print / Export ▾</span>
+      </button>
+      <div class="export-menu" role="menu">
+        <div class="export-menu__section">Current Page</div>
+        <a class="export-menu__item" href="javascript:void(0)" onclick="window.print()">
+          <span class="export-menu__icon">🖨️</span>
+          <span>Print Page / PDF</span>
+        </a>
+        <a class="export-menu__item" href="javascript:void(0)" onclick="window.downloadCurrentPageText && window.downloadCurrentPageText()">
+          <span class="export-menu__icon">📝</span>
+          <span>Download Page (.txt)</span>
+        </a>
+        <div class="export-menu__divider"></div>
+        <div class="export-menu__section">Whole Documentation</div>
+        <a class="export-menu__item" href="../print-all.html" target="_blank">
+          <span class="export-menu__icon">📑</span>
+          <span>Print Whole Docs (PDF)</span>
+        </a>
+        <a class="export-menu__item" href="../full-docs.txt" download="hypercdc-docs-full-docs.txt">
+          <span class="export-menu__icon">📚</span>
+          <span>Download Whole Docs (.txt)</span>
+        </a>
+      </div>
+    </div>
     <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
   </div>
 </header>
@@ -2930,6 +2957,10 @@ In the preceding example, the <code>payload</code> contains a single field, <cod
 <div class="sect2">
 <h3 id="mysql-change-event-values"><a class="anchor" href="#mysql-change-event-values"></a>Change event values</h3>
 <div class="paragraph">
+<p>A change event value contains the full row state before and after an operation,
+along with source metadata and operation type, structured as a Kafka Connect <code>Envelope</code>.</p>
+</div>
+<div class="paragraph">
 <p>The value in a change event is a bit more complicated than the key. Like the key, the value has a <code>schema</code> section and a <code>payload</code> section. The <code>schema</code> section contains the schema that describes the <code>Envelope</code> structure of the <code>payload</code> section, including its nested fields. Change events for operations that create, update or delete data all have a value payload with an envelope structure.</p>
 </div>
 <div class="paragraph">
@@ -2973,6 +3004,10 @@ In the preceding example, the <code>payload</code> contains a single field, <cod
 </div>
 <div class="sect2">
 <h3 id="mysql-create-events"><a class="anchor" href="#mysql-create-events"></a><em>create</em> events</h3>
+<div class="paragraph">
+<p>A <em>create</em> event contains the full row data for an <code>INSERT</code> operation,
+capturing the state of the new row in the <code>after</code> field of the event value payload.</p>
+</div>
 <div class="paragraph">
 <p>The following example shows the value portion of a change event that the connector generates for an operation that creates data in the <code>customers</code> table:</p>
 </div>
@@ -3161,7 +3196,7 @@ In the preceding example, the <code>payload</code> contains a single field, <cod
       "id": 1004,
       "first_name": "Anne",
       "last_name": "Kretchmar",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0c6d626269674c62636d627f7b697e22637e6b">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ef8e81818a84af81808e819c988a9dc1809d88">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -3179,7 +3214,7 @@ In the preceding example, the <code>payload</code> contains a single field, <cod
       "pos": 154,
       "row": 0,
       "thread": 7,
-      "query": "INSERT INTO customers (first_name, last_name, email) VALUES ('Anne', 'Kretchmar', '<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="24454a4a414f644a4b454a575341560a4b5643">[email&nbsp;protected]</a>')"
+      "query": "INSERT INTO customers (first_name, last_name, email) VALUES ('Anne', 'Kretchmar', '<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ccada2a2a9a78ca2a3ada2bfbba9bee2a3beab">[email&nbsp;protected]</a>')"
     }
   }
 }</code></pre>
@@ -3377,13 +3412,13 @@ The source metadata provides the following information:</p>
       "id": 1004,
       "first_name": "Anne",
       "last_name": "Kretchmar",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="80e1eeeee5ebc0eeefe1eef3f7e5f2aeeff2e7">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9cfdf2f2f9f7dcf2f3fdf2efebf9eeb2f3eefb">[email&nbsp;protected]</a>"
     },
     "after": {
       "id": 1004,
       "first_name": "Anne Marie",
       "last_name": "Kretchmar",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="51303f3f343a113f3e303f222634237f3e2336">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="583936363d3318363739362b2f3d2a76372a3f">[email&nbsp;protected]</a>"
     },
     "source": {
       "version": "3.6.1.Final",
@@ -3567,7 +3602,7 @@ as a primary key change. For a primary key change, in place of an <code>UPDATE</
       "id": 1004,
       "first_name": "Anne Marie",
       "last_name": "Kretchmar",
-      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4a2b24242f210a24252b24393d2f386425382d">[email&nbsp;protected]</a>"
+      "email": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="50313e3e353b103e3f313e232735227e3f2237">[email&nbsp;protected]</a>"
     },
     "after": null,
     "source": {
@@ -5017,6 +5052,10 @@ If using a hosted option such as Amazon RDS or Amazon Aurora that does not allow
 </div>
 <div class="sect3">
 <h4 id="permissions-explained-mysql-connector"><a class="anchor" href="#permissions-explained-mysql-connector"></a>Descriptions of user permissions</h4>
+<div class="paragraph">
+<p>The following table describes the MySQL permissions that you must grant to the HyperCDC connector user account,
+with an explanation of why each permission is required.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 14. Descriptions of user permissions</caption>
 <colgroup>
@@ -5158,6 +5197,9 @@ If the database instance is not configured to perform automated backups, the bin
 </div>
 <div class="sect3">
 <h4 id="binlog-configuration-properties-mysql-connector"><a class="anchor" href="#binlog-configuration-properties-mysql-connector"></a>Descriptions of MySQL binlog configuration properties</h4>
+<div class="paragraph">
+<p>The following table describes the MySQL server configuration properties that you must set to enable and configure the binary log for use with the HyperCDC connector.</p>
+</div>
 <div class="table-container"><table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 15. Descriptions of MySQL binlog configuration properties</caption>
 <colgroup>
