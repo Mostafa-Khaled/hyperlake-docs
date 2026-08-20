@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Adding Asset Types — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Adding Asset Types</h1></header>
+<p>Register a custom asset type in three steps:</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-create-the-php-asset-class">1) Create the PHP Asset Class<a href="#1-create-the-php-asset-class" class="hash-link" aria-label="Direct link to 1) Create the PHP Asset Class" title="Direct link to 1) Create the PHP Asset Class" translate="no">​</a></h2>
+<p>The asset class must extend an existing <code>HyperMDM\Model\Asset</code> subclass. Choose the base class
+that best matches your type's storage behavior. For example, extend <code>Asset\Document</code> for
+office-like files, or <code>Asset\Image</code> for image variants.</p>
+<p>Place the class in a <code>Model\Asset</code> sub-namespace:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter important">&lt;?php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// src/Model/Asset/InDesign.php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">namespace</span><span class="token plain"> </span><span class="token package">App</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Asset</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name-definition class-name">InDesign</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">extends</span><span class="token plain"> </span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">HyperMDM</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">Model</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">Asset</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">protected</span><span class="token plain"> </span><span class="token keyword type-declaration" style="color:#00009f">string</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$type</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'indesign'</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p>For reference, see the built-in asset types in <a href="https://github.com/pimcore/pimcore/tree/2026.x/models/Asset" target="_blank" rel="noopener noreferrer" class="">hypermdm/hypermdm on GitHub</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-register-the-asset-in-configuration">2) Register the Asset in Configuration<a href="#2-register-the-asset-in-configuration" class="hash-link" aria-label="Direct link to 2) Register the Asset in Configuration" title="Direct link to 2) Register the Asset in Configuration" translate="no">​</a></h2>
+<p>Add your type to the <code>hypermdm.assets.type_definitions.map</code> configuration. The <code>matching</code>
+array contains regular expressions. When a file is uploaded, its filename is tested against
+these patterns to determine the asset type automatically.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># config/config.yaml</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">assets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">type_definitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">map</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">indesign</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">class</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> \App\Model\Asset\InDesign</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">matching</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">"/\\.indd/"</span><span class="token punctuation" style="color:#393A34">]</span><br></span></code></pre></div></div>
+<p>No database migration is needed. The <code>assets.type</code> column is <code>varchar(20)</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-add-a-studio-ui-frontend-plugin">3) Add a Studio UI Frontend Plugin<a href="#3-add-a-studio-ui-frontend-plugin" class="hash-link" aria-label="Direct link to 3) Add a Studio UI Frontend Plugin" title="Direct link to 3) Add a Studio UI Frontend Plugin" translate="no">​</a></h2>
+<p>To give your asset type a proper editor in HyperMDM Studio, create a frontend plugin that:</p>
+<ol>
+<li class=""><strong>Creates a <code>TabManager</code></strong> subclass with your type name</li>
+<li class=""><strong>Registers the type</strong> in the <code>Asset/Editor/TypeRegistry</code></li>
+<li class=""><strong>Registers editor tabs</strong> (Custom Metadata, Properties, Versions, etc.)</li>
+</ol>
+<p>The complete working example is in the <a href="https://github.com/pimcore/studio-example-bundle/tree/main/assets/js/src/examples/custom-asset-type" target="_blank" rel="noopener noreferrer" class="">Studio Example Bundle</a>:</p>
+<ul>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-asset-type/index.ts" target="_blank" rel="noopener noreferrer" class="">Plugin entry (index.ts)</a> — binds TabManager and registers the module</li>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-asset-type/modules/indesign-asset-module.tsx" target="_blank" rel="noopener noreferrer" class="">Module (indesign-asset-module.tsx)</a> — registers type, tabs, and context menu</li>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-asset-type/asset/editor/types/indesign/tab-manager/indesign-tab-manager.ts" target="_blank" rel="noopener noreferrer" class="">TabManager (indesign-tab-manager.ts)</a> — extends <code>TabManager</code> with <code>type = 'indesign'</code></li>
+</ul>
+<p>See also the <a href="https://pimcore.com/docs/platform/Studio_UI/Extending/Plugin_Development_Examples/Custom_Asset_Type" target="_blank" rel="noopener noreferrer" class="">Plugin Development Examples</a> documentation.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

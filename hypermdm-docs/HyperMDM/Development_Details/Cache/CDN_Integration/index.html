@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CDN Integration — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>CDN Integration</h1></header>
+<p>HyperMDM can integrate with a CDN that supports tag-based purging. The bundled
+implementation targets <a href="https://www.fastly.com/" target="_blank" rel="noopener noreferrer" class="">Fastly</a>, and the architecture
+allows other providers to be added by implementing
+<code>HyperMDM\Cdn\PurgeClientInterface</code>.</p>
+<p>This document describes the <strong>cache-proxy</strong> integration: the CDN sits in front
+of HyperMDM, caches asset and thumbnail responses, and is invalidated when
+assets or thumbnail configurations change. It also covers the opt-in
+<strong>image-optimizer</strong> mode (Fastly Image Optimizer), which transforms originals at
+the edge instead of generating thumbnail files — see
+<a href="#image-optimizer-mode-opt-in" class="">Image Optimizer Mode</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="quick-start">Quick Start<a href="#quick-start" class="hash-link" aria-label="Direct link to Quick Start" title="Direct link to Quick Start" translate="no">​</a></h2>
+<p>Set these environment variables on your runtime:</p>
+<div class="table-container"><table><thead><tr><th>Variable</th><th>Required</th><th>Example</th><th>Purpose</th></tr></thead><tbody><tr><td><code>CDN_PROVIDER</code></td><td>yes</td><td><code>fastly</code></td><td>Activates the CDN listeners. Empty/unset disables all CDN behavior — HyperMDM will not emit cache tags or dispatch purges.</td></tr><tr><td><code>FASTLY_API_TOKEN</code></td><td>for Fastly</td><td><code>xxxxxxxx</code></td><td>Fastly API token with the <code>purge_select</code> scope (least privilege — sufficient for surrogate-key and URL purges; <code>purge_all</code> is not required).</td></tr><tr><td><code>FASTLY_API_SERVICE</code></td><td>for Fastly</td><td><code>abc123…</code></td><td>Fastly service ID.</td></tr><tr><td><code>FASTLY_API_BASE_URL</code></td><td>no</td><td><code>https://api.fastly.com</code> (default)</td><td>Override the Fastly API base URL if your environment needs a custom API endpoint/proxy.</td></tr><tr><td><code>CDN_BASE_URL</code></td><td>no</td><td><code>https://cdn.example.com</code></td><td>Public base URL of the CDN. Required when original assets are served statically and must be purged by URL — see <a href="#original-assets" class="">Original Assets</a>.</td></tr><tr><td><code>CDN_IMAGE_OPTIMIZER</code></td><td>no</td><td><code>fastly</code></td><td>Enables CDN-side image transformation (Fastly Image Optimizer). Empty = HyperMDM generates thumbnails as usual. Independent of <code>CDN_PROVIDER</code>. Requires <code>CDN_BASE_URL</code>.</td></tr></tbody></table></div>
+<p>Once <code>CDN_PROVIDER</code> is set, three event listeners activate:</p>
+<ol>
+<li class=""><code>CdnSurrogateKeyListener</code> — emits <code>Surrogate-Key</code> and <code>Cache-Tag</code> headers
+on thumbnail responses</li>
+<li class=""><code>CdnAssetCookieStripperListener</code> — strips <code>Set-Cookie</code> from asset and
+thumbnail responses (priority <code>-200</code>, runs after personalization listeners)</li>
+<li class=""><code>CdnPurgeListener</code> — dispatches purge messages on asset and
+thumbnail-config changes</li>
+</ol>
+<p>When <code>CDN_PROVIDER</code> is empty, all three listeners short-circuit and the
+application behaves exactly as it did before the integration was introduced.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-tagging-works">How Tagging Works<a href="#how-tagging-works" class="hash-link" aria-label="Direct link to How Tagging Works" title="Direct link to How Tagging Works" translate="no">​</a></h2>
+<p>For each thumbnail response, <code>CdnSurrogateKeyListener</code> emits the following
+tags (via both <code>Surrogate-Key</code> for Fastly and <code>Cache-Tag</code> for clients/proxies
+that prefer the standard header):</p>
+<ul>
+<li class=""><code>asset-{id}</code> — invalidate every cached representation of this asset
+(every thumbnail variant of asset <code>{id}</code>)</li>
+<li class=""><code>thumb-{configName}</code> — invalidate every thumbnail using this config,
+across all assets</li>
+<li class=""><code>asset-{id}-thumb-{configName}</code> — invalidate this specific variant only</li>
+</ul>
+<p>For original asset URLs (<code>/var/assets/...</code>) the same listener also computes:</p>
+<ul>
+<li class=""><code>asset-path-{16-char-xxh3-hash}</code> — the path-hash for tag-purging the
+original. The hash is <code>xxh3('/var/assets' + asset_full_path)</code> (a fast
+non-cryptographic 64-bit fingerprint; a collision merely over-purges,
+which is harmless).</li>
+</ul>
+<p>…but this only reaches the cached object if <code>/var/assets/...</code> responses pass
+through PHP. See <a href="#original-assets" class="">Original Assets</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="image-optimizer-mode-opt-in">Image Optimizer Mode (opt-in)<a href="#image-optimizer-mode-opt-in" class="hash-link" aria-label="Direct link to Image Optimizer Mode (opt-in)" title="Direct link to Image Optimizer Mode (opt-in)" translate="no">​</a></h2>
+<p>When <code>CDN_IMAGE_OPTIMIZER=fastly</code>, HyperMDM stops generating thumbnail files for eligible image
+variants and instead returns a Fastly Image Optimizer URL that transforms the <strong>original</strong> asset
+at the edge. The customer API is unchanged — <code>$asset-&gt;getThumbnail('cfg')-&gt;getPath()</code> returns the
+CDN URL transparently. <code>CDN_PROVIDER</code> (purge) and <code>CDN_IMAGE_OPTIMIZER</code> (transform) are independent
+switches.</p>
+<p><strong>Eligibility.</strong> A thumbnail is rewritten only when both hold; otherwise HyperMDM generates it as usual:</p>
+<ol>
+<li class="">
+<p>The asset's source MIME type is in the configured allowlist
+<code>hypermdm.cdn.image_optimizer_source_formats</code> (default: <code>image/jpeg</code>, <code>image/png</code>, <code>image/gif</code>,
+<code>image/webp</code> — the source formats Fastly Image Optimizer can ingest). Vector graphics (SVG),
+video thumbnails, and document previews are never rewritten. Raster formats the optimizer cannot
+ingest (e.g. TIFF, PSD, BMP) also fall back to HyperMDM generation — without this guard they would
+be rewritten to a transform URL the edge cannot process (the original served untransformed, or a
+404), so the fallback is what keeps those thumbnails working.</p>
+</li>
+<li class="">
+<p>The thumbnail config uses only translatable transforms: <code>resize</code>, <code>scaleByWidth</code>,
+<code>scaleByHeight</code>, <code>contain</code>, <code>cover</code>, <code>crop</code>, plus format/quality and 2x high-resolution. Note:</p>
+<ul>
+<li class=""><code>cover</code> is translatable <strong>only with the default <code>center</code> positioning</strong>. Any non-center
+positioning (<code>topleft</code>, <code>topright</code>, …) falls back, as does any <code>cover</code> applied to an asset
+that has a focal point set — HyperMDM turns those into focal-point crops the edge cannot
+reproduce.</li>
+<li class="">High-resolution is translatable <strong>only at exactly 2x</strong>. Other factors (1.5x, 3x, 4x, …) fall
+back, since the transform carries only an integer 2x device-pixel-ratio.</li>
+</ul>
+<p>A config using anything else (<code>frame</code>, <code>rotate</code>, <code>mirror</code>, <code>trim</code>, <code>roundCorners</code>, color
+adjustments, non-center/focal-point <code>cover</code>, non-2x high-resolution, <code>cropPercent</code>) falls back to
+HyperMDM generation.</p>
+</li>
+</ol>
+<p>The source-format allowlist is configurable — extend it only with formats your optimizer can
+actually ingest:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">cdn</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">image_optimizer_source_formats</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'image/jpeg'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'image/png'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'image/gif'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'image/webp'</span><br></span></code></pre></div></div>
+<p>MIME types are matched case-insensitively. Setting an empty list disables rewriting entirely
+(every thumbnail is then generated by HyperMDM).</p>
+<p><strong><code>CDN_BASE_URL</code> is required</strong> in optimizer mode (used to build absolute transformation URLs);
+the Fastly adapter throws if it is missing.</p>
+<p><strong>Purging transforms.</strong> With static originals (<strong>Mode B</strong>, the default — see
+<a href="#original-assets" class="">Original Assets</a>) edge transforms carry no inherited <code>Surrogate-Key</code>, so they are
+<strong>not</strong> reachable by tag purges (<code>asset-{id}</code>, <code>asset-path-{hash}</code>, <code>thumb-{config}</code>). They are
+invalidated by <strong>URL</strong> purge of the original instead: <code>CdnPurgeListener</code> dispatches a
+<code>PurgeCdnUrlMessage</code> on asset update/delete (when <code>CDN_BASE_URL</code> is set), and Fastly cascades that
+source-URL purge to all of the original's transforms. So <strong>editing an asset does refresh its
+transforms automatically</strong>. Without <code>CDN_BASE_URL</code> set — or for changes that do not re-save the
+asset — transforms refresh only when their TTL expires.</p>
+<p>Tag-based purge of transforms (an <code>asset-path-{hash}</code> purge invalidating the original and all its
+transforms at once) requires the original <code>/var/assets/...</code> response to carry the header, which
+in turn requires originals to be served through PHP (<strong>Mode A</strong>). Mode A is <strong>not</strong> provided out of
+the box — HyperMDM has no route that serves original assets through PHP — so it is an optional,
+custom add-on (see <a href="#original-assets" class="">Original Assets</a>). For most projects TTL refresh plus
+URL-purge is sufficient.</p>
+<p><strong>Thumbnail-config edits.</strong> Edge transforms are keyed by the original's surrogate keys, not by a
+named config, so editing a thumbnail config does <strong>not</strong> invalidate already-cached transforms via
+<code>thumb-{config}</code>. In practice a config change that alters the transform parameters (size, quality,
+fit) also changes the emitted transform URL, so freshly rendered pages request a new edge object and
+the stale one is simply orphaned until its TTL. To force an <em>existing</em> transform to refresh
+immediately, <strong>re-save the affected asset</strong>: <code>CdnPurgeListener</code> then dispatches the URL purge that
+reaches the static original and — because Fastly links each transform to its source URL — its
+transforms too. Note that <code>hypermdm:cdn:purge --asset &lt;id&gt;</code> is <strong>tag-only</strong> and does <strong>not</strong> reach
+statically-served (Mode B) originals or their transforms (see <a href="#manual-purges" class="">Manual Purges</a>); it
+only invalidates PHP-served thumbnails.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cookie-stripping">Cookie Stripping<a href="#cookie-stripping" class="hash-link" aria-label="Direct link to Cookie Stripping" title="Direct link to Cookie Stripping" translate="no">​</a></h2>
+<p>HyperMDM's personalization bundle sets cookies (<code>_pc_tss</code>, <code>_pc_tvs</code>) on every
+response, including assets. Most CDNs refuse to cache responses that carry a
+<code>Set-Cookie</code> header. <code>CdnAssetCookieStripperListener</code> runs at priority <code>-200</code>
+(after the targeting listener at <code>-115</code>) and removes the personalization cookies (<code>_pc_tss</code>, <code>_pc_tvs</code>) from</p>
+<ul>
+<li class="">Thumbnails: <code>(?:^|/)(image|video)-thumb__\d+__([a-zA-Z0-9_\-]+)/</code></li>
+<li class="">Originals: the configured original-asset prefix (defaults to <code>^/var/assets/</code>; see “The URL prefix contract”)</li>
+</ul>
+<p>When <code>CDN_PROVIDER</code> is empty, this listener is inert and cookies pass through
+unchanged.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="purge-mechanism">Purge Mechanism<a href="#purge-mechanism" class="hash-link" aria-label="Direct link to Purge Mechanism" title="Direct link to Purge Mechanism" translate="no">​</a></h2>
+<p><code>CdnPurgeListener</code> subscribes to six events:</p>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Action</th></tr></thead><tbody><tr><td><code>AssetEvents::POST_UPDATE</code></td><td>Dispatch <code>asset-{id}</code> and <code>asset-path-{newPathHash}</code>. If renamed/moved, also <code>asset-path-{oldPathHash}</code>.</td></tr><tr><td><code>AssetEvents::POST_DELETE</code></td><td>Same as above.</td></tr><tr><td><code>ImageThumbnailConfigEvents::POST_UPDATE</code></td><td>Dispatch <code>thumb-{configName}</code> (global, across all assets).</td></tr><tr><td><code>ImageThumbnailConfigEvents::POST_DELETE</code></td><td>Same as above.</td></tr><tr><td><code>VideoThumbnailConfigEvents::POST_UPDATE</code></td><td>Dispatch <code>thumb-{configName}</code> (global, across all assets).</td></tr><tr><td><code>VideoThumbnailConfigEvents::POST_DELETE</code></td><td>Same as above.</td></tr></tbody></table></div>
+<p>All tags of one event are dispatched as a single <code>PurgeCdnTagsMessage</code> (and,
+if <code>CDN_BASE_URL</code> is set, per-URL <code>PurgeCdnUrlMessage</code>s) onto the
+<code>hypermdm_cdn_purge</code> Symfony Messenger transport. A worker consumes the queue and calls the configured
+<code>PurgeClientInterface</code> implementation (currently <code>FastlyPurgeClient</code>).</p>
+<blockquote>
+<p><strong>Asset paths with special characters</strong>
+Asset filenames may legitimately contain spaces or non-ASCII characters
+(e.g. <code>/Car Images/Mötley.jpg</code>). The listener percent-encodes each path
+segment when building the <code>PurgeCdnUrlMessage</code> URL, so the URL sent to the
+CDN matches the cache key the CDN actually stored for the browser-encoded
+request. Tag-based purges hash the decoded path on both sides and are
+unaffected.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="worker-configuration">Worker Configuration<a href="#worker-configuration" class="hash-link" aria-label="Direct link to Worker Configuration" title="Direct link to Worker Configuration" translate="no">​</a></h3>
+<p>Add <code>hypermdm_cdn_purge</code> to your <code>messenger:consume</code> worker setup:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console messenger:consume hypermdm_cdn_purge --memory-limit=250M --time-limit=3600</span><br></span></code></pre></div></div>
+<p>For inspecting failed purges, also consume the failure transport:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console messenger:consume hypermdm_cdn_purge_failed --memory-limit=128M --time-limit=3600</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console messenger:failed:show</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="retry-behavior">Retry Behavior<a href="#retry-behavior" class="hash-link" aria-label="Direct link to Retry Behavior" title="Direct link to Retry Behavior" translate="no">​</a></h3>
+<p>The <code>hypermdm_cdn_purge</code> transport ships with the following retry policy in
+<code>bundles/CoreBundle/config/hypermdm/default.yaml</code>:</p>
+<ul>
+<li class=""><code>max_retries: 5</code></li>
+<li class="">Exponential backoff: 2 s → 4 s → 8 s → 16 s → 32 s, capped at 60 s</li>
+<li class="">Failure transport: <code>hypermdm_cdn_purge_failed</code></li>
+</ul>
+<p>A non-2xx HTTP response from Fastly causes <code>FastlyPurgeClient</code> to throw,
+which lets Messenger retry the message. Network/transport failures (HTTP
+client exceptions) also retry. After exhausting retries, the message lands in
+<code>hypermdm_cdn_purge_failed</code> for inspection or manual replay.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="manual-purges">Manual Purges<a href="#manual-purges" class="hash-link" aria-label="Direct link to Manual Purges" title="Direct link to Manual Purges" translate="no">​</a></h2>
+<p>Use the <code>hypermdm:cdn:purge</code> console command for recovery scenarios, deploy
+hooks, content-migration scripts, or runbooks. Routine purges happen
+automatically via the listener — you should not normally need this command.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Purge all caches related to a specific asset (asset-{id} + asset-path-{hash})</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:cdn:purge --asset 42</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Purge multiple assets in one call</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:cdn:purge --asset 42 --asset 43</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Purge every thumbnail using a given config (thumb-{configName})</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:cdn:purge --config product_detail</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Combine</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:cdn:purge --asset 42 --config product_detail</span><br></span></code></pre></div></div>
+<blockquote>
+<p><strong>Notes</strong></p>
+<ul>
+<li class="">The command computes the <code>asset-path-{hash}</code> tag itself, so unknown asset
+IDs are reported and skipped (only the <code>asset-{id}</code> thumbnail tag is
+purged in that case).</li>
+<li class="">Tags are deduplicated before being submitted (Fastly limits each batch
+purge to 256 keys).</li>
+<li class="">The command calls <code>PurgeClientInterface::purgeByTags()</code> directly and
+does <strong>not</strong> go through the messenger queue, so retries do not apply.</li>
+<li class="">It issues <strong>tag</strong> purges only — it never URL-purges. In <strong>Mode B</strong>
+(statically-served originals, the default) the original and its Fastly IO
+transforms carry no surrogate tags, so <code>--asset</code> does <strong>not</strong> invalidate
+them; it only purges the asset's PHP-served thumbnails. To refresh a Mode B
+original or its transforms on demand, re-save the asset (which dispatches a
+<code>PurgeCdnUrlMessage</code>) or URL-purge via your CDN's API.</li>
+<li class="">"Purge everything" is intentionally not supported. Use your CDN
+provider's admin panel or API for that operation.</li>
+</ul>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cdn-edge--vcl-requirements">CDN Edge / VCL Requirements<a href="#cdn-edge--vcl-requirements" class="hash-link" aria-label="Direct link to CDN Edge / VCL Requirements" title="Direct link to CDN Edge / VCL Requirements" translate="no">​</a></h2>
+<p>The CDN edge must be configured to:</p>
+<ol>
+<li class="">
+<p><strong>Strip the <code>Cookie</code> request header before lookup</strong> for asset paths,
+otherwise per-user cookies fragment the cache key and the cache hit rate
+collapses. A typical Fastly VCL snippet:</p>
+<div class="language-vcl codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-vcl codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">sub vcl_recv {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  if (req.url ~ "^/(image|video)-thumb__" ||</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      req.url ~ "^/var/assets/" ||</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      req.url ~ "\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|mp4|webm|woff2?|ttf|eot)(\?|$)") {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      unset req.http.Cookie;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>Honor <code>Surrogate-Key</code></strong> as the cache-tag header. Fastly does this
+natively and strips the header from the downstream response. Other
+providers may need <code>Cache-Tag</code> instead — both headers are emitted, so the
+edge can use whichever it prefers.</p>
+</li>
+<li class="">
+<p><strong>Accept <code>PURGE</code> requests</strong> against asset URLs for <code>PurgeCdnUrlMessage</code>,
+and the Fastly batch-purge endpoint
+<code>POST /service/{service_id}/purge</code> (with <code>Surrogate-Key</code> header) for
+<code>PurgeCdnTagsMessage</code>. Both are handled by <code>FastlyPurgeClient</code>.</p>
+</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="original-assets">Original Assets<a href="#original-assets" class="hash-link" aria-label="Direct link to Original Assets" title="Direct link to Original Assets" translate="no">​</a></h2>
+<p>For original assets (<code>/var/assets/...</code>) there are two operation modes.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-url-prefix-contract-read-this-first">The URL prefix contract (read this first)<a href="#the-url-prefix-contract-read-this-first" class="hash-link" aria-label="Direct link to The URL prefix contract (read this first)" title="Direct link to The URL prefix contract (read this first)" translate="no">​</a></h3>
+<p>The CDN integration must build the <strong>same public URLs your templates emit</strong> —
+otherwise purge URLs and <code>asset-path-{hash}</code> tags target paths the CDN never
+cached, and stale originals silently survive every purge.</p>
+<p>HyperMDM emits original-asset URLs as <code>{frontend_prefixes.source}{asset path}</code>
+(see <code>Asset::getFrontendFullPath()</code>), and the CDN integration follows the same
+setting:</p>
+<ul>
+<li class=""><code>hypermdm.assets.frontend_prefixes.source</code> <strong>set</strong> (e.g. <code>/var/assets</code>): the
+integration uses it for purge URLs, optimizer URLs, response matching, and
+tag hashing. For an absolute-URL prefix only its path component is used for
+matching/tagging — the host part must be your <code>CDN_BASE_URL</code> host.</li>
+<li class=""><strong>unset/empty</strong> (HyperMDM default): the integration assumes the <code>/var/assets</code>
+contract described under Mode B. <strong>Note that stock HyperMDM web-server configs
+serve originals at the prefix-less tree path via an internal rewrite</strong> — under
+that setup the CDN caches URLs the integration cannot purge. To use the CDN
+integration for originals, set the prefix explicitly so emitted URLs and the
+CDN contract agree:</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">assets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">frontend_prefixes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">source</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> /var/assets</span><br></span></code></pre></div></div>
+<p>With that setting templates emit <code>/var/assets/...</code> URLs, the web server serves
+them statically off disk (Mode B), and purge URLs match the cached objects.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="mode-b-url-purge-for-originals-static-serving--default">Mode B: URL purge for originals (static serving) — default<a href="#mode-b-url-purge-for-originals-static-serving--default" class="hash-link" aria-label="Direct link to Mode B: URL purge for originals (static serving) — default" title="Direct link to Mode B: URL purge for originals (static serving) — default" translate="no">​</a></h3>
+<p>This is the default and recommended mode: keep <code>/var/assets</code> as static-file
+serving so the web server streams the file directly off disk (fast, with native
+range and conditional-request support).</p>
+<p>Original responses do not carry CDN tags in this mode (the PHP kernel never runs
+for a statically-served file). Configure <code>CDN_BASE_URL</code> so <code>CdnPurgeListener</code>
+dispatches <code>PurgeCdnUrlMessage</code> on asset update/delete (including the old URL on
+rename/move); Fastly then issues a direct <code>PURGE https://cdn.example.com/var/assets/...</code>
+by URL. If <code>CDN_BASE_URL</code> is not set, originals refresh only when TTL expires.</p>
+<blockquote>
+<p>Do <strong>not</strong> route <code>/var/assets/*</code> through <code>/index.php</code> on Upsun/Platform.sh
+expecting Mode A — HyperMDM has no route that serves original assets through PHP,
+so every original would return 404. See Mode A below.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="mode-a-tag-based-purge-for-originals-optional-custom--not-shipped">Mode A: Tag-based purge for originals (optional, custom — not shipped)<a href="#mode-a-tag-based-purge-for-originals-optional-custom--not-shipped" class="hash-link" aria-label="Direct link to Mode A: Tag-based purge for originals (optional, custom — not shipped)" title="Direct link to Mode A: Tag-based purge for originals (optional, custom — not shipped)" translate="no">​</a></h3>
+<p>Use this only if you specifically need <code>asset-path-{hash}</code> surrogate tags to
+invalidate cached originals (and, by inheritance, their Fastly IO transforms)
+instead of relying on URL-purge / TTL.</p>
+<p>Requirement: original asset requests must be handled by PHP on cache fill, not
+served directly as static files — otherwise <code>CdnSurrogateKeyListener</code> cannot emit
+<code>Surrogate-Key</code>/<code>Cache-Tag</code>. <strong>HyperMDM does not provide a controller for this</strong>;
+only thumbnails have a PHP serving route. To enable Mode A you must add your own
+controller/route that streams originals from the asset storage (mirroring
+<code>PublicServicesController::thumbnailAction</code>) so the response is produced by PHP,
+then point <code>/var/assets</code> routing at <code>/index.php</code>.</p>
+<p>Be aware this re-implements static file serving in PHP: you are responsible for
+HTTP range (<code>206</code>) and conditional (<code>304</code>) handling, and you accept the per-request
+kernel overhead on originals (mitigated, but not eliminated, by edge caching).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="private--access-controlled-assets">Private / Access-Controlled Assets<a href="#private--access-controlled-assets" class="hash-link" aria-label="Direct link to Private / Access-Controlled Assets" title="Direct link to Private / Access-Controlled Assets" translate="no">​</a></h2>
+<p>The CDN listeners never emit cache tags (and never strip cookies) for a response when:</p>
+<ul>
+<li class="">the response carries <code>Cache-Control: no-store</code> (set this on gated/access-controlled asset
+controllers to keep them off the CDN), or</li>
+<li class="">the request path matches a pattern in <code>hypermdm.cdn.excluded_paths</code>.</li>
+</ul>
+<p>Query-string variants of asset URLs (e.g. cache-busters like <code>?v=3</code>) are tagged and
+cookie-stripped like their bare-path equivalents: the CDN caches them under the full URL
+anyway, so the shared path-derived tags are what let a purge reach every cached variant.
+Signed/gated URLs should opt out via <code>no-store</code> or <code>excluded_paths</code>.</p>
+<blockquote>
+<p>Note: only <code>no-store</code> is honored as an opt-out. <code>private</code> and <code>no-cache</code> are <strong>not</strong> treated as
+opt-outs because Symfony emits a default <code>Cache-Control: no-cache, private</code> on responses that set
+no explicit cache headers, making them indistinguishable from a deliberate choice. Use <code>no-store</code>.</p>
+</blockquote>
+<p>Configure path exclusions in YAML:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">cdn</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">excluded_paths</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'#^/var/assets/private/#'</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="adding-a-new-cdn-provider">Adding a New CDN Provider<a href="#adding-a-new-cdn-provider" class="hash-link" aria-label="Direct link to Adding a New CDN Provider" title="Direct link to Adding a New CDN Provider" translate="no">​</a></h2>
+<p>Implement <code>HyperMDM\Cdn\PurgeClientInterface</code>:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter important">&lt;?php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">namespace</span><span class="token plain"> </span><span class="token package">App</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Cdn</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Cdn</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">PurgeClientInterface</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">final</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name-definition class-name">MyCdnPurgeClient</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">implements</span><span class="token plain"> </span><span class="token class-name">PurgeClientInterface</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">purgeByTag</span><span class="token punctuation" style="color:#393A34">(</span><span class="token keyword type-hint" style="color:#00009f">string</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$tag</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword return-type" style="color:#00009f">void</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">/* ... */</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">/** @param list&lt;string&gt; $tags */</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">purgeByTags</span><span class="token punctuation" style="color:#393A34">(</span><span class="token keyword type-hint" style="color:#00009f">array</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$tags</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword return-type" style="color:#00009f">void</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">/* ... */</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">purgeByUrl</span><span class="token punctuation" style="color:#393A34">(</span><span class="token keyword type-hint" style="color:#00009f">string</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$url</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword return-type" style="color:#00009f">void</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">/* ... */</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p>Register it as a service and tag it with <code>hypermdm.cdn.purge_client</code>, setting the
+<code>provider</code> attribute to the identifier you will use in <code>CDN_PROVIDER</code>:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">services</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">App\Cdn\MyCdnPurgeClient</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">tags</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> hypermdm.cdn.purge_client</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">provider</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> mycdn </span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p><code>CdnPurgeClientRegistry</code> collects every tagged client and lazily resolves the one
+whose <code>provider</code> matches <code>CDN_PROVIDER</code> at runtime. You do <strong>not</strong> replace the
+<code>HyperMDM\Cdn\PurgeClientInterface</code> alias — it points at the registry, which does
+the selection. The Fastly implementation in <code>bundles/CoreBundle/config/cdn.yaml</code>
+(tagged via the <code>#[AutoconfigureTag]</code> attribute on <code>FastlyPurgeClient</code>) is a
+reference template.</p>
+<blockquote>
+<p><strong>Multi-provider selection</strong> is controlled by <code>CDN_PROVIDER</code> and the <code>hypermdm.cdn.purge_client</code> service tags (the registry resolves the selected provider lazily).</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="verification-guidance">Verification Guidance<a href="#verification-guidance" class="hash-link" aria-label="Direct link to Verification Guidance" title="Direct link to Verification Guidance" translate="no">​</a></h2>
+<p>For deployment verification, test against your target CDN endpoint and check:</p>
+<ol>
+<li class=""><code>Cache-Tag</code>/<code>Surrogate-Key</code> presence on 2xx thumbnail responses.</li>
+<li class="">Expected behavior for originals based on your selected mode in
+<a href="#original-assets" class="">Original Assets</a>.</li>
+<li class="">Messenger queue health for <code>hypermdm_cdn_purge</code> and
+<code>hypermdm_cdn_purge_failed</code>.</li>
+</ol></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

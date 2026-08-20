@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Model Evaluation — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Model Evaluation</h1></header>
+<p>We evaluated a range of models against the bundle's real agent tasks to ground the guidance in
+<a class="" href="../Model_Requirements/index.html">Model Requirements</a>. This page documents how the evaluation works
+and the measured results.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="methodology">Methodology<a href="#methodology" class="hash-link" aria-label="Direct link to Methodology" title="Direct link to Methodology" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-eval-tool">The eval tool<a href="#the-eval-tool" class="hash-link" aria-label="Direct link to The eval tool" title="Direct link to The eval tool" translate="no">​</a></h3>
+<p>The agent-server ships a CLI evaluation harness under <code>agent-server/eval</code>. It drives real agent
+sessions against the live PHP backend and records full metrics per run.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">cd dev/hypermdm/hypermdm-agent-bundle/agent-server</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm run eval -- list                       # list available tasks and agents</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm run eval -- run &lt;taskId&gt; --batch &lt;b&gt;   # run a task, tagged into a batch</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm run eval -- summary --batch &lt;b&gt;        # aggregate a batch into a metrics table</span><br></span></code></pre></div></div>
+<p>Other subcommands (<code>prompt</code>, <code>ask-reply</code>, <code>proposal</code>, <code>report</code>, <code>status</code>) drive follow-up turns,
+answer questions, resolve proposals, and emit per-session reports.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="claude-code-as-the-operator">Claude Code as the operator<a href="#claude-code-as-the-operator" class="hash-link" aria-label="Direct link to Claude Code as the operator" title="Direct link to Claude Code as the operator" translate="no">​</a></h3>
+<p>Each task is run with <strong>Claude Code acting as the operator</strong> that drives the conversation the way
+a real user would: it sends the task prompt, issues refinement messages when the first attempt is
+incomplete, and approves, refines, or rejects the agent's proposals - then judges the outcome and
+records a <code>pass</code>/<code>fail</code> verdict with notes.</p>
+<p>Mechanical "continue or stop?" checkpoints are handled by an <strong>autopilot</strong> so operator latency
+does not distort timings: it auto-answers <code>continue</code> until the task completes, a <em>real</em> question
+surfaces (hands back to the operator), the per-task tool-call ceiling is hit, or a maximum number
+of continue round-trips is reached.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-tasks">The tasks<a href="#the-tasks" class="hash-link" aria-label="Direct link to The tasks" title="Direct link to The tasks" translate="no">​</a></h3>
+<p>The suite has <strong>18 tasks</strong> spanning the capabilities agents are used for. Each runs against a
+sample agent definition shipped with the bundle which can be run against our demo dataset.</p>
+<div class="table-container"><table><thead><tr><th>#</th><th>Task</th><th>What it exercises</th></tr></thead><tbody><tr><td>1</td><td><code>smoke-list-classes</code></td><td>Basic tool wiring - call the read tool and list the available data-object classes instead of answering from memory.</td></tr><tr><td>2</td><td><code>reason-data-model</code></td><td>Read and explain the data model: the Manufacturer ↔ Car relation plus the fields the Car class itself holds.</td></tr><tr><td>3</td><td><code>load-red-cars</code></td><td>Query cars filtered by color and present them as interactive object-preview widgets (not a table or prose list).</td></tr><tr><td>4</td><td><code>load-bmw-cars-table</code></td><td>Query cars by manufacturer and render them in a data-table widget with sensible columns.</td></tr><tr><td>5</td><td><code>load-aston-martin-assets</code></td><td>Find image assets for a manufacturer and present them through asset-preview widgets.</td></tr><tr><td>6</td><td><code>summarize-car</code></td><td>Read a single car and summarise its key fields, emitting an element-link widget to the object.</td></tr><tr><td>7</td><td><code>update-car-object</code></td><td>Propose a multi-field update (bodystyle, class, year, colors, images, dimensions) as one approved change-set.</td></tr><tr><td>8</td><td><code>update-accessorypart-object</code></td><td>Edit nested classification-store data - round numeric dimensions and change a typed value.</td></tr><tr><td>9</td><td><code>update-event-object</code></td><td>Multi-language update (title/description across locales) plus tags, location, status, and computed dates.</td></tr><tr><td>10</td><td><code>update-multiple-cars</code></td><td>Produce one separate proposal per car across four cars, each with localised descriptions.</td></tr><tr><td>11</td><td><code>asset-metadata-relation</code></td><td>Add a car to an asset's relation field while preserving the entries already present.</td></tr><tr><td>12</td><td><code>asset-tags-visual</code></td><td>Vision - <strong>look at the image</strong> and tag it with the correct color, country, and quality.</td></tr><tr><td>13</td><td><code>research-car-price</code></td><td>Use the <strong>web-research</strong> tool to find a price and propose a written analysis (not internal guesses).</td></tr><tr><td>14</td><td><code>personalize-document</code></td><td>Create a target-group-scoped variant of an existing landing page for a given persona.</td></tr><tr><td>15</td><td><code>template-simple</code></td><td>Author and render a simple Twig template with a single editable headline.</td></tr><tr><td>16</td><td><code>template-advanced</code></td><td>Author a more complex template combining an image grid and a WYSIWYG editable.</td></tr><tr><td>17</td><td><code>create-news-object</code></td><td>Create a News object end-to-end - image, field-collection entries, and relations, in the correct folder.</td></tr><tr><td>18</td><td><code>landing-page-chevrolet</code></td><td>Build a complex landing page from web research: intro, FAQ, and an image carousel with linked content.</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="metrics-and-grading">Metrics and grading<a href="#metrics-and-grading" class="hash-link" aria-label="Direct link to Metrics and grading" title="Direct link to Metrics and grading" translate="no">​</a></h3>
+<p>Every run records token accounting (input, output, <strong>cache-read</strong>, cache-write), server-side
+timing (model vs. tool time), tool-call counts, proposals, and emitted widgets. Automated checks
+(e.g. "this widget was emitted", "this proposal field equals X", "this tool was called", "no
+errors") run after the session; the operator's <code>pass</code>/<code>fail</code> verdict is the headline result.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="results">Results<a href="#results" class="hash-link" aria-label="Direct link to Results" title="Direct link to Results" translate="no">​</a></h2>
+<blockquote>
+<p><strong>These results are spot-checks.</strong> Each figure is a single run; the agents and
+models are non-deterministic, so reruns will produce slightly different numbers and occasionally
+different pass/fail outcomes. Some failures are environmental rather than model quality - for
+example, Hugging Face inference endpoints that scale to zero can time out mid-run. Treat the
+table as directional, and re-run the eval tool against your own tasks before committing to a
+model for production.</p>
+</blockquote>
+<p>One row per unique model, using that model's <strong>best (highest-scoring)</strong> run. Where a model was
+evaluated more than once, the run with the most passes is shown (ties broken by lower cost), so the
+date column varies per model. <em>Non-cached input</em> = total input − cache-read; it is the figure that
+best reflects effective input cost. Token counts are rounded to thousands; all runs are from June 2026.</p>
+<div class="table-container"><table><thead><tr><th>Model</th><th>Date</th><th>Success</th><th>In</th><th>Out</th><th>Cached-in</th><th>Non-cached-in</th><th>Provider</th><th>Runtime</th><th>Estimated Costs</th></tr></thead><tbody><tr><td><code>claude-sonnet-4.6</code></td><td>2026-06-23</td><td>18/18 (100%)</td><td>3,593k</td><td>61k</td><td>3,176k</td><td>417k</td><td>Copilot</td><td>25.5 min</td><td>3.12 $</td></tr><tr><td><code>claude-haiku-4.5</code></td><td>2026-06-09</td><td>17/18 (94%)</td><td>3,010k</td><td>41k</td><td>2,597k</td><td>412k</td><td>Copilot</td><td>10.2 min</td><td>0.88$</td></tr><tr><td><code>gpt-5.4-mini</code></td><td>2026-06-11</td><td>17/18 (94%)</td><td>3,468k</td><td>81k</td><td>3,010k</td><td>457k</td><td>Copilot</td><td>20.8 min</td><td>0.93$</td></tr><tr><td><code>qwen3p6-plus</code></td><td>2026-06-10</td><td>17/18 (94%)</td><td>5,431k</td><td>87k</td><td>4,485k</td><td>946k</td><td>Fireworks</td><td>40.0 min</td><td>1.19 $</td></tr><tr><td><code>gemini-3.5-flash</code></td><td>2026-06-11</td><td>17/18 (94%)</td><td>7,642k</td><td>67k</td><td>5,823k</td><td>1,820k</td><td>Copilot</td><td>29.2 min</td><td>4.2 $</td></tr><tr><td><code>kimi-k2p6</code></td><td>2026-06-10</td><td>16/18 (89%)</td><td>2,563k</td><td>56k</td><td>2,138k</td><td>425k</td><td>Fireworks</td><td>21.6 min</td><td>0.97 $</td></tr><tr><td><code>deepseek-v3.2</code></td><td>2026-06-22</td><td>16/18 (89%)</td><td>5,768k</td><td>63k</td><td>1,665k</td><td>4,103k</td><td>Huggingface</td><td>57.2 min</td><td>1.58$</td></tr><tr><td><code>Qwen3.6-35B-A3B</code></td><td>2026-06-19</td><td>14/18 (78%)</td><td>6,656k</td><td>131k</td><td>0</td><td>6,656k</td><td>Huggingface</td><td>30.2 min</td><td>1.12 $</td></tr><tr><td><code>minimax-m2.7</code></td><td>2026-06-22</td><td>14/18 (78%)</td><td>7,969k</td><td>108k</td><td>6,780k</td><td>1,190k</td><td>Huggingface</td><td>28.8 min</td><td>2.52 $</td></tr><tr><td><code>gemma4:31b-cloud</code></td><td>2026-06-11</td><td>13/18 (72%)</td><td>2,883k</td><td>19k</td><td>0</td><td>2,883k</td><td>Ollama</td><td>23.8 min</td><td>-</td></tr><tr><td><code>gemma-4-26B-A4B-it</code></td><td>2026-06-19</td><td>12/18 (67%)</td><td>10,111k</td><td>68k</td><td>0</td><td>10,111k</td><td>Huggingface</td><td>61.2 min</td><td>0.73 $</td></tr><tr><td><code>gpt-oss-120b</code></td><td>2026-06-09</td><td>10/18 (56%)</td><td>7,842k</td><td>87k</td><td>7,102k</td><td>740k</td><td>Cerebras</td><td>7.5 min</td><td>0.32 $</td></tr><tr><td><code>qwen3-32b</code></td><td>2026-06-19</td><td>10/18 (56%)</td><td>3,122k</td><td>137k</td><td>0</td><td>3,122k</td><td>Huggingface</td><td>59.7 min</td><td>0.28 $</td></tr></tbody></table></div>
+<p><code>claude-sonnet-4.6</code> is the only model to clear the whole suite (18/18) and is the accuracy leader,
+but it is several times more expensive per run than the efficiency leaders. Among the high-scorers,
+<code>claude-haiku-4.5</code> is the most efficient - comparable non-cached input to Sonnet at roughly a third
+the cost and a quarter the runtime - which is why it remains the shipped default. The practical read:
+default to Haiku, and reach for Sonnet on the hardest document/creation agents where the extra
+reliability is worth the cost.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="per-model-strengths-weaknesses-and-failures">Per-model strengths, weaknesses, and failures<a href="#per-model-strengths-weaknesses-and-failures" class="hash-link" aria-label="Direct link to Per-model strengths, weaknesses, and failures" title="Direct link to Per-model strengths, weaknesses, and failures" translate="no">​</a></h3>
+<p>Each entry summarizes what the model is good and bad at, then lists the specific tasks its best run
+failed.</p>
+<ul>
+<li class="">
+<p><strong><code>claude-sonnet-4.6</code></strong> (18/18): The only clean sweep - it passed every task, including the two
+hard document/creation tasks that trip most of the field (a full Chevrolet landing page with five
+product-teaser renderlets, and an end-to-end News object) plus the date and vision tasks. Strong
+caching (≈88%); the trade-off is cost - several times pricier per run than Haiku and ~2.5× slower.</p>
+<p><em>Failed:</em> none.</p>
+</li>
+<li class="">
+<p><strong><code>claude-haiku-4.5</code></strong> (17/18): Best pass-rate-to-cost balance - one task off the top at the
+lowest cost and fastest runtime; reliable on object/asset updates, tagging, templates, listings,
+and document personalization. Its one real gap is Unix-timestamp/date arithmetic.</p>
+<p><em>Failed:</em> <code>update-event-object</code> - set the wrong date and only converged after an explicit epoch was supplied.</p>
+</li>
+<li class="">
+<p><strong><code>gpt-5.4-mini</code></strong> (17/18): Broadly correct across updates, research, templates, and the hard
+document tasks, with strong content quality; roughly twice as slow as Haiku.</p>
+<p><em>Failed:</em> <code>load-aston-martin-assets</code> - found all assets but rendered a data-table instead of the required
+asset-preview widgets.</p>
+</li>
+<li class="">
+<p><strong><code>qwen3p6-plus</code></strong> (17/18): Top-tier accuracy including dates and document tasks; the slowest of
+the 17/18 tier and prone to long single-inference stalls.</p>
+<p><em>Failed:</em> <code>template-advanced</code> - no proposal; stalled in a 300 s inference timeout (environmental, not a logic error).</p>
+</li>
+<li class="">
+<p><strong><code>gemini-3.5-flash</code></strong> (17/18): Very high pass rate across updates, listings, and templates, but
+high token and non-cached cost.</p>
+<p><em>Failed:</em> <code>landing-page-chevrolet</code> - produced only an empty areablock skeleton and then thrashed on refine (serialization errors).</p>
+</li>
+<li class="">
+<p><strong><code>kimi-k2p6</code></strong> (16/18): Lowest total input of any model; fast and accurate on text/data tasks,
+but no reliable vision.</p>
+<p><em>Failed:</em> <code>load-red-cars</code> (data-table instead of object-preview widgets);
+<code>asset-tags-visual</code> (blue car never tagged blue).</p>
+</li>
+<li class="">
+<p><strong><code>deepseek-v3.2</code></strong> (16/18): Strong content and research quality, but weak at date computation
+and expensive: caches poorly (≈29%) and is the slowest model.</p>
+<p><em>Failed:</em> <code>landing-page-chevrolet</code> (car-teaser links unmet); <code>update-event-object</code> (wrong dates).</p>
+</li>
+<li class="">
+<p><strong><code>Qwen3.6-35B-A3B</code></strong> (14/18): Gets listing content right but systematically mis-emits widgets
+and has no vision; no prompt cache inflates cost.</p>
+<p><em>Failed:</em> <code>load-red-cars</code>, <code>load-bmw-cars-table</code> (wrong widget type), <code>asset-tags-visual</code> (vision hallucination), <code>landing-page-chevrolet</code>
+(empty-scaffold thrash).</p>
+</li>
+<li class="">
+<p><strong><code>minimax-m2.7</code></strong> (14/18): Reasonable on standard object updates, but skips required web
+research, is weak on vision and dates, and goes non-convergent on multi-part creates.</p>
+<p><em>Failed:</em> <code>research-car-price</code> (no web research), <code>update-event-object</code> (dates), <code>asset-tags-visual</code> (vision
+miss), <code>create-news-object</code> (non-convergent, 96 tool calls).</p>
+</li>
+<li class="">
+<p><strong><code>gemma4:31b-cloud</code></strong> (13/18): Cheapest output tokens and fine on simpler updates/listings, but
+stalls to empty answers on create/document tasks; no prompt cache.</p>
+<p><em>Failed:</em> <code>asset-tags-visual</code>, <code>update-event-object</code> (dates), <code>template-advanced</code> (undefined CSS variable), and <code>create-news-object</code>
+/ <code>landing-page-chevrolet</code> (no proposal - ended with an empty answer).</p>
+</li>
+<li class="">
+<p><strong><code>gemma-4-26B-A4B-it</code></strong> (12/18):  Passes simpler read/update tasks but falls into an
+"approve-minimal-first" non-convergence loop on anything multi-field; by far the most expensive
+(10.1 M input, 61 m).</p>
+<p><em>Failed:</em> <code>load-red-cars</code>, <code>update-car-object</code> (only 5/7 fields), <code>update-event-object</code>, <code>personalize-document</code>, <code>create-news-object</code>, <code>landing-page-chevrolet</code>.</p>
+</li>
+<li class="">
+<p><strong><code>gpt-oss-120b</code></strong> (10/18): Fastest wall-clock, but broadly unreliable for tool-driven work:
+leaks chain-of-thought as the answer, skips required tool calls, and hallucinates errors.</p>
+<p><em>Failed:</em> eight tasks incl. <code>smoke-list-classes</code> (leaked reasoning, never called the tool), the data-query
+widgets, <code>asset-tags-visual</code>, <code>research-car-price</code>, and <code>landing-page-chevrolet</code>.</p>
+</li>
+<li class="">
+<p><strong><code>qwen3-32b</code></strong> (10/18):  Modest input footprint but the weakest tier: no vision, broken
+dates/relations (hallucinated IDs), no widget emission, and thrashes on templates/documents.</p>
+<p><em>Failed:</em> eight tasks incl. the data-query widgets, <code>asset-tags-visual</code>, <code>research-car-price</code>,
+<code>template-simple</code> (42 failing calls), <code>create-news-object</code>, and <code>landing-page-chevrolet</code>.</p>
+</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

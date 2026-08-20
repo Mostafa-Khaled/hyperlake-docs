@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Field Hint System — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Field Hint System</h1></header>
+<p>When the agent asks HyperMDM "what fields does the Car class have?", it doesn't just get a list of names and types - it
+gets a <strong>format hint</strong> for every field telling it exactly what JSON shape to produce. Without this, an agent would have
+to guess the layout of a classification store or a localized field, and it would get it wrong. Field hints are why
+<code>propose_data_object_update</code> works reliably across all 40+ HyperMDM field types.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-the-agent-sees">What the agent sees<a href="#what-the-agent-sees" class="hash-link" aria-label="Direct link to What the agent sees" title="Direct link to What the agent sees" translate="no">​</a></h2>
+<p>When the agent calls <code>get_class_definition("Car")</code> or <code>get_field_schema(...)</code>, each field definition includes an
+<code>editableDataFormat</code> string and optional metadata:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "name": "mileage",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "type": "quantityValue",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "required": false,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "editableDataFormat": "{\"value\": &lt;number&gt;, \"unitId\": \"&lt;unit&gt;\"}",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "example": "{\"value\": 42000, \"unitId\": \"km\"}",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "metadata": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "validUnits": ["km", "mi", "m"],</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "defaultUnit": "km"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<p>The agent uses this schema when composing updates - the format string becomes the template, the metadata constrains its choices. Combined with the HITL proposal flow (see <a class="" href="../../Features/HITL_Proposals/index.html">Features → HITL Proposals</a>), this is how agents reliably edit complex types without guessing.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="covered-field-types">Covered field types<a href="#covered-field-types" class="hash-link" aria-label="Direct link to Covered field types" title="Direct link to Covered field types" translate="no">​</a></h2>
+<p>The bundle ships nine providers that together cover every HyperMDM data type. Each provider handles a family of related types:</p>
+<div class="table-container"><table><thead><tr><th>Provider</th><th>Types</th></tr></thead><tbody><tr><td><strong>Simple</strong></td><td>30+ scalar types - <code>input</code>, <code>textarea</code>, <code>wysiwyg</code>, <code>numeric</code>, <code>checkbox</code>, <code>date</code>, <code>datetime</code>, <code>image</code>, <code>link</code>, <code>geopoint</code>, …</td></tr><tr><td><strong>Select</strong></td><td><code>select</code>, <code>multiselect</code>, <code>booleanSelect</code> - extracts static options; notes dynamic providers.</td></tr><tr><td><strong>Relation</strong></td><td><code>manyToOneRelation</code>, <code>manyToManyRelation</code>, <code>advancedManyToManyRelation</code>, … - metadata for allowed classes, types, max items, relation columns.</td></tr><tr><td><strong>QuantityValue</strong></td><td><code>quantityValue</code>, <code>inputQuantityValue</code> - resolves unit labels, lists valid units.</td></tr><tr><td><strong>LocalizedFields</strong></td><td>Resolves configured locales; recursively formats child fields.</td></tr><tr><td><strong>Block</strong></td><td>Recursively formats block child fields.</td></tr><tr><td><strong>FieldCollections</strong></td><td>Extracts allowed collection types.</td></tr><tr><td><strong>ObjectBricks</strong></td><td>Extracts allowed brick types.</td></tr><tr><td><strong>ClassificationStore</strong></td><td>Resolves store ID and group count; formats the nested <code>{groupId: {default: {keyId: value}}}</code> structure.</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="a-few-concrete-format-strings">A few concrete format strings<a href="#a-few-concrete-format-strings" class="hash-link" aria-label="Direct link to A few concrete format strings" title="Direct link to A few concrete format strings" translate="no">​</a></h3>
+<ul>
+<li class=""><code>checkbox</code> → <code>true | false</code></li>
+<li class=""><code>datetime</code> → <code>&lt;unix timestamp&gt;</code> with example <code>1700000000</code></li>
+<li class=""><code>numeric</code> → <code>&lt;number&gt;</code> with metadata <code>{min, max}</code> from the field config</li>
+<li class=""><code>image</code> → <code>{"id": &lt;assetId&gt;, "type": "asset"}</code></li>
+<li class=""><code>quantityValue</code> → <code>{"value": &lt;number&gt;, "unitId": "&lt;unit&gt;"}</code> with <code>validUnits</code></li>
+<li class=""><code>block</code> → <code>[{"&lt;field&gt;": &lt;value&gt;, ...}]</code> with <code>maxItems</code></li>
+<li class=""><code>localizedfields</code> → <code>{"&lt;field&gt;": {"&lt;locale&gt;": &lt;value&gt;}}</code> with <code>locales</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-the-system-is-organised">How the system is organised<a href="#how-the-system-is-organised" class="hash-link" aria-label="Direct link to How the system is organised" title="Direct link to How the system is organised" translate="no">​</a></h2>
+<p>Field hints use a <strong>provider pattern</strong> with a central registry:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GetClassDefinitionTool / GetFieldSchemaTool</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  └─ FieldDefinitionFormatter  (facade for tool consumers)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">       └─ FieldFormatHintRegistry</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            └─ SimpleFieldHintProvider</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            └─ BlockHintProvider</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            └─ ClassificationStoreHintProvider</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            └─ …</span><br></span></code></pre></div></div>
+<p>The registry receives every provider via a tagged iterator (<code>hypermdm_agent.field_format_hint_provider</code>), builds a
+<code>fieldType → provider</code> map once at construction, and delegates hint resolution to the right provider.</p>
+<p>Recursive types (blocks of blocks, bricks containing bricks) are bounded by a <strong>depth guard</strong> at 4 levels - beyond
+that the registry returns a generic <code>&lt;value&gt;</code> fallback to keep tool responses bounded.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="extending">Extending<a href="#extending" class="hash-link" aria-label="Direct link to Extending" title="Direct link to Extending" translate="no">​</a></h2>
+<p>If you ship a custom HyperMDM data type, you also need a field-hint provider or the agent will see a generic
+<code>&lt;value&gt;</code> for it. One class implementing <code>FieldFormatHintProviderInterface</code>, one service tag.
+See <a class="" href="../../Extending/Custom_Field_Hint_Providers/index.html">Extending → Custom Field Hint Providers</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-reading">Related reading<a href="#related-reading" class="hash-link" aria-label="Direct link to Related reading" title="Direct link to Related reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Features/HITL_Proposals/index.html">Features → HITL Proposals</a> - how field hints feed the propose tool.</li>
+<li class=""><a class="" href="../../Extending/Custom_Field_Hint_Providers/index.html">Extending → Custom Field Hint Providers</a> - implementing a provider for your own data type.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

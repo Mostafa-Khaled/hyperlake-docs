@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Extending HyperMDM — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Extending HyperMDM</h1></header>
+<p>HyperMDM builds on Symfony's extension mechanisms and adds its own extension points.
+Most projects start with data modeling, controllers, templates, and documents,
+all achievable through configuration and standard Symfony patterns.
+When you need to go further, HyperMDM provides dedicated extension points across
+three layers.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="architecture-where-to-extend-what">Architecture: Where to Extend What<a href="#architecture-where-to-extend-what" class="hash-link" aria-label="Direct link to Architecture: Where to Extend What" title="Direct link to Architecture: Where to Extend What" translate="no">​</a></h2>
+<p>HyperMDM's extension points span three layers, each documented in its own chapter:</p>
+<div class="table-container"><table><thead><tr><th>Layer</th><th>What it covers</th><th>When to use</th></tr></thead><tbody><tr><td><strong>Core Framework</strong> (this chapter)</td><td>Events, models, bundles, data types, Symfony DI, Composer dependencies</td><td>PHP/Symfony-level customization, data model extensions, lifecycle hooks, distributable bundles</td></tr><tr><td><strong><a class="" href="../../Studio_Backend/Extending/index.html">Studio Backend API</a></strong></td><td>API endpoints, response customization, grid columns, filters, metadata adapters</td><td>Customizing the REST API layer that powers HyperMDM Studio</td></tr><tr><td><strong><a class="" href="../../Studio_UI/Extending/index.html">Studio UI</a></strong></td><td>Plugins, tabs, widgets, navigation, context menus, sidebar extensions</td><td>Extending the HyperMDM Studio frontend with custom UI components</td></tr></tbody></table></div>
+<p><strong>Cross-cutting extensions</strong> (e.g. adding a custom asset type or document type) typically
+require changes across multiple layers. The guides in this chapter cover the full workflow
+and link to the Studio Backend and Studio UI documentation for layer-specific detail.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="core-framework-extensions">Core Framework Extensions<a href="#core-framework-extensions" class="hash-link" aria-label="Direct link to Core Framework Extensions" title="Direct link to Core Framework Extensions" translate="no">​</a></h2>
+<p><strong><a class="" href="Events/index.html">Events and Event Listeners</a></strong>
+Hook into HyperMDM's lifecycle (element CRUD, cache, mail, workflows) using
+the Symfony EventDispatcher without modifying core code.</p>
+<p><strong><a class="" href="Add_Your_Own_Dependencies/index.html">Add Your Own Dependencies</a></strong>
+Install external Composer packages and register third-party Symfony bundles.</p>
+<p><strong><a class="" href="Custom_Extension_Guides/index.html">Custom Extension Guides</a></strong>
+Step-by-step guides for specific customizations: custom asset types, document types,
+data types, permissions, persistent models, and more. Includes a cross-bundle index
+of all extension guides across all three layers.</p>
+<p><strong><a class="" href="HyperMDM_Bundle_Developers_Guide/index.html">Bundle Developer's Guide</a></strong>
+Build reusable, distributable HyperMDM bundles with installers, service definitions,
+auto-loaded configuration, and migrations.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-backend-extensions">Studio Backend Extensions<a href="#studio-backend-extensions" class="hash-link" aria-label="Direct link to Studio Backend Extensions" title="Direct link to Studio Backend Extensions" translate="no">​</a></h2>
+<p>The Studio Backend Bundle exposes extension points for the API layer that powers
+HyperMDM Studio: custom endpoints, response enrichment via events, grid columns,
+filters, metadata adapters, and OpenAPI integration.</p>
+<p>See the full reference:
+<strong><a class="" href="../../Studio_Backend/Extending/index.html">Extending HyperMDM Studio Backend</a></strong></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-ui-extensions">Studio UI Extensions<a href="#studio-ui-extensions" class="hash-link" aria-label="Direct link to Studio UI Extensions" title="Direct link to Studio UI Extensions" translate="no">​</a></h2>
+<p>The Studio UI Bundle provides a plugin/module architecture, component registry,
+dependency injection, and dynamic type system for client-side customization of
+HyperMDM Studio.</p>
+<p>Start with the plugin development guide. The SDK Overview provides background on the
+module system and component registry that plugins build on.</p>
+<ul>
+<li class=""><strong><a class="" href="../../Studio_UI/Extending/index.html">Extending HyperMDM Studio</a></strong> -
+plugin development guide and examples</li>
+<li class=""><strong><a class="" href="../../Studio_UI/Architecture_Overview/SDK_Overview/index.html">Studio UI SDK Overview</a></strong> -
+SDK architecture, module system, dependency injection, and component registry</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="see-also">See Also<a href="#see-also" class="hash-link" aria-label="Direct link to See Also" title="Direct link to See Also" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../Development_Details/Configuration/index.html">Configuration</a> -
+override HyperMDM constants (asset directory, temp directory, etc.)</li>
+<li class=""><a class="" href="../Objects/Object_Classes/Additional_Class_Settings/Parent_Class/index.html">Parent Class for Objects</a> -
+inject additional functionality into object classes</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Architecture Overview — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Architecture Overview</h1></header>
+<p>The following architecture overview shows available framework components. The component configuration takes place in
+the <code>hypermdm_ecommerce_framework</code> configuration node and a factory is responsible for resolving of the implementations.
+For each component a custom implementation can be configured and used.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Ecommerce_Framework-Architecture_Overview-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Ecommerce_Framework-Architecture_Overview-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">bigpicture</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/ecommerce-architecture-76b63b73d3e45d6e5848d82d1132e06e.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Ecommerce_Framework-Architecture_Overview-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/ecommerce-architecture-76b63b73d3e45d6e5848d82d1132e06e.png"><figure class="visual-placeholder" id="fig-Ecommerce_Framework-Architecture_Overview-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Ecommerce_Framework-Architecture_Overview-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">bigpicture</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/ecommerce-architecture-76b63b73d3e45d6e5848d82d1132e06e.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Ecommerce_Framework-Architecture_Overview-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/ecommerce-architecture-76b63b73d3e45d6e5848d82d1132e06e.png"><figure class="visual-placeholder" id="fig-Ecommerce_Framework-Architecture_Overview-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Ecommerce_Framework-Architecture_Overview-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">bigpicture</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/ecommerce-architecture-76b63b73d3e45d6e5848d82d1132e06e.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Ecommerce_Framework-Architecture_Overview-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h1>Separation of Concerns</h1>
+<p>We try to separate different functionality and encapsulate them as good as possible in the different components.
+Following list should state the basic ideas and represent a guideline for future extensions:</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="index-service">Index Service<a href="#index-service" class="hash-link" aria-label="Direct link to Index Service" title="Direct link to Index Service" translate="no">​</a></h2>
+<p>The Index Service is responsible for all aspects concerning indexing products and providing an API to access product
+data from the index.</p>
+<p>These aspects contain among other things:</p>
+<ul>
+<li class="">Defining which attributes should be indexed.</li>
+<li class="">Implementations for different search backends (e.g. mysql, elasticsearch, fact finder, findologic).</li>
+<li class=""><em>Product Lists</em> as the API to access the product data stored in the search index. <em>Product Lists</em> can be used
+by controllers to display product listings.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="filter-service">Filter Service<a href="#filter-service" class="hash-link" aria-label="Direct link to Filter Service" title="Direct link to Filter Service" translate="no">​</a></h2>
+<p>The Filter Service is responsible for all aspects concerning filtering products and setting up a filtered navigation.
+It is tightly coupled with the <em>Product Lists</em> of the Index Service, provides the developer a simple API for building
+a layered navigation and takes care of query generation, counting results and stuff.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="availability-system">Availability System<a href="#availability-system" class="hash-link" aria-label="Direct link to Availability System" title="Direct link to Availability System" translate="no">​</a></h2>
+<p>The <em>Availability System</em> is responsible for all aspects concerning product availability. Here the logic for calculating
+availabilities, calling external availability services, etc. is encapsulated. Each product has an <em>Availability System</em>
+assigned and when it comes to getting the availability of a product, this should be delegated to the <em>Availability
+System</em> of the product.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="price-system-and-taxes">Price System and Taxes<a href="#price-system-and-taxes" class="hash-link" aria-label="Direct link to Price System and Taxes" title="Direct link to Price System and Taxes" translate="no">​</a></h2>
+<p>Like <em>Availability Systems</em>, there are <em>Price Systems</em> which are responsible for all aspects of getting product prices.
+Here the logic of calculating the product prices should be encapsulated. Each product has a <em>Price System</em> and when it
+comes to getting the price of a product, this should be delegated to the <em>Price System</em> of the product.</p>
+<p>Also <em>Tax Management</em> is located in this component.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="pricing-manager">Pricing Manager<a href="#pricing-manager" class="hash-link" aria-label="Direct link to Pricing Manager" title="Direct link to Pricing Manager" translate="no">​</a></h2>
+<p>In addition to the <em>Price System</em>, there is the Pricing Manager which is responsible for all aspects concerning
+modification of prices for marketing purposes. Therefore pricing rules (e.g. certain products, certain time frames, ...)
+build conditions which need to be valid that certain pricing actions (e.g. product price discount, free shipping, ...)
+are executed.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="voucher-system">Voucher System<a href="#voucher-system" class="hash-link" aria-label="Direct link to Voucher System" title="Direct link to Voucher System" translate="no">​</a></h2>
+<p>The Voucher System is responsible for all aspects concerning vouchers for customers. These aspects contain among
+other things:</p>
+<ul>
+<li class="">Voucher Services</li>
+<li class="">Voucher Tokens</li>
+<li class="">Voucher Statistics</li>
+<li class="">Modification of product prices based on vouchers which is done with the help of the Pricing Manager.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cart-manager">Cart Manager<a href="#cart-manager" class="hash-link" aria-label="Direct link to Cart Manager" title="Direct link to Cart Manager" translate="no">​</a></h2>
+<p>The Cart Manager is responsible for all aspects concerning carts. These aspects contain among other things:</p>
+<ul>
+<li class="">Different cart implementations</li>
+<li class="">CRUD-Operations on carts</li>
+<li class="">Price calculations for carts</li>
+<li class="">Price modifications for carts (like shipping costs, etc.)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="checkout-manager">Checkout Manager<a href="#checkout-manager" class="hash-link" aria-label="Direct link to Checkout Manager" title="Direct link to Checkout Manager" translate="no">​</a></h2>
+<p>The Checkout Manager is responsible for all aspects concerning checkout process and an one-stop API for getting
+through the checkout process. The Checkout Manager always works with a cart and at certain points in the checkout
+process it delegates to other components to convert the cart to an order object (Order Manager), start payment
+operations (Commit Order Processor and Payment Manager) and commits the order (Commit Order Processor).</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="commit-order-processor">Commit Order Processor<a href="#commit-order-processor" class="hash-link" aria-label="Direct link to Commit Order Processor" title="Direct link to Commit Order Processor" translate="no">​</a></h3>
+<p>The Commit Order Processor is part of the Checkout Manager namespace and is responsible for all aspects concerning
+committing and order.</p>
+<p>These aspects contain among other things:</p>
+<ul>
+<li class="">Handle payment response</li>
+<li class="">commit order payment</li>
+<li class="">commit order and send order to other backend systems (e.g. erp system)</li>
+</ul>
+<p>In contrast to the Checkout Manager, the Commit Order Processor does not work with carts anymore and can be
+initialized without a cart. Therefore it also can be used to commit orders in combination with server side payment
+notifications when no cart is available anymore.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="payment-manager">Payment Manager<a href="#payment-manager" class="hash-link" aria-label="Direct link to Payment Manager" title="Direct link to Payment Manager" translate="no">​</a></h2>
+<p>The Payment Manager is responsible for all aspects concerning payment. The main aspect is the implementation
+of different Payment Providers to integrate them into the framework.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="order-manager">Order Manager<a href="#order-manager" class="hash-link" aria-label="Direct link to Order Manager" title="Direct link to Order Manager" translate="no">​</a></h2>
+<p>The Order Manager is responsible for all aspects of working with orders except committing them (which is the
+responsibility of the Commit Order Processor). These aspects contain among other things:</p>
+<ul>
+<li class="">Creating orders based on carts</li>
+<li class="">Order Storage</li>
+<li class="">Loading orders</li>
+<li class="">Loading order lists and filter them (Order List)</li>
+<li class="">Working with orders after order commit (Order Agent)</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

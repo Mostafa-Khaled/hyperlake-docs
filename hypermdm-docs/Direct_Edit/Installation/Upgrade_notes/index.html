@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-admin-classic--extjs-support">Removed Admin Classic / ExtJS Support<a href="#removed-admin-classic--extjs-support" class="hash-link" aria-label="Direct link to Removed Admin Classic / ExtJS Support" title="Direct link to Removed Admin Classic / ExtJS Support" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMDirectEditBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code> and no longer uses <code>BundleAdminClassicTrait</code>. The <code>getJsPaths()</code> and <code>getCssPaths()</code> methods have been removed.</li>
+<li class="">All ExtJS-based frontend assets have been deleted:<!-- -->
+<ul>
+<li class=""><code>src/Resources/public/js/startup.js</code></li>
+<li class=""><code>src/Resources/public/js/modal.js</code></li>
+<li class=""><code>src/Resources/public/js/bootstrap-modal.js</code></li>
+<li class=""><code>src/Resources/public/css/style.css</code></li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-controllers">Removed Controllers<a href="#removed-controllers" class="hash-link" aria-label="Direct link to Removed Controllers" title="Direct link to Removed Controllers" translate="no">​</a></h3>
+<ul>
+<li class=""><code>AssetEditController</code> has been removed (was Admin Classic based).</li>
+<li class=""><code>MercureController</code> has been removed (was Admin Classic based).</li>
+<li class=""><code>StudioRouteLoader</code> has been removed; Studio routing is now handled directly via configuration.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-ui-implementation">Studio UI Implementation<a href="#studio-ui-implementation" class="hash-link" aria-label="Direct link to Studio UI Implementation" title="Direct link to Studio UI Implementation" translate="no">​</a></h3>
+<ul>
+<li class="">
+<p>Full Studio UI support has been implemented. The bundle now ships with a React/TypeScript frontend under <code>assets/studio/</code>.</p>
+</li>
+<li class="">
+<p>New Studio backend controllers added under <code>src/Controller/Studio/</code>:</p>
+<ul>
+<li class=""><code>CancelEditController</code></li>
+<li class=""><code>ConfirmUploadController</code></li>
+<li class=""><code>GenerateLinkController</code></li>
+<li class=""><code>GetStatusController</code> (replaces the former <code>DefaultController</code>)</li>
+<li class=""><code>ResolveConflictController</code></li>
+</ul>
+</li>
+<li class="">
+<p>New Studio event classes added:</p>
+<ul>
+<li class=""><code>HyperMDM\Bundle\DirectEditBundle\Event\Studio\DirectEditLinkEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\DirectEditBundle\Event\Studio\DirectEditStatusEvent</code></li>
+</ul>
+<p>These classes exist but the bundle does not dispatch them anywhere. There is currently no way to hook into a
+direct edit request through the event system.</p>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="interface--api-changes">Interface &amp; API Changes<a href="#interface--api-changes" class="hash-link" aria-label="Direct link to Interface &amp; API Changes" title="Direct link to Interface &amp; API Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>ClientController</code> is now marked <code>@internal</code>.</li>
+<li class=""><code>ClientController</code> constructor: <code>ClientCommunicationService $clientCommunicationService</code> dependency has been replaced by <code>DirectEditEventNotifierInterface $notificationService</code>.</li>
+<li class=""><code>ClientCommunicationService</code> constructor: a new optional <code>?string $clientHostUrl</code> parameter has been added as the last argument.</li>
+<li class="">The internal method call <code>ClientCommunicationService::sendStartLocalEditingEvent()</code> used inside <code>ClientController</code> has been replaced by <code>DirectEditEventNotifierInterface::notifyStartEditing()</code>.</li>
+<li class=""><code>ClientController</code> upload handler now calls <code>DirectEditEventNotifierInterface::notifyUploadComplete()</code> instead of <code>ClientCommunicationService::sendClientUploadEvent()</code>.</li>
+<li class="">Both <code>notifyStartEditing()</code> and <code>notifyUploadComplete()</code> now return <code>string[]</code> (warnings for non-fatal failures), and the JSON responses from <code>ClientController</code> will include a <code>warnings</code> key when warnings are present.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="new-interfaces">New Interfaces<a href="#new-interfaces" class="hash-link" aria-label="Direct link to New Interfaces" title="Direct link to New Interfaces" translate="no">​</a></h3>
+<p>The following new interfaces have been added (all marked <code>@internal</code>):</p>
+<ul>
+<li class=""><code>HyperMDM\Bundle\DirectEditBundle\Service\DirectEditEventNotifierInterface</code>: abstraction over event notification channels, with methods:<!-- -->
+<ul>
+<li class=""><code>notifyStartEditing(AssetToken $assetToken): string[]</code></li>
+<li class=""><code>notifyUploadComplete(AssetToken $assetToken): string[]</code></li>
+</ul>
+</li>
+<li class=""><code>HyperMDM\Bundle\DirectEditBundle\Service\Studio\DirectEditServiceInterface</code>: Studio backend service interface with methods: <code>generateLink()</code>, <code>cancelEdit()</code>, <code>confirmUpload()</code>, <code>resolveConflict()</code>, <code>getStatus()</code>.</li>
+<li class=""><code>HyperMDM\Bundle\DirectEditBundle\Hydrator\DirectEditLinkHydratorInterface</code>: hydrates <code>DirectEditLink</code> schema objects.</li>
+<li class=""><code>HyperMDM\Bundle\DirectEditBundle\Hydrator\DirectEditStatusHydratorInterface</code>: hydrates <code>DirectEditStatus</code> schema objects.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="update-to-version-25">Update to Version 2.5<a href="#update-to-version-25" class="hash-link" aria-label="Direct link to Update to Version 2.5" title="Direct link to Update to Version 2.5" translate="no">​</a></h3>
+<ul>
+<li class="">It is now possible to define the JWT Cookie Host and strictness via configuration.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="update-to-version-21">Update to Version 2.1<a href="#update-to-version-21" class="hash-link" aria-label="Direct link to Update to Version 2.1" title="Direct link to Update to Version 2.1" translate="no">​</a></h2>
+<p>Please be aware that version 2.1 of the bundle drops support for HyperMDM 10.6.
+Make sure to upgrade to HyperMDM 11.1 or higher before updating the bundle.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

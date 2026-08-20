@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>House Keeping — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>House Keeping</h1></header>
+<p>For certain processes within the portal engine it is needed to store temporary files in the file system. The portal
+engine should do quite a good job in cleaning them automatically.</p>
+<p>This section gives a short overview over those files and how long they are stored.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="vartmpportal-enginejson-tmp"><code>var/tmp/portal-engine/json-tmp</code><a href="#vartmpportal-enginejson-tmp" class="hash-link" aria-label="Direct link to vartmpportal-enginejson-tmp" title="Direct link to vartmpportal-enginejson-tmp" translate="no">​</a></h2>
+<p>Used to store JSON tmp files for the JSON download format. Will be deleted as soon as the JSON got downloaded or added to the zip.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="vartmpportal-enginecsv-tmp"><code>var/tmp/portal-engine/csv-tmp</code><a href="#vartmpportal-enginecsv-tmp" class="hash-link" aria-label="Direct link to vartmpportal-enginecsv-tmp" title="Direct link to vartmpportal-enginecsv-tmp" translate="no">​</a></h2>
+<p>Used to store CSV tmp files for the CSV download format. Will be deleted as soon as the CSV got downloaded or added to the zip.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="vartmpportal-enginezip-tmp"><code>var/tmp/portal-engine/zip-tmp</code><a href="#vartmpportal-enginezip-tmp" class="hash-link" aria-label="Direct link to vartmpportal-enginezip-tmp" title="Direct link to vartmpportal-enginezip-tmp" translate="no">​</a></h2>
+<p>Used to generate download zip files. For each download zip a <code>TmpStore</code> entry will be created too
+which stores some meta information.</p>
+<p>The generated download zip files ready for downloading will be stored in <code>/var/tmp/portal-engine/downloads</code>. For more
+details see below.</p>
+<p>The download zip file and <code>TmpStore</code> entry will be deleted as soon as the final zip file got downloaded.</p>
+<p>If the final download will not be downloaded by the user or something breaks in the zip generation process,
+the download batch task and the related tmp files will be deleted after a configurable amount of time by a maintenance task.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_portal_engine</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">batch_task_queue</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">cleanup</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">cleanup_uncompleted_tasks_after_hours</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">24</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">cleanup_finished_tasks_after_hours</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">72</span><br></span></code></pre></div></div>
+<p>Additionally, zip upload files will be stored in this directory.
+They are cleaned as soon as the upload got finished and in addition to that a maintenance task checks for these files too
+and deletes them after 24 hours.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="vartmpportal-enginedownloads"><code>/var/tmp/portal-engine/downloads</code><a href="#vartmpportal-enginedownloads" class="hash-link" aria-label="Direct link to vartmpportal-enginedownloads" title="Direct link to vartmpportal-enginedownloads" translate="no">​</a></h2>
+<p>Generating download zip files is done asynchronously via Symfony messaging queue. Thus, it is necessary, to place generation
+results in a shared location that they are accessible by other nodes, e.g. for delivering the download to the webserver.</p>
+<p>While <code>var/tmp/portal-engine/json-tmp</code>, <code>var/tmp/portal-engine/csv-tmp</code> and <code>var/tmp/portal-engine/zip-tmp</code> are local
+tmp directories that are not shared between nodes (and only contain tmp files which need to be accessible only in their
+own node), <code>/var/tmp/portal-engine/downloads</code> needs to be a shared tmp folder.</p>
+<p>It is used as storage location for download zips after they are generated by a message handler and are ready for download,
+or also as starting point for the next message handler when number of files exceeds the chunk size of one message.</p>
+<p><code>/var/tmp/portal-engine/downloads</code> is accessed via flysystem and thus its actual storage location can be easily configured
+via flysystem configuration:</p>
+<div class="language-yml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">flysystem</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">storages</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hypermdm.portalEngine.download.storage</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">adapter</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'local'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">visibility</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> private</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">directory</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%kernel.project_dir%/var/tmp/portal-engine/downloads'</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

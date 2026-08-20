@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Document Schema — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Document Schema</h1></header>
+<p>Documents and areabricks don't have a class definition - their editable surface is whatever the rendering Twig template
+happens to call <code>hypermdm_input(…)</code>, <code>hypermdm_image(…)</code>, <code>hypermdm_areablock(…)</code>, etc. on. Two consequences for an LLM:</p>
+<ol>
+<li class="">To write to a document, it has to know what the template offers - names, types, addressing - without rendering it.</li>
+<li class="">Some Twig patterns (<code>hypermdm_iterate_block</code>, conditionals, computed names) cannot be fully recovered from static
+analysis, so worked examples a developer authored once compensate.</li>
+</ol>
+<p>The bundle gives LLMs that information by combining three signals: <strong>AST analysis</strong> of Twig templates, the <strong>HyperMDM
+editable registry</strong> (types + value shapes), and <strong>co-located JSON example fixtures</strong>. The same machinery powers
+<code>get_document_schema(documentId)</code> and <code>get_area_brick(brickId)</code> in the <code>hypermdm-documents-read</code> MCP group.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-the-llm-receives">What the LLM receives<a href="#what-the-llm-receives" class="hash-link" aria-label="Direct link to What the LLM receives" title="Direct link to What the LLM receives" translate="no">​</a></h2>
+<p>When the LLM calls <code>get_area_brick("standard-teaser")</code>, the response combines four sources:</p>
+<div class="table-container"><table><thead><tr><th>Source</th><th>Carries</th></tr></thead><tbody><tr><td>AST of the brick's view template</td><td>Flat list of editables (<code>{name, type}</code> per call site) + <code>blocks[]</code> + <code>areablocks[]</code> containers</td></tr><tr><td>HyperMDM <code>EditableLoaderInterface::supports()</code></td><td>Classifies each <code>hypermdm_&lt;type&gt;</code> call as a real editable (vs. helpers like <code>hypermdm_iterate_block</code>); third-party editables register without bundle changes</td></tr><tr><td><code>EditableHintRegistry</code> (provider-based)</td><td><code>writeFormat</code> + a populated <code>example</code> per editable type - same mechanism as data objects (<a class="" href="../Field_Hint_System/index.html">Field Hint System</a>)</td></tr><tr><td>Co-located fixtures (<code>&lt;template&gt;.examples/</code>)</td><td>Optional <code>_meta.json</code> description + per-variant JSON files showing realistic editable combinations - the primary signal for small LLMs</td></tr></tbody></table></div>
+<p>The LLM applies one substitution rule when consuming the response: replace each <code>&lt;index&gt;</code> placeholder in an editable
+name with a concrete integer. That covers loop iteration (<code>image_&lt;index&gt;</code> → <code>image_0</code>) AND HyperMDM's iterate-block
+prefix rule (<code>images:&lt;index&gt;.image</code> → <code>images:0.image</code>) - so the agent doesn't need a separate concept of
+"block-contained editable."</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-mcp-tool-surface">The MCP tool surface<a href="#the-mcp-tool-surface" class="hash-link" aria-label="Direct link to The MCP tool surface" title="Direct link to The MCP tool surface" translate="no">​</a></h2>
+<p>Nine document tools across <code>/hypermdm-mcp/agent/hypermdm-documents-{read,write,direct-write}</code>:</p>
+<div class="table-container"><table><thead><tr><th>Group</th><th>Tool</th><th>Use</th></tr></thead><tbody><tr><td>read</td><td><code>search_documents</code></td><td>Find a document by path / key / fulltext</td></tr><tr><td>read</td><td><code>get_document</code></td><td>Current state - opt in to <code>includeContent</code> / <code>includeSettings</code> / <code>includeProperties</code> (and optionally <code>targetGroupId</code> to read a personalization variant)</td></tr><tr><td>read</td><td><code>get_document_schema</code></td><td>What's POSSIBLE - <code>editables[]</code> (every editable plus areablock + block containers with their <code>availableBricks</code> palette) + <code>settings[]</code> + optional <code>examples[]</code> / <code>templateDescription</code></td></tr><tr><td>read</td><td><code>get_area_brick</code></td><td>One or more bricks' schema in a single call - comma-separated ids → <code>{results, errors}</code>, each result with <code>editables[]</code> + <code>examples[]</code></td></tr><tr><td>read</td><td><code>list_target_groups</code></td><td>List active personalization target groups (see <a href="#target-group-variants-personalization" class="">Target-group variants</a>)</td></tr><tr><td>write</td><td><code>create_document</code></td><td>New page / snippet / email / link / hardlink / folder. Pair with <code>list_document_types</code></td></tr><tr><td>write</td><td><code>list_document_types</code></td><td>List configured Document Type presets</td></tr><tr><td>write</td><td><code>propose_document_update</code></td><td>HITL propose-and-review write - see <a class="" href="../../Features/HITL_Proposals/index.html">HITL Proposals</a></td></tr><tr><td>direct-write</td><td><code>update_document</code></td><td>Direct editable update - validates pre-write; returns <code>renderErrors[]</code> from a post-save render pass</td></tr></tbody></table></div>
+<p><code>get_document</code> returns CURRENT state; <code>get_document_schema</code> returns POSSIBLE state. Brick instances under
+<code>&lt;areablock&gt;:&lt;index&gt;.&lt;editable&gt;</code> are NOT expanded into the document schema - the agent fetches each unique brick type's
+schema once via <code>get_area_brick</code> (batch every brick id you need into one call). The brick palette previously emitted by
+the removed <code>list_area_bricks</code> tool now ships <strong>inline</strong> on each areablock entry (<code>editables[].availableBricks</code>).</p>
+<p><strong>Read vs. write split.</strong> Read + propose tools live in <code>hypermdm-documents-read</code> / <code>…-write</code>. The single bypass-approval
+tool, <code>update_document</code>, is isolated in <code>hypermdm-documents-direct-write</code> so an agent's YAML can grant the propose flow
+without granting unattended writes - see
+<a class="" href="../../Features/HITL_Proposals/index.html#two-write-modes-chosen-by-mcp-group">HITL Proposals → Two write modes</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-ast-analyzer">The AST analyzer<a href="#the-ast-analyzer" class="hash-link" aria-label="Direct link to The AST analyzer" title="Direct link to The AST analyzer" translate="no">​</a></h2>
+<p><code>TemplateAnalyzer</code> (in <code>src/Twig/Analyzer/</code>) walks the Twig AST and emits a <code>TemplateSchema</code>:</p>
+<div class="table-container"><table><thead><tr><th>Captured</th><th>What it represents</th></tr></thead><tbody><tr><td><code>editables[]</code></td><td>Every editable call site, as <code>CallSiteEditable {name, type, …}</code></td></tr><tr><td><code>areablocks[]</code> + <code>areablockAllowed[]</code></td><td><code>hypermdm_areablock('content', { allowed: [...] })</code> + the allowed-brick list</td></tr><tr><td><code>blocks[]</code></td><td><code>hypermdm_block(...)</code> / <code>hypermdm_scheduledblock(...)</code> call sites</td></tr><tr><td><code>includes[]</code></td><td>Static include paths (resolver walks them transitively)</td></tr></tbody></table></div>
+<p>Editable type classification defers to <strong>HyperMDM's <code>EditableLoaderInterface::supports($type)</code></strong> - the analyzer extracts
+the suffix from <code>hypermdm_&lt;type&gt;</code> calls and asks HyperMDM's own registry whether that's a real editable type. So:</p>
+<ul>
+<li class="">Standard editable types are recognised automatically</li>
+<li class="">Third-party bundles that register custom editables (<code>hypermdm_myCustomThing</code>) work without modifying this bundle</li>
+<li class="">Non-editable Twig helpers (<code>hypermdm_iterate_block</code>, <code>hypermdm_url</code>, <code>hypermdm_glossary</code>) are skipped automatically</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="patterns-the-analyzer-handles">Patterns the analyzer handles<a href="#patterns-the-analyzer-handles" class="hash-link" aria-label="Direct link to Patterns the analyzer handles" title="Direct link to Patterns the analyzer handles" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Pattern</th><th>Captured name</th></tr></thead><tbody><tr><td><code>hypermdm_input('foo')</code></td><td><code>foo</code></td></tr><tr><td><code>hypermdm_input('foo_' ~ i)</code> inside <code>for i in 0..2</code></td><td><code>foo_&lt;index&gt;</code></td></tr><tr><td><code>hypermdm_iterate_block(hypermdm_block('items'))</code> with editables inside</td><td>Block <code>items</code> recorded; inner editables get the prefix: <code>items:&lt;index&gt;.&lt;leaf&gt;</code></td></tr><tr><td><code>{% set blockVar = hypermdm_block('X') %}</code> + <code>hypermdm_iterate_block(blockVar)</code></td><td>Same as above - one hop of <code>{% set %}</code> indirection is followed</td></tr><tr><td><code>{% include 'snippets/foo.html.twig' %}</code></td><td>Included template's editables are merged into the parent's schema</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="patterns-the-analyzer-cannot-fully-express">Patterns the analyzer cannot fully express<a href="#patterns-the-analyzer-cannot-fully-express" class="hash-link" aria-label="Direct link to Patterns the analyzer cannot fully express" title="Direct link to Patterns the analyzer cannot fully express" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Pattern</th><th>What it does</th><th>What the schema shows</th></tr></thead><tbody><tr><td>Dynamic block names: <code>hypermdm_iterate_block(hypermdm_block('contents_' ~ i))</code></td><td>Two distinct iteration variables (outer block-name index + inner per-iteration index)</td><td>Block surfaces as <code>contents_&lt;index&gt;</code>, but inner editables surface as bare names - folding two indices into one <code>&lt;index&gt;</code> placeholder would be ambiguous</td></tr><tr><td><code>hypermdm_input(myObject.field)</code></td><td>Editable name computed at runtime</td><td>Not captured - the AST can't resolve runtime expressions</td></tr><tr><td>Nested blocks (block A containing block B)</td><td>Two real iteration indices</td><td>Each block surfaces independently; the inner block's prefix has to be authored in the fixture</td></tr><tr><td>Macros passing editables as parameters</td><td>Indirection through macro args</td><td>Macro bodies are walked, but parameter-flow is not traced</td></tr></tbody></table></div>
+<p>When a pattern can't be expressed, the example fixture is the workaround - the runtime LLM reads the worked example and
+pattern-matches the address shape. See <a class="" href="../../Extending/Template_Examples/index.html#address-rules">Extending → Template Examples</a>
+for how authors encode these patterns.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="co-located-example-fixtures">Co-located example fixtures<a href="#co-located-example-fixtures" class="hash-link" aria-label="Direct link to Co-located example fixtures" title="Direct link to Co-located example fixtures" translate="no">​</a></h2>
+<p>A Twig template at <code>&lt;dir&gt;/&lt;stem&gt;.html.twig</code> has fixtures in the sibling folder <code>&lt;dir&gt;/&lt;stem&gt;.examples/</code>:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">templates/areas/standard-teaser/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── view.html.twig</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">└── view.examples/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    ├── _meta.json              ← optional LLM-targeted description</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    ├── all-direct.json         ← variant 1</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    └── mixed-types.json        ← variant 2</span><br></span></code></pre></div></div>
+<p>Same convention for document templates: <code>templates/content/portal.html.twig</code> → <code>templates/content/portal.examples/</code>.</p>
+<p><code>ExampleLoader</code> resolves the sibling folder per template path on each MCP call (no separate cache - OS-level page cache
+is sufficient) and folds the result into <code>BrickSchema</code> / <code>DocumentSchema</code> as <code>description</code> (from <code>_meta.json</code>),
+<code>examples[]</code> (variants), and an optional <code>usageHint</code>.</p>
+<p><strong>For everything authoring-related</strong> - file format, address rules, value shapes, the dev workflow, the CLI commands,
+gotchas - see <a class="" href="../../Extending/Template_Examples/index.html">Extending → Template Examples</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="validation">Validation<a href="#validation" class="hash-link" aria-label="Direct link to Validation" title="Direct link to Validation" translate="no">​</a></h2>
+<p><code>ExampleLinter</code> cross-checks every key in every fixture against the analyzer's editable-name set:</p>
+<div class="table-container"><table><thead><tr><th>Issue</th><th>Severity</th><th>Cause</th></tr></thead><tbody><tr><td>Fixture key not in analyzer's name set</td><td>error</td><td>Typo, or stale fixture after a template change</td></tr><tr><td>Editable in name set with no example coverage</td><td>warning</td><td>Optional gap - author another variant if useful</td></tr><tr><td>Brick has no example folder</td><td>warning</td><td>Advisory; some bricks (single-editable) may not need one</td></tr></tbody></table></div>
+<p>Run via <code>bin/console hypermdm-agent:document-schema:lint</code>. The linter discovers <code>*.examples/</code> folders by scanning roots
+configured at <code>hypermdm_agent.examples.template_roots</code> (defaults: <code>%kernel.project_dir%/templates</code> and
+<code>%kernel.project_dir%/bundles</code>). For the dev workflow, see
+<a class="" href="../../Extending/Template_Examples/index.html">Extending → Template Examples</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="target-group-variants-personalization">Target-group variants (personalization)<a href="#target-group-variants-personalization" class="hash-link" aria-label="Direct link to Target-group variants (personalization)" title="Direct link to Target-group variants (personalization)" translate="no">​</a></h2>
+<p>When the optional <code>hypermdm/personalization-bundle</code> is installed, one document can carry per-target-group variants of its
+editables - the base content stays canonical, and a variant overrides individual editables when a visitor matches the
+group. The bundle exposes target groups through <code>list_target_groups</code> and threads a <code>targetGroupId</code> parameter through
+<code>get_document</code>, <code>propose_document_update</code>, and <code>update_document</code>.</p>
+<div class="table-container"><table><thead><tr><th>Step</th><th>Tool call</th></tr></thead><tbody><tr><td>Discover groups</td><td><code>list_target_groups</code> → <code>{available: bool, targetGroups: [{id, name}]}</code>. When the personalization bundle is missing, <code>available</code> is <code>false</code> and the other document tools refuse <code>targetGroupId</code>.</td></tr><tr><td>Read variant content</td><td><code>get_document(id, targetGroupId: &lt;id&gt;)</code> - every editable carries <code>inherited: true</code> if it falls back to base content, <code>inherited: false</code> if a variant override exists</td></tr><tr><td>Author variant content</td><td><code>propose_document_update(..., targetGroupId: &lt;id&gt;)</code> or <code>update_document(id, targetGroupId: &lt;id&gt;, …)</code> with <strong>unprefixed</strong> editable names. The backend transparently writes them as <code>persona_-&lt;id&gt;-_&lt;name&gt;</code> rows</td></tr></tbody></table></div>
+<p>Integration touchpoints:</p>
+<ul>
+<li class=""><code>src/Personalization/TargetGroupProviderInterface.php</code> - abstraction over HyperMDM's <code>TargetGroup\Listing</code>. Implemented
+by <code>PersonalizationTargetGroupProvider</code> when personalization is installed; falls back to <code>NullTargetGroupProvider</code>
+(returns <code>available: false</code>) when it is not.</li>
+<li class=""><code>src/Mcp/Document/State/DocumentDataInspector.php</code> - strips the <code>persona_-N-_</code> prefix on read; surfaces <code>inherited</code>
+per editable so the agent always sees canonical names.</li>
+<li class=""><code>src/Mcp/Document/Update/DocumentOverrideApplier.php</code> - re-applies the prefix on write, forces <code>appendEditables=true</code>,
+rejects payloads that combine <code>targetGroupId</code> with <code>settings</code> or <code>properties</code>. Same applier feeds the proposal preview,
+so the modal renders the <strong>personalized</strong> output for the chosen group.</li>
+</ul>
+<p>The user-facing workflow is documented in the bundled <code>document-editing</code> SKILL - every agent that opts into the
+documents groups loads it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="extension-surface">Extension surface<a href="#extension-surface" class="hash-link" aria-label="Direct link to Extension surface" title="Direct link to Extension surface" translate="no">​</a></h2>
+<p>Three places third-party bundles plug in:</p>
+<div class="table-container"><table><thead><tr><th>Add</th><th>How</th></tr></thead><tbody><tr><td>New editable type</td><td>Register with HyperMDM's <code>EditableLoaderInterface</code> - the analyzer picks it up via <code>supports()</code></td></tr><tr><td>Format hint for a custom editable type</td><td>Implement <code>EditableHintProviderInterface</code> + tag with <code>hypermdm_agent.editable_hint_provider</code> (see <a class="" href="../Field_Hint_System/index.html">Field Hint System</a>)</td></tr><tr><td>Example fixtures for project bricks / templates</td><td>Author JSON files in the sibling <code>&lt;template&gt;.examples/</code> folder - see <a class="" href="../../Extending/Template_Examples/index.html">Extending → Template Examples</a></td></tr></tbody></table></div>
+<p>Bundle-shipped areabricks need fixtures alongside the vendor's templates, which means the bundle author owns them.
+Project-local overlay support for vendor templates is a known gap.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

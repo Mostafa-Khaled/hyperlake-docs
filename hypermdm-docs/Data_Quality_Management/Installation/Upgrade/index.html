@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Information — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Information</h1></header>
+<p>The following steps are necessary during updating to newer versions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php--symfony-version-support">PHP &amp; Symfony Version Support<a href="#php--symfony-version-support" class="hash-link" aria-label="Direct link to PHP &amp; Symfony Version Support" title="Direct link to PHP &amp; Symfony Version Support" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-admin-classic--extjs-ui">Removed Admin Classic / ExtJS UI<a href="#removed-admin-classic--extjs-ui" class="hash-link" aria-label="Direct link to Removed Admin Classic / ExtJS UI" title="Direct link to Removed Admin Classic / ExtJS UI" translate="no">​</a></h3>
+<ul>
+<li class="">Removed the <code>hypermdm/admin-ui-classic-bundle</code> dependency. The bundle no longer implements
+<code>HyperMDMBundleAdminClassicInterface</code> or uses <code>BundleAdminClassicTrait</code>.</li>
+<li class="">Removed all ExtJS-based JavaScript and CSS paths (<code>getCssPaths()</code> and <code>getJsPaths()</code> methods removed from
+<code>HyperMDMDataQualityManagementBundle</code>).</li>
+<li class=""><code>HyperMDMAdminBundle</code> is no longer registered as a dependent bundle.</li>
+<li class=""><code>TreeBadgeService</code> and <code>TreeBadgeServiceInterface</code> have been removed (they were <code>@internal</code>).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="interface--return-type-changes">Interface &amp; Return Type Changes<a href="#interface--return-type-changes" class="hash-link" aria-label="Direct link to Interface &amp; Return Type Changes" title="Direct link to Interface &amp; Return Type Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><strong><code>RuleDefinitionInterface::getSuggestion()</code></strong>: The parameter <code>array $objectData</code> has been replaced by
+<code>Concrete $object</code>. Custom rule definitions implementing this interface must accept a
+<code>HyperMDM\Model\DataObject\Concrete</code> instance instead of an array.</li>
+<li class=""><strong><code>AbstractRuleDefinition::getSuggestion()</code></strong>: Same change as above. Custom classes extending
+<code>AbstractRuleDefinition</code> must update their <code>getSuggestion()</code> signature from <code>array $objectData</code> to
+<code>Concrete $object</code>.</li>
+<li class=""><strong><code>ScoreServiceInterface::calculateScores()</code></strong>: Added a new required parameter <code>array $fieldDefinitions</code> between
+<code>$dataObject</code> and <code>$skipSaving</code>. Custom implementations of <code>ScoreServiceInterface</code> must be updated.<!-- -->
+<ul>
+<li class="">Old: <code>calculateScores(Concrete $dataObject, bool $skipSaving = false): void</code></li>
+<li class="">New: <code>calculateScores(Concrete $dataObject, array $fieldDefinitions, bool $skipSaving = false): void</code></li>
+</ul>
+</li>
+<li class=""><strong><code>DetailWidgetHydratorInterface::hydrate()</code></strong>: The parameter <code>array $objectData</code> has been replaced by
+<code>Concrete $object</code>. This interface is <code>@internal</code>.</li>
+<li class=""><strong><code>RuleDataHydratorInterface::hydrate()</code></strong>: The parameter <code>array $objectData</code> has been replaced by
+<code>Concrete $object</code>. This interface is <code>@internal</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="messenger-transport-configuration">Messenger Transport Configuration<a href="#messenger-transport-configuration" class="hash-link" aria-label="Direct link to Messenger Transport Configuration" title="Direct link to Messenger Transport Configuration" translate="no">​</a></h3>
+<ul>
+<li class="">The messenger transport DSN is now configurable via the <code>%hypermdm.messenger.transport_dsn_prefix%</code> container
+parameter instead of being hardcoded to <code>doctrine://default</code>. This lets the installer wire the transport DSN
+from environment variables (for example <code>HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX</code>).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-studio-enhancements">HyperMDM Studio Enhancements<a href="#hypermdm-studio-enhancements" class="hash-link" aria-label="Direct link to Pimcore Studio Enhancements" title="Direct link to Pimcore Studio Enhancements" translate="no">​</a></h3>
+<ul>
+<li class="">Added Studio class editor field type support for the Data Quality field definition, including rule definition
+configuration via HyperMDM Studio.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="doctrine">Doctrine<a href="#doctrine" class="hash-link" aria-label="Direct link to Doctrine" title="Direct link to Doctrine" translate="no">​</a></h3>
+<ul>
+<li class="">Removed Doctrine enum mapping from the bundle test configuration.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-160">Upgrade to 1.6.0<a href="#upgrade-to-160" class="hash-link" aria-label="Direct link to Upgrade to 1.6.0" title="Direct link to Upgrade to 1.6.0" translate="no">​</a></h2>
+<ul>
+<li class="">Added <code>HyperMDM Studio Backend Bundle</code> support.</li>
+<li class="">[Custom Rules] The data structure of the <code>getSuggestion()</code> method's object parameter differed between Admin Classic
+and HyperMDM Studio at the time. This distinction no longer applies: since the 2026.1.0 upgrade,
+<code>getSuggestion()</code> always receives a <code>HyperMDM\Model\DataObject\Concrete</code> instance. See
+<a class="" href="../../Customization/Custom_Rule_Definition/index.html">Custom Rule Definition</a> for the current signature.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

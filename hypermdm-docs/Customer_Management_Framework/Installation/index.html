@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation and First Configuration — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Installation and First Configuration</h1></header>
+<p>This section describes the installation of the Customer Management Framework (CMF) and the first configuration steps.</p>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Installation-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Installation-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-Installation-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>The Customer Management Framework requires MariaDB. It does not work with plain MySQL, because
+<a class="" href="../Activities/index.html">activities</a> are stored using the MariaDB Dynamic Columns feature. See the
+<a href="https://mariadb.com/kb/en/library/dynamic-columns/" target="_blank" rel="noopener noreferrer" class="">MariaDB Dynamic Columns documentation</a> for details.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="server-requirements">Server Requirements<a href="#server-requirements" class="hash-link" aria-label="Direct link to Server Requirements" title="Direct link to Server Requirements" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="database-permissions">Database Permissions<a href="#database-permissions" class="hash-link" aria-label="Direct link to Database Permissions" title="Direct link to Database Permissions" translate="no">​</a></h3>
+<p>The database user needs all permissions from the platform's
+<a class="" href="../../Getting_Started/Installation/System_Requirements/index.html#permissions">System Requirements - Permissions</a>,
+plus:</p>
+<ul>
+<li class="">Create routine</li>
+<li class="">Alter routine</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="installation-process">Installation Process<a href="#installation-process" class="hash-link" aria-label="Direct link to Installation Process" title="Direct link to Installation Process" translate="no">​</a></h2>
+<p>Install the Customer Management Framework in three steps.</p>
+<ol>
+<li class="">Install the required dependencies:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/customer-management-framework-bundle</span><br></span></code></pre></div></div>
+<ol start="2">
+<li class="">Enable the bundle in <code>config/bundles.php</code>:</li>
+</ol>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">CustomerManagementFrameworkBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">HyperMDMCustomerManagementFrameworkBundle</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Bundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">ObjectMergerBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">ObjectMergerBundle</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name static-context">HyperMDMCustomerManagementFrameworkBundle</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name static-context">ObjectMergerBundle</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<ol start="3">
+<li class="">Install the bundle:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:bundle:install HyperMDMCustomerManagementFrameworkBundle</span><br></span></code></pre></div></div>
+<p>The installer:</p>
+<ul>
+<li class="">Installs several data object classes.</li>
+<li class="">Creates additional tables for activities, deletions, segment building, actions, triggers, rules, duplicates, and the
+newsletter export queue.</li>
+<li class="">Registers the <a href="#permissions" class="">permissions</a> listed below.</li>
+</ul>
+<p>After installation, reload HyperMDM Studio. The Customer Management Framework's menu entries (Customers, Customer
+duplicates, Customer automation rules) become available to users who hold the corresponding permission.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="permissions">Permissions<a href="#permissions" class="hash-link" aria-label="Direct link to Permissions" title="Direct link to Permissions" translate="no">​</a></h2>
+<p>CMF registers the following permissions during installation. Grant them to the roles or users who need access to the
+corresponding feature.</p>
+<div class="table-container"><table><thead><tr><th>Permission key</th><th>Studio label</th><th>Grants</th></tr></thead><tbody><tr><td><code>plugin_cmf_perm_customerview</code></td><td>CMF Customer View</td><td>Read access to customers (including the customer list export), segments, segment groups, duplicates, term segment builder definitions, and helper lookups. Also required to create, update, delete, and share filter definitions, to decline a potential duplicate, and to read <strong>and change</strong> the segments assigned to a HyperMDM element (the Segment Assignment tab).</td></tr><tr><td><code>plugin_cmf_perm_customerview_admin</code></td><td>CMF Customer Filter-Admin</td><td>Write access: create, update, and delete customers, activities, segments, and segment groups; change the segments assigned to a customer; read the newsletter queue size and manage the webservice API key settings; update all filter definitions shared with the user (see <a class="" href="../ListViews/index.html">List Views</a>).</td></tr><tr><td><code>plugin_cmf_perm_activityview</code></td><td>CMF Activity View</td><td>Read-only access to activities and the deletions log.</td></tr><tr><td><code>plugin_cmf_perm_customer_automation_rules</code></td><td>CMF Customer Automation Rules</td><td>Full access (list, get, create, update, delete) to <a class="" href="../ActionTrigger/index.html">ActionTrigger automation rules</a>.</td></tr><tr><td><code>plugin_cmf_perm_newsletter_enqueue_all_customers</code></td><td>CMF Newsletter Enqueue Customers</td><td>Permission to trigger a bulk newsletter enqueue for all eligible customers.</td></tr></tbody></table></div>
+<p>Two related features rely on permissions defined outside the CMF bundle:</p>
+<ul>
+<li class=""><strong>Sharing a saved customer filter</strong> with other users or roles additionally requires the HyperMDM core permission
+<strong>Share configurations</strong> (<code>share_configurations</code>). See <a class="" href="../ListViews/index.html">List Views</a>.</li>
+<li class=""><strong>GDPR data extraction</strong> for customers is exposed through the Studio GDPR framework's <code>customers</code> data provider.
+The provider itself is gated by <code>plugin_cmf_perm_customerview_admin</code>, the same permission used for all other write
+operations on customers. CMF defines an additional <code>gdpr_data_extractor</code> constant, but no code in the bundle
+currently checks it.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configure-the-customer-class">Configure the Customer Class<a href="#configure-the-customer-class" class="hash-link" aria-label="Direct link to Configure the Customer Class" title="Direct link to Configure the Customer Class" translate="no">​</a></h2>
+<p>The CMF installer does not create a data object class for customers, because the framework does not limit you to a
+specific class or class structure. The only requirement is that the customer class is prepared for use in a CMF
+context. Choose one of the following options.</p>
+<ul>
+<li class="">
+<p><strong>For all basic CMF functionality</strong>, extend the customer class from
+<a href="https://github.com/pimcore/ee-customer-data-framework/blob/2026.x/src/Model/AbstractCustomer.php" target="_blank" rel="noopener noreferrer" class=""><code>CustomerManagementFrameworkBundle\Model\AbstractCustomer</code></a>.
+The class also needs these data attributes:</p>
+<ul>
+<li class=""><code>active</code>: checkbox</li>
+<li class=""><code>gender</code>: gender field</li>
+<li class=""><code>firstname</code>: firstname field</li>
+<li class=""><code>lastname</code>: lastname field</li>
+<li class=""><code>street</code>: input field</li>
+<li class=""><code>zip</code>: input field</li>
+<li class=""><code>city</code>: input field</li>
+<li class=""><code>countryCode</code>: country selection</li>
+<li class=""><code>customerLanguage</code>: language selection</li>
+<li class=""><code>email</code>: email field</li>
+<li class=""><code>phone</code>: input field</li>
+<li class=""><code>manualSegments</code>: an object relation to <code>CustomerSegments</code>, or an object relation with metadata to
+<code>CustomerSegments</code> using <code>created_timestamp</code> and <code>application_counter</code> as numeric metadata fields</li>
+<li class=""><code>calculatedSegments</code>: same options as <code>manualSegments</code></li>
+<li class=""><code>idEncoded</code>: input field</li>
+<li class=""><code>profilingConsent</code>: consent field (optional)</li>
+</ul>
+<p>Use this
+<a href="https://github.com/pimcore/ee-customer-data-framework/blob/2026.x/install/class_source/optional/class_Customer_export.json" target="_blank" rel="noopener noreferrer" class="">class definition</a>
+as a starting point.</p>
+<p>The attributes do not have to be field definitions on the class itself. You can instead implement them as getters on
+your class implementation:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name-definition class-name">AppBundleCustomer</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">extends</span><span class="token plain"> </span><span class="token class-name class-name-fully-qualified">HyperMDM</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">Model</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">DataObject</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">Customer</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">/** Implementation for firstname */</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">getFirstname</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$this</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getCustomerAddress</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getFirstname</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>When using customer objects as Symfony security users</strong>, extend the customer class from
+<a href="https://github.com/pimcore/ee-customer-data-framework/blob/2026.x/src/Model/AbstractCustomer/DefaultAbstractUserawareCustomer.php" target="_blank" rel="noopener noreferrer" class=""><code>CustomerManagementFrameworkBundle\Model\AbstractCustomer\DefaultAbstractUserawareCustomer</code></a>
+and add one more data attribute:</p>
+<ul>
+<li class=""><code>password</code>: password field</li>
+</ul>
+<p>When extending from <code>DefaultAbstractUserawareCustomer</code>, the customer class must also provide the getters/setters
+required by
+<a href="https://github.com/pimcore/ee-customer-data-framework/blob/2026.x/src/Model/CustomerInterface.php" target="_blank" rel="noopener noreferrer" class=""><code>CustomerManagementFrameworkBundle\Model\CustomerInterface</code></a>.
+Either add them directly to the class, or use a
+<a href="https://gist.github.com/dvesh3/ee88f6a7b75ea65f9f1db981b682e7cd" target="_blank" rel="noopener noreferrer" class="">trait that implements them</a>.</p>
+</li>
+<li class="">
+<p><strong>Minimal requirements</strong> (not recommended): to stay independent of the base classes above, implement
+<code>CustomerManagementFrameworkBundle\Model\CustomerInterface</code> directly on your customer class.</p>
+</li>
+</ul>
+<div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Installation-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Installation-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-Installation-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>tip</div><div class="admonitionContent_BuS1"><p>Name the customer class <code>Customer</code>. Any other name works too, but then set <code>general.customerHyperMDMClass</code> to that
+name in the <a class="" href="../Configuration/index.html">Configuration chapter</a>.</p></div></div>
+<p>Add any further attributes your project needs on top of this baseline.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="segment-assignment-stored-functions">Segment Assignment Stored Functions<a href="#segment-assignment-stored-functions" class="hash-link" aria-label="Direct link to Segment Assignment Stored Functions" title="Direct link to Segment Assignment Stored Functions" translate="no">​</a></h2>
+<p>The installer creates database stored functions for auto-assigning segments to assets, documents, and data objects.
+If that step fails, import the stored functions manually. Set a delimiter other than <code>;</code> when running these files:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">/Resources/sql/segmentAssignment/storedFunctionDocument.sql</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">/Resources/sql/segmentAssignment/storedFunctionAsset.sql</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">/Resources/sql/segmentAssignment/storedFunctionObject.sql</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<p>CMF ships with a default configuration that covers basic functionality, so no further configuration is required to get
+started. To enable or customize additional functionality, see the <a class="" href="../Configuration/index.html">Configuration chapter</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configure-the-webservice-firewall">Configure the Webservice Firewall<a href="#configure-the-webservice-firewall" class="hash-link" aria-label="Direct link to Configure the Webservice Firewall" title="Direct link to Configure the Webservice Firewall" translate="no">​</a></h3>
+<p>The <a class="" href="../Webservice/index.html">REST webservice</a> authenticates requests with <code>WebserviceAuthenticator</code>
+(<code>CustomerManagementFrameworkBundle\Security\Authenticator\WebserviceAuthenticator</code>), which accepts either an API key
+or an existing HyperMDM Studio session. The bundle ships the complete firewall definition as the
+<code>customer_management_framework.firewall_settings</code> container parameter, so registering the firewall is a single line:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">security</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">firewalls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># ... your other firewalls, e.g. hypermdm_studio</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">cmf_webservice</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%customer_management_framework.firewall_settings%'</span><br></span></code></pre></div></div>
+<p>The parameter sets the route pattern (<code>^/__customermanagementframework/webservice(/.*)?$</code>), <code>stateless: true</code>, the
+<code>hypermdm_admin</code> user provider, and the <code>WebserviceAuthenticator</code> as custom authenticator.</p>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Installation-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Installation-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-Installation-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>caution</div><div class="admonitionContent_BuS1"><p>Spelling the firewall out by hand instead of using the parameter is possible but not recommended, as it may break in
+future versions when the bundle changes the route pattern or the authenticator wiring.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="set-up-the-required-cron-jobs">Set Up the Required Cron Jobs<a href="#set-up-the-required-cron-jobs" class="hash-link" aria-label="Direct link to Set Up the Required Cron Jobs" title="Direct link to Set Up the Required Cron Jobs" translate="no">​</a></h2>
+<p>CMF needs several cron jobs configured to keep segment building, action triggers, duplicate detection, maintenance
+tasks, and the newsletter sync running. See the <a class="" href="../Cronjobs/index.html">Cron Jobs chapter</a> for the full list.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

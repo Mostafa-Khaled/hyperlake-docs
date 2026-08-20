@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Commands — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Commands</h1></header><h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="important-commands">Important Commands<a href="#important-commands" class="hash-link" aria-label="Direct link to Important Commands" title="Direct link to Important Commands" translate="no">​</a></h2>
+<p>Following commands are provided by the bundle.</p>
+<blockquote>
+<p>Most of them need to be executed on regular base (depending on use case) via cron jobs. There is no
+automatic execution.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="create-a-translation-job">Create a translation job<a href="#create-a-translation-job" class="hash-link" aria-label="Direct link to Create a translation job" title="Direct link to Create a translation job" translate="no">​</a></h3>
+<p>This scans the <a class="" href="../../Development_Details/Database_Model/index.html">translations_interface_bundle__data_changed</a> table for
+modifications and prepares translation jobs suitable for transmission to the translation provider.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console translations-provider-interface-bundle:jobs -c</span><br></span></code></pre></div></div>
+<p>Generated jobs can be found in the <a class="" href="../../Development_Details/Database_Model/index.html">translations_interface_bundle__jobs</a> table.</p>
+<p>However, the jobs are not submitted for translation yet.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="submit-a-job">Submit a job<a href="#submit-a-job" class="hash-link" aria-label="Direct link to Submit a job" title="Direct link to Submit a job" translate="no">​</a></h3>
+<p>Process the open jobs and submit them for translation.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console translations-provider-interface-bundle:jobs -o</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="receive-the-translation">Receive the translation<a href="#receive-the-translation" class="hash-link" aria-label="Direct link to Receive the translation" title="Direct link to Receive the translation" translate="no">​</a></h3>
+<p>This will fetch the translation if already available.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console translations-provider-interface-bundle:jobs -s</span><br></span></code></pre></div></div>
+<p>The completed translation will be stored again in the <a class="" href="../../Development_Details/Database_Model/index.html">translations_interface_bundle__jobs</a>
+table but not processed until the following command is executed.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="process-the-received-translation">Process the received translation<a href="#process-the-received-translation" class="hash-link" aria-label="Direct link to Process the received translation" title="Direct link to Process the received translation" translate="no">​</a></h3>
+<p>This will process the translations and update the HyperMDM objects accordingly.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console translations-provider-interface-bundle:jobs -r</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="reset-failed-jobs">Reset failed jobs<a href="#reset-failed-jobs" class="hash-link" aria-label="Direct link to Reset failed jobs" title="Direct link to Reset failed jobs" translate="no">​</a></h3>
+<p>Reset all jobs to the state they had before the error.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console translations-provider-interface-bundle:jobs -f</span><br></span></code></pre></div></div>
+<p>Maximum failing attempts can be configured via config</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_translations_provider_interface</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">error_threshold</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">4</span><span class="token plain">          </span><span class="token comment" style="color:#999988;font-style:italic"># default 10</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="checking-for-redeliveries">Checking for redeliveries<a href="#checking-for-redeliveries" class="hash-link" aria-label="Direct link to Checking for redeliveries" title="Direct link to Checking for redeliveries" translate="no">​</a></h3>
+<p>A Project director user can re-open an already delivered translation job an change the translation.</p>
+<p>Use the following command to check for redeliveries.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console translations-provider-interface-bundle:jobs --check-redeliveries</span><br></span></code></pre></div></div>
+<p>Jobs not older that 60 days will be checked for updates. You can change this default value with the following setting.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_translations_provider_interface</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">redelivery_threshold</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">60</span><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># days</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

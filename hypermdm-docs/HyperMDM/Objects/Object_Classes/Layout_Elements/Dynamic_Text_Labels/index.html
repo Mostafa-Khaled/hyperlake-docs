@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dynamic Text Labels — HyperMDM</title>
+<link rel="stylesheet" href="../../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Dynamic Text Labels</h1></header>
+<p>Similar to the <a class="" href="../../Data_Types/Calculated_Value_Type/index.html">CalculatedValue</a> data type,
+generate the Layout Text dynamically based on the current object and the label's context. Two options exist for defining dynamic content:</p>
+<ul>
+<li class="">Providing a custom renderer class</li>
+<li class="">Using twig in template
+This is an alternative to the static text defined in the class definition.</li>
+</ul>
+<p>The preview tab shows a preview of the generated content. If your content uses object context, drag and drop an object onto the "Drag Object for Preview" field to check the output in the preview tab.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="custom-renderer-class">Custom Renderer Class<a href="#custom-renderer-class" class="hash-link" aria-label="Direct link to Custom Renderer Class" title="Direct link to Custom Renderer Class" translate="no">​</a></h2>
+<p>Consider the following example.</p>
+<p>It uses a custom renderer service implementing <code>DynamicTextLabelInterface</code> that returns a dynamic text string from the <code>renderLayoutText</code> method, with additional data passed to the rendering method.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Class Definition</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_1-ddbe18a140747596d73c5d52d964b906.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/dynamic_textlabel_1-ddbe18a140747596d73c5d52d964b906.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Class Definition</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_1-ddbe18a140747596d73c5d52d964b906.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/dynamic_textlabel_1-ddbe18a140747596d73c5d52d964b906.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Class Definition</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_1-ddbe18a140747596d73c5d52d964b906.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Here is an example for a rendering class.</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter important">&lt;?php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">namespace</span><span class="token plain"> </span><span class="token package">App</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Helpers</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataObject</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Concrete</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name-definition class-name">CustomRenderer</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">implements</span><span class="token plain"> </span><span class="token class-name">DynamicTextLabelInterface</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">/**</span><br></span><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">     * @param string $data as provided in the class definition</span><br></span><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">     */</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">renderLayoutText</span><span class="token punctuation" style="color:#393A34">(</span><span class="token keyword type-hint" style="color:#00009f">string</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$data</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">?</span><span class="token class-name type-declaration">Concrete</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$object</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token keyword type-hint" style="color:#00009f">array</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$params</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword return-type" style="color:#00009f">string</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token variable" style="color:#36acaa">$text</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'&lt;h1 style="color: #F00;"&gt;Last reload: '</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">date</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'c'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'&lt;/h1&gt;'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token string single-quoted-string" style="color:#e3116c">'&lt;h2&gt;Additional Data: '</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$data</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'&lt;/h2&gt;'</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token keyword" style="color:#00009f">if</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$object</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token variable" style="color:#36acaa">$text</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.=</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'&lt;h3&gt;BTW, my fullpath is: '</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getFullPath</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">' and my ID is '</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getId</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'&lt;/h3&gt;'</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$text</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p><em>$data</em> will contain the additional data from the class definition. In <em>$params</em> you will find additional information about the current context.
+For example: If the text label lives inside a field collection, <em>$params</em> will contain the name of the field collection (and the name of the label itself).</p>
+<p>The result will be as follows:</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Editmode</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_2-37fb40446b4c2e86f2b50e819d226cde.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/dynamic_textlabel_2-37fb40446b4c2e86f2b50e819d226cde.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Editmode</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_2-37fb40446b4c2e86f2b50e819d226cde.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/dynamic_textlabel_2-37fb40446b4c2e86f2b50e819d226cde.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Editmode</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_2-37fb40446b4c2e86f2b50e819d226cde.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="twig--preview">Twig &amp; Preview<a href="#twig--preview" class="hash-link" aria-label="Direct link to Twig &amp; Preview" title="Direct link to Twig &amp; Preview" translate="no">​</a></h2>
+<p>Use Twig syntax inside the HTML editor (Source Edit) or Renderer class. You can also check the generated output in preview tab.</p>
+<p>Following variables are available in twig context:</p>
+<ul>
+<li class=""><code>object</code> - current data object</li>
+<li class=""><code>data</code> - data provided to renderer defined in the class definition</li>
+</ul>
+<p>Here is an example of Twig content in htmleditor source edit mode:</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Template Class Definition</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_3-5198663d4f822becaca2960a35c7f2b4.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/dynamic_textlabel_3-5198663d4f822becaca2960a35c7f2b4.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Template Class Definition</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_3-5198663d4f822becaca2960a35c7f2b4.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/dynamic_textlabel_3-5198663d4f822becaca2960a35c7f2b4.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Template Class Definition</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_3-5198663d4f822becaca2960a35c7f2b4.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-10">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-10</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Template editmode</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_4-3268e05afe7f1d44ac5ed91fe9b35c5f.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-10">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/dynamic_textlabel_4-3268e05afe7f1d44ac5ed91fe9b35c5f.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-11">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-11</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Template editmode</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_4-3268e05afe7f1d44ac5ed91fe9b35c5f.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-11">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/dynamic_textlabel_4-3268e05afe7f1d44ac5ed91fe9b35c5f.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-12">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-12</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Template editmode</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dynamic_textlabel_4-3268e05afe7f1d44ac5ed91fe9b35c5f.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Layout_Elements-Dynamic_Text_Labels-index-12">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sandbox-restrictions">Sandbox Restrictions<a href="#sandbox-restrictions" class="hash-link" aria-label="Direct link to Sandbox Restrictions" title="Direct link to Sandbox Restrictions" translate="no">​</a></h3>
+<p>Dynamic Text renders user-controlled Twig templates in a sandbox with restrictive
+security policies for tags, filters, and functions. Use the following configuration to allow more in template rendering:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">          </span><span class="token key atrule" style="color:#00a4db">templating_engine</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              </span><span class="token key atrule" style="color:#00a4db">twig</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">sandbox_security_policy</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                  </span><span class="token key atrule" style="color:#00a4db">tags</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">'if'</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                  </span><span class="token key atrule" style="color:#00a4db">filters</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">'upper'</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                  </span><span class="token key atrule" style="color:#00a4db">functions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">'include'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'path'</span><span class="token punctuation" style="color:#393A34">]</span><br></span></code></pre></div></div>
+<p>The sandbox also restricts which objects a template may call methods or access properties
+on. See <a class="" href="../../../../Development_Tools/Security_and_Authentication/Twig_Sandbox_Object_Access/index.html">Twig Sandbox Object Access</a>
+for the <code>blocked_classes</code> / <code>allowed_classes</code> options.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../../search.js"></script>
+</body>
+</html>

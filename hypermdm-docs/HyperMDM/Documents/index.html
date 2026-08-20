@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Documents — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Documents</h1></header>
+<p>Documents are HyperMDM's web content management component. Each document is a node in a hierarchical tree,
+identified by a unique ID and a path that doubles as its public URL. A page at <code>/en/about/team</code> in the
+document tree is reachable at exactly that address in the browser.</p>
+<p>Documents combine structured content editing in <a class="" href="../../Studio_UI/index.html">HyperMDM Studio</a>
+with Symfony-based rendering on the frontend.
+Editors work with visual <a class="" href="Templates/Editables/index.html">Editables</a> (input fields, WYSIWYG editors,
+image pickers) directly inside the page, while developers control layout and logic through controllers
+and Twig templates.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="document-types">Document Types<a href="#document-types" class="hash-link" aria-label="Direct link to Document Types" title="Direct link to Document Types" translate="no">​</a></h2>
+<p>HyperMDM provides several document types, each designed for a specific use case:</p>
+<div class="table-container"><table><thead><tr><th>Type</th><th>Purpose</th></tr></thead><tbody><tr><td>Page</td><td>A web page. Its path in the tree equals its URL in the browser.</td></tr><tr><td>Snippet</td><td>A reusable content fragment, embeddable in pages or other snippets.</td></tr><tr><td>Link</td><td>A web link for use in navigation structures.</td></tr><tr><td>Hardlink</td><td>A reference to another document subtree, reusing its content in a different context.</td></tr><tr><td>Folder</td><td>Organizes documents, just like folders on a filesystem.</td></tr><tr><td>Email</td><td>A document with special functionality for transactional emails.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-documents-work">How Documents Work<a href="#how-documents-work" class="hash-link" aria-label="Direct link to How Documents Work" title="Direct link to How Documents Work" translate="no">​</a></h2>
+<p>Documents follow a document-controller-template pattern built on Symfony MVC.
+A request is <a class="" href="Routing_and_URLs/index.html">routed</a> to a document, which determines
+the controller and template for rendering.
+See <a class="" href="MVC_in_HyperMDM/index.html">MVC in HyperMDM</a> for the rendering flow and configuration types.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="properties">Properties<a href="#properties" class="hash-link" aria-label="Direct link to Properties" title="Direct link to Properties" translate="no">​</a></h2>
+<p><a class="" href="../Content_Management_Features/Properties/index.html">Properties</a> add key-value metadata to documents.
+Combined with tree inheritance, they become a powerful tool for managing cross-cutting concerns
+without touching every page individually:</p>
+<ul>
+<li class=""><strong>Navigation</strong> - control separators, highlighting, or custom CSS classes for navigation rendering.</li>
+<li class=""><strong>Header images</strong> - set a default header image at the root and override it deeper in the tree.</li>
+<li class=""><strong>Sidebars</strong> - toggle sidebar visibility per section.</li>
+<li class=""><strong>SEO</strong> - define fallback meta titles and descriptions that inherit down the tree,
+overridden only where needed.</li>
+<li class=""><strong>Protected areas</strong> - mark subtrees for closed user groups.</li>
+<li class=""><strong>Appearance</strong> - switch themes or layouts for micro-sites or nested sites.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next Steps<a href="#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="Templates/index.html">Templates</a> - Twig templates and editables</li>
+<li class=""><a class="" href="MVC_in_HyperMDM/index.html">MVC in HyperMDM</a> - document rendering architecture and type configuration</li>
+<li class=""><a class="" href="Templates/Editables/index.html">Editables</a> - in-page content editing widgets</li>
+<li class=""><a class="" href="Routing_and_URLs/index.html">Routing and URLs</a> - how requests reach documents</li>
+<li class=""><a class="" href="Navigation/index.html">Navigation</a> - building navigations from the document tree</li>
+<li class=""><a class="" href="Document_Inheritance/index.html">Document Inheritance</a> - inheriting content between documents</li>
+<li class=""><a class="" href="Predefined_Document_Types/index.html">Predefined Document Types</a> - preconfigured controller/template combinations</li>
+<li class=""><a class="" href="Working_with_Documents_via_PHP_API/index.html">Working with Documents via PHP API</a> - CRUD operations and listings</li>
+<li class=""><a class="" href="../../Getting_Started/Create_a_First_Project/index.html">Create a First Project</a> - hands-on tutorial</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

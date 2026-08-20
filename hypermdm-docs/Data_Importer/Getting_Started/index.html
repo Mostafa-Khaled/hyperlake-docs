@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Getting Started — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Getting Started</h1></header>
+<p>This page walks through a first import: a CSV file of products is mapped onto a <code>Product</code> data object class and imported.
+Each step links to the reference chapter that explains every available option.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<ul>
+<li class="">The bundle is installed and a queue processing mode is set up, see <a class="" href="../Installation/index.html">Installation</a>.</li>
+<li class="">Your user has the <code>plugin_datahub_config</code> permission and the
+<code>plugin_datahub_adapter_dataImporterDataObject</code> permission.</li>
+<li class="">A data object class exists to import into. This example uses a class named <code>Product</code> with the fields <code>sku</code> and <code>name</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-create-an-import-configuration">1. Create an Import Configuration<a href="#1-create-an-import-configuration" class="hash-link" aria-label="Direct link to 1. Create an Import Configuration" title="Direct link to 1. Create an Import Configuration" translate="no">​</a></h2>
+<p>In HyperMDM Studio, open the main navigation and choose <strong>Automation &amp; Integration</strong> &gt; <strong>Data Hub Configuration</strong>.
+Add a new configuration and select the <strong>Data Objects Importer</strong> adapter type.</p>
+<p>The configuration opens with these tabs:</p>
+<div class="table-container"><table><thead><tr><th>Tab</th><th>Purpose</th></tr></thead><tbody><tr><td>General</td><td>Activate the configuration, and set its name, description and group.</td></tr><tr><td>Data Setup</td><td>The import definition itself, split into five steps.</td></tr><tr><td>Execution</td><td>Schedule the import, start it manually, and watch its progress.</td></tr><tr><td>Import Logs</td><td>Application logger entries belonging to this configuration.</td></tr><tr><td>Permissions</td><td>Which users and roles may read, update and delete this configuration.</td></tr></tbody></table></div>
+<p>The <strong>Data Setup</strong> tab drives the rest of this walkthrough. Work through its five steps from left to right.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-data-source">2. Data Source<a href="#2-data-source" class="hash-link" aria-label="Direct link to 2. Data Source" title="Direct link to 2. Data Source" translate="no">​</a></h2>
+<p>Choose where the import data comes from and how it is parsed. For this example, pick the <strong>Upload</strong> data source so you
+can import a local file directly, and set the file format to <strong>CSV</strong>.</p>
+<p>A CSV file such as this one:</p>
+<div class="language-csv codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-csv codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">sku,name</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">A-001,Racing Bike</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">A-002,Touring Bike</span><br></span></code></pre></div></div>
+<p>needs <strong>Skip First Row</strong> and <strong>Save Header Name</strong> enabled. Skipping the first row keeps the header out of the imported
+data; saving the header name makes the columns addressable as <code>sku</code> and <code>name</code> instead of <code>0</code> and <code>1</code>.</p>
+<p>Reference: <a class="" href="../Configuration/Data_Sources/index.html">Data Sources</a> and <a class="" href="../Configuration/File_Formats/index.html">File Formats</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-preview-import">3. Preview Import<a href="#3-preview-import" class="hash-link" aria-label="Direct link to 3. Preview Import" title="Direct link to 3. Preview Import" translate="no">​</a></h2>
+<p>Load a small extract of the data so the later steps can show real values. Either upload a preview file or copy one from
+the configured data source. The preview shows one record at a time and never writes anything to HyperMDM.</p>
+<p>Reference: <a class="" href="../Configuration/Import_Preview/index.html">Import Preview</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-resolver">4. Resolver<a href="#4-resolver" class="hash-link" aria-label="Direct link to 4. Resolver" title="Direct link to 4. Resolver" translate="no">​</a></h2>
+<p>The resolver decides which data object a row belongs to. Configure four things:</p>
+<ul>
+<li class=""><strong>Data Object Class</strong>: <code>Product</code>.</li>
+<li class=""><strong>Element Loading</strong>: how an existing object is found so it gets updated instead of duplicated. Use the <code>Attribute</code>
+strategy with the attribute <code>sku</code> and the data source index <code>sku</code>.</li>
+<li class=""><strong>Element Creation</strong>: where a new object is placed when no existing one is found. Use <code>Static Path</code> with
+<code>/Products</code>.</li>
+<li class=""><strong>Element Publishing</strong>: whether imported objects are published. <code>Always Publish</code> is a sensible start.</li>
+</ul>
+<p>Reference: <a class="" href="../Configuration/Resolver_Settings/index.html">Resolver Settings</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-mapping">5. Mapping<a href="#5-mapping" class="hash-link" aria-label="Direct link to 5. Mapping" title="Direct link to 5. Mapping" translate="no">​</a></h2>
+<p>A mapping entry connects one or more source columns to one data object field. Create two entries:</p>
+<div class="table-container"><table><thead><tr><th>Source</th><th>Data Target</th></tr></thead><tbody><tr><td><code>sku</code></td><td><code>sku</code></td></tr><tr><td><code>name</code></td><td><code>name</code></td></tr></tbody></table></div>
+<p>Both are direct one-to-one assignments, so no transformation is needed. When the source value does not fit the target
+field, open <strong>Advanced</strong> and add operators to the transformation pipeline, for example <code>Trim</code> to strip whitespace or
+<code>Numeric</code> to cast a string to a number.</p>
+<p>Reference: <a class="" href="../Configuration/Mapping_Configuration/index.html">Mapping Configuration</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-processing-settings">6. Processing Settings<a href="#6-processing-settings" class="hash-link" aria-label="Direct link to 6. Processing Settings" title="Direct link to 6. Processing Settings" translate="no">​</a></h2>
+<p>Leave the defaults for a first run. The one setting worth understanding now is <strong>Execution Type</strong>:</p>
+<ul>
+<li class=""><strong>Sequential</strong> processes rows one after another. Choose this when rows depend on each other, for example when the
+import builds a hierarchy.</li>
+<li class=""><strong>Parallel</strong> processes rows concurrently. Faster, but the order is not guaranteed.</li>
+</ul>
+<p>Reference: <a class="" href="../Configuration/Processing_Settings/index.html">Processing Settings</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="7-run-the-import">7. Run the Import<a href="#7-run-the-import" class="hash-link" aria-label="Direct link to 7. Run the Import" title="Direct link to 7. Run the Import" translate="no">​</a></h2>
+<p>Save the configuration, switch to the <strong>Execution</strong> tab, and select <strong>Start Import</strong>.</p>
+<p>Starting an import does not import anything by itself. It prepares the import: the source file is loaded, split into
+rows, and the rows are queued. The queue worker you configured during installation then processes those rows. The
+<strong>Execution Status</strong> panel shows how many items have been processed and lets you cancel a running import.</p>
+<p>If the status never moves past zero, queue processing is not running. See
+<a class="" href="../Troubleshooting_FAQ/index.html">Troubleshooting / FAQ</a>.</p>
+<p>Reference: <a class="" href="../Configuration/Execution_Configuration/index.html">Execution Configuration</a> and
+<a class="" href="../Import_Execution_Details/index.html">Import Execution Details</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="8-check-the-result">8. Check the Result<a href="#8-check-the-result" class="hash-link" aria-label="Direct link to 8. Check the Result" title="Direct link to 8. Check the Result" translate="no">​</a></h2>
+<p>Open the <strong>Import Logs</strong> tab. It lists the application logger entries for this configuration: when the import started,
+which elements were imported, and any errors. Each imported element links to the original source row as a file object.</p>
+<p>Reference: <a class="" href="../Import_Progress_and_Logging/index.html">Import Progress and Logging</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-to-go-next">Where to Go Next<a href="#where-to-go-next" class="hash-link" aria-label="Direct link to Where to Go Next" title="Direct link to Where to Go Next" translate="no">​</a></h2>
+<ul>
+<li class="">Automate the run with a cron expression or a one-time job in
+<a class="" href="../Configuration/Execution_Configuration/index.html">Execution Configuration</a>.</li>
+<li class="">Speed up recurring full imports with <strong>Delta Check</strong>, and remove obsolete objects with <strong>Cleanup</strong>, in
+<a class="" href="../Configuration/Processing_Settings/index.html">Processing Settings</a>.</li>
+<li class="">Add a data source, file format or operator of your own in <a class="" href="../Extending/index.html">Extending</a>.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

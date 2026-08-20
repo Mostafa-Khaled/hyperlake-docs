@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pre-Response Events — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Pre-Response Events</h1></header>
+<p>HyperMDM Copilot is a HyperMDM Studio plugin backed by Studio Backend API endpoints. Before one of those endpoints
+returns its response, the bundle dispatches a pre-response event carrying the response DTO. Subscribe to the event to
+read from or add data to that DTO before it is sent to the client.</p>
+<p>All events are declared under <code>HyperMDM\Bundle\CopilotBundle\Event\PreResponse</code> and extend
+<code>HyperMDM\Bundle\StudioBackendBundle\Event\AbstractPreResponseEvent</code>. Each event class exposes a getter for the DTO it carries
+(for example <code>getAction()</code>), and <code>AbstractPreResponseEvent</code> itself provides <code>addAdditionalAttribute()</code>,
+<code>getAdditionalAttribute()</code>, <code>hasAdditionalAttribute()</code> and <code>removeAdditionalAttribute()</code> to attach arbitrary key-value
+data to the response. See the Studio Backend
+<a class="" href="../../../Studio_Backend/Extending/Additional_and_Custom_Attributes/index.html">Additional and Custom Attributes documentation</a>
+for the general listener pattern and a worked subscriber example.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Copilot-Extending_Copilot-Pre_Response_Events-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Copilot-Extending_Copilot-Pre_Response_Events-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Copilot-Extending_Copilot-Pre_Response_Events-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The Studio Backend API endpoints themselves are not a supported public API. Their controllers are marked <code>@internal</code>
+and may change in any release without a deprecation path. Do not build integrations against the endpoints directly;
+use these events instead.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="actions">Actions<a href="#actions" class="hash-link" aria-label="Direct link to Actions" title="Direct link to Actions" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Event class</th><th>Event name</th><th>Dispatched when</th><th>DTO</th></tr></thead><tbody><tr><td><code>ActionsEvent</code></td><td><code>pre_response.copilot.actions</code></td><td>Once per action, before the list of available Copilot actions is returned.</td><td><code>Action</code></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="automation-action-configuration">Automation action configuration<a href="#automation-action-configuration" class="hash-link" aria-label="Direct link to Automation action configuration" title="Direct link to Automation action configuration" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Event class</th><th>Event name</th><th>Dispatched when</th><th>DTO</th></tr></thead><tbody><tr><td><code>AutomationActionCreatedEvent</code></td><td><code>pre_response.copilot.automation_action_created</code></td><td>A new automation action configuration was created.</td><td><code>AutomationActionCreated</code></td></tr><tr><td><code>AutomationActionConfigurationEvent</code></td><td><code>pre_response.copilot.automation_action_configuration</code></td><td>A single automation action configuration is read.</td><td><code>AutomationActionConfiguration</code></td></tr><tr><td><code>AutomationActionEnvironmentTypeEvent</code></td><td><code>pre_response.copilot.automation_action_environment_type</code></td><td>Once per registered environment variable type, before the type list is returned.</td><td><code>AutomationActionEnvironmentType</code></td></tr><tr><td><code>AutomationActionEnvironmentInlineHelpEvent</code></td><td><code>pre_response.copilot.automation_action_environment_inline_help</code></td><td>The inline help content for environment variable types is returned.</td><td><code>AutomationActionEnvironmentInlineHelp</code></td></tr><tr><td><code>AutomationActionPostInteractionEvent</code></td><td><code>pre_response.copilot.automation_action_post_interaction</code></td><td>The list of available post-interaction types is returned.</td><td><code>AutomationActionPostInteraction</code></td></tr><tr><td><code>AutomationActionPreconditionFilterEvent</code></td><td><code>pre_response.copilot.automation_action_precondition_filter</code></td><td>Once per registered precondition filter, before the filter list is returned.</td><td><code>AutomationActionPreconditionFilter</code></td></tr><tr><td><code>AutomationActionStepImplementationEvent</code></td><td><code>pre_response.copilot.automation_action_step_implementation</code></td><td>The list of available step implementations is returned.</td><td><code>AutomationActionStepImplementation</code></td></tr><tr><td><code>AutomationActionStepImplementationInlineHelpEvent</code></td><td><code>pre_response.copilot.automation_action_step_implementation_inline_help</code></td><td>The inline help content for step implementations is returned.</td><td><code>AutomationActionStepImplementationInlineHelp</code></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="interaction-action-configuration">Interaction action configuration<a href="#interaction-action-configuration" class="hash-link" aria-label="Direct link to Interaction action configuration" title="Direct link to Interaction action configuration" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Event class</th><th>Event name</th><th>Dispatched when</th><th>DTO</th></tr></thead><tbody><tr><td><code>InteractionActionCreatedEvent</code></td><td><code>pre_response.copilot.interaction_action_created</code></td><td>A new interaction action configuration was created.</td><td><code>InteractionActionCreated</code></td></tr><tr><td><code>InteractionActionConfigurationEvent</code></td><td><code>pre_response.copilot.interaction_action_configuration</code></td><td>A single interaction action configuration is read.</td><td><code>InteractionActionConfiguration</code></td></tr><tr><td><code>InteractionActionTypeEvent</code></td><td><code>pre_response.copilot.interaction_action_type</code></td><td>Once per registered interaction type, before the type list is returned.</td><td><code>InteractionActionType</code></td></tr><tr><td><code>InteractionActionInlineHelpEvent</code></td><td><code>pre_response.copilot.interaction_action_inline_help</code></td><td>The inline help content for interaction types is returned.</td><td><code>InteractionActionInlineHelp</code></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="interaction-action-runtime">Interaction action runtime<a href="#interaction-action-runtime" class="hash-link" aria-label="Direct link to Interaction action runtime" title="Direct link to Interaction action runtime" translate="no">​</a></h2>
+<p>Dispatched while a chat or one-step interaction is executed. See
+<a class="" href="../Extending_Interaction_Actions/index.html">Extending Interaction Actions</a> for background on interaction types.</p>
+<div class="table-container"><table><thead><tr><th>Event class</th><th>Event name</th><th>Dispatched when</th><th>DTO</th></tr></thead><tbody><tr><td><code>InteractionActionChatHistoryEvent</code></td><td><code>pre_response.copilot.interaction_action_chat_history</code></td><td>Once per chat history entry, when the initial or follow-up step of a chat interaction returns its history.</td><td><code>InteractionActionChatHistory</code></td></tr><tr><td><code>InteractionActionOneStepEvent</code></td><td><code>pre_response.copilot.interaction_action_one_step</code></td><td>A one-step interaction has produced its result.</td><td><code>InteractionActionOneStep</code></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="job-runs">Job runs<a href="#job-runs" class="hash-link" aria-label="Direct link to Job runs" title="Direct link to Job runs" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Event class</th><th>Event name</th><th>Dispatched when</th><th>DTO</th></tr></thead><tbody><tr><td><code>CopilotJobRunIdEvent</code></td><td><code>pre_response.copilot.job_run_id</code></td><td>An automation action was launched and its job run ID is returned.</td><td><code>CopilotJobRunId</code></td></tr><tr><td><code>JobRunEvent</code></td><td><code>pre_response.copilot.job_runs</code></td><td>Once per job run, when a job run list is returned or a job run is rerun.</td><td><code>CopilotJobRun</code></td></tr><tr><td><code>JobRunProgressEvent</code></td><td><code>pre_response.copilot.job_runs.progress</code></td><td>The progress of a job run is returned.</td><td><code>CopilotJobRunProgress</code></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-and-context">Configuration and context<a href="#configuration-and-context" class="hash-link" aria-label="Direct link to Configuration and context" title="Direct link to Configuration and context" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Event class</th><th>Event name</th><th>Dispatched when</th><th>DTO</th></tr></thead><tbody><tr><td><code>ConfigurationTreeNodeEvent</code></td><td><code>pre_response.copilot.configuration_tree_node</code></td><td>Once per node, when the configuration tree (automation and interaction actions) is returned.</td><td><code>ConfigurationTreeNode</code></td></tr><tr><td><code>ConfigurationImportEvent</code></td><td><code>pre_response.copilot.configuration_import</code></td><td>A configuration was imported.</td><td><code>ConfigurationImport</code></td></tr><tr><td><code>ConfigurationEventDefinitionEvent</code></td><td><code>pre_response.copilot.configuration_event</code></td><td>Once per available workflow or core event, when the list of events usable as automation action triggers is returned.</td><td><code>ConfigurationEventDefinition</code></td></tr><tr><td><code>ContextLimitationEvent</code></td><td><code>pre_response.copilot.context_limitation</code></td><td>Once per entry, when the list of available context limitations is returned.</td><td><code>ContextLimitation</code></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-objects-and-workflows">Data objects and workflows<a href="#data-objects-and-workflows" class="hash-link" aria-label="Direct link to Data objects and workflows" title="Direct link to Data objects and workflows" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Event class</th><th>Event name</th><th>Dispatched when</th><th>DTO</th></tr></thead><tbody><tr><td><code>DataObjectClassDefinitionEvent</code></td><td><code>pre_response.copilot.data_object_class_definition</code></td><td>Once per data object class, when the list of class definitions is returned.</td><td><code>DataObjectClassDefinition</code></td></tr><tr><td><code>WorkflowEvent</code></td><td><code>pre_response.copilot.workflow</code></td><td>Once per workflow, when the list of workflows is returned.</td><td><code>CopilotWorkflow</code></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="permissions">Permissions<a href="#permissions" class="hash-link" aria-label="Direct link to Permissions" title="Direct link to Permissions" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Event class</th><th>Event name</th><th>Dispatched when</th><th>DTO</th></tr></thead><tbody><tr><td><code>PermissionGridEntryEvent</code></td><td><code>pre_response.copilot.permission_grid_entry</code></td><td>Once per user or role entry, when the permission grid is returned.</td><td><code>PermissionGridEntry</code></td></tr></tbody></table></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

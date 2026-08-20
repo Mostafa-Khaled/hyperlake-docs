@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Model Requirements — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Model Requirements</h1></header>
+<p>Not every agent needs the same model. The right choice depends on the <strong>complexity of the
+tasks</strong> the agent performs, and picking per-agent (rather than one model for everything) is
+the biggest lever on both result quality and running cost.</p>
+<p>This page gives the guidance; <a class="" href="../Model_Evaluation/index.html">Model Evaluation</a> gives the data
+behind it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="task-complexity-drives-model-size">Task complexity drives model size<a href="#task-complexity-drives-model-size" class="hash-link" aria-label="Direct link to Task complexity drives model size" title="Direct link to Task complexity drives model size" translate="no">​</a></h2>
+<p>Agent work falls into rough tiers. The heavier the tier, the more capable a model it needs to
+finish reliably.</p>
+<div class="table-container"><table><thead><tr><th>Tier</th><th>Typical work</th><th>What it demands of the model</th></tr></thead><tbody><tr><td><strong>Light</strong></td><td>List/query data, summarize a single object, explain the data model, render read-only widgets</td><td>Follow instructions, call the right read tool, emit the requested widget. Small/fast models cope well.</td></tr><tr><td><strong>Medium</strong></td><td>Single-object, multi-field update proposals; tagging; classification-store edits</td><td>Hold a multi-field change-set together, respect field shapes, converge in one proposal. Mid-tier models cope; weaker ones drop or mis-shape fields.</td></tr><tr><td><strong>Heavy</strong></td><td>Multi-step document/landing-page authoring, multi-object proposals, web research, image (vision) tagging, target-group personalization</td><td>Long-horizon planning, tool orchestration without looping, correct composition, vision, and knowing when to stop. Only stronger models finish these consistently.</td></tr></tbody></table></div>
+<p>The recurring failure modes on the heavy tier are instructive - weaker models tend to:</p>
+<ul>
+<li class="">emit the <strong>wrong widget type</strong> (a markdown/data table where an object-preview is required);</li>
+<li class=""><strong>skip web research</strong> even when a fetch tool is available;</li>
+<li class=""><strong>hallucinate</strong> in vision tasks (wrong colour/brand on an image);</li>
+<li class=""><strong>never converge</strong> - loop on the same tool calls or "approve a minimal update first" without
+finishing; and</li>
+<li class="">produce an <strong>empty document scaffold</strong> with no real content proposal.</li>
+</ul>
+<p>Stronger models avoid these; that gap, more than raw benchmark scores, is what separates a
+model that <em>completes</em> agent work from one that merely starts it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-findings-from-our-evaluation">General findings from our evaluation<a href="#general-findings-from-our-evaluation" class="hash-link" aria-label="Direct link to General findings from our evaluation" title="Direct link to General findings from our evaluation" translate="no">​</a></h2>
+<p>From our evaluation runs in June 2026 (full data and caveats in
+<a class="" href="../Model_Evaluation/index.html">Model Evaluation</a>):</p>
+<ul>
+<li class=""><strong>Best overall (18/18):</strong> <code>claude-sonnet-4.6</code> is the only model that cleared the entire suite,
+including the hardest document- and object-creation tasks. The catch is cost - several times more
+expensive per run than the efficient leaders - so it earns its place on the heaviest agents rather
+than as a blanket default.</li>
+<li class=""><strong>Best all-round success (17/18):</strong> <code>claude-haiku-4.5</code>, <code>gpt-5.4-mini</code>, <code>qwen3p6-plus</code>, and
+<code>gemini-3.5-flash</code> each passed 17 of 18, missing only a single hard task.</li>
+<li class=""><strong>Best efficiency:</strong> <code>claude-haiku-4.5</code> is the standout - it tops the <em>efficiency</em> ranking (fewest
+tokens, least wall-clock time, strong caching) while sitting one task off the top of the accuracy
+ranking. That balance is why it is the shipped default.</li>
+<li class=""><strong>Solid (16/18):</strong> <code>kimi-k2p6</code> (very low input use) and <code>deepseek-v3.2</code> (accurate but the slowest
+and caches poorly, so comparatively expensive).</li>
+<li class=""><strong>Mid-tier (14/18):</strong> <code>minimax-m2.7</code> and <code>Qwen3.6-35B-A3B</code> - generally correct content but
+recurring widget-type, vision, or convergence slips.</li>
+<li class=""><strong>Weak on heavy tasks (≤13/18):</strong> the Gemma variants, <code>gpt-oss-120b</code>, and <code>qwen3-32b</code> - these
+frequently fail to materialize a proposal at all on document/creation tasks, and several do not
+cache, making them both less reliable and more expensive.</li>
+</ul>
+<blockquote>
+<p><strong>Recommendation.</strong> Keep the shipped default (GitHub Copilot + Claude Haiku 4.5) for general
+and data agents - it is fast, cheap, and well-cached. For document-authoring and research
+agents, point at a stronger model - <code>claude-sonnet-4.6</code> was the only model to pass every task
+in our suite, or pick another higher-tier model from the Copilot catalog or a BYOK provider.
+Then <strong>validate against your own tasks</strong> with the eval tool - these findings are spot-checks,
+and your workload may stress models differently.</p>
+</blockquote></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

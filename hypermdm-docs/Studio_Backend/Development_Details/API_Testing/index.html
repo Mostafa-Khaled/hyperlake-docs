@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>API Testing — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Api Testing</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="set-up-local-test-environment">Set up local test environment<a href="#set-up-local-test-environment" class="hash-link" aria-label="Direct link to Set up local test environment" title="Direct link to Set up local test environment" translate="no">​</a></h2>
+<p>We provide a shell script to set up a local test environment. This script will install a fresh HyperMDM instance and install the Studio Backend Bundle with all its dependencies. The script is located in the <code>tests/Api</code> directory.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">cd tests/Api</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">sudo chmod +x boot-test-env.sh</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">./boot-test-env.sh</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="credentials">Credentials<a href="#credentials" class="hash-link" aria-label="Direct link to Credentials" title="Direct link to Credentials" translate="no">​</a></h3>
+<ul>
+<li class=""><strong>HyperMDM admin user:</strong> <code>admin</code></li>
+<li class=""><strong>HyperMDM admin password:</strong> <code>admin</code></li>
+<li class=""><strong>Database user:</strong> <code>hypermdm</code></li>
+<li class=""><strong>Database password:</strong> <code>ROOT</code></li>
+<li class=""><strong>Database name:</strong> <code>hypermdm</code></li>
+<li class=""><strong>Opensearch Dashboard user:</strong> <code>admin</code></li>
+<li class=""><strong>Opensearch Dashboard password:</strong> <code>HyperMDMTests1492!</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="debug-api-tests">Debug API tests<a href="#debug-api-tests" class="hash-link" aria-label="Direct link to Debug API tests" title="Direct link to Debug API tests" translate="no">​</a></h3>
+<p>For debugging purposes docker exposes some ports to the host machine. You can access the following services:</p>
+<ul>
+<li class="">HyperMDM Admin UI: <code>http://localhost:6001/admin</code></li>
+<li class="">HyperMDM API: <code>http://localhost:6002/hypermdm-studio/api/docs</code></li>
+<li class="">HyperMDM Database: <code>localhost:6006</code></li>
+<li class="">Opensearch Dashboard: <code>http://localhost:6004/</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="run-postman-api-tests">Run Postman API tests<a href="#run-postman-api-tests" class="hash-link" aria-label="Direct link to Run Postman API tests" title="Direct link to Run Postman API tests" translate="no">​</a></h2>
+<p>To run the Postman API tests you need to have Postman installed on your machine. You can download it from <a href="https://www.postman.com/downloads/" target="_blank" rel="noopener noreferrer" class="">here</a>.</p>
+<ol>
+<li class="">Open Postman</li>
+<li class="">Import all the collections <code>tests/Api/*.json</code></li>
+<li class="">Create a new environment with the following variables:<!-- -->
+<ul>
+<li class=""><code>host</code>: <code>http://localhost:6001/hypermdm-studio/api</code></li>
+</ul>
+</li>
+<li class="">Run the collection either by clicking on the <code>Run</code> button or by running the following command in the terminal:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">postman login --with-api-key "your_postman_api_key"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">postman collection run tests/Api/*.json --environment "UID_of_your_environment"</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

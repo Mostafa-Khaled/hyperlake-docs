@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Configuration &amp; Deployment — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Configuration &amp; Deployment</h1></header>
+<p>By default a configuration is stored as <code>var/config/data_hub/&lt;name&gt;.yaml</code>.
+Additionally, a workspace permission index is kept in the database for better query performance when
+checking for permissions.</p>
+<p>When deploying configurations following steps are necessary:</p>
+<ul>
+<li class="">
+<p>Deploy the configuration file <code>var/config/data_hub/&lt;name&gt;.yaml</code> - e.g. check it into your VCS and
+deploy it with your deployment mechanisms.</p>
+</li>
+<li class="">
+<p>Rebuild workspaces by running <code>datahub:configuration:rebuild-workspaces</code></p>
+</li>
+</ul>
+<p>Either call:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">datahub:configuration:rebuild-workspaces</span><br></span></code></pre></div></div>
+<p>to do that for all definitions, or:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">datahub:configuration:rebuild-workspaces --configs=assets,events</span><br></span></code></pre></div></div>
+<p>for specific definitions.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Datahub-Deployment-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub-Deployment-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Datahub-Deployment-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The command <code>datahub:graphql:rebuild-definitions</code> was removed in Datahub 2.0.0. Use
+<code>datahub:configuration:rebuild-workspaces</code> instead.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-storage">Configuration Storage<a href="#configuration-storage" class="hash-link" aria-label="Direct link to Configuration Storage" title="Direct link to Configuration Storage" translate="no">​</a></h3>
+<p>The configuration user interface utilizes the <code>LocationAwareConfigRepository</code> for storing the configuration. In the symfony tree the storage location can be configured, possible values are</p>
+<ul>
+<li class=""><code>symfony-config</code> - write configs as Symfony Config as YAML files to <code>/var/config/data_hub/&lt;name&gt;.yaml</code></li>
+<li class=""><code>settings-store</code> - write configs to the SettingsStore</li>
+<li class=""><code>disabled</code> - do not allow to edit/write configs at all</li>
+</ul>
+<blockquote>
+<p>Important: When using symfony-config write target, configs are written to Symfony
+Config files (yaml), which are only getting revalidated in debug mode. So if you're changing configs in production you
+won't see any update, because these configs are read only.</p>
+</blockquote>
+<p>Details also see <a class="" href="../../HyperMDM/Development_Details/Configuration/Configuration_Environments/index.html#configuration-storage-locations-and-fallbacks-locationawareconfigrepository">HyperMDM Docs</a>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="example">Example<a href="#example" class="hash-link" aria-label="Direct link to Example" title="Direct link to Example" translate="no">​</a></h4>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_data_hub</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">config_location</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">data_hub</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">write_target</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'symfony-config'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                     </span><span class="token key atrule" style="color:#00a4db">directory</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'/var/www/html/var/config/data_hub'</span><br></span></code></pre></div></div>
+<p>Additionally, it is also possible to define the configuration directly in a symfony configuration file without using
+the configuration user interface. In this case, the configuration user interface is just read only.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-configuration-file">Sample Configuration File<a href="#sample-configuration-file" class="hash-link" aria-label="Direct link to Sample Configuration File" title="Direct link to Sample Configuration File" translate="no">​</a></h4>
+<div class="language-yml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_data_hub</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">configurations</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">&lt;name&gt;</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">general</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">active</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'&lt;TYPE&gt;'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'&lt;NAME&gt;'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">description</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'&lt;DESCRIPTION&gt;'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">group</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'&lt;GROUP&gt;'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">modificationDate</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> &lt;DATE</span><span class="token punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'&lt;PATH&gt;'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">createDate</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> &lt;DATE</span><span class="token punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">schema</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">queryEntities</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">mutationEntities</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">specialEntities</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">document</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">read</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">create</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">update</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">delete</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">...</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

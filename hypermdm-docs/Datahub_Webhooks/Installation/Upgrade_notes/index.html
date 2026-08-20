@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php--dependency-updates">PHP / Dependency Updates<a href="#php--dependency-updates" class="hash-link" aria-label="Direct link to PHP / Dependency Updates" title="Direct link to PHP / Dependency Updates" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-extjs--admin-classic-ui">Removed ExtJS / Admin Classic UI<a href="#removed-extjs--admin-classic-ui" class="hash-link" aria-label="Direct link to Removed ExtJS / Admin Classic UI" title="Direct link to Removed ExtJS / Admin Classic UI" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMDataHubWebhooksBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code> and no longer uses
+<code>BundleAdminClassicTrait</code>.</li>
+<li class="">The Admin Classic UI JavaScript and CSS assets have been removed:<!-- -->
+<ul>
+<li class=""><code>js/hypermdm/adapter/webhooks.js</code></li>
+<li class=""><code>js/hypermdm/configuration/configItem.js</code></li>
+<li class=""><code>js/hypermdm/configuration/gridConfigDialog.js</code></li>
+<li class=""><code>js/hypermdm/configuration/workspace/asset.js</code></li>
+<li class=""><code>js/hypermdm/configuration/workspace/document.js</code></li>
+<li class=""><code>js/hypermdm/configuration/workspace/object.js</code></li>
+<li class=""><code>js/hypermdm/configuration/workspace/nodeHelper.js</code></li>
+<li class=""><code>js/hypermdm/configuration/components/logTab.js</code></li>
+<li class=""><code>css/icons.css</code></li>
+</ul>
+</li>
+<li class=""><code>ConfigController</code> has been removed (it served the ExtJS-based configuration UI).</li>
+<li class=""><code>StudioRouteLoader</code> has been removed; Studio routes are now registered via the standard bundle configuration.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="messenger-transport-dsn-rename">Messenger Transport DSN Rename<a href="#messenger-transport-dsn-rename" class="hash-link" aria-label="Direct link to Messenger Transport DSN Rename" title="Direct link to Messenger Transport DSN Rename" translate="no">​</a></h3>
+<ul>
+<li class="">The messenger transport DSN is now configured via the <code>%hypermdm.messenger.transport_dsn_prefix%</code> container parameter
+(previously <code>%hypermdm.messenger.transport_dsn%</code>). If you override the transport DSN configuration, update your
+environment variable from <code>HYPERMDM_MESSENGER_TRANSPORT_DSN</code> to <code>HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="classes-marked-as-internal-andor-final">Classes Marked as <code>@internal</code> and/or <code>final</code><a href="#classes-marked-as-internal-andor-final" class="hash-link" aria-label="Direct link to classes-marked-as-internal-andor-final" title="Direct link to classes-marked-as-internal-andor-final" translate="no">​</a></h3>
+<p>The classes listed below are now marked as <code>@internal</code>, and all of them are also <code>final</code> unless noted otherwise. If you
+were extending or instantiating any of these directly, refactor to use composition, decoration, or event subscribers
+instead.</p>
+<p>The public surface is unchanged: <code>Processors\WebhookProcessorInterface</code>, the
+<code>Processors\DataExtractor\OutputFormatter</code> interfaces, <code>Event\Studio\PreResponse\ConfigurationDetailEvent</code>, the
+<code>Exception\*</code> classes and the bundle class <code>HyperMDMDataHubWebhooksBundle</code> are not marked <code>@internal</code>.
+<code>HyperMDMDataHubWebhooksBundle</code> is <code>final</code>, so decorate or compose instead of subclassing it.</p>
+<p><strong>Controllers</strong></p>
+<ul>
+<li class=""><code>Controller\Studio\Config\GetController</code></li>
+<li class=""><code>Controller\Studio\Config\TestSubscribersController</code></li>
+<li class=""><code>Controller\Studio\Config\UpdateController</code></li>
+</ul>
+<p><strong>DependencyInjection</strong></p>
+<ul>
+<li class=""><code>Configuration</code></li>
+<li class=""><code>HyperMDMDataHubWebhooksExtension</code></li>
+<li class=""><code>CompilerPass\EventConfigurationServicePass</code></li>
+</ul>
+<p><strong>EventListeners</strong></p>
+<ul>
+<li class=""><code>EventListener\ElementDeleteEventListener</code></li>
+<li class=""><code>EventListener\ElementEventListener</code></li>
+<li class=""><code>EventListener\WorkflowEventListener</code></li>
+</ul>
+<p><strong>Installer</strong></p>
+<ul>
+<li class=""><code>Installer</code></li>
+</ul>
+<p><strong>Logger</strong></p>
+<ul>
+<li class=""><code>Log\WebhookLogger</code></li>
+</ul>
+<p><strong>Maintenance</strong></p>
+<ul>
+<li class=""><code>Maintenance\QueueProcessingDispatchingTask</code></li>
+</ul>
+<p><strong>Messenger</strong></p>
+<ul>
+<li class=""><code>Messenger\Handler\WebhookHandler</code></li>
+<li class=""><code>Messenger\WebhookMessage</code></li>
+</ul>
+<p><strong>Processors</strong></p>
+<ul>
+<li class=""><code>Processors\AbstractWebhookProcessor</code> (<code>@internal</code>, not <code>final</code>)</li>
+<li class=""><code>Processors\AssetWebhookProcessor</code></li>
+<li class=""><code>Processors\DataObjectWebhookProcessor</code></li>
+<li class=""><code>Processors\DocumentWebhookProcessor</code></li>
+<li class=""><code>Processors\WorkflowWebhookProcessor</code></li>
+<li class=""><code>Processors\DataExtractor\ElementDataExtractor</code> (<code>@internal</code>, not <code>final</code>)</li>
+<li class=""><code>Processors\DataExtractor\OutputFormatter\Loader\TaggedIteratorOutputFormatterLoader</code></li>
+<li class=""><code>Processors\DataExtractor\OutputFormatter\Formatter\HotspotImageFormatter</code></li>
+<li class=""><code>Processors\DataExtractor\OutputFormatter\Formatter\ImageFormatter</code></li>
+<li class=""><code>Processors\DataExtractor\OutputFormatter\Formatter\ImageGalleryFormatter</code></li>
+<li class=""><code>Processors\DataExtractor\OutputFormatter\Formatter\VideoFormatter</code></li>
+</ul>
+<p><strong>Queue</strong></p>
+<ul>
+<li class=""><code>Queue\QueueService</code></li>
+</ul>
+<p><strong>Services</strong></p>
+<ul>
+<li class=""><code>Service\ConfigService</code></li>
+<li class=""><code>Service\Studio\ConfigurationService</code></li>
+<li class=""><code>Service\Studio\SubscriberTestService</code></li>
+</ul>
+<p><strong>Tools</strong></p>
+<ul>
+<li class=""><code>Tool\AssetRelationFixer</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="visibility-tightening">Visibility Tightening<a href="#visibility-tightening" class="hash-link" aria-label="Direct link to Visibility Tightening" title="Direct link to Visibility Tightening" translate="no">​</a></h3>
+<p>The following methods and properties had their visibility changed (e.g. <code>protected</code> → <code>private</code>, or made <code>readonly</code>).
+If you extended any of these classes, update your subclass accordingly:</p>
+<ul>
+<li class=""><code>WebhookHandler</code>: constructor parameters are now <code>private readonly</code>.</li>
+<li class=""><code>QueueService</code>: <code>getDb()</code>, <code>getCurrentQueueTableOperationTime()</code> and <code>createQueueTableIfNotExisting()</code> changed from
+<code>protected</code> to <code>private</code>.</li>
+<li class=""><code>WebhookLogger</code>: <code>$fileObject</code> changed from <code>protected</code> to <code>private</code>; constructor parameter is now
+<code>private readonly</code>.</li>
+<li class=""><code>Installer::createAdapterPermission()</code> changed from <code>protected</code> to <code>private</code>.</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="update-to-version-22">Update to Version 2.2<a href="#update-to-version-22" class="hash-link" aria-label="Direct link to Update to Version 2.2" title="Direct link to Update to Version 2.2" translate="no">​</a></h2>
+<p>With this version and the HyperMDM Studio integration, we introduced a new architecture for schema definitions.
+We are moving from the tree-based schema definition (also used in the grid configuration of the Admin Classic UI)
+to a pipeline-based approach (also used in HyperMDM Studio grids).
+This change is driven by technical and maintenance considerations, as the tree-based implementation has limitations in
+terms of consistency, flexibility, and extensibility.
+The new architecture aligns with how HyperMDM Studio grids work internally, streamlining the implementation across
+adapters and improving consistency, stability, and extensibility.</p>
+<p>Existing configurations created in the Admin Classic UI remain functional and continue to execute without changes.
+However, a configuration must be fully migrated to the new pipeline-based format before it can be edited in
+HyperMDM Studio.
+Migration must be done manually by following the steps provided in HyperMDM Studio.</p>
+<p>Read-only support for the legacy tree-based schema definitions will be removed in version 2027.1.0.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="update-to-version-20">Update to Version 2.0<a href="#update-to-version-20" class="hash-link" aria-label="Direct link to Update to Version 2.0" title="Direct link to Update to Version 2.0" translate="no">​</a></h2>
+<p><code>HyperMDM\Bundle\DataHubWebhooksBundle\Configuration\Dao</code> was removed and replaced by
+<code>HyperMDM\Bundle\DataHubWebhooksBundle\Service\ConfigurationServiceInterface</code>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

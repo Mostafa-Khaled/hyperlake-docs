@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notices — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notices</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="platform-requirements">Platform Requirements<a href="#platform-requirements" class="hash-link" aria-label="Direct link to Platform Requirements" title="Direct link to Platform Requirements" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-extjs--admin-classic-ui">Removed ExtJS / Admin Classic UI<a href="#removed-extjs--admin-classic-ui" class="hash-link" aria-label="Direct link to Removed ExtJS / Admin Classic UI" title="Direct link to Removed ExtJS / Admin Classic UI" translate="no">​</a></h3>
+<p>All legacy ExtJS-based admin controllers and frontend assets have been removed. The Admin Classic UI is no longer
+supported:</p>
+<ul>
+<li class="">Removed <code>src/Controller/Admin.php</code> and all controllers under <code>src/Controller/Admin/</code> (Activities, Customers,
+Duplicates, FilterDefinition, GDPRData, Helper, Rules, SegmentAssignment, Settings, Templates)</li>
+<li class="">Removed <code>src/Controller/Report/TermSegmentBuilderController.php</code></li>
+<li class="">Removed all ExtJS JavaScript files under <code>src/Resources/public/js/</code> (startup, config, ActivityView, CustomerView,
+CustomerDuplicates, SegmentAssignment, targeting, gdprDataProvider, etc.)</li>
+<li class="">Removed all vendor font/icon assets (FontAwesome, Glyphicons, Ionicons) from <code>src/Resources/public/admin/fonts/</code></li>
+<li class="">Removed ExtJS data and tags JS for <code>TermSegmentBuilder</code> custom report definition</li>
+<li class="">Removed <code>src/CustomReport/Adapter/TermSegmentBuilder.php</code> (adapter no longer needed)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-newsletter-bundle-dependency">Removed Newsletter Bundle Dependency<a href="#removed-newsletter-bundle-dependency" class="hash-link" aria-label="Direct link to Removed Newsletter Bundle Dependency" title="Direct link to Removed Newsletter Bundle Dependency" translate="no">​</a></h3>
+<ul>
+<li class="">Removed hard dependency on <code>hypermdm/newsletter-bundle</code>. The <code>SegmentAddressSource</code> class
+(<code>src/Newsletter/AddressSource/SegmentAddressSource.php</code>), which implemented <code>AddressSourceAdapterInterface</code> from
+the newsletter bundle, has been removed. If you were using this class, implement your own adapter.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="gdpr-data-provider-refactoring">GDPR Data Provider Refactoring<a href="#gdpr-data-provider-refactoring" class="hash-link" aria-label="Direct link to GDPR Data Provider Refactoring" title="Direct link to GDPR Data Provider Refactoring" translate="no">​</a></h3>
+<ul>
+<li class="">Removed <code>CustomerManagementFrameworkBundle\GDPR\DataProvider\Customers</code> (was under
+<code>src/GDPR/DataProvider/Customers.php</code>, extending <code>HyperMDM\Bundle\AdminBundle\GDPR\DataProvider\DataObjects</code>).
+Replaced by the new Studio-compatible provider:<!-- -->
+<ul>
+<li class="">New class: <code>CustomerManagementFrameworkBundle\GDPR\StudioProvider\CustomerDataProvider</code> (moved from
+<code>src/Gdpr/Provider/CustomerDataProvider.php</code>, which was an internal class)</li>
+</ul>
+</li>
+<li class="">Removed <code>src/Routing/StudioRouteLoader.php</code>. Studio routing is now handled via <code>services.yml</code> configuration.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-backend-api-new">Studio Backend API (New)<a href="#studio-backend-api-new" class="hash-link" aria-label="Direct link to Studio Backend API (New)" title="Direct link to Studio Backend API (New)" translate="no">​</a></h3>
+<p>All 45 legacy JSON admin endpoints have been migrated to modern Studio Backend API controllers. New Studio API
+controllers are available under <code>src/Controller/Studio/</code>:</p>
+<ul>
+<li class="">Customer: Collection, Get, View (List, Detail)</li>
+<li class="">Activity: Collection, Create, Delete, Get, Update, View (List, Detail)</li>
+<li class="">AutomationRule: Collection, Create, Delete, Get, Update</li>
+<li class="">Duplicate: Decline, View (List)</li>
+<li class="">FilterDefinition: Create, Delete, Share, Update</li>
+<li class="">Segment / SegmentGroup / SegmentAssignment: full CRUD</li>
+<li class="">Helper endpoints: ActivityTypes, CustomerFieldList, GroupedSegments, NewsletterFilterFlags</li>
+<li class="">Newsletter: EnqueueAll, GetQueueSize</li>
+<li class="">Settings: GetApiKeys, UpdateApiKey</li>
+<li class="">Customer Export: Init, Step, Download (<code>src/Controller/Studio/Customer/Export/</code>)</li>
+<li class="">Term Segment Builder Definitions: Collection</li>
+</ul>
+<p>New interfaces and services added:</p>
+<ul>
+<li class=""><code>CustomerManagementFrameworkBundle\Service\Studio\Customer\Export\ExportServiceInterface</code> - new interface for
+managing multi-step customer export jobs</li>
+<li class=""><code>CustomerManagementFrameworkBundle\Service\Studio\Customer\View\ViewServiceInterface</code> - now has an additional
+<code>renderCustomerDetail(int $id): string</code> method (previously only <code>renderCustomerList</code>)</li>
+</ul>
+<p>New hydrators with interfaces:</p>
+<ul>
+<li class=""><code>src/Hydrator/AutomationRuleHydratorInterface</code></li>
+<li class=""><code>src/Hydrator/FilterDefinitionHydratorInterface</code></li>
+<li class=""><code>src/Hydrator/HelperHydratorInterface</code></li>
+<li class=""><code>src/Hydrator/SegmentAssignmentHydratorInterface</code></li>
+<li class=""><code>src/Hydrator/TermSegmentBuilderDefinitionHydratorInterface</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-studio-integration">HyperMDM Studio Integration<a href="#hypermdm-studio-integration" class="hash-link" aria-label="Direct link to Pimcore Studio Integration" title="Direct link to Pimcore Studio Integration" translate="no">​</a></h3>
+<ul>
+<li class="">The Automation Rules editor is now fully implemented in HyperMDM Studio (React/TypeScript modules under
+<code>assets/studio/js/src/modules/automation-rules/</code>).</li>
+<li class="">Segment Assignments are now available as a tab in HyperMDM Studio.</li>
+<li class="">GDPR Data Extractor: new <code>DynamicTypeCustomerGDPRProvider</code> dynamic type for the Studio GDPR module.</li>
+<li class="">Term Segment Builder Definition: new HyperMDM Studio adapter.</li>
+<li class="">Newsletter data object fields (<code>NewsletterActive</code>, <code>NewsletterConfirmed</code>) are now available as Studio class editor
+data types (<code>core-extension/HyperMDM/Model/DataObject/ClassDefinition/Data/</code>).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="interface-and-return-type-changes">Interface and Return Type Changes<a href="#interface-and-return-type-changes" class="hash-link" aria-label="Direct link to Interface and Return Type Changes" title="Direct link to Interface and Return Type Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>CustomerManagementFrameworkBundle\Model\ActivityExternalIdInterface::getId()</code>: PHPDoc return type corrected from
+<code>string/int</code> to <code>string|int</code> (no functional change).</li>
+<li class=""><code>CustomerManagementFrameworkBundle\Model\ActivityStoreEntry\ActivityStoreEntryInterface::setMetadataItem()</code>: PHPDoc
+corrected, the trailing semicolon was removed from <code>@return void;</code> to read <code>@return void</code>.</li>
+<li class=""><code>CustomerManagementFrameworkBundle\CustomerList\Filter\CustomerSegment</code>: constructor and method signatures changed:<!-- -->
+<ul>
+<li class=""><code>__construct(array $segments, ...)</code>: the <code>$segments</code> type hint was updated from <code>DataObject\CustomerSegment[]</code> to
+<code>CustomerSegmentInterface[]</code>.</li>
+<li class=""><code>addCustomerSegment()</code>: parameter type changed from <code>DataObject\CustomerSegment</code> to <code>CustomerSegmentInterface</code>.</li>
+<li class="">Internal closures updated accordingly.</li>
+</ul>
+</li>
+<li class=""><code>CustomerManagementFrameworkBundle\Filter\ExportActivitiesFilterParams</code>: <code>getType()</code> and <code>setType()</code> return/parameter
+type narrowed from <code>string|bool</code> to <code>string</code>; the <code>false</code> default was replaced with <code>''</code> (empty string).</li>
+<li class=""><code>CustomerManagementFrameworkBundle\ActionTrigger\RuleEnvironment</code>: added <code>__serialize(): array</code> and
+<code>__unserialize(array $data): void</code> methods for the PHP 8.1+ serialization interface.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="other-changes">Other Changes<a href="#other-changes" class="hash-link" aria-label="Direct link to Other Changes" title="Direct link to Other Changes" translate="no">​</a></h3>
+<ul>
+<li class="">Removed Doctrine DBAL enum type mapping configuration (deprecated)</li>
+<li class="">Added <code>src/Setting/SegmentAssignmentSettingsProvider.php</code> for configuring segment assignment settings</li>
+<li class="">Added <code>src/Resources/config/generic_data_index.yaml</code> for Generic Data Index integration</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-version-50">Upgrade to Version 5.0<a href="#upgrade-to-version-50" class="hash-link" aria-label="Direct link to Upgrade to Version 5.0" title="Direct link to Upgrade to Version 5.0" translate="no">​</a></h2>
+<ul>
+<li class=""><code>CustomerManagementFrameworkBundle\Newsletter\Queue\Item\DefaultNewsletterQueueItem</code> constructor removed the default
+<code>null</code> value from the <code>$customer</code> parameter.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-version-412">Upgrade to Version 4.1.2<a href="#upgrade-to-version-412" class="hash-link" aria-label="Direct link to Upgrade to Version 4.1.2" title="Direct link to Upgrade to Version 4.1.2" translate="no">​</a></h2>
+<ul>
+<li class="">CSS includes using the <code>hypermdm_head_link</code> view helper are no longer wrapped in a deferred block. If you extend the
+CMF <code>layout.html.twig</code> template in your own code and embed additional CSS via the <code>hypermdm_head_link</code> Twig
+extension, check that it still renders correctly.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-version-4">Upgrade to Version 4<a href="#upgrade-to-version-4" class="hash-link" aria-label="Direct link to Upgrade to Version 4" title="Direct link to Upgrade to Version 4" translate="no">​</a></h2>
+<ul>
+<li class="">Execute the SQL script <code>src/Resources/sql/segmentAssignment/storedFunctionObject.sql</code>, only for HyperMDM 11.</li>
+<li class="">Remove Single Sign On custom implementations and classes, e.g. <code>SSOIdentity</code>, <code>OAuth1Token</code>, <code>OAuth2Token</code>, and the
+<code>ssoIdentities</code> field in the Customer class.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-version-3">Upgrade to Version 3<a href="#upgrade-to-version-3" class="hash-link" aria-label="Direct link to Upgrade to Version 3" title="Direct link to Upgrade to Version 3" translate="no">​</a></h2>
+<ul>
+<li class="">Activate <code>Generate Type Declarations</code> for all classes generated/used by the Customer Management Framework:<!-- -->
+<ul>
+<li class=""><code>Customer</code></li>
+<li class=""><code>CustomerSegment</code></li>
+<li class=""><code>CustomerSegmentGroup</code></li>
+<li class=""><code>SsoIdentity</code></li>
+</ul>
+</li>
+<li class="">Migrate all templates to twig.</li>
+<li class="">Add following line to your firewalls configuration in the <code>security.yml</code> of your app after the <code>hypermdm_admin</code> firewall.</li>
+</ul>
+<div class="language-yml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">security</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">firewalls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hypermdm_admin</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token comment" style="color:#999988;font-style:italic"># ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">cmf_webservice</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%customer_management_framework.firewall_settings%'</span><br></span></code></pre></div></div>
+<ul>
+<li class="">Webservices URLs changed to <code> /__customermanagementframework/webservice/*</code></li>
+<li class="">Execute all migrations of Customer Management Framework.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="additional-code-changes-that-might-affect-your-application">Additional code changes (that might affect your application)<a href="#additional-code-changes-that-might-affect-your-application" class="hash-link" aria-label="Direct link to Additional code changes (that might affect your application)" title="Direct link to Additional code changes (that might affect your application)" translate="no">​</a></h3>
+<ul>
+<li class="">Migrated <code>SearchQueryParser\QueryBuilder\ZendCompatibility</code> to <code>Doctrine\DBAL\Query\QueryBuilder</code>.</li>
+<li class="">Migrated <code>Zend\Paginator</code> to <code>Knp\Component\Pager</code>.</li>
+<li class=""><code>FilterHandler::addFilter</code> has no operator as parameter anymore (as this was only considered with <code>SearchQuery</code> filters).
+Use new <code>BoolanCombinator</code> for combining multiple filters with OR operator instead.</li>
+<li class=""><code>AbstractObjectActivity::toArray</code> and GDPR exporter results might be different, as it utilizes new <code>normalize</code> methods
+instead of deprecated <code>getDataForWebservice</code> methods.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-features-in-version-3">Removed features in Version 3<a href="#removed-features-in-version-3" class="hash-link" aria-label="Direct link to Removed features in Version 3" title="Direct link to Removed features in Version 3" translate="no">​</a></h3>
+<ul>
+<li class="">Removed <code>SegmentTrackedListener</code> for tracking tracked segments into Piwik/Matomo
+(as matomo integration is deprecated in HyperMDM 6.9 and removed in HyperMDM X).</li>
+<li class="">Migrated all templates to php templates and removed templating helpers.</li>
+<li class="">CSV Importer integration as it is also removed from HyperMDM X. Use
+<a href="https://github.com/pimcore/data-importer" target="_blank" rel="noopener noreferrer" class="">HyperMDM Data Importer</a> instead.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-hypermdm-x">Upgrade to HyperMDM X<a href="#upgrade-to-hypermdm-x" class="hash-link" aria-label="Direct link to Upgrade to Pimcore X" title="Direct link to Upgrade to Pimcore X" translate="no">​</a></h2>
+<ul>
+<li class="">Update to HyperMDM 6.9.</li>
+<li class="">Update Customer Management Framework to latest version (compatible to HyperMDM 6.9).</li>
+<li class="">Execute all migrations of Customer Management Framework.</li>
+<li class="">Update to HyperMDM X.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

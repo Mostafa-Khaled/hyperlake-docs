@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build Role &amp; Rights System for Frontends — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Build Role &amp; Rights System for Frontends</h1></header>
+<p>A common use case for HyperMDM applications are portals with user logins and a complex permission structure like for
+example b2b portals.</p>
+<p>One way of achieving this is to leverage Symfony Security functionality with access control configuration
+and ACLs as described <a href="https://symfony.com/doc/current/security.html" target="_blank" rel="noopener noreferrer" class="">here</a>.</p>
+<p>But, it might be handy to empower admin users to configure and maintain user permissions themselves. And therefore,
+HyperMDM data objects are also a great choice.
+Just create an user object and define permissions directly on it or via relations to other permission role objects
+that are assigned to the user object.</p>
+<p>So how to integrate HyperMDM objects, a roles &amp; rights system and Symfony best practices to implement complex permission
+structures for Frontends based on HyperMDM?</p>
+<p><strong>Solution</strong></p>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="setup-user-authentication-with-symfony-security-and-hypermdm-objects">Setup User Authentication with Symfony Security and HyperMDM Objects<a href="#setup-user-authentication-with-symfony-security-and-hypermdm-objects" class="hash-link" aria-label="Direct link to Setup User Authentication with Symfony Security and Pimcore Objects" title="Direct link to Setup User Authentication with Symfony Security and Pimcore Objects" translate="no">​</a></h5>
+<p>See the <a class="" href="../../Development_Tools/Security_and_Authentication/Authenticate_HyperMDM_Objects/index.html">HyperMDM docs</a>
+for how to integrate HyperMDM objects with Symfony Security in general. Here you see how to authenticate against a HyperMDM
+user object.</p>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="configure-user-permissions-with-hypermdm-objects">Configure User Permissions with HyperMDM Objects<a href="#configure-user-permissions-with-hypermdm-objects" class="hash-link" aria-label="Direct link to Configure User Permissions with Pimcore Objects" title="Direct link to Configure User Permissions with Pimcore Objects" translate="no">​</a></h5>
+<p>Use the <a href="https://github.com/pimcore/frontend-permission-toolkit" target="_blank" rel="noopener noreferrer" class="">Frontend Permission Toolkit</a> for configuring permissions
+directly within the user objects by using the new data type <code>permissionResource</code>.
+<span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Permission Resource Data Type</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/permission-resource-type-d4593d99b0f8df9f512e9caf485231a7.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/permission-resource-type-d4593d99b0f8df9f512e9caf485231a7.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Permission Resource Data Type</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/permission-resource-type-d4593d99b0f8df9f512e9caf485231a7.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/permission-resource-type-d4593d99b0f8df9f512e9caf485231a7.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Permission Resource Data Type</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/permission-resource-type-d4593d99b0f8df9f512e9caf485231a7.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>A <code>permissionResource</code> represents one specific user right (e.g. login, show prices, order, etc.) and can have the
+values <code>allow</code>, <code>deny</code> and <code>inherit</code>.</p>
+<ul>
+<li class=""><code>allow</code>: User has this permission.</li>
+<li class=""><code>deny</code>: User doesn't have this permission.</li>
+<li class=""><code>inherit</code>: Permission is inherited from linked other permission objects (see next).</li>
+</ul>
+<p>In addition to configure <code>permissionResources</code> directly in the user object, it is possible to create additional object
+classes (e.g. <code>UserRole</code>) and link object with the type <code>UserRole</code> to user objects.</p>
+<p>A <code>UserRole</code> might look similar to the following example and contain <code>permissionResources</code> for itself.
+<span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">User Role Class</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/user-role-class-04b4dbbf6600e899490d83a388d6fdb8.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/user-role-class-04b4dbbf6600e899490d83a388d6fdb8.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">User Role Class</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/user-role-class-04b4dbbf6600e899490d83a388d6fdb8.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/user-role-class-04b4dbbf6600e899490d83a388d6fdb8.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">User Role Class</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/user-role-class-04b4dbbf6600e899490d83a388d6fdb8.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Implementation_Inspirations-Build_Role_Rights_for_Frontends-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>The userRole objects can have <code>permissionResources</code> with the name like these in the user object (in this case values are
+merged as described below), or can have additional <code>permissionResources</code>.</p>
+<p>To link userRole objects to user objects, use the new data types <code>Permission Objects</code> or <code>Permission Href</code> instead of
+default relation data types. This allows the Frontend Permission Toolkit Service to recursively resolve the permissions
+of a given user object.</p>
+<p>Complex permission structures can be set up with HyperMDM objects.</p>
+<p>The Frontend Permission Toolkit Service provides two methods for working with permissions:</p>
+<ul>
+<li class="">
+<p><code>Service::getPermissions</code>:</p>
+<ul>
+<li class="">Returns an array of all permissions for the given object (e.g. user object), automatically merges all
+<code>permissionResources</code> of objects related to the given object with <code>Permission Objects</code> or <code>Permission Href</code>.</li>
+<li class="">Merging: When permission is set to <code>allow</code> / <code>deny</code> directly in the object, this is used. Otherwise optimistic
+merging is used, means once one permission is allowed, it stays that way. PermissionResources are matched by their
+field name.</li>
+</ul>
+</li>
+<li class="">
+<p><code>Service::isAllowed</code>: checks if given object (e.g. user object) is allowed for given the resource</p>
+</li>
+</ul>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="integrate-user-permissions-in-your-frontend-implementation">Integrate User Permissions in your Frontend Implementation<a href="#integrate-user-permissions-in-your-frontend-implementation" class="hash-link" aria-label="Direct link to Integrate User Permissions in your Frontend Implementation" title="Direct link to Integrate User Permissions in your Frontend Implementation" translate="no">​</a></h5>
+<p>There are several ways how to integrate the configured user permissions into the Frontend:</p>
+<ol>
+<li class="">Use the Frontend Permission Toolkit Service in your application code to check if user is allowed for a certain resource:</li>
+</ol>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">//get user object from Symfony</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token variable" style="color:#36acaa">$userObject</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$this</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">get</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'security.token_storage'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getToken</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getUser</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">//get permission service from container</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token variable" style="color:#36acaa">$permissionService</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">HyperMDM</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">getContainer</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">get</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string double-quoted-string" style="color:#e3116c">"bundle.frontendpermissiontoolkit.service"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">if</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$permissionService</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">isAllowed</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$userObject</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string double-quoted-string" style="color:#e3116c">"order"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic">//do some stuff, show some stuff, whatever ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">       </span><br></span></code></pre></div></div>
+<ol start="2">
+<li class="">
+<p>Integrate <code>permissionResources</code> to Symfony Security as Roles:
+There are several ways to integrate the object <code>permissionResource</code> permissions into the Symfony Security system.
+One would be to implement a custom voter as described <a href="https://symfony.com/doc/current/security/voters.html" target="_blank" rel="noopener noreferrer" class="">here</a>.
+The simplest (but maybe not prettiest) way would be to return all allowed <code>permissionResources</code> of an user object as roles
+of this user. In this case you can access this information everywhere in the Symfony framework. For details see docs in the
+<a href="https://github.com/pimcore/frontend-permission-toolkit#integration-with-symfony-security" target="_blank" rel="noopener noreferrer" class="">Frontend Permission Toolkit</a>.</p>
+</li>
+<li class="">
+<p>Integrate <code>permissionResources</code> to documents and HyperMDM navigation:
+For details see docs in the <a href="https://github.com/pimcore/frontend-permission-toolkit#integration-with-pimcore-navigation" target="_blank" rel="noopener noreferrer" class="">Frontend Permission Toolkit</a>.</p>
+</li>
+</ol></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

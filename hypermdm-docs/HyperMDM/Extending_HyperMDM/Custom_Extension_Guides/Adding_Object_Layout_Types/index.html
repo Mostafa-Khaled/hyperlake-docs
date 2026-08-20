@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Adding Object Layout Types — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Adding Object Layout Types</h1></header>
+<blockquote>
+<p><strong>Working example:</strong> The
+<a href="https://github.com/pimcore/studio-example-bundle" target="_blank" rel="noopener noreferrer" class="">studio-example-bundle</a>
+contains a complete <code>simpleTextLayout</code> custom layout type example
+covering all steps below.</p>
+</blockquote>
+<p>Adding a custom object layout type to HyperMDM Studio requires
+registration across two layers:</p>
+<ul>
+<li class=""><strong>HyperMDM Core</strong> (layout class and config)</li>
+<li class=""><strong>Studio UI</strong> (frontend dynamic types and plugin)</li>
+</ul>
+<p>Unlike data types, layout types are purely structural — they do
+<strong>not</strong> require Generic Data Index adapters, Studio Backend data
+adapters, grid column definitions, or search filters.</p>
+<p>The <code>$fieldtype</code> property (e.g. <code>'simpleTextLayout'</code>) is the common
+identifier that ties all layers together — it must match between the
+PHP class, the field definition dynamic type <code>id</code>, and the object
+layout dynamic type <code>id</code>.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-core">HyperMDM Core<a href="#hypermdm-core" class="hash-link" aria-label="Direct link to Pimcore Core" title="Direct link to Pimcore Core" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-1--php-layout-class">Step 1 — PHP Layout Class<a href="#step-1--php-layout-class" class="hash-link" aria-label="Direct link to Step 1 — PHP Layout Class" title="Direct link to Step 1 — PHP Layout Class" translate="no">​</a></h3>
+<p>Create a class extending
+<code>HyperMDM\Model\DataObject\ClassDefinition\Layout</code>. This defines the
+layout's properties and how they are serialized in the class
+definition.</p>
+<p>For simple layouts, you only need the <code>$fieldtype</code> property and any
+custom properties (e.g. <code>$html</code> for rendering static content).</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Model/DataObject/ClassDefinition/Layout/SimpleTextLayout.php" target="_blank" rel="noopener noreferrer" class="">SimpleTextLayout.php</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-2--register-the-layout-type">Step 2 — Register the Layout Type<a href="#step-2--register-the-layout-type" class="hash-link" aria-label="Direct link to Step 2 — Register the Layout Type" title="Direct link to Step 2 — Register the Layout Type" translate="no">​</a></h3>
+<p>Register the layout type by extending the
+<code>hypermdm.objects.class_definitions.layout.map</code> configuration in a
+config file that is
+<a class="" href="../../HyperMDM_Bundle_Developers_Guide/Auto_Loading_Config_and_Routing/index.html">automatically loaded</a>.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">objects</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">class_definitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">layout</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">map</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">simpleTextLayout</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> \App\Model\DataObject\ClassDefinition\Layout\SimpleTextLayout</span><br></span></code></pre></div></div>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/pimcore/config.yaml" target="_blank" rel="noopener noreferrer" class="">config.yaml</a>
+in the example bundle.</p>
+</blockquote>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-ui-frontend">Studio UI (Frontend)<a href="#studio-ui-frontend" class="hash-link" aria-label="Direct link to Studio UI (Frontend)" title="Direct link to Studio UI (Frontend)" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-3--object-layout-dynamic-type">Step 3 — Object Layout Dynamic Type<a href="#step-3--object-layout-dynamic-type" class="hash-link" aria-label="Direct link to Step 3 — Object Layout Dynamic Type" title="Direct link to Step 3 — Object Layout Dynamic Type" translate="no">​</a></h3>
+<p>Create a class extending <code>DynamicTypeObjectLayoutAbstract</code> (from
+<code>@hypermdm/studio-ui-bundle/modules/element</code>). This renders the
+layout in the <strong>data object editor</strong> — the structural container
+users see when editing objects.</p>
+<p>Key properties and methods:</p>
+<ul>
+<li class=""><code>id</code> — must match <code>$fieldtype</code> from the PHP class</li>
+<li class=""><code>getObjectLayoutComponent()</code> — React component that renders the
+layout; receives all layout properties as props</li>
+</ul>
+<p>Register in the <code>DynamicTypeObjectLayoutRegistry</code> via a module.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-layout-type/dynamic-types/definitions/dynamic-type-object-layout-simple-text-layout.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-object-layout-simple-text-layout.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-4--field-definition-dynamic-type">Step 4 — Field Definition Dynamic Type<a href="#step-4--field-definition-dynamic-type" class="hash-link" aria-label="Direct link to Step 4 — Field Definition Dynamic Type" title="Direct link to Step 4 — Field Definition Dynamic Type" translate="no">​</a></h3>
+<p>Create a class extending <code>DynamicTypeFieldDefinitionLayoutAbstract</code>
+(from <code>@hypermdm/studio-ui-bundle/modules/field-definitions</code>). This
+renders the layout configuration in the <strong>class definition editor</strong>
+— how admins add and configure the layout.</p>
+<p>Key methods:</p>
+<ul>
+<li class=""><code>id</code> — must match <code>$fieldtype</code> from the PHP class</li>
+<li class=""><code>getIcon()</code> — icon for the layout type dropdown</li>
+<li class=""><code>getGroup()</code> — category in the dropdown (e.g. <code>'text'</code>)</li>
+<li class=""><code>getSpecificFormFields()</code> — type-specific settings form</li>
+</ul>
+<p>The base class <code>DynamicTypeFieldDefinitionLayoutAbstract</code> already
+provides default behavior for child tags (<code>group:layout</code>,
+<code>group:data</code>), tags (<code>group:layout</code>, <code>group:root</code>), and default
+data. Override <code>getSpecificFormFields()</code> to add type-specific
+settings, or return an empty fragment for layouts with no settings.</p>
+<p>Register in the <code>DynamicTypeFieldDefinitionRegistry</code> via a module.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-layout-type/dynamic-types/definitions/dynamic-type-field-definition-simple-text-layout.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-field-definition-simple-text-layout.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-5--plugin-registration">Step 5 — Plugin Registration<a href="#step-5--plugin-registration" class="hash-link" aria-label="Direct link to Step 5 — Plugin Registration" title="Direct link to Step 5 — Plugin Registration" translate="no">​</a></h3>
+<p>Create a plugin that binds both dynamic type classes in <code>onInit</code>
+(singleton scope) and registers the module in <code>onStartup</code>.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-layout-type/index.ts" target="_blank" rel="noopener noreferrer" class="">index.ts</a>
+and
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-layout-type/modules/simple-text-layout-module.tsx" target="_blank" rel="noopener noreferrer" class="">simple-text-layout-module.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="complete-example">Complete Example<a href="#complete-example" class="hash-link" aria-label="Direct link to Complete Example" title="Direct link to Complete Example" translate="no">​</a></h2>
+<p>The
+<a href="https://github.com/pimcore/studio-example-bundle" target="_blank" rel="noopener noreferrer" class="">studio-example-bundle</a>
+implements the complete <code>simpleTextLayout</code> custom layout type. See
+the
+<a class="" href="../../../../Studio_UI/Extending/Plugin_Development_Examples/Custom_Object_Layout_Type/index.html">Custom Object Layout Type</a>
+plugin development example for an overview.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

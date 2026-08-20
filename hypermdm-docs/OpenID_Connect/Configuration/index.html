@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Configuration — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Configuration</h1></header>
+<p>Configure OpenID Connect providers in <strong>System &gt; User &amp; Roles &gt; OpenId Connect &gt; OpenId Connect Configuration</strong> in
+HyperMDM Studio, or directly in a Symfony configuration file (see <a href="#configuration-storage" class="">Configuration Storage</a>).
+Opening this screen requires the <strong>OpenID Connect Configuration</strong> permission, see
+<a class="" href="../Installation/index.html#user-permissions">Installation</a>.</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-OpenID_Connect-Configuration-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-OpenID_Connect-Configuration-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">OpenID Connect Configuration screen in HyperMDM Studio, showing a provider named Onelogin with its client ID, masked client secret, discovery URL, scopes, the two toggles, a collapsed Claim Mapping section, and the Default Provider select below</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/config-08058c5e73d1fa68f15b5242be489607.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-OpenID_Connect-Configuration-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/config-08058c5e73d1fa68f15b5242be489607.png"><figure class="visual-placeholder" id="fig-OpenID_Connect-Configuration-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-OpenID_Connect-Configuration-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">OpenID Connect Configuration screen in HyperMDM Studio, showing a provider named Onelogin with its client ID, masked client secret, discovery URL, scopes, the two toggles, a collapsed Claim Mapping section, and the Default Provider select below</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/config-08058c5e73d1fa68f15b5242be489607.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-OpenID_Connect-Configuration-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/config-08058c5e73d1fa68f15b5242be489607.png"><figure class="visual-placeholder" id="fig-OpenID_Connect-Configuration-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-OpenID_Connect-Configuration-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">OpenID Connect Configuration screen in HyperMDM Studio, showing a provider named Onelogin with its client ID, masked client secret, discovery URL, scopes, the two toggles, a collapsed Claim Mapping section, and the Default Provider select below</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/config-08058c5e73d1fa68f15b5242be489607.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-OpenID_Connect-Configuration-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="provider-configuration">Provider Configuration<a href="#provider-configuration" class="hash-link" aria-label="Direct link to Provider Configuration" title="Direct link to Provider Configuration" translate="no">​</a></h2>
+<p>Configure one or more OpenID Connect providers in parallel. HyperMDM Studio shows a "Login with <code>&lt;Provider&gt;</code>" button
+per configured provider on its login page; clicking one starts that provider's OpenID Connect flow. Each provider
+needs a unique name.</p>
+<p>On the provider side, register an application for HyperMDM with:</p>
+<ul>
+<li class=""><strong>Redirect URL</strong>: <code>https://&lt;YOUR_HYPERMDM_DOMAIN&gt;/hypermdm-studio/api/bundle/openid-connect/auth/endpoint</code></li>
+<li class=""><strong>Allowed scopes</strong>: <code>openid profile email groups</code> (see <code>scopes</code> below)</li>
+</ul>
+<p>Once the application is set up, configure these required values per provider in HyperMDM:</p>
+<ul>
+<li class=""><code>client_id</code>: Client ID provided by the provider.</li>
+<li class=""><code>client_secret</code>: Client secret provided by the provider.</li>
+<li class=""><code>url_discovery</code>: Endpoint for OpenID configuration discovery, based on the
+<a href="https://openid.net/specs/openid-connect-discovery-1_0.html" target="_blank" rel="noopener noreferrer" class="">OpenID Connect Discovery spec</a>. Typically something
+like <code>&lt;PROVIDER_DOMAIN&gt;/.well-known/openid-configuration</code>.</li>
+</ul>
+<p>Optional values per provider:</p>
+<ul>
+<li class=""><code>scopes</code>: Scopes sent with the authorization request. Defaults to <code>openid</code>, <code>profile</code>, <code>email</code> and <code>groups</code>.
+HyperMDM always adds <code>openid</code>, even if you remove it, because the OpenID Connect flow requires it.</li>
+<li class=""><code>load_user_info</code>: Merge the provider's userinfo response into the claims taken from the ID token, with the userinfo
+values winning. Enable this if the ID token alone does not carry all the claims HyperMDM needs.</li>
+<li class=""><code>dont_overwrite_roles</code>: Skip role re-assignment after login, so you can manage roles in HyperMDM instead of the
+provider. See <a class="" href="../Technical_Details/index.html#role-mapping">Role Mapping</a>.</li>
+<li class=""><code>claim_mapping</code>: Custom claim names, for providers that deviate from the OpenID Connect standard names. Maps the
+supported claims <code>preferred_username</code> (the username), <code>given_name</code>, <code>family_name</code>, <code>email</code>, <code>groups</code> (an array, or
+a comma- or semicolon-separated string, of group names), <code>picture</code> (URL of the user's avatar) and <code>sub</code> (the
+provider's remote user ID).</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="default-provider">Default Provider<a href="#default-provider" class="hash-link" aria-label="Direct link to Default Provider" title="Direct link to Default Provider" translate="no">​</a></h2>
+<p>Optionally set a default provider by name. HyperMDM Studio's login page then redirects to that provider's login
+immediately instead of showing the local credentials form.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-OpenID_Connect-Configuration-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-OpenID_Connect-Configuration-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-OpenID_Connect-Configuration-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The redirect happens as soon as the login page loads, with no way to reach the local credentials form from that
+page. If the default provider becomes unreachable and locks out local accounts, remove
+<code>HyperMDMOpenIdConnectBundle::class</code> from <code>config/bundles.php</code> and clear the cache to restore the plain login form.
+This works regardless of where the configuration is stored. If it is stored as <code>symfony-config</code>, removing
+<code>default_provider</code> from the configuration file (see <a href="#configuration-storage" class="">Configuration Storage</a>) works too and
+does not require disabling the bundle.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-login-flow">Studio Login Flow<a href="#studio-login-flow" class="hash-link" aria-label="Direct link to Studio Login Flow" title="Direct link to Studio Login Flow" translate="no">​</a></h2>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-OpenID_Connect-Configuration-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-OpenID_Connect-Configuration-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">HyperMDM Studio login page with username and password fields and a &amp;quot;Login with Onelogin&amp;quot; button below them</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/login-87843d68e508fa28e347f1ed81787fa7.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-OpenID_Connect-Configuration-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/login-87843d68e508fa28e347f1ed81787fa7.png"><figure class="visual-placeholder" id="fig-OpenID_Connect-Configuration-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-OpenID_Connect-Configuration-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">HyperMDM Studio login page with username and password fields and a &amp;quot;Login with Onelogin&amp;quot; button below them</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/login-87843d68e508fa28e347f1ed81787fa7.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-OpenID_Connect-Configuration-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/login-87843d68e508fa28e347f1ed81787fa7.png"><figure class="visual-placeholder" id="fig-OpenID_Connect-Configuration-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-OpenID_Connect-Configuration-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">HyperMDM Studio login page with username and password fields and a &amp;quot;Login with Onelogin&amp;quot; button below them</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/login-87843d68e508fa28e347f1ed81787fa7.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-OpenID_Connect-Configuration-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Once at least one provider is configured, a user signs in like this:</p>
+<ol>
+<li class="">HyperMDM Studio's login page shows a "Login with <code>&lt;Provider&gt;</code>" button for each configured provider, next to the
+local credentials form (or redirects immediately if a <a href="#default-provider" class="">default provider</a> is set).</li>
+<li class="">Clicking a button sends the browser to the bundle's public callback route, the same <strong>Redirect URL</strong> you
+registered with the provider above, with the provider name attached. The route redirects to that provider's
+authorization endpoint, starting the OAuth2 authorization code flow.</li>
+<li class="">The user authenticates with the provider.</li>
+<li class="">The provider redirects back to the same callback route with an authorization code. The bundle validates the
+OAuth2 state and redirects the browser to its login route, passing the code along.</li>
+<li class="">HyperMDM's security layer picks up that request with its <code>OpenIdConnectAuthenticator</code>. It exchanges the code for
+tokens, validates the ID token's signature and claims, and creates or updates the matching HyperMDM user from the
+token claims (see <a class="" href="../Technical_Details/index.html">Technical Details</a>).</li>
+<li class="">The login route redirects the browser into HyperMDM Studio, restoring the perspective and page that were active
+before the login started.</li>
+</ol>
+<p>The local credentials form keeps working alongside SSO, unless a default provider forces the redirect described
+above.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-storage">Configuration Storage<a href="#configuration-storage" class="hash-link" aria-label="Direct link to Configuration Storage" title="Direct link to Configuration Storage" translate="no">​</a></h2>
+<p>The configuration screen stores its data through a <code>LocationAwareConfigRepository</code>. Configure the storage location
+in the Symfony configuration tree:</p>
+<ul>
+<li class=""><code>symfony-config</code>: write configuration as YAML to <code>/var/config/oidc/hypermdm_open_id_connect.yaml</code>.</li>
+<li class=""><code>settings-store</code>: write configuration to the HyperMDM SettingsStore.</li>
+<li class=""><code>disabled</code>: do not allow writes. The configuration screen becomes read-only, and its Save button and input fields
+are disabled.</li>
+</ul>
+<p>See the HyperMDM <a class="" href="../../HyperMDM/Development_Details/Configuration/Configuration_Environments/index.html">Configuration Storage Locations and Fallbacks</a>
+documentation for the underlying mechanism.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="example-custom-storage-directory">Example: Custom Storage Directory<a href="#example-custom-storage-directory" class="hash-link" aria-label="Direct link to Example: Custom Storage Directory" title="Direct link to Example: Custom Storage Directory" translate="no">​</a></h3>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_open_id_connect</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">config_location</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">open_id_connect</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">write_target</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'symfony-config'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">directory</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'/var/www/html/var/config/oidc'</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="example-providers-defined-in-symfony-configuration">Example: Providers Defined in Symfony Configuration<a href="#example-providers-defined-in-symfony-configuration" class="hash-link" aria-label="Direct link to Example: Providers Defined in Symfony Configuration" title="Direct link to Example: Providers Defined in Symfony Configuration" translate="no">​</a></h3>
+<p>Define providers directly in a Symfony configuration file instead of using the configuration screen. In this case,
+the configuration screen becomes read-only, since the values it would edit no longer come from a writable source.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_open_id_connect</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">default_provider</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> onelogin</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">providers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">onelogin</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">client_id</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> &lt;CLIENT_ID</span><span class="token punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">client_secret</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> &lt;CLIENT_SECRET</span><span class="token punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">url_discovery</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> https</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain">//&lt;USERNAME</span><span class="token punctuation" style="color:#393A34">&gt;</span><span class="token plain">.onelogin.com/oidc/2/.well</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">known/openid</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">configuration</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">okta</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">client_id</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> &lt;CLIENT_ID</span><span class="token punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">client_secret</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> &lt;CLIENT_SECRET</span><span class="token punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">url_discovery</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> https</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain">//&lt;USERNAME</span><span class="token punctuation" style="color:#393A34">&gt;</span><span class="token plain">.okta.com/.well</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">known/openid</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">configuration</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">load_user_info</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">dont_overwrite_roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">scopes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> openid</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> profile</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> email</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> groups</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">claim_mapping</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">preferred_username</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> preferred_username</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">given_name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> given_name</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">family_name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> family_name</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">email</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> email</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">groups</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> groups</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">picture</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> picture</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">sub</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> sub</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="debugging">Debugging<a href="#debugging" class="hash-link" aria-label="Direct link to Debugging" title="Direct link to Debugging" translate="no">​</a></h2>
+<p>Open <strong>System &gt; User &amp; Roles &gt; OpenId Connect &gt; Debugging Tool</strong> in HyperMDM Studio (same permission as the
+configuration screen) to troubleshoot a provider setup. It opens in a new browser tab and lists the configured
+providers.</p>
+<p>Picking a provider runs a real sign-in against it, the same OAuth2 flow described above, but instead of logging you
+into HyperMDM Studio, the tool shows the raw response: the ID token claims, the userinfo response, the configured
+<code>claim_mapping</code>, and the resulting merged user information HyperMDM would use. Use it to verify a provider sends the
+claims your <code>claim_mapping</code> expects. If the flow fails, the tool renders the error message instead.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

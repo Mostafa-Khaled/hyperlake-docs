@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Information — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Information</h1></header>
+<p>Following steps are necessary during updating to newer versions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php--symfony-version-requirements">PHP &amp; Symfony Version Requirements<a href="#php--symfony-version-requirements" class="hash-link" aria-label="Direct link to PHP &amp; Symfony Version Requirements" title="Direct link to PHP &amp; Symfony Version Requirements" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>. Upgrade to PHP 8.4+ and Symfony 7 before updating to this version.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-admin-classic-extjs-support">Removed Admin Classic (ExtJS) Support<a href="#removed-admin-classic-extjs-support" class="hash-link" aria-label="Direct link to Removed Admin Classic (ExtJS) Support" title="Direct link to Removed Admin Classic (ExtJS) Support" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMWebToPrintBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code> and no longer uses <code>BundleAdminClassicTrait</code>. All ExtJS-based Admin Classic UI assets have been removed.</li>
+<li class="">The following ExtJS JavaScript files have been removed and are no longer served:<!-- -->
+<ul>
+<li class=""><code>public/js/startup.js</code></li>
+<li class=""><code>public/js/settings.js</code></li>
+<li class=""><code>public/js/document/printabstract.js</code></li>
+<li class=""><code>public/js/document/printcontainer.js</code></li>
+<li class=""><code>public/js/document/printpage.js</code></li>
+<li class=""><code>public/js/document/printpages/pdf_preview.js</code></li>
+</ul>
+</li>
+<li class="">The CSS files <code>public/css/icons.css</code> and <code>public/css/print/print-printermarks.css</code> have been removed.</li>
+<li class="">The <code>getCssPaths()</code> and <code>getJsPaths()</code> methods have been removed from <code>HyperMDMWebToPrintBundle</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-admin-classic-controllers">Removed Admin Classic Controllers<a href="#removed-admin-classic-controllers" class="hash-link" aria-label="Direct link to Removed Admin Classic Controllers" title="Direct link to Removed Admin Classic Controllers" translate="no">​</a></h3>
+<ul>
+<li class="">The following Admin Classic controllers have been removed entirely (they were <code>@internal</code>):<!-- -->
+<ul>
+<li class=""><code>HyperMDM\Bundle\WebToPrintBundle\Controller\Document\PrintcontainerController</code></li>
+<li class=""><code>HyperMDM\Bundle\WebToPrintBundle\Controller\Document\PrintpageController</code></li>
+<li class=""><code>HyperMDM\Bundle\WebToPrintBundle\Controller\Document\PrintpageControllerBase</code></li>
+<li class=""><code>HyperMDM\Bundle\WebToPrintBundle\Controller\SettingsController</code></li>
+</ul>
+</li>
+<li class=""><code>HyperMDM\Bundle\WebToPrintBundle\Routing\StudioRouteLoader</code> has been removed.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-eventlistener">Removed EventListener<a href="#removed-eventlistener" class="hash-link" aria-label="Direct link to Removed EventListener" title="Direct link to Removed EventListener" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\WebToPrintBundle\EventListener\IndexSettingsListener</code> has been removed.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="interface-changes">Interface Changes<a href="#interface-changes" class="hash-link" aria-label="Direct link to Interface Changes" title="Direct link to Interface Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\WebToPrintBundle\Service\DownloadServiceInterface</code>: The <code>@throws</code> declarations on <code>pdfDownload()</code> and <code>pdfStream()</code> have been updated. <code>NotFoundException</code> and <code>UserNotFoundException</code> are no longer declared as thrown exceptions. Both methods now only declare <code>@throws ForbiddenException</code>. If you have custom implementations of this interface, remove the corresponding <code>NotFoundException</code> and <code>UserNotFoundException</code> imports and <code>@throws</code> annotations.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="gotenberg-processor-improvements">Gotenberg Processor Improvements<a href="#gotenberg-processor-improvements" class="hash-link" aria-label="Direct link to Gotenberg Processor Improvements" title="Direct link to Gotenberg Processor Improvements" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\WebToPrintBundle\Processor\Gotenberg</code>: Removed the BC compatibility layer for <code>gotenberg-php</code> v1. The processor now requires <code>gotenberg-php</code> v2+ and always calls <code>-&gt;pdf()</code> on the Chromium builder.</li>
+<li class="">The base URL for Gotenberg is now resolved from <code>hypermdm.gotenberg.base_url</code> system config with a fallback to <code>$processParams['hostUrl']</code>.</li>
+<li class="">The BC compatibility methods <code>userAgent()</code>, <code>pdfFormat()</code> from <code>gotenberg-php</code> v1 are no longer conditionally called.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-backend--studio-ui-services">Studio Backend / Studio UI Services<a href="#studio-backend--studio-ui-services" class="hash-link" aria-label="Direct link to Studio Backend / Studio UI Services" title="Direct link to Studio Backend / Studio UI Services" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMStudioBackendBundle</code> and <code>HyperMDMStudioUiBundle</code> are now required dependencies. The conditional loading of their service configurations has been removed, the studio backend and studio UI configurations are now always loaded unconditionally.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-frontend-gotenberg-settings">Studio Frontend: Gotenberg Settings<a href="#studio-frontend-gotenberg-settings" class="hash-link" aria-label="Direct link to Studio Frontend: Gotenberg Settings" title="Direct link to Studio Frontend: Gotenberg Settings" translate="no">​</a></h3>
+<ul>
+<li class="">Added Gotenberg configuration panel in the HyperMDM Studio UI settings. The settings form now conditionally renders either the PDFreactor or Gotenberg panel based on the selected tool.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-200">Upgrade to 2.0.0<a href="#upgrade-to-200" class="hash-link" aria-label="Direct link to Upgrade to 2.0.0" title="Direct link to Upgrade to 2.0.0" translate="no">​</a></h2>
+<ul>
+<li class="">[Processor] Removed support for standalone chromium. Use Processor Gotenberg instead.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

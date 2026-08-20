@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Installation</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<p>The bundle declares <a href="https://github.com/pimcore/data-hub" target="_blank" rel="noopener noreferrer" class="">Datahub</a>, the Studio Backend bundle and the Studio UI bundle
+as Composer dependencies. Composer pulls them in automatically, and the bundle registers Datahub, the Application Logger
+bundle and the Flysystem bundle as dependent bundles, so they are loaded without manual bundle ordering.</p>
+<p>Loading Datahub this way does not install it. Datahub's own installer creates the <code>plugin_datahub_config</code> permission
+and the Datahub permission category that Data Importer depends on, so Datahub must be installed on its own, see step 3
+below.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-installation">Bundle Installation<a href="#bundle-installation" class="hash-link" aria-label="Direct link to Bundle Installation" title="Direct link to Bundle Installation" translate="no">​</a></h2>
+<ol>
+<li class="">Install the package:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/data-importer</span><br></span></code></pre></div></div>
+<ol start="2">
+<li class="">Enable the bundle in <code>config/bundles.php</code>:</li>
+</ol>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Bundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataImporterBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">HyperMDMDataImporterBundle</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name static-context">HyperMDMDataImporterBundle</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<ol start="3">
+<li class="">Install Datahub, if it is not installed yet. Enabling it as a dependent bundle only loads it, it does not create
+the <code>plugin_datahub_config</code> permission and the Datahub permission category that Data Importer depends on:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:bundle:install HyperMDMDataHubBundle</span><br></span></code></pre></div></div>
+<ol start="4">
+<li class="">Install the bundle:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:bundle:install HyperMDMDataImporterBundle</span><br></span></code></pre></div></div>
+<p>The installer creates the <code>plugin_datahub_adapter_dataImporterDataObject</code> user permission in the Datahub permission
+category. See <a href="#user-permissions" class="">User Permissions</a> below for what it controls and what else is required.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="user-permissions">User Permissions<a href="#user-permissions" class="hash-link" aria-label="Direct link to User Permissions" title="Direct link to User Permissions" translate="no">​</a></h2>
+<p>Access to the configuration panel and to individual import configurations is checked on two independent levels.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="gate-permission">Gate Permission<a href="#gate-permission" class="hash-link" aria-label="Direct link to Gate Permission" title="Direct link to Gate Permission" translate="no">​</a></h3>
+<p><code>plugin_datahub_config</code> ("Datahub Configuration") is required to reach any endpoint of the configuration panel. It is
+created by Datahub's installer and shared with Datahub, so a user administering Datahub configurations already has it.
+Without it every request of the panel is rejected.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="access-to-an-individual-configuration">Access to an Individual Configuration<a href="#access-to-an-individual-configuration" class="hash-link" aria-label="Direct link to Access to an Individual Configuration" title="Direct link to Access to an Individual Configuration" translate="no">​</a></h3>
+<p>Each configuration is then checked separately for <code>read</code>, <code>update</code> and <code>delete</code>. The rules are evaluated in this order:</p>
+<ol>
+<li class="">A user with the <code>admin</code> flag, or with the <code>plugin_datahub_admin</code> ("Datahub Admin") permission, is granted
+everything.</li>
+<li class="">If the configuration has <strong>no</strong> entries in its <strong>Permissions</strong> tab, the adapter permission
+<code>plugin_datahub_adapter_dataImporterDataObject</code> ("Datahub Adapter - Data Object Importer") decides. The installer
+creates this permission in the Datahub permission category.</li>
+<li class="">As soon as the <strong>Permissions</strong> tab holds at least one user or role entry, the adapter permission is ignored for that
+configuration and only those entries apply. An entry matching the user's own name wins outright; otherwise the
+user's roles are checked and any role granting the operation is enough.</li>
+</ol>
+<p>So the per-configuration grid replaces the adapter permission, it does not narrow it. Adding a single entry to a
+configuration locks out every other non-admin user, including users who hold the adapter permission.</p>
+<p>Grant the gate and adapter permissions to every user or role that works with import configurations. Use the
+<strong>Permissions</strong> tab only when a configuration needs its own, self-contained access list.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="queue-processing">Queue Processing<a href="#queue-processing" class="hash-link" aria-label="Direct link to Queue Processing" title="Direct link to Queue Processing" translate="no">​</a></h2>
+<p>Imports never run inside the request that starts them. An import first writes its rows into a queue, and a separate
+worker processes that queue. Set up one of the two processing modes below, otherwise imports stay queued and the
+execution status never progresses.</p>
+<p>For the difference between sequential and parallel processing, see
+<a class="" href="../Import_Execution_Details/index.html">Import Execution Details</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="command-based-processing">Command-based Processing<a href="#command-based-processing" class="hash-link" aria-label="Direct link to Command-based Processing" title="Direct link to Command-based Processing" translate="no">​</a></h3>
+<p>Run both commands on a regular basis. The interval depends on the use case and the system environment.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Process queue items that can run in parallel</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">*/5 * * * * php /home/project/www/bin/console datahub:data-importer:process-queue-parallel --processes=5</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Process queue items that must run one after another</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">*/5 * * * * php /home/project/www/bin/console datahub:data-importer:process-queue-sequential</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="symfony-messenger-based-processing">Symfony Messenger-based Processing<a href="#symfony-messenger-based-processing" class="hash-link" aria-label="Direct link to Symfony Messenger-based Processing" title="Direct link to Symfony Messenger-based Processing" translate="no">​</a></h3>
+<p>Activate messenger processing in the Symfony configuration:</p>
+<div class="language-yml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_data_importer</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">messenger_queue_processing</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">activated</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><br></span></code></pre></div></div>
+<p>Queue processing then starts automatically as soon as an import is prepared. Messages are dispatched via the
+<code>hypermdm_data_import</code> transport, so run a worker for that transport:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console messenger:consume hypermdm_data_import</span><br></span></code></pre></div></div>
+<p>These optional settings tune the messenger processing:</p>
+<div class="table-container"><table><thead><tr><th>Setting</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>worker_count_parallel</code></td><td><code>3</code></td><td>Maximum number of parallel worker messages for parallel imports.</td></tr><tr><td><code>worker_item_count</code></td><td><code>200</code></td><td>Number of items imported per worker message.</td></tr><tr><td><code>worker_count_lifetime</code></td><td><code>1800</code></td><td>Lifetime in seconds of the tmp store entry holding the current worker count. After it expires, the value is cleared.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="scheduled-imports">Scheduled Imports<a href="#scheduled-imports" class="hash-link" aria-label="Direct link to Scheduled Imports" title="Direct link to Scheduled Imports" translate="no">​</a></h2>
+<p>An import configuration can run on a cron expression or at a fixed date and time. The
+<code>datahub:data-importer:execute-cron</code> command evaluates both schedule types, so run it regularly. The shorter the
+interval, the more accurately imports start at their scheduled time.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Check schedules and start due imports</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">* * * * * php /home/project/www/bin/console datahub:data-importer:execute-cron</span><br></span></code></pre></div></div>
+<p>See <a class="" href="../Configuration/Execution_Configuration/index.html">Execution Configuration</a> for the schedule types.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next Steps<a href="#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h2>
+<p>Follow <a class="" href="../Getting_Started/index.html">Getting Started</a> to build a first import configuration end to end.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

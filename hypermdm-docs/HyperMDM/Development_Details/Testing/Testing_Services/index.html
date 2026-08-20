@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Testing Services — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Testing Symfony Services</h1></header>
+<p>When writing integration tests for Symfony services, you can retrieve them directly from the Symfony container
+regardless of whether they are public or private.</p>
+<p>The symfony default way is described <a href="https://symfony.com/doc/current/testing.html#retrieving-services-in-the-test" target="_blank" rel="noopener noreferrer" class="">here</a>
+and can be used in context within HyperMDM too.</p>
+<p>In combination with codeception, where is the <a href="https://codeception.com/docs/modules/Symfony" target="_blank" rel="noopener noreferrer" class="">codeception symfony module</a>
+that provides additional functionality as also grabbing services from
+<a href="https://codeception.com/docs/modules/Symfony#grabService" target="_blank" rel="noopener noreferrer" class="">the container</a>.</p>
+<p>Currently, we are not using the <a href="https://codeception.com/docs/modules/Symfony" target="_blank" rel="noopener noreferrer" class="">codeception symfony module</a> though,
+to reduce test complexity and due to lack of compatibility with symfony 6.</p>
+<p>To still have the grab service functionality available, just use the
+<a href="https://github.com/pimcore/pimcore/blob/2026.x/tests/Support/Helper/Pimcore.php#L101" target="_blank" rel="noopener noreferrer" class=""><code>HyperMDM\Tests\Support\Helper\HyperMDM</code></a>
+module and call <code>grabService</code> as below:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Tests</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Support</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Helper</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">HyperMDM</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">/** @var HyperMDM $hypermdmModule */</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$hypermdmModule</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$this</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getModule</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'\\'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">.</span><span class="token plain"> </span><span class="token class-name static-context">HyperMDM</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword" style="color:#00009f">class</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$mailerService</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$hypermdmModule</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">grabService</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'mailer'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div></div></article></div></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

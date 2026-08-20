@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup Objects in Product List Results — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Mockup Objects in Product List Results</h1></header>
+<p>Normally the result of Product Lists contain HyperMDM product objects. When retrieving lists with many entries this can
+result in performance issues during rendering product listings - especially on high traffic applications when HyperMDM
+product objects are very complex, heavily use content inheritance and have lots of relations.</p>
+<p>To address this issue, Product Lists can return so called Mockup objects instead of the original HyperMDM product objects.
+The idea is that these Mockup objects are a lightweight a selection of the product data, therefore are much smaller and
+load faster.</p>
+<p>By default the optimized product index implementations of the E-Commerce Framework support Mockup objects in a
+transparent way and you can take advantage from the faster loading times.</p>
+<p>This means that the corresponding product lists return Mockup objects which contain all data that is
+stored into the product index. If a getter is called on the Mockup object (e.g. <code>$product-&gt;getName()</code>), it first tries
+to get the requested data from the index data. If the data is not available, the call is delegated to the original
+HyperMDM object.
+Then the call is delegated, following log message is written to HyperMDM log files - if system is in debug mode as <code>WARN</code>,
+otherwise as <code>INFO</code>.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">"Method $method not in Mockup implemented, delegating to object with id {$this-&gt;id}."</span><br></span></code></pre></div></div>
+<p>So, the only thing you need to take care about: make sure that all the data that is printed in product listing is
+available in the product index.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="using-custom-mockup-object-implementation">Using Custom Mockup Object Implementation<a href="#using-custom-mockup-object-implementation" class="hash-link" aria-label="Direct link to Using Custom Mockup Object Implementation" title="Direct link to Using Custom Mockup Object Implementation" translate="no">​</a></h2>
+<p>Of course, it might be necessary to use custom Mockup implementations. To do you, overwrite the
+<code>createMockupObject($objectId, $data, $relations)</code> method in your <code>Config</code> implementation. For an example see
+<a href="https://github.com/pimcore/demo/blob/11.x/src/Ecommerce/IndexService/Tenant/Config/MyOptimizedMysql.php#L37" target="_blank" rel="noopener noreferrer" class=""><code>MyOptimizedMysql</code></a>
+in the Demo.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

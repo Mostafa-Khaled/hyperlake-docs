@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Working with Availabilities — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Working with Availabilities</h1></header>
+<p>For availabilities there is a similar concepts like the <a class="" href="../Working_with_Prices/Price_Systems_and_getting_Prices/index.html">PriceSystems</a>
+for prices - which is called <em>Availability Systems</em>.</p>
+<p>The Availability Systems are responsible for retrieving or calculating availabilities of a product and returning a so called
+<code>AvailabilityInfo</code> object which contains all the availability information.
+Each product can have its own Availability System.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-of-availability-systems">Configuration of Availability Systems<a href="#configuration-of-availability-systems" class="hash-link" aria-label="Direct link to Configuration of Availability Systems" title="Direct link to Configuration of Availability Systems" translate="no">​</a></h2>
+<p>An availability system is a class implementing <code>HyperMDM\Bundle\EcommerceFrameworkBundle\AvailabilitySystem\AvailabilitySystemInterface</code> which
+is defined as service and registered with a name in the <code>hypermdm_ecommerce_framework.availability_systems</code> configuration tree.</p>
+<p>Currently, the framework ships only with a <a href="https://github.com/pimcore/ecommerce-framework-bundle/blob/1.x/src/AvailabilitySystem/AvailabilitySystem.php#L21" target="_blank" rel="noopener noreferrer" class="">sample implementation</a>
+which you can use as starting point.</p>
+<p>There are 3 places where the configuration of Availability Systems takes place:</p>
+<ul>
+<li class=""><strong>Product class</strong>: Each product has to implement the method <code>getAvailabilitySystemName()</code> which returns the name of its
+Availability System.</li>
+<li class=""><strong>Service definition</strong>: Each Availability System must be registered as service</li>
+<li class=""><strong>Configuration</strong>: The <code>availability_systems</code> section maps Availability System names to service IDs</li>
+</ul>
+<p>The product class returns the name of an Availability System:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter important">&lt;?php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name-definition class-name">MyProduct</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">implements</span><span class="token plain"> </span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">HyperMDM</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">Bundle</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">EcommerceFrameworkBundle</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">Model</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">CheckoutableInterface</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">getAvailabilitySystemName</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword return-type" style="color:#00009f">string</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'myAvailabilitySystem'</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p>Each Availability System must be defined as service (either a service defined by core configuration or your custom services):</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># services.yaml</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    _defaults:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        public: false</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        autowire: true</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        autoconfigure: true</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    #</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    # AVAILABILITY SYSTEMS</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    #</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    HyperMDM\Bundle\EcommerceFrameworkBundle\AvailabilitySystem\AvailabilitySystem: ~</span><br></span></code></pre></div></div>
+<p>The <code>availability_systems</code> configuration maps names to service IDs:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">hypermdm_ecommerce_framework:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    # defines 3 availability systems</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    availability_systems:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        # the availability system is already defined in core availability_systems.yaml service definition</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        default:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            id: HyperMDM\Bundle\EcommerceFrameworkBundle\AvailabilitySystem\AvailabilitySystem</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">       </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        foo:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            id: App\Ecommerce\AvailabilitySystem\CustomAvailabilitySystem</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        bar:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            id: app.custom_attribute_availability_system</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="getting-availabilities">Getting Availabilities<a href="#getting-availabilities" class="hash-link" aria-label="Direct link to Getting Availabilities" title="Direct link to Getting Availabilities" translate="no">​</a></h2>
+<p>Each product (if it implements <code>CheckoutableInterface</code>) needs to implement the method <code>getOSAvailabilityInfo</code> which in the default
+implementation gets the corresponding Availability System and calculates the availability.</p>
+<p>The return value is an <code>AvailabilityInterface</code> object, which at least has one <code>getAvailable</code> method and can contain additional
+availability information (e.g. availability for different storage locations etc.).</p>
+<p>This can be used to visualize availability on product detail pages or to check, if a product can actually be checked out.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

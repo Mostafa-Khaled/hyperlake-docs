@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation &amp; Configuration — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Installation &amp; Configuration</h1></header>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Direct_Edit-Installation-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Direct_Edit-Installation-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Direct_Edit-Installation-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>Direct Edit is an enterprise bundle. It requires a HyperMDM enterprise subscription.</p></div></div>
+<p>Direct Edit has two parts. The <strong>bundle</strong> runs inside HyperMDM and exposes the download and upload endpoints. The
+<strong>desktop client</strong> runs on each editor's machine, downloads the asset, opens it in a local editor, and uploads the
+changed file back. Both are required.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<p>The bundle requires HyperMDM 2026.1 or later and PHP 8.4 or 8.5. It also needs a running
+<a href="https://mercure.rocks/" target="_blank" rel="noopener noreferrer" class="">Mercure</a> hub, and HyperMDM has to be served over HTTPS.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-installation">Bundle Installation<a href="#bundle-installation" class="hash-link" aria-label="Direct link to Bundle Installation" title="Direct link to Bundle Installation" translate="no">​</a></h2>
+<ol>
+<li class="">Install the package:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/direct-edit</span><br></span></code></pre></div></div>
+<ol start="2">
+<li class="">Enable the bundle in <code>config/bundles.php</code>:</li>
+</ol>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Bundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DirectEditBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">HyperMDMDirectEditBundle</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name static-context">HyperMDMDirectEditBundle</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<ol start="3">
+<li class="">Install the bundle:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:bundle:install HyperMDMDirectEditBundle</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="maintenance-command">Maintenance Command<a href="#maintenance-command" class="hash-link" aria-label="Direct link to Maintenance Command" title="Direct link to Maintenance Command" translate="no">​</a></h2>
+<p>Direct Edit issues a token per editing session. Clean up abandoned tokens regularly:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:direct-edit:cleanup --hours=12</span><br></span></code></pre></div></div>
+<p><code>--hours</code> sets how old a token has to be before it is deleted. It defaults to <code>12</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="jwt-key">JWT Key<a href="#jwt-key" class="hash-link" aria-label="Direct link to JWT Key" title="Direct link to JWT Key" translate="no">​</a></h2>
+<p>Mercure communication is signed with a JWT key. Generate a secure key of at least 32 characters and add it to the
+Symfony parameters, and to the Mercure hub itself.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">parameters</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">mercure</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hub</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">jwt_key</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'your-256-bit-secret-min-32-chars'</span><br></span></code></pre></div></div>
+<p>Separate keys for publishing and subscribing are supported as well. Configure both, or neither:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">parameters</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">mercure</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hub</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">publisher_jwt_key</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'your-publisher-secret-min-32-chars'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">subscriber_jwt_key</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'your-subscriber-secret-min-32-chars'</span><br></span></code></pre></div></div>
+<p>Direct Edit fails at runtime unless it finds either <code>mercure.hub.jwt_key</code>, or both <code>mercure.hub.publisher_jwt_key</code> and
+<code>mercure.hub.subscriber_jwt_key</code>.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Direct_Edit-Installation-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Direct_Edit-Installation-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Direct_Edit-Installation-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>Keep the JWT key private. See <a href="https://jwt.io" target="_blank" rel="noopener noreferrer" class="">jwt.io</a> for background on JWT keys.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="mercure-setup">Mercure Setup<a href="#mercure-setup" class="hash-link" aria-label="Direct link to Mercure Setup" title="Direct link to Mercure Setup" translate="no">​</a></h2>
+<p>The bundle uses Mercure for the communication between HyperMDM and the desktop client while a file is being edited.
+Without a running hub, direct editing does not work.</p>
+<p>Follow the <a href="https://mercure.rocks/docs/hub/install" target="_blank" rel="noopener noreferrer" class="">Mercure installation guide</a>. The simplest setup uses the Docker
+image behind a reverse proxy on your own web server, which also avoids CSP problems. For the details and common
+questions, see <a class="" href="Mercure_Setup/index.html">Mercure Setup</a>.</p>
+<p>Configure the same JWT key on the Mercure hub and in HyperMDM.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-configuration">Bundle Configuration<a href="#bundle-configuration" class="hash-link" aria-label="Direct link to Bundle Configuration" title="Direct link to Bundle Configuration" translate="no">​</a></h2>
+<p>All settings live under the <code>hypermdm_direct_edit</code> key and all of them are optional.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_direct_edit</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">client_host_url</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://my-host.example.com'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">mercure_settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">client_side_url</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://my-host.example.com/hub/.well-known/mercure'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">server_side_url</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'http://mercure/.well-known/mercure'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">jwt_cookie_host</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'.example.com'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">jwt_cookie_strictness</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><br></span></code></pre></div></div>
+<div class="table-container"><table><thead><tr><th>Setting</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>client_host_url</code></td><td>current request host</td><td>Base URL used to build the <code>hypermdmfile://</code> download link sent to the desktop client. Override it when HyperMDM runs behind a reverse proxy or in Docker and the client has to reach a different URL.</td></tr><tr><td><code>mercure_settings.client_side_url</code></td><td><code>http(s)://&lt;HYPERMDM_HOST&gt;/hub/.well-known/mercure</code></td><td>Mercure URL reachable by the browser. <code>&lt;HYPERMDM_SCHEMA_HOST&gt;</code> works as a placeholder for the current scheme and host.</td></tr><tr><td><code>mercure_settings.server_side_url</code></td><td><code>http(s)://&lt;HYPERMDM_HOST&gt;/hub/.well-known/mercure</code></td><td>Mercure URL reachable by HyperMDM itself.</td></tr><tr><td><code>mercure_settings.jwt_cookie_host</code></td><td>current host only</td><td>Value of the cookie's <code>Domain</code> attribute.</td></tr><tr><td><code>mercure_settings.jwt_cookie_strictness</code></td><td><code>true</code></td><td><code>true</code> sets the cookie's <code>SameSite</code> attribute to <code>Strict</code>, <code>false</code> sets it to <code>None</code>.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="deployment-hint">Deployment Hint<a href="#deployment-hint" class="hash-link" aria-label="Direct link to Deployment Hint" title="Direct link to Deployment Hint" translate="no">​</a></h2>
+<p>In pipelines without database access, Doctrine ORM cache warm-up fails because it tries to detect the database version.
+Configure the server version explicitly in the default DBAL connection:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">doctrine</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">dbal</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">default_connection</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> default</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">connections</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">default</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token comment" style="color:#999988;font-style:italic"># ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">server_version</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> mariadb</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">10.11.0</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="install-the-desktop-client">Install the Desktop Client<a href="#install-the-desktop-client" class="hash-link" aria-label="Direct link to Install the Desktop Client" title="Direct link to Install the Desktop Client" translate="no">​</a></h2>
+<p>Install the HyperMDM Direct Edit client on every machine that should edit assets locally. The installer registers the
+<code>hypermdmfile</code> protocol handler that HyperMDM uses to hand an asset to the client.</p>
+<p>See <a class="" href="../HyperMDM_Direct_Edit_Client/index.html">HyperMDM Direct Edit Client</a> for the download links for Windows, macOS and
+macOS ARM64, the install locations, and troubleshooting.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="compatibility">Compatibility<a href="#compatibility" class="hash-link" aria-label="Direct link to Compatibility" title="Direct link to Compatibility" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="https-only">HTTPS Only<a href="#https-only" class="hash-link" aria-label="Direct link to HTTPS Only" title="Direct link to HTTPS Only" translate="no">​</a></h3>
+<p>Direct Edit requires HTTPS. Only web servers running over HTTPS are supported, development systems included. When the
+system sits behind a proxy and internal communication is HTTP only, configure the
+<a href="https://symfony.com/doc/current/deployment/proxies.html" target="_blank" rel="noopener noreferrer" class="">trusted proxies in Symfony</a>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="self-signed-certificates">Self-signed Certificates<a href="#self-signed-certificates" class="hash-link" aria-label="Direct link to Self-signed Certificates" title="Direct link to Self-signed Certificates" translate="no">​</a></h4>
+<p>To make the desktop client accept self-signed certificates, create <code>certificate-paths.txt</code> in the client's <code>tmp</code> folder
+and list the paths to the root certificates to verify against, one per line.</p>
+<p>Restart the client after changing that file.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="supported-operating-systems-for-the-desktop-client">Supported Operating Systems for the Desktop Client<a href="#supported-operating-systems-for-the-desktop-client" class="hash-link" aria-label="Direct link to Supported Operating Systems for the Desktop Client" title="Direct link to Supported Operating Systems for the Desktop Client" translate="no">​</a></h3>
+<ul>
+<li class="">Windows 10</li>
+<li class="">macOS</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="browser-compatibility">Browser Compatibility<a href="#browser-compatibility" class="hash-link" aria-label="Direct link to Browser Compatibility" title="Direct link to Browser Compatibility" translate="no">​</a></h3>
+<p>The application has been tested with Chrome, Firefox, Microsoft Edge and Safari.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="user-permissions">User Permissions<a href="#user-permissions" class="hash-link" aria-label="Direct link to User Permissions" title="Direct link to User Permissions" translate="no">​</a></h2>
+<p>The installer creates one permission, <code>hypermdm_direct_edit</code>. Grant it to every user and role that should edit assets
+locally.</p>
+<p>A user may start a Direct Edit session on an asset only if both of these hold:</p>
+<ul>
+<li class="">the user holds <code>hypermdm_direct_edit</code>, and</li>
+<li class="">the user is allowed to <code>publish</code> that asset.</li>
+</ul>
+<p>Without the permission, the <strong>Edit Locally</strong> action stays unavailable, and every endpoint that starts, checks, or
+resolves an editing session (generate link, get status, cancel, confirm upload, resolve conflict) rejects the
+request. The desktop client's download and upload endpoints authenticate with the session token issued when the link
+was generated, not by rechecking the permission on every call.</p>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Direct_Edit-Installation-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Direct_Edit-Installation-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Direct_Edit-Installation-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>The endpoints under <code>/hypermdm_direct_edit</code> are the protocol between HyperMDM and the Direct Edit desktop client. They
+are not a general-purpose API. To place a Direct Edit button in your own application, see
+<a class="" href="../Integrate_into_Custom_Application/index.html">Integrate into Custom Application</a>.</p></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Authentication — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Authentication</h1></header>
+<p>The agent-server does not own users. Every <code>/agent-server/api/*</code> endpoint (except two explicit exceptions) inherits
+authentication from HyperMDM itself: the browser sends the user's HyperMDM session cookie, the agent-server validates
+it against the PHP backend, and MCP tool calls run with the user's real permissions. Admin endpoints use a separate bearer token.</p>
+<blockquote>
+<p>For a map of <strong>every</strong> communication flow and the credential each one uses, start at
+<a class="" href="../Communication_Flows/index.html">Communication Flows</a>. This page is the credential reference behind that map.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-auth-credentials">The auth credentials<a href="#the-auth-credentials" class="hash-link" aria-label="Direct link to The auth credentials" title="Direct link to The auth credentials" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Credential</th><th>Used by</th><th>Value</th><th>Endpoint reached</th></tr></thead><tbody><tr><td>User session cookie</td><td>Browser → agent-server; agent-server → auth-validator + synchronous bundle-API persistence</td><td>HyperMDM <code>PHPSESSID</code> cookie</td><td><code>/agent-server/api/*</code> (excluding admin); <code>GET /hypermdm-studio/api/user/current-user-information</code>; <code>POST …/bundle/agent/sessions|proposals</code> (synchronous work)</td></tr><tr><td>MCP access token (per chat session)</td><td>Agent-server → internal MCP tools (always) and deferred bundle-API persistence</td><td><code>Authorization: Bearer pmcp_…</code></td><td><code>/hypermdm-mcp/agent/*</code> (MCP firewall); <code>/hypermdm-studio/api/bundle/agent/sessions|proposals</code> (bundle-API firewall)</td></tr><tr><td>Admin bearer token</td><td>Agent-server → PHP config export; operator → admin endpoints</td><td><code>AGENT_SERVER_ADMIN_TOKEN</code></td><td><code>GET /hypermdm-studio/api/bundle/agent/configurations/export</code>, <code>/agent-server/api/admin/*</code></td></tr><tr><td>Mercure publisher JWT</td><td>Agent-server → Mercure hub (publish only)</td><td>HS256, shared <code>MERCURE_JWT_KEY</code></td><td><code>MERCURE_SERVER_URL</code> (per-user topic)</td></tr></tbody></table></div>
+<p>Each credential is detailed below. See <a class="" href="../MCP_Integration/index.html#authentication-forwarding">MCP Integration → Authentication forwarding</a>
+for the full token lifecycle (issue / refresh / re-mint / revoke / GC).</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM_Agent-Architecture-Authentication-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM_Agent-Architecture-Authentication-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Authentication flow: the browser&amp;#39;s session cookie is validated against HyperMDM, then the agent-server&amp;#39;s MCP tool call is authenticated by the chat-scoped pmcp_ bearer and executed with the user&amp;#39;s own permissions.</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/authentication_flow-8a4935c389f3ffde0dea905e47e9ce82.jpeg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM_Agent-Architecture-Authentication-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/authentication_flow-8a4935c389f3ffde0dea905e47e9ce82.jpeg"><figure class="visual-placeholder" id="fig-HyperMDM_Agent-Architecture-Authentication-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM_Agent-Architecture-Authentication-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Authentication flow: the browser&amp;#39;s session cookie is validated against HyperMDM, then the agent-server&amp;#39;s MCP tool call is authenticated by the chat-scoped pmcp_ bearer and executed with the user&amp;#39;s own permissions.</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/authentication_flow-8a4935c389f3ffde0dea905e47e9ce82.jpeg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM_Agent-Architecture-Authentication-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/authentication_flow-8a4935c389f3ffde0dea905e47e9ce82.jpeg"><figure class="visual-placeholder" id="fig-HyperMDM_Agent-Architecture-Authentication-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM_Agent-Architecture-Authentication-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Authentication flow: the browser&amp;#39;s session cookie is validated against HyperMDM, then the agent-server&amp;#39;s MCP tool call is authenticated by the chat-scoped pmcp_ bearer and executed with the user&amp;#39;s own permissions.</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/authentication_flow-8a4935c389f3ffde0dea905e47e9ce82.jpeg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM_Agent-Architecture-Authentication-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="user-session-cookie">User session cookie<a href="#user-session-cookie" class="hash-link" aria-label="Direct link to User session cookie" title="Direct link to User session cookie" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="flow">Flow<a href="#flow" class="hash-link" aria-label="Direct link to Flow" title="Direct link to Flow" translate="no">​</a></h3>
+<ol>
+<li class="">Browser includes the HyperMDM session cookie on every request.</li>
+<li class="">Nginx proxies to the agent-server, forwarding the cookie.</li>
+<li class="">Auth middleware calls <code>GET /hypermdm-studio/api/user/current-user-information</code> with the cookie.</li>
+<li class="">PHP resolves the session to a HyperMDM user and returns identity (ID, username, admin flag, permissions).</li>
+<li class="">The identity is cached so repeat requests don't re-hit PHP.</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="identity-cache">Identity cache<a href="#identity-cache" class="hash-link" aria-label="Direct link to Identity cache" title="Direct link to Identity cache" translate="no">​</a></h3>
+<p>The validated identity is cached in-memory keyed by <code>sha256(cookie)</code>. TTL defaults to 60 seconds
+(<code>AGENT_SERVER_AUTH_CACHE_TTL</code>). After expiry the next request re-validates against PHP.</p>
+<p>This is the <em>validation</em> cache only. Conversation data lives in <a class="" href="../Session_Storage/index.html">Session Storage</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="server-to-server-calls-bundle-api-and-internal-mcp">Server-to-server calls: bundle API and internal MCP<a href="#server-to-server-calls-bundle-api-and-internal-mcp" class="hash-link" aria-label="Direct link to Server-to-server calls: bundle API and internal MCP" title="Direct link to Server-to-server calls: bundle API and internal MCP" translate="no">​</a></h3>
+<p>The browser cookie authenticates the agent-server's own <code>/agent-server/api/*</code> endpoints (via the
+auth-validator call <code>GET /hypermdm-studio/api/user/current-user-information</code>). For calls the agent-server
+makes <em>into</em> PHP on behalf of a chat session, the credential depends on the target:</p>
+<ul>
+<li class=""><strong>Internal MCP servers</strong> (<code>/hypermdm-mcp/agent/*</code>) - <strong>always</strong> the chat-scoped bearer
+(<code>Authorization: Bearer pmcp_…</code>), resolved by <code>McpAccessTokenAuthenticator</code> on the <code>hypermdm_mcp</code>
+firewall from Studio Backend.</li>
+<li class=""><strong>Bundle API</strong> (<code>/hypermdm-studio/api/bundle/agent/sessions|proposals</code>) - the validated <strong>session cookie</strong>
+for synchronous in-request work, and the <strong><code>pmcp_…</code> bearer</strong> for deferred work that must outlive the browser
+session (e.g. the post-turn persistence flush). Both are accepted by the dedicated <code>hypermdm_agent_bundle_api</code>
+firewall, whose authenticator chain is <code>SessionBridge → McpAccessTokenAuthenticator</code>. PAT is <strong>intentionally
+excluded</strong> - a personal access token is the external-client credential, and an external PAT user has no chat
+session to act on. The firewall pattern is <code>^/hypermdm-studio/api/bundle/agent/(sessions|proposals)</code>; other
+bundle/agent routes (<code>/configurations/*</code>, <code>/skills/*</code>, <code>/templates/*</code>) stay on the broader <code>hypermdm_studio</code>
+firewall.</li>
+</ul>
+<p>The firewall definitions are exposed as container parameters (<code>%hypermdm_agent.bundle_api_firewall_settings%</code>,
+<code>%hypermdm_studio_backend.mcp_firewall_settings%</code>) and wired in the project's <code>security.yaml</code> - see
+<a class="" href="../../Installation/index.html#3-configure-security">Installation → Configure Security</a> for the YAML.</p>
+<p>However the credential arrives, <code>McpAccessTokenAuthenticator</code> (bearer) or <code>SessionBridgeAuthenticator</code> (cookie)
+resolves it to the session's effective HyperMDM <code>User</code>, and HyperMDM's standard permission system applies. By default
+the effective user is the chat initiator, so an agent has <em>exactly</em> the permissions of the user who started the
+chat - no privilege escalation, no service-account fallback. The one deliberate exception is an agent configured
+with an <code>executionUser</code>: see <a href="#execution-user-resolution" class="">Execution user resolution</a> below.</p>
+<p>External MCP servers (<code>mcpServers</code>) receive neither the cookie nor the MCP access token; they use whatever auth
+their YAML configures. For the issue / refresh / re-mint / revoke / GC lifecycle of the bearer see
+<a class="" href="../MCP_Integration/index.html#token-lifecycle">MCP Integration → Token lifecycle</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="exceptions">Exceptions<a href="#exceptions" class="hash-link" aria-label="Direct link to Exceptions" title="Direct link to Exceptions" translate="no">​</a></h3>
+<p>These endpoints do not require a cookie:</p>
+<ul>
+<li class=""><code>GET /agent-server/api/health</code> - health check.</li>
+<li class=""><code>GET /agent-server/api/docs</code> - Swagger UI (only when <code>NODE_ENV</code> ≠ <code>production</code>).</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-user-resolution">Execution user resolution<a href="#execution-user-resolution" class="hash-link" aria-label="Direct link to Execution user resolution" title="Direct link to Execution user resolution" translate="no">​</a></h2>
+<p>Agent configurations can optionally carry an <code>executionUser</code> field - a HyperMDM username the whole session should
+act as instead of the chat initiator. Full field reference:
+<a class="" href="../../Configuration/Agents/index.html#execution-user">Configuration → Agents → Execution user</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-resolution-happens">Where resolution happens<a href="#where-resolution-happens" class="hash-link" aria-label="Direct link to Where resolution happens" title="Direct link to Where resolution happens" translate="no">​</a></h3>
+<p><code>EffectiveUserResolver</code> runs once, at session creation, when the first MCP access token for a chat session is
+minted. It receives the chat session id, the agent name, and the initiator's user id:</p>
+<ul>
+<li class="">When the agent's <code>executionUser</code> is empty (the default), the effective user is the initiator, exactly as
+described above.</li>
+<li class="">When <code>executionUser</code> is set, the configured username is looked up against active HyperMDM users. If it resolves,
+the effective user becomes that user's id. If it does not resolve to an active user, resolution fails and session
+creation fails with it - a configured but broken execution user never falls back to the initiator silently.</li>
+</ul>
+<p>The MCP access token is then minted for the resolved effective user id, not necessarily the initiator's. Because
+internal MCP tools already derive their acting user from the token, as described above, this single resolution
+point is enough to make every tool call, MCP call, and permission check in the session run with the execution
+user's permissions.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="session-ownership-is-unaffected">Session ownership is unaffected<a href="#session-ownership-is-unaffected" class="hash-link" aria-label="Direct link to Session ownership is unaffected" title="Direct link to Session ownership is unaffected" translate="no">​</a></h3>
+<p>Effective-user resolution only changes who the MCP token acts as; it does not change who owns the chat. Session
+ownership checks (listing, resume, history) are always evaluated against the initiator's user id, independently of
+<code>executionUser</code>. A user who starts a chat with an execution-user agent still sees that session in their own session
+list and remains the only one who can resume it.</p>
+<p>See <a class="" href="../Tool_Security/index.html#execution-user-and-information-disclosure">Tool Security → Execution user and information disclosure</a>
+for the security implications of running a session as a more privileged user than the initiator.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="per-provider-llm-authentication">Per-provider LLM authentication<a href="#per-provider-llm-authentication" class="hash-link" aria-label="Direct link to Per-provider LLM authentication" title="Direct link to Per-provider LLM authentication" translate="no">​</a></h2>
+<p>Each inference provider in <code>hypermdm_agent.inference.providers</code> carries its own <code>auth_mode</code> and <code>token</code>. The
+agent-server applies provider auth at session-creation time - after resolving which provider an agent uses -
+before the SDK session is started:</p>
+<div class="table-container"><table><thead><tr><th><code>auth_mode</code></th><th>Effect</th></tr></thead><tbody><tr><td><code>byok</code></td><td>Builds an SDK <code>provider</code> block: <code>{ type, baseUrl, apiKey }</code>. The <code>token</code> value (after <code>${VAR}</code> interpolation) becomes the <code>apiKey</code>.</td></tr><tr><td><code>github</code></td><td>Sets the session-level <code>gitHubToken</code>. No <code>provider</code> block is added.</td></tr></tbody></table></div>
+<p>A session's provider credentials are determined once at creation and held for the lifetime of the SDK session.
+If the agent changes mid-conversation (agent switch) the SDK session is recreated with the new agent's provider
+resolved from scratch.</p>
+<p>Mixing byok and github agents in the same deployment is supported - each agent's session uses its own provider's
+credentials independently. The single caveat is that only one GitHub identity (GitHub PAT) is used across all
+github-mode providers in a deployment; multiple distinct GitHub accounts per provider are not yet supported.</p>
+<p>For the full schema and examples of provider configuration, see <a class="" href="../../Configuration/Inference_Providers/index.html">Inference Providers</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="admin-bearer-token">Admin bearer token<a href="#admin-bearer-token" class="hash-link" aria-label="Direct link to Admin bearer token" title="Direct link to Admin bearer token" translate="no">​</a></h2>
+<p>Admin endpoints are machine-to-machine: the agent-server fetches the config export endpoint in PHP, and an operator may
+trigger a reload or list models.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">AGENT_SERVER_ADMIN_TOKEN=&lt;strong-random-value&gt;</span><br></span></code></pre></div></div>
+<p>If <code>AGENT_SERVER_ADMIN_TOKEN</code> is unset, admin endpoints return <code>403</code>. In production use a strong random value.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="endpoints">Endpoints<a href="#endpoints" class="hash-link" aria-label="Direct link to Endpoints" title="Direct link to Endpoints" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Endpoint</th><th>Used by</th></tr></thead><tbody><tr><td><code>GET /hypermdm-studio/api/bundle/agent/configurations/export</code></td><td>The agent-server, on startup and on every reload. Verified with <code>hash_equals</code>; bypasses the user-session firewall via a <code>PUBLIC_ACCESS</code> rule in <code>security.yaml</code>.</td></tr><tr><td><code>POST /agent-server/api/admin/reload-agents</code></td><td>Re-fetches the config export, clears sessions, returns model-validation warnings.</td></tr><tr><td><code>GET /agent-server/api/admin/models</code></td><td>Lists available LLM models, cross-references them against agent configs.</td></tr></tbody></table></div>
+<p>The config-export flow (three-layer merge, push-on-CRUD reload, background retry) is documented in
+<a class="" href="../Configuration_System/index.html#export-endpoint-contract">Configuration System → Export endpoint contract</a>.</p>
+<p>Example:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">curl -X POST http://localhost/agent-server/api/admin/reload-agents \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  -H "Authorization: Bearer $AGENT_SERVER_ADMIN_TOKEN"</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="mercure-publisher-jwt">Mercure publisher JWT<a href="#mercure-publisher-jwt" class="hash-link" aria-label="Direct link to Mercure publisher JWT" title="Direct link to Mercure publisher JWT" translate="no">​</a></h2>
+<p>Live cross-client chat sync publishes each turn event to Studio's per-user Mercure topic using a narrow
+<strong>publisher JWT</strong> - HS256, signed in-process with the shared <code>MERCURE_JWT_KEY</code>, scoped to
+<code>studio-backend-default/user/{id}</code>. This credential only <em>publishes</em> to the hub; it never authenticates a user.
+Because each publish is a Mercure <strong>private</strong> update, the hub delivers it only to that user's own tabs/devices,
+so <strong>cross-tenant isolation is enforced by the hub</strong>, not by agent-server code. The <code>MERCURE_JWT_KEY</code> lives in the
+agent-server env at the same trust level as PHP and is never shipped to the browser. If it is unset/blank the
+publisher is a no-op (startup warning) - replies stop streaming and surface only on the client's record
+re-read; PHP remains the record. See <a class="" href="../Realtime_Sync/index.html">Real-time Sync</a>.</p>
+<p>Full detail - topic, private-update targeting, subscriber auth, coalescing - is in
+<a class="" href="../Realtime_Sync/index.html#live-delivery-per-user-topic-private-updates">Real-time Sync → Live delivery</a>.
+The <code>MERCURE_JWT_KEY</code> / <code>MERCURE_SERVER_URL</code> values are in
+<a class="" href="../../Configuration/Environment_Variables/index.html">Configuration → Environment Variables</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="csrf-protection">CSRF protection<a href="#csrf-protection" class="hash-link" aria-label="Direct link to CSRF protection" title="Direct link to CSRF protection" translate="no">​</a></h2>
+<p>Every state-changing request (POST / PUT / DELETE) to <code>/agent-server/api/*</code> must include <code>X-Requested-With: XMLHttpRequest</code>.
+This triggers the CORS preflight for cross-origin requests and blocks silent cross-site form submissions.</p>
+<p>The frontend sets the header automatically in both the streaming fetch client (<code>agent-stream.service.ts</code>) and the
+RTK Query slice (<code>agent-api-slice.ts</code>). If you add a new endpoint or call from custom code, include the header:</p>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token function" style="color:#d73a49">fetch</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'/agent-server/api/…'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  method</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'POST'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  headers</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string-property property" style="color:#36acaa">'Content-Type'</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'application/json'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string-property property" style="color:#36acaa">'X-Requested-With'</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'XMLHttpRequest'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  credentials</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'include'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  body</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token constant" style="color:#36acaa">JSON</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">stringify</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">payload</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="rate-limiting">Rate limiting<a href="#rate-limiting" class="hash-link" aria-label="Direct link to Rate limiting" title="Direct link to Rate limiting" translate="no">​</a></h2>
+<p>Per-user limits via <code>@fastify/rate-limit</code>, keyed by authenticated user ID (falling back to IP):</p>
+<div class="table-container"><table><thead><tr><th>Endpoint group</th><th>Limit</th></tr></thead><tbody><tr><td>Chat (<code>POST /chat</code>, <code>POST /chat/:id</code>)</td><td>20 / min</td></tr><tr><td>Sessions (<code>GET /sessions</code>)</td><td>30 / min</td></tr><tr><td>Admin (<code>POST /admin/*</code>)</td><td>5 / min</td></tr></tbody></table></div>
+<p>Over the limit → HTTP 429.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="other-security-measures">Other security measures<a href="#other-security-measures" class="hash-link" aria-label="Direct link to Other security measures" title="Direct link to Other security measures" translate="no">​</a></h2>
+<ul>
+<li class="">
+<p><strong>Credential isolation</strong> - internal MCP tool calls and deferred bundle-API persistence use the chat-scoped
+<code>pmcp_…</code> bearer; synchronous bundle-API persistence reuses the validated session cookie; the cookie is never
+forwarded to MCP servers. Third-party servers under <code>mcpServers</code> receive only what their YAML defines. The chat
+session id is bound to the bearer server-side and recovered from the validated token, not from any
+client-supplied header.</p>
+</li>
+<li class="">
+<p><strong>Error sanitisation</strong> - internal error details (stack traces, SDK errors, upstream URLs) never reach the client.
+SSE <code>error</code> events carry generic messages; full details are server-side logs.</p>
+</li>
+<li class="">
+<p><strong>Message length cap</strong> - chat messages are capped at 10,000 characters to prevent token-cost abuse and storage exhaustion.</p>
+</li>
+<li class="">
+<p><strong>Request IDs</strong> - every response returns <code>X-Request-Id</code>. Nginx-supplied IDs are preserved; otherwise a UUID is generated.</p>
+</li>
+<li class="">
+<p><strong>Host validation / DNS rebinding</strong> - the internal MCP endpoints (<code>/hypermdm-mcp/agent/*</code>) are reachable through
+nginx by external agents, so the <code>Host</code> header must be constrained. This is handled by HyperMDM's <strong><code>TRUSTED_HOSTS</code></strong>
+environment variable (a regex; HyperMDM's <code>Bootstrap</code> passes it to <code>Request::setTrustedHosts()</code>), which Symfony
+enforces in <code>kernel.request</code> - a non-matching <code>Host</code> is rejected with <code>400</code> before any controller runs. That is what
+defeats DNS rebinding, where an attacker re-points their own domain at the server and the request arrives with the
+attacker's <code>Host</code>. <strong><code>TRUSTED_HOSTS</code> is unset by default - set it in production.</strong></p>
+<blockquote>
+<p>The PHP MCP SDK ships its own <code>DnsRebindingProtectionMiddleware</code>, but it matches <code>Host</code>/<code>Origin</code> literally against
+<code>{localhost, 127.0.0.1, [::1]}</code> and cannot consume Symfony's regex <code>trusted_hosts</code>, so it would reject every
+request in a reverse-proxied deployment. The MCP transport therefore receives an explicit middleware stack of
+<code>CorsMiddleware</code> and <code>ProtocolVersionMiddleware</code> - the SDK's default stack minus the DNS-rebinding check - and
+relies on the framework-level check above for <code>Host</code> validation. Note this is distinct from <code>TRUSTED_PROXIES</code>
+(which HyperMDM does set), which governs client IP/scheme resolution from <code>X-Forwarded-*</code>, not <code>Host</code> validation.</p>
+</blockquote>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="audit-log">Audit log<a href="#audit-log" class="hash-link" aria-label="Direct link to Audit log" title="Direct link to Audit log" translate="no">​</a></h2>
+<p>Security events are emitted as structured JSON with <code>"level": "audit"</code>:</p>
+<div class="table-container"><table><thead><tr><th>Event</th><th>When</th></tr></thead><tbody><tr><td><code>auth_no_cookie</code></td><td>Non-exception endpoint hit without a cookie.</td></tr><tr><td><code>auth_failed</code></td><td>Cookie validation against HyperMDM returned no user.</td></tr><tr><td><code>session_access_denied</code></td><td>User tried to access another user's session.</td></tr><tr><td><code>admin_no_token_configured</code></td><td>Admin endpoint hit while <code>AGENT_SERVER_ADMIN_TOKEN</code> is unset (returns <code>403</code>).</td></tr><tr><td><code>admin_auth_missing</code> / <code>admin_auth_failed</code></td><td>Admin endpoint hit without / with wrong token.</td></tr><tr><td><code>admin_reload_agents</code> / <code>admin_list_models</code></td><td>Successful admin actions.</td></tr></tbody></table></div>
+<p>The tool-security hook adds its own audit records - see <a class="" href="../Tool_Security/index.html">Tool Security</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

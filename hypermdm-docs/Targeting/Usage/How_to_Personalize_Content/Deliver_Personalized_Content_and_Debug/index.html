@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deliver Personalized Content — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Deliver Personalized Content</h1></header>
+<p>Once target groups are defined, visitor profiling rules are set and personalized content is created, it's time to
+deliver that content to the right people.</p>
+<p>HyperMDM provides two ways to deliver personalized content:</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="delivering-personalized-content-with-documents">Delivering Personalized Content with Documents<a href="#delivering-personalized-content-with-documents" class="hash-link" aria-label="Direct link to Delivering Personalized Content with Documents" title="Direct link to Delivering Personalized Content with Documents" translate="no">​</a></h2>
+<p>When HyperMDM delivers a document to a visitor, it picks the best-matching variant using the following rule:</p>
+<ul>
+<li class="">If the visitor has only one assigned target group and content exists for that target group, HyperMDM uses the
+personalized variant for that target group.</li>
+<li class="">If the visitor has multiple assigned target groups, HyperMDM sorts them by assignment count and uses the first
+target group in that list that has personalized content for the document.</li>
+</ul>
+<p>This logic runs for every document and sub-request, so a document can show content for one target group while a
+snippet or renderlet on the same page shows content for a different target group.</p>
+<p>The Symfony profiler shows which target group was applied to which document. In the screenshot below, the main
+document used the target group <code>basketball</code> while the footer snippet was rendered with the target group <code>female</code>.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Targeting Profiler Target Groups</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/targeting_profiler_target_groups-9bcb5f5c881bfdb6511eeb055298dffb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/targeting_profiler_target_groups-9bcb5f5c881bfdb6511eeb055298dffb.png"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Targeting Profiler Target Groups</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/targeting_profiler_target_groups-9bcb5f5c881bfdb6511eeb055298dffb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/targeting_profiler_target_groups-9bcb5f5c881bfdb6511eeb055298dffb.png"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Targeting Profiler Target Groups</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/targeting_profiler_target_groups-9bcb5f5c881bfdb6511eeb055298dffb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>See <a href="#verify-what-happens-aka-debug" class="">Verify What Happens</a> below for more on debugging.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="delivering-personalized-content-with-global-targeting-rules">Delivering Personalized Content with Global Targeting Rules<a href="#delivering-personalized-content-with-global-targeting-rules" class="hash-link" aria-label="Direct link to Delivering Personalized Content with Global Targeting Rules" title="Direct link to Delivering Personalized Content with Global Targeting Rules" translate="no">​</a></h2>
+<p>In addition to document delivery, global targeting rules provide two actions for delivering personalized content to
+the visitor:</p>
+<ol>
+<li class=""><strong>Redirect</strong>: redirects the visitor when its conditions match, for example to send first-time visitors to a
+special landing page.</li>
+<li class=""><strong>Code Snippet</strong>: injects a code snippet into the response when its conditions match. This covers restyling the
+page with injected CSS, adding functionality with a JS snippet, or injecting whole HTML blocks.</li>
+</ol>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Targeting Rule Code Snippet Action</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/targeting-rules-action2-406f3e836aac2fb2d44d03225fa02553.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/targeting-rules-action2-406f3e836aac2fb2d44d03225fa02553.jpg"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Targeting Rule Code Snippet Action</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/targeting-rules-action2-406f3e836aac2fb2d44d03225fa02553.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/targeting-rules-action2-406f3e836aac2fb2d44d03225fa02553.jpg"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Targeting Rule Code Snippet Action</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/targeting-rules-action2-406f3e836aac2fb2d44d03225fa02553.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="verify-what-happens-aka-debug">Verify What Happens (aka Debug)<a href="#verify-what-happens-aka-debug" class="hash-link" aria-label="Direct link to Verify What Happens (aka Debug)" title="Direct link to Verify What Happens (aka Debug)" translate="no">​</a></h2>
+<p>The personalization configuration can grow complex quickly. To help you see what happens, which rules matched a
+given request, which target groups are assigned, and what data was collected, HyperMDM adds a Targeting panel to the
+Symfony web debug toolbar.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Profiler Bar Popup</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/profiler1-97ce7f6ec49ef2d3e32b4869d0079a20.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/profiler1-97ce7f6ec49ef2d3e32b4869d0079a20.jpg"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Profiler Bar Popup</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/profiler1-97ce7f6ec49ef2d3e32b4869d0079a20.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/profiler1-97ce7f6ec49ef2d3e32b4869d0079a20.jpg"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Profiler Bar Popup</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/profiler1-97ce7f6ec49ef2d3e32b4869d0079a20.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>The detail page lists matching targeting rules, assigned target groups, target groups chosen for document delivery,
+all stored visitor information and the content of the visitor storage.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-10">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-10</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Profiler Information</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/profiler2-cbea35bea43a1b8389bbdd814e640c8a.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-10">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/profiler2-cbea35bea43a1b8389bbdd814e640c8a.jpg"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-11">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-11</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Profiler Information</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/profiler2-cbea35bea43a1b8389bbdd814e640c8a.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-11">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/profiler2-cbea35bea43a1b8389bbdd814e640c8a.jpg"><figure class="visual-placeholder" id="fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-12">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-12</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Profiler Information</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/profiler2-cbea35bea43a1b8389bbdd814e640c8a.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Targeting-Usage-How_to_Personalize_Content-Deliver_Personalized_Content_and_Debug-index-12">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>For debugging on the live page itself (outside the <code>dev</code> environment), HyperMDM Studio also offers an on-page
+targeting toolbar. See
+<a class="" href="../../../Development_Documentation/index.html#debugging-targeting-data">Debugging Targeting Data</a> in the
+Development Documentation.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

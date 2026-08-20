@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Getting Started — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Getting Started</h1></header>
+<p>This page walks through one webhook: whenever a <code>Car</code> data object is updated, HyperMDM sends a request to an external
+endpoint containing the object's name and description.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-a-webhook-works">How a Webhook Works<a href="#how-a-webhook-works" class="hash-link" aria-label="Direct link to How a Webhook Works" title="Direct link to How a Webhook Works" translate="no">​</a></h2>
+<!-- -->
+<p>An event such as <code>hypermdm.dataobject.postUpdate</code> is caught by an event listener, which queues a message. A Symfony
+Messenger worker picks it up, hands it to the webhook processor for that event, and the processor checks every active
+webhook configuration: does the configuration listen to this event, does the element match the schema, and does it fall
+inside the configured workspace? If all three hold, the processor builds the payload and sends one HTTP request per
+subscriber.</p>
+<p>Two consequences are worth remembering from the start:</p>
+<ul>
+<li class="">Nothing is delivered without a running worker. See <a class="" href="../Installation/index.html#message-queue">Installation</a>.</li>
+<li class="">A configuration that selects an event but has no matching schema definition sends nothing.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<ul>
+<li class="">The bundle is installed and a worker consumes the <code>hypermdm_datahub_webhooks</code> transport.</li>
+<li class="">Your user has the <code>plugin_datahub_config</code> and <code>plugin_datahub_adapter_webhooks</code> permissions.</li>
+<li class="">An endpoint that accepts HTTP requests and that HyperMDM can reach.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-create-a-webhook-configuration">1. Create a Webhook Configuration<a href="#1-create-a-webhook-configuration" class="hash-link" aria-label="Direct link to 1. Create a Webhook Configuration" title="Direct link to 1. Create a Webhook Configuration" translate="no">​</a></h2>
+<p>In HyperMDM Studio, open the main navigation and choose <strong>Automation &amp; Integration</strong> &gt; <strong>Data Hub Configuration</strong>.
+Add a new configuration and select the <strong>Webhooks</strong> adapter type.</p>
+<p>The configuration opens with these tabs:</p>
+<div class="table-container"><table><thead><tr><th>Tab</th><th>Purpose</th></tr></thead><tbody><tr><td>General</td><td>Activate the configuration, set its log level, description and group.</td></tr><tr><td>Events &amp; Schema</td><td>The events to listen to, and the payload sent to subscribers.</td></tr><tr><td>Workspaces</td><td>Restrict the configuration to parts of the element trees.</td></tr><tr><td>Subscribers</td><td>The endpoints that receive the requests, and their custom headers.</td></tr><tr><td>Logs</td><td>Application logger entries for this configuration.</td></tr><tr><td>Permissions</td><td>Which users and roles may read, update and delete this configuration.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-activate-the-configuration">2. Activate the Configuration<a href="#2-activate-the-configuration" class="hash-link" aria-label="Direct link to 2. Activate the Configuration" title="Direct link to 2. Activate the Configuration" translate="no">​</a></h2>
+<p>On the <strong>General</strong> tab, switch <strong>Active</strong> on. An inactive configuration is skipped, which is a convenient way to park a
+configuration without deleting it.</p>
+<p>Set <strong>Log Level</strong> to <code>Info</code> while you build the webhook. It records every request, subscriber and HTTP status code in
+the <strong>Logs</strong> tab.</p>
+<p>Reference: <a class="" href="../Configuration/General/index.html">General</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-select-the-event-and-the-payload">3. Select the Event and the Payload<a href="#3-select-the-event-and-the-payload" class="hash-link" aria-label="Direct link to 3. Select the Event and the Payload" title="Direct link to 3. Select the Event and the Payload" translate="no">​</a></h2>
+<p>On the <strong>Events &amp; Schema</strong> tab, select the event <code>hypermdm.dataobject.postUpdate</code>.</p>
+<p>Then configure the matching schema, otherwise no request is sent. Under <strong>Schema Definition Data Objects</strong>, add the
+class <code>Car</code> and open its <strong>Settings</strong> to choose the fields to send, for example <code>name</code> and <code>description</code>.</p>
+<p>Reference: <a class="" href="../Configuration/Events_and_Schema/index.html">Events and Schema</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-restrict-the-scope-optional">4. Restrict the Scope (Optional)<a href="#4-restrict-the-scope-optional" class="hash-link" aria-label="Direct link to 4. Restrict the Scope (Optional)" title="Direct link to 4. Restrict the Scope (Optional)" translate="no">​</a></h2>
+<p>On the <strong>Workspaces</strong> tab, add a row for Objects with the path <code>/Product Data/Cars</code> and enable <strong>include</strong>. Only objects
+under that path then trigger the webhook.</p>
+<p>Leave the tab empty to react to every element.</p>
+<p>Reference: <a class="" href="../Configuration/Workspaces/index.html">Workspaces</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-add-a-subscriber">5. Add a Subscriber<a href="#5-add-a-subscriber" class="hash-link" aria-label="Direct link to 5. Add a Subscriber" title="Direct link to 5. Add a Subscriber" translate="no">​</a></h2>
+<p>On the <strong>Subscribers</strong> tab, add the URL of your endpoint. Add custom headers if the endpoint needs them, for example an
+authorization header.</p>
+<p>Use <strong>Test</strong> next to the input field to send a bodyless HTTP <code>POST</code> request to every subscriber and confirm HyperMDM can
+reach them.</p>
+<p>Reference: <a class="" href="../Configuration/Subscribers/index.html">Subscribers</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-trigger-and-verify">6. Trigger and Verify<a href="#6-trigger-and-verify" class="hash-link" aria-label="Direct link to 6. Trigger and Verify" title="Direct link to 6. Trigger and Verify" translate="no">​</a></h2>
+<p>Save the configuration, then edit and save a <code>Car</code> object under <code>/Product Data/Cars</code>.</p>
+<p>Once the worker processes the message, your endpoint receives an HTTP <code>PUT</code> request. The verb depends on the event:
+<code>postAdd</code> sends <code>POST</code>, <code>postUpdate</code> sends <code>PUT</code>, <code>postDelete</code> sends <code>DELETE</code>.</p>
+<p>The body has a <code>general</code> section describing the event and a <code>subject</code> section with the fields you selected. Each
+selected field appears under its field name:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "general": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "eventName": "hypermdm.dataobject.postUpdate",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "timestamp": 1690975273,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "subjectType": "object",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "versionOnly": false</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "subject": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "id": 260,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "path": "/Product Data/Cars/alfa romeo/1900",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "name": "1900",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "description": "&lt;p&gt;The Alfa Romeo 1900 is an automobile produced by Alfa Romeo from 1950 to 1959.&lt;/p&gt;",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "userModification": 25,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "userModificationName": "admin",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "published": false,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "type": "Car"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<p>If nothing arrives, check the <strong>Logs</strong> tab first, then confirm a worker is running.</p>
+<p>Reference: <a class="" href="../Request_Structure/index.html">Request Structure</a> and <a class="" href="../Configuration/Logs/index.html">Logs</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-to-go-next">Where to Go Next<a href="#where-to-go-next" class="hash-link" aria-label="Direct link to Where to Go Next" title="Direct link to Where to Go Next" translate="no">​</a></h2>
+<ul>
+<li class="">Send binary data such as images and thumbnails: <a class="" href="../Configuration/Events_and_Schema/index.html">Events and Schema</a>.</li>
+<li class="">React to workflow transitions instead of element changes:
+<a class="" href="../Configuration/Events_and_Schema/index.html#schema-definition-workflows">Events and Schema</a>.</li>
+<li class="">Build a payload the standard processors cannot produce: <a class="" href="../Extending/index.html">Extending</a>.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Database Model — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Database Model</h1></header>
+<p>HyperMDM maintains an optimized database model. The number of tables can make finding the right data
+challenging at first.</p>
+<p>There are two types of tables:</p>
+<ul>
+<li class=""><strong>Default tables</strong> created during installation, covering assets, documents, logs, versions, and more.</li>
+<li class=""><strong>Dynamically created tables</strong> generated during object data model configuration, primarily for object-related data.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="default-tables">Default Tables<a href="#default-tables" class="hash-link" aria-label="Direct link to Default Tables" title="Direct link to Default Tables" translate="no">​</a></h2>
+<p>These tables are created during HyperMDM install and are always the same.</p>
+<div class="table-container"><table><thead><tr><th>Table</th><th>Description</th></tr></thead><tbody><tr><td>application_logs</td><td>Contains all application logs. For more information see <a class="" href="../../Development_Tools/Logging/Application_Logger/index.html">Application Logger</a>. Additionally, there might be application_logs_archive* tables for old logging entries.</td></tr><tr><td>assets</td><td>Assets (Images, etc.), with system metadata</td></tr><tr><td>assets_metadata</td><td>Additional user metadata (Metadata tab in the asset panel)</td></tr><tr><td>classes</td><td>List of all object classes with ID and name. Everything else is stored in PHP configuration files.</td></tr><tr><td>classificationstore_collectionrelations</td><td>Relation Collection - Group for Classification Store</td></tr><tr><td>classificationstore_collections</td><td>Collections of Classification Store</td></tr><tr><td>classificationstore_groups</td><td>Groups of Classification Store</td></tr><tr><td>classificationstore_keys</td><td>Keys of Classification Store</td></tr><tr><td>classificationstore_relations</td><td>Relation Group - Key for Classification Store</td></tr><tr><td>classificationstore_stores</td><td>Stores of Classification Store</td></tr><tr><td>dependencies</td><td>Stores dependencies between elements such as objects, assets, documents</td></tr><tr><td>documents</td><td>List of all documents, folders, links, hardlinks, emails and snippets of the document area with meta- and config-data, relations</td></tr><tr><td>documents_editables</td><td>Editables of documents (data), in a serialized form</td></tr><tr><td>documents_email</td><td>Extra config data</td></tr><tr><td>documents_hardlink</td><td>Extra config data</td></tr><tr><td>documents_link</td><td>Extra config data</td></tr><tr><td>documents_page</td><td>Extra config data</td></tr><tr><td>documents_printpage</td><td>Extra config data</td></tr><tr><td>documents_snippet</td><td>Extra config data</td></tr><tr><td>documents_translations</td><td>Relation between same documents for different languages</td></tr><tr><td>edit_lock</td><td>Tracks which user opened which resource in HyperMDM Studio</td></tr><tr><td>element_workflow_state</td><td>Keeps track of workflow state for all elements</td></tr><tr><td>email_blocklist</td><td>Blocklist for eMail-addresses</td></tr><tr><td>email_log</td><td>Log for sent emails</td></tr><tr><td>lock_keys</td><td>Store for Locking functionality</td></tr><tr><td>notes</td><td><a class="" href="../../Content_Management_Features/Notes_and_Events/index.html">Notes</a> for elements</td></tr><tr><td>notes_data</td><td>Additional data for notes</td></tr><tr><td>objects</td><td>List of all objects with metadata like id, class name, path, parent, ...</td></tr><tr><td>object_url_slugs</td><td><a class="" href="../../Objects/Object_Classes/Data_Types/Others/index.html">URL Slug</a> data</td></tr><tr><td>properties</td><td>Data from the <code>properties</code> tab</td></tr><tr><td>quantityvalue_units</td><td>Available quantities for quantity value object data type</td></tr><tr><td>recyclebin</td><td>Stores metadata of deleted elements</td></tr><tr><td>redirects</td><td>Stores redirects</td></tr><tr><td>settings_store</td><td>Key-value store for persisting settings through LocationAwareConfigRepository and runtime configuration. See <a class="" href="../../Development_Tools/Settings_Store/index.html">Settings Store</a>.</td></tr><tr><td>schedule_tasks</td><td>Stores scheduled tasks</td></tr><tr><td>sites</td><td>Stores <a class="" href="../../Documents/Working_with_Sites/index.html">sites</a></td></tr><tr><td>tags</td><td>Stores available <a class="" href="../../Content_Management_Features/Tags/index.html">tags</a></td></tr><tr><td>tags_assignment</td><td>Stores assignment of tags to elements</td></tr><tr><td>tmp_store</td><td>HyperMDM internal tmp store</td></tr><tr><td>tracking_events</td><td>Stores tracking event data for analytics integration</td></tr><tr><td>translations_admin</td><td>HyperMDM Studio translations</td></tr><tr><td>translations_messages</td><td>Frontend translations</td></tr><tr><td>tree_locks</td><td>Element tree locks in HyperMDM Studio</td></tr><tr><td>users</td><td>HyperMDM users</td></tr><tr><td>users_permission_definitions</td><td>List of globally assignable user permissions</td></tr><tr><td>users_workspaces_asset</td><td>Stores user access permissions for asset folder</td></tr><tr><td>users_workspaces_document</td><td>Stores user access permissions for document folders</td></tr><tr><td>users_workspaces_object</td><td>Stores user access permissions for object folders</td></tr><tr><td>uuids</td><td>stores Unique Identifiers - if enabled</td></tr><tr><td>versions</td><td>List of object/asset/document versions. Actual data is serialized and written to disk</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="object-tables">Object Tables<a href="#object-tables" class="hash-link" aria-label="Direct link to Object Tables" title="Direct link to Object Tables" translate="no">​</a></h2>
+<p>These tables are created and modified dynamically during the configuration of the object data model.
+As a result, they look different on every HyperMDM installation depending on the data model.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="objects">Objects<a href="#objects" class="hash-link" aria-label="Direct link to Objects" title="Direct link to Objects" translate="no">​</a></h3>
+<p>As soon as a new object class is created in HyperMDM, at least three tables are
+added to the database. The tables have a numerical suffix, denoting the number
+(id) of the object class: <code>object_query_(id)</code>, <code>object_relations_(id)</code>,
+<code>object_store_(id)</code> and an additional database view <code>object_(id)</code> which is a combination of
+<code>object_query_(id)</code> and <code>objects</code>.</p>
+<div class="table-container"><table><thead><tr><th>Table / View</th><th>Description</th></tr></thead><tbody><tr><td><code>object_(id)</code> View</td><td>Database view joining object_query_(id) and objects table</td></tr><tr><td><code>object_query_(id)</code> Table</td><td>Use this table to retrieve data incl. inherited data. Data types with relations are usually stored in a serialized form here, too. HyperMDM Object-Lists work with this table.</td></tr><tr><td><code>object_relations_(id)</code> Table</td><td>Contains data of fields with relations to objects, assets, etc.</td></tr><tr><td><code>object_store_(id)</code> Table</td><td>This is the main data storage table of an object class. It contains all "flat" data without any relations or external dependencies.</td></tr><tr><td><code>objects</code> Table</td><td>Contains an entry for each and every object in the system. The id field is an auto_increment and the source of the primary key for an object. Metadata about an object is stored in this table, too.</td></tr></tbody></table></div>
+<blockquote>
+<p>When restore of query tables is necessary (for what ever reason) calling <code>DataObject\Concrete::disableDirtyDetection();</code> and
+saving all data objects of class will do the trick. When not disabling dirty detection, there might be data missing in query table.</p>
+</blockquote>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="simple-data-field-types">Simple Data Field Types<a href="#simple-data-field-types" class="hash-link" aria-label="Direct link to Simple Data Field Types" title="Direct link to Simple Data Field Types" translate="no">​</a></h4>
+<p>Following is an overview of how different object data types are stored in the database. This overview might not be complete.
+This overview might be a useful starting point when querying object data with object lists.</p>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="text">Text<a href="#text" class="hash-link" aria-label="Direct link to Text" title="Direct link to Text" translate="no">​</a></h5>
+<p>Table: object_store_(id)</p>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Data Type</th><th>Default</th><th>Comment</th></tr></thead><tbody><tr><td>Input</td><td>varchar(255)</td><td>NULL</td><td>/</td></tr><tr><td>Textarea</td><td>longtext</td><td>NULL</td><td>/</td></tr><tr><td>wysiwyg</td><td>longtext</td><td>NULL</td><td>Text with HTML-tags</td></tr><tr><td>password</td><td>varchar(255)</td><td>NULL</td><td>Password - as hash</td></tr></tbody></table></div>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="number">Number<a href="#number" class="hash-link" aria-label="Direct link to Number" title="Direct link to Number" translate="no">​</a></h5>
+<p>Table: object_store_(id)</p>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Data Type</th><th>Default</th><th>Comment</th></tr></thead><tbody><tr><td>Number</td><td>double/decimal(64,3)</td><td>NULL</td><td>Datatype depends on selected precision</td></tr><tr><td>Slider</td><td>double</td><td>NULL</td><td>/</td></tr></tbody></table></div>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="date">Date<a href="#date" class="hash-link" aria-label="Direct link to Date" title="Direct link to Date" translate="no">​</a></h5>
+<p>Table: object_store_(id)</p>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Data Type</th><th>Default</th><th>Comment</th></tr></thead><tbody><tr><td>Date</td><td>bigint(20)</td><td>NULL</td><td>&lt; 1970 = negative Timestamp</td></tr><tr><td>Date &amp; Time</td><td>bigint(20)</td><td>NULL</td><td>&lt; 1970 = negative Timestamp</td></tr><tr><td>Time</td><td>varchar(5)</td><td>NULL</td><td>String - e.g.: "12:00"</td></tr></tbody></table></div>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="select">Select<a href="#select" class="hash-link" aria-label="Direct link to Select" title="Direct link to Select" translate="no">​</a></h5>
+<p>Table: object_store_(id)</p>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Data Type</th><th>Default</th><th>Comment</th></tr></thead><tbody><tr><td>Select</td><td>varchar(255)</td><td>NULL</td><td>Selected value</td></tr><tr><td>User</td><td>varchar(255)</td><td>NULL</td><td>HyperMDM User-ID</td></tr><tr><td>Country</td><td>varchar(255)</td><td>NULL</td><td>Country code</td></tr><tr><td>Language</td><td>varchar(255)</td><td>NULL</td><td>Language code</td></tr><tr><td>Multiselection</td><td>text</td><td>NULL</td><td>String, selected values, separated by ","</td></tr><tr><td>Countries (Multiselect)</td><td>text</td><td>NULL</td><td>String, selected language-codes, separated by ","</td></tr><tr><td>Languages (Multiselect)</td><td>text</td><td>NULL</td><td>String, selected language-codes, separated by ","</td></tr></tbody></table></div>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="relations">Relations<a href="#relations" class="hash-link" aria-label="Direct link to Relations" title="Direct link to Relations" translate="no">​</a></h5>
+<p>Table: object_relations_(id) &amp; object_meta_data_(id)</p>
+<ul>
+<li class="">Data fields of relation types are stored in extra tables</li>
+<li class="">Data fields are not stored in distinct columns, but as rows, whereas the field name is in an extra column <code>fieldname</code></li>
+<li class="">The column <code>type</code> specifies the type of the linked resource (Object, Document, Asset)</li>
+<li class="">The columns <code>src_id</code> and <code>dest_id</code> define the relation / the link between the objects.</li>
+<li class="">Column <code>index</code> is used to specify the order of the relations</li>
+<li class="">Columns <code>ownertype</code>, <code>ownername</code> and <code>position</code> are used when relations are within field collections, localized fields, object bricks, etc.</li>
+<li class="">The data type <code>Advanced Many-To-One Object Relation</code> stores the extra data in a table <code>object_meta_data_(id)</code> - the column <code>column</code>
+specifies the name of the meta item and <code>data</code> stores the value</li>
+</ul>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="structured">Structured<a href="#structured" class="hash-link" aria-label="Direct link to Structured" title="Direct link to Structured" translate="no">​</a></h5>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Comment</th></tr></thead><tbody><tr><td>Table</td><td>Table data is stored as a string - serialized.</td></tr><tr><td>Structured Table</td><td>Each table cell is stored distinctively; schema: (fieldname)__(row key)#(column key)</td></tr><tr><td>Field-Collections</td><td>see special data fields later</td></tr><tr><td>Objectbricks</td><td>see special data fields later</td></tr><tr><td>Localized Fields</td><td>see special data fields later</td></tr></tbody></table></div>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="geographic">Geographic<a href="#geographic" class="hash-link" aria-label="Direct link to Geographic" title="Direct link to Geographic" translate="no">​</a></h5>
+<p>Table: object_store_(id)</p>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Data Type</th><th>Default</th><th>Comment</th></tr></thead><tbody><tr><td>Geographic Point</td><td>double</td><td>NULL</td><td>Creates two columns: ‘(name)__longitude’ and ‘(name)__latitude’</td></tr><tr><td>Geographic Bounds</td><td>double</td><td>NULL</td><td>Creates four columns: ‘(name)__NElongitude’, ‘(name)__NElatitude’, ‘(name)__SWlongitude’ and ‘(name)__SWlatitude’</td></tr><tr><td>Geographic Polygon</td><td>longtext</td><td>NULL</td><td>Serialized geo-data</td></tr></tbody></table></div>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="other">Other<a href="#other" class="hash-link" aria-label="Direct link to Other" title="Direct link to Other" translate="no">​</a></h5>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Data Type</th><th>Default</th><th>Comment</th></tr></thead><tbody><tr><td>Image</td><td>int(11)</td><td>NULL</td><td>ID of the image asset</td></tr><tr><td>Image Advanced</td><td>int(11), text</td><td>NULL</td><td>Creates a column <code>(name)__image</code>(int)  for the image assets id and the column <code>(name)__hotspots</code>(text). Hotspots are stored serialized.</td></tr><tr><td>Video</td><td>text</td><td>NULL</td><td>Serialized data</td></tr><tr><td>Checkbox</td><td>tinyint(1)</td><td>NULL</td><td>Boolean value (1 = true)</td></tr><tr><td>Link</td><td>text</td><td>NULL</td><td>Serialized data</td></tr></tbody></table></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="special-data-fields">Special Data Fields<a href="#special-data-fields" class="hash-link" aria-label="Direct link to Special Data Fields" title="Direct link to Special Data Fields" translate="no">​</a></h4>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="objectbricks">Objectbricks<a href="#objectbricks" class="hash-link" aria-label="Direct link to Objectbricks" title="Direct link to Objectbricks" translate="no">​</a></h5>
+<div class="table-container"><table><thead><tr><th>Table/View</th><th>Purpose</th></tr></thead><tbody><tr><td>object_brick_query_(id) Table</td><td>Analog to object_query_(id)</td></tr><tr><td>object_brick_store_(id) Table</td><td>Main data storage</td></tr></tbody></table></div>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="localized-fields">Localized fields<a href="#localized-fields" class="hash-link" aria-label="Direct link to Localized fields" title="Direct link to Localized fields" translate="no">​</a></h5>
+<div class="table-container"><table><thead><tr><th>Table/View</th><th>Purpose</th></tr></thead><tbody><tr><td>object_localized_(id)_(language-code) View</td><td>A database view per language, combining regular and localized data fields</td></tr><tr><td>object_localized_data_(id) Table</td><td>Stores localized field data</td></tr><tr><td>object_localized_query_(id)_(language-code) Table</td><td>Analog to object_query_(id)</td></tr></tbody></table></div>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="field-collections">Field Collections<a href="#field-collections" class="hash-link" aria-label="Direct link to Field Collections" title="Direct link to Field Collections" translate="no">​</a></h5>
+<div class="table-container"><table><thead><tr><th>Table/View</th><th>Purpose</th></tr></thead><tbody><tr><td>object_collection_(collection-name)_(object-id)</td><td>Stores data of the field collections fields and the order (index)</td></tr></tbody></table></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

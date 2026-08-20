@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Other Bundle Events — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Other Bundle Events</h1></header>
+<p>Individual HyperMDM bundles dispatch their own events beyond those in the core framework
+and Studio Backend. Each bundle defines event constants in dedicated event classes.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundles-within-hypermdmhypermdm">Bundles Within hypermdm/hypermdm<a href="#bundles-within-hypermdmhypermdm" class="hash-link" aria-label="Direct link to Bundles Within pimcore/pimcore" title="Direct link to Bundles Within pimcore/pimcore" translate="no">​</a></h2>
+<p>These bundles ship with the <code>hypermdm/hypermdm</code> package but define separate event classes:</p>
+<ul>
+<li class=""><a href="https://github.com/pimcore/pimcore/blob/2026.x/bundles/SeoBundle/src/Event/RedirectEvents.php" target="_blank" rel="noopener noreferrer" class="">RedirectEvents</a>
+(SeoBundle) - redirect create, update, delete</li>
+<li class=""><a href="https://github.com/pimcore/pimcore/blob/2026.x/bundles/GenericExecutionEngineBundle/src/Event/JobRunStateChangedEvent.php" target="_blank" rel="noopener noreferrer" class="">JobRunStateChangedEvent</a>
+(GenericExecutionEngineBundle) - job execution state changes</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-hub">Data Hub<a href="#data-hub" class="hash-link" aria-label="Direct link to Data Hub" title="Direct link to Data Hub" translate="no">​</a></h2>
+<p>The Data Hub bundle defines events for configuration management and GraphQL operations:</p>
+<ul>
+<li class=""><a href="https://github.com/pimcore/data-hub/blob/3.x/src/Event/ConfigEvents.php" target="_blank" rel="noopener noreferrer" class="">ConfigEvents</a> -
+Data Hub configuration changes</li>
+<li class=""><a href="https://github.com/pimcore/data-hub/blob/3.x/src/Event/AdminEvents.php" target="_blank" rel="noopener noreferrer" class="">AdminEvents</a> -
+Data Hub admin operations</li>
+<li class="">GraphQL events for queries, mutations, and listings
+(see <code>HyperMDM\Bundle\DataHubBundle\Event\GraphQL</code> namespace)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="ecommerce-framework">Ecommerce Framework<a href="#ecommerce-framework" class="hash-link" aria-label="Direct link to Ecommerce Framework" title="Direct link to Ecommerce Framework" translate="no">​</a></h2>
+<p>The Ecommerce Framework provides events for checkout, order processing, and indexing:</p>
+<ul>
+<li class=""><a href="https://github.com/pimcore/ecommerce-framework-bundle/blob/2.x/src/Event/CheckoutManagerEvents.php" target="_blank" rel="noopener noreferrer" class="">CheckoutManagerEvents</a> -
+checkout process lifecycle</li>
+<li class=""><a href="https://github.com/pimcore/ecommerce-framework-bundle/blob/2.x/src/Event/CommitOrderProcessorEvents.php" target="_blank" rel="noopener noreferrer" class="">CommitOrderProcessorEvents</a> -
+order commit processing</li>
+<li class=""><a href="https://github.com/pimcore/ecommerce-framework-bundle/blob/2.x/src/Event/IndexServiceEvents.php" target="_blank" rel="noopener noreferrer" class="">IndexServiceEvents</a> -
+product index operations</li>
+<li class=""><a href="https://github.com/pimcore/ecommerce-framework-bundle/blob/2.x/src/Event/OrderAgentEvents.php" target="_blank" rel="noopener noreferrer" class="">OrderAgentEvents</a> -
+order agent actions</li>
+<li class=""><a href="https://github.com/pimcore/ecommerce-framework-bundle/blob/2.x/src/Event/OrderManagerEvents.php" target="_blank" rel="noopener noreferrer" class="">OrderManagerEvents</a> -
+order management operations</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="personalization">Personalization<a href="#personalization" class="hash-link" aria-label="Direct link to Personalization" title="Direct link to Personalization" translate="no">​</a></h2>
+<p>The Personalization bundle provides targeting and visitor profiling events:</p>
+<ul>
+<li class=""><a href="https://github.com/pimcore/personalization-bundle/blob/1.x/src/Event/TargetGroupEvents.php" target="_blank" rel="noopener noreferrer" class="">TargetGroupEvents</a> -
+target group assignment changes</li>
+<li class=""><a href="https://github.com/pimcore/personalization-bundle/blob/1.x/src/Event/TargetingEvents.php" target="_blank" rel="noopener noreferrer" class="">TargetingEvents</a> -
+targeting rule evaluation and visitor profiling</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="other-bundles">Other Bundles<a href="#other-bundles" class="hash-link" aria-label="Direct link to Other Bundles" title="Direct link to Other Bundles" translate="no">​</a></h2>
+<p>Additional bundles with their own events include:</p>
+<ul>
+<li class=""><strong>Web-to-Print</strong> - document rendering events
+(see <code>HyperMDM\Bundle\WebToPrintBundle\Event\DocumentEvents</code>)</li>
+<li class=""><strong>Generic Data Index</strong> - asset, document, and data object indexing events
+(see <code>HyperMDM\Bundle\GenericDataIndexBundle\Event</code> namespace)</li>
+</ul>
+<p>Refer to each bundle's documentation and source code for the full list of available
+events, event objects, and usage examples.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

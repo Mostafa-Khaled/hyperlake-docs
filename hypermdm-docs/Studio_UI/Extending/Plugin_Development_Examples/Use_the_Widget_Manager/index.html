@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Use the Widget Manager — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>How to Use the Widget Manager</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="overview">Overview<a href="#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h2>
+<p>This example registers a custom widget component and opens it programmatically
+in different panel areas of HyperMDM Studio.</p>
+<p>HyperMDM Studio has two widget systems that work together:</p>
+<ol>
+<li class="">
+<p><strong>Widget Manager</strong> (<code>WidgetRegistry</code> + <code>useWidgetManager</code>) - registers React components
+by name and opens them as panels in main/left/right/bottom areas. This is the rendering system.</p>
+</li>
+<li class="">
+<p><strong>Widget Editor</strong> (<code>DynamicTypeWidgetTypeAbstract</code> + <code>DynamicTypeWidgetTypeRegistry</code>) -
+registers widget type definitions for the perspective editor. This is how the perspective editor
+discovers widget types, shows them in the "add widget" dropdown, and renders configuration forms.</p>
+</li>
+</ol>
+<p>The Widget Editor tells the perspective editor what widget types exist and how to configure them,
+while the Widget Manager renders the actual widget component at runtime.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="screenshot">Screenshot<a href="#screenshot" class="hash-link" aria-label="Direct link to Screenshot" title="Direct link to Screenshot" translate="no">​</a></h2>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Studio_UI-Extending-Plugin_Development_Examples-Use_the_Widget_Manager-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Studio_UI-Extending-Plugin_Development_Examples-Use_the_Widget_Manager-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Widget Manager Example</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/widget-manager-7c1a3f50850007cc6de593be58f00073.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Studio_UI-Extending-Plugin_Development_Examples-Use_the_Widget_Manager-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/widget-manager-7c1a3f50850007cc6de593be58f00073.png"><figure class="visual-placeholder" id="fig-Studio_UI-Extending-Plugin_Development_Examples-Use_the_Widget_Manager-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Studio_UI-Extending-Plugin_Development_Examples-Use_the_Widget_Manager-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Widget Manager Example</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/widget-manager-7c1a3f50850007cc6de593be58f00073.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Studio_UI-Extending-Plugin_Development_Examples-Use_the_Widget_Manager-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/widget-manager-7c1a3f50850007cc6de593be58f00073.png"><figure class="visual-placeholder" id="fig-Studio_UI-Extending-Plugin_Development_Examples-Use_the_Widget_Manager-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Studio_UI-Extending-Plugin_Development_Examples-Use_the_Widget_Manager-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Widget Manager Example</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/widget-manager-7c1a3f50850007cc6de593be58f00073.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Studio_UI-Extending-Plugin_Development_Examples-Use_the_Widget_Manager-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="details">Details<a href="#details" class="hash-link" aria-label="Direct link to Details" title="Direct link to Details" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="widget-manager">Widget Manager<a href="#widget-manager" class="hash-link" aria-label="Direct link to Widget Manager" title="Direct link to Widget Manager" translate="no">​</a></h3>
+<p>Register a widget component in a module via the <code>WidgetRegistry</code>, then open it with the
+<code>useWidgetManager</code> hook. The hook provides methods for each panel area:
+<code>openMainWidget()</code>, <code>openLeftWidget()</code>, <code>openRightWidget()</code>, <code>openBottomWidget()</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="widget-editor-integration">Widget Editor Integration<a href="#widget-editor-integration" class="hash-link" aria-label="Direct link to Widget Editor Integration" title="Direct link to Widget Editor Integration" translate="no">​</a></h3>
+<p>To make a custom widget type available in the perspective editor,
+register a <code>DynamicTypeWidgetTypeAbstract</code> subclass:</p>
+<ul>
+<li class=""><code>id</code> - must match the backend widget type string registered
+in <code>hypermdm_studio_backend.widget_types</code></li>
+<li class=""><code>name</code> - display name in the dropdown</li>
+<li class=""><code>group</code> - groups related widget types</li>
+<li class=""><code>icon</code> - icon name from the HyperMDM icon library</li>
+<li class=""><code>form()</code> - returns the configuration form for the perspective editor</li>
+</ul>
+<p>Bind the class in your plugin's <code>onInit</code>, then register it in the
+<code>DynamicTypeWidgetTypeRegistry</code> via a module.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="key-mapping">Key Mapping<a href="#key-mapping" class="hash-link" aria-label="Direct link to Key Mapping" title="Direct link to Key Mapping" translate="no">​</a></h3>
+<p>The widget type string must match between:</p>
+<ul>
+<li class="">Backend <code>hypermdm_studio_backend.widget_types</code> config</li>
+<li class="">Backend <code>WidgetConfigRepositoryInterface.getSupportedWidgetType()</code></li>
+<li class="">Backend <code>WidgetConfigHydratorInterface.getSupportedWidgetType()</code></li>
+<li class="">Frontend <code>DynamicTypeWidgetTypeAbstract.id</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="code-example-on-github">Code Example on GitHub<a href="#code-example-on-github" class="hash-link" aria-label="Direct link to Code Example on GitHub" title="Direct link to Code Example on GitHub" translate="no">​</a></h2>
+<blockquote>
+<p><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-widgets/index.ts" target="_blank" rel="noopener noreferrer" class="">Custom widgets example on GitHub</a>.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related">Related<a href="#related" class="hash-link" aria-label="Direct link to Related" title="Direct link to Related" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../../../Studio_Backend/Extending/Perspectives/Extending_Widgets/index.html">Extending Widgets (Backend)</a> -
+widget type registration, repository, hydrator, schema</li>
+<li class=""><a class="" href="../../../../HyperMDM/Extending_HyperMDM/Custom_Extension_Guides/Custom_Perspective_Widgets/index.html">Custom Perspective Widgets</a> -
+cross-layer guide</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

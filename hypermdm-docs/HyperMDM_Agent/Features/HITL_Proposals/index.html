@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HITL Proposals — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>HITL Proposals</h1></header>
+<p>Writes the agent wants to make to HyperMDM data can go through a <strong>proposal</strong>: the agent proposes, the user reviews,
+the user approves or rejects. Nothing is written without a click. This is the central safety mechanism - HITL,
+"Human-in-the-Loop" - that makes it safe to let an LLM touch production data.</p>
+<p>Five proposal types ship today: single data-object edits, asset-metadata edits, tag assignments, document edits
+(page / snippet / email content), and agent-generated Twig templates. All follow the same
+<strong>propose → review → resolve</strong> flow described below. For the template-specific flow see
+<a class="" href="../Agent_Templates/index.html">Agent Templates</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="two-write-modes-chosen-by-mcp-group">Two write modes, chosen by MCP group<a href="#two-write-modes-chosen-by-mcp-group" class="hash-link" aria-label="Direct link to Two write modes, chosen by MCP group" title="Direct link to Two write modes, chosen by MCP group" translate="no">​</a></h2>
+<p>An agent's write authority is set by which MCP groups it has access to. Every write operation has either a proposal tool
+or a direct-write tool - and the tools are in different groups, so agent config alone decides which an agent can call.</p>
+<div class="table-container"><table><thead><tr><th>Group</th><th>Write tools</th><th>Mode</th></tr></thead><tbody><tr><td><code>hypermdm-data-objects-write</code></td><td><code>create_data_object</code>, <code>propose_data_object_update</code></td><td>HITL (propose + approve); <code>create_data_object</code> writes the empty shell, <code>update_data_object</code> (in <code>…-direct-write</code>) is required to populate it</td></tr><tr><td><code>hypermdm-data-objects-direct-write</code></td><td><code>update_data_object</code></td><td>Direct (no approval)</td></tr><tr><td><code>hypermdm-assets-write</code></td><td><code>propose_asset_metadata_update</code></td><td>HITL</td></tr><tr><td><code>hypermdm-assets-direct-write</code></td><td><code>update_asset</code>, <code>upload_asset</code></td><td>Direct</td></tr><tr><td><code>hypermdm-tags-write</code></td><td><code>create_tag</code>, <code>propose_tag_assignment</code></td><td>HITL</td></tr><tr><td><code>hypermdm-tags-direct-write</code></td><td><code>assign_tag</code>, <code>unassign_tag</code></td><td>Direct</td></tr><tr><td><code>hypermdm-documents-write</code></td><td><code>create_document</code>, <code>propose_document_update</code></td><td>HITL - <code>create_document</code> writes a fresh empty document; the editable population goes through the proposal flow</td></tr><tr><td><code>hypermdm-documents-direct-write</code></td><td><code>update_document</code></td><td>Direct (no approval) - the only document tool that bypasses HITL. For discovery and target-group rules see <a class="" href="../../Architecture/Document_Schema/index.html">Architecture → Document Schema</a>.</td></tr></tbody></table></div>
+<p>An agent with <code>hypermdm-data-objects-write</code> but not <code>…-direct-write</code> can only propose - there is no way for it to
+bypass the gate. The recommended default is HITL for anything user-facing; direct writes are appropriate
+only for tightly scoped, automation-style agents.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-flow">The flow<a href="#the-flow" class="hash-link" aria-label="Direct link to The flow" title="Direct link to The flow" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-propose">1. Propose<a href="#1-propose" class="hash-link" aria-label="Direct link to 1. Propose" title="Direct link to 1. Propose" translate="no">​</a></h3>
+<p>The agent calls a propose tool (e.g. <code>propose_data_object_update</code>). The PHP tool validates the payload
+(a dry-run - no writes), stores the validated result server-side in <code>bundle_agent_proposal_statuses</code> keyed by a
+generated <code>proposalId</code>, and returns <strong>only</strong> <code>{proposalId}</code> to the LLM. No element paths, IDs, or field values
+flow back through the LLM. Keeping the LLM out of the transcription loop is deliberate: it prevents the model
+from silently dropping fields on long batches.</p>
+<p>The review widget then appears <strong>on its own</strong> - there is no <code>show_*_proposal</code> tool. When the propose tool
+succeeds the agent-server emits the matching proposal widget automatically (on <code>tool.execution_complete</code>),
+so the model just proposes and stops its turn. The propose call takes an optional <code>summary</code> parameter for the
+widget caption; if omitted, the server generates a neutral one.</p>
+<p>All propose tools support <strong>batching</strong> - one call can create multiple proposals, each with its own <code>proposalId</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-review">2. Review<a href="#2-review" class="hash-link" aria-label="Direct link to 2. Review" title="Direct link to 2. Review" translate="no">​</a></h3>
+<p>What the user sees depends on how many proposals are in the batch:</p>
+<ul>
+<li class=""><strong>Single proposal</strong> - a compact card with <strong>View changes</strong>, <strong>Approve</strong>, <strong>Reject</strong> buttons. <em>View changes</em> opens a
+diff modal: current value on the left, proposed value on the right.</li>
+<li class=""><strong>Multiple proposals</strong> - a table with one row per element, showing path, status, and a per-row <em>View changes</em>.
+Batch actions (<em>Approve selected</em>, <em>Reject selected</em>) operate on the checked rows.</li>
+</ul>
+<p>When the widget mounts, the router does one bulk fetch for every proposal payload in the batch:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /hypermdm-studio/api/bundle/agent/proposals/{sessionId}/data?ids=a,b,c</span><br></span></code></pre></div></div>
+<p>The response is keyed by <code>proposalId</code> and contains <code>elementPath</code>, <code>elementId</code>, and the full diff payload. This is
+the <strong>single source of truth</strong> for everything the widget renders - so anything the LLM might have forgotten or
+misremembered is irrelevant. The diff modal calls the same RTK Query hook on open; its fetch is a deduped cache hit.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-resolve">3. Resolve<a href="#3-resolve" class="hash-link" aria-label="Direct link to 3. Resolve" title="Direct link to 3. Resolve" translate="no">​</a></h3>
+<p>Each proposal has four possible outcomes:</p>
+<ul>
+<li class=""><strong>Approve</strong> - the agent-server forwards the request to a PHP resolver, which fetches the stored payload and applies it.
+The resolver re-checks permissions and compares <code>modificationDate</code> against the stored snapshot to detect stale data
+before writing. After a successful resolve, the proposal widget tells Studio to reload the matching editor - but only
+when the element's editor tab is currently open AND has no unsaved local changes (<code>useEditorRefresh.refreshIfOpenAndClean</code>).
+An editor with pending edits is left alone so the user does not lose work.</li>
+<li class=""><strong>Reject</strong> - status is recorded; nothing is modified.</li>
+<li class=""><strong>Refine</strong> - status becomes <code>refined</code>; a system message with the previous change context is appended to the
+conversation. The user's refinement text goes in as a user message, and the agent produces a new proposal
+incorporating the feedback.</li>
+<li class=""><strong>Error</strong> - the resolver hit a validation or permission failure. The proposal card turns red; the user sees
+the error message. When the failure happens while a <strong>diff / detail modal is open</strong> (data-object,
+document, tag, asset-metadata, or agent-template), the message is <em>also</em> rendered inside the modal
+footer next to the action buttons - otherwise the user would be stuck behind the modal with no
+visible feedback.</li>
+</ul>
+<p>The sequence:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">LLM                   Agent Server             PHP Backend              Studio Frontend</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |                         |                         |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |-- propose tool call ---&gt;|--- MCP HTTP -----&gt;      |                         |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |                   validate + store                |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |&lt;-- {proposalId} --------|&lt;-- scalar result--|                               |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |--- widget event --&gt;  browser   (auto-emitted on   |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |  (model stops turn)     |                         |       tool.execution_complete)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |                         |&lt;-- GET /proposals/      |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |                         |       {sid}/data?ids=.. |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |                         |--- {data: stored} -----&gt;|</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |                   [User: Approve]                 |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |&lt;-- POST /proposal-resolve ------------------------|</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |--- POST /resolve ------&gt;|                         |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |                   fetch stored, check perms,      |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |                   apply + save                    |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |                         |&lt;-- {success} -----------|                         |</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="refinement">Refinement<a href="#refinement" class="hash-link" aria-label="Direct link to Refinement" title="Direct link to Refinement" translate="no">​</a></h2>
+<p>Users can ask for changes without starting the proposal over:</p>
+<ol>
+<li class="">Type a refinement message in the proposal widget or diff modal.</li>
+<li class="">The proposal status changes to <code>refined</code>.</li>
+<li class="">A system message is appended with structured context identifying which elements to re-propose.</li>
+<li class="">The user's refinement text is sent as a visible user message.</li>
+<li class="">The agent produces new proposals incorporating the feedback.</li>
+</ol>
+<p>For multi-proposal overviews, refinement can target individual elements or a selected subset. A <code>batch-refine</code>
+action sets all selected proposals to <code>refined</code> and appends one combined system message listing which elements
+to re-propose.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="storage">Storage<a href="#storage" class="hash-link" aria-label="Direct link to Storage" title="Direct link to Storage" translate="no">​</a></h2>
+<p>Proposal payloads live in <code>bundle_agent_proposal_statuses</code>:</p>
+<div class="table-container"><table><thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>session_id</code></td><td>varchar(36)</td><td>FK to session</td></tr><tr><td><code>proposal_id</code></td><td>varchar(36)</td><td>32-char hex</td></tr><tr><td><code>status</code></td><td>varchar(20)</td><td><code>pending</code> / <code>applied</code> / <code>rejected</code> / <code>refined</code> / <code>error</code></td></tr><tr><td><code>timestamp</code></td><td>bigint</td><td>Last status change (ms)</td></tr><tr><td><code>data</code></td><td>json</td><td>Full payload</td></tr></tbody></table></div>
+<p><strong>Why server-side?</strong> LLMs can lose JSON escaping, fabricate fields, or drop data when re-serialising complex structures.
+Storing the validated data at proposal time guarantees <em>exactly</em> that payload reaches the resolver, and saves
+context-window tokens on the way back through the LLM.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="security">Security<a href="#security" class="hash-link" aria-label="Direct link to Security" title="Direct link to Security" translate="no">​</a></h2>
+<ul>
+<li class="">Proposal data is validated at creation time (dry-run via field adapters).</li>
+<li class="">Permissions are <strong>re-checked at resolution time</strong> - a user may lose access between propose and approve.</li>
+<li class="">Stale-data detection via <code>modificationDate</code> comparison prevents silent overwrites.</li>
+<li class="">Session ownership is enforced on every proposal endpoint.</li>
+<li class="">The resolver reads from the database, not from the request body - no LLM-controlled writes.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further reading" title="Direct link to Further reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Extending/Custom_Proposal_Types/index.html">Extending → Custom Proposal Types</a> - add your own propose tool + resolver + widget for a domain-specific write flow.</li>
+<li class=""><a class="" href="../Rich_Chat_Widgets/index.html">Rich Chat Widgets</a> - the catalog of proposal-related widgets.</li>
+<li class=""><a class="" href="../../Architecture/Authentication/index.html">Architecture → Authentication</a> - how permissions are re-checked.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

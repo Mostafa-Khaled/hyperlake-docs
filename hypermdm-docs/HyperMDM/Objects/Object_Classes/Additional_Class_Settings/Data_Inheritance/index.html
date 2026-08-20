@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Inheritance — HyperMDM</title>
+<link rel="stylesheet" href="../../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Data Inheritance</h1></header>
+<p>A key feature for PIM use cases is data inheritance. Data inheritance allows objects of the same
+class to inherit data from their parent objects in the object tree.</p>
+<p><strong>Example:</strong> You have a group of products that share many attributes and differ only in a few
+(size, color, etc.). Create a parent product that stores the common attributes, then add child
+products that specify only the differing attributes. All other values are inherited from the parent.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="enabling-data-inheritance">Enabling Data Inheritance<a href="#enabling-data-inheritance" class="hash-link" aria-label="Direct link to Enabling Data Inheritance" title="Direct link to Enabling Data Inheritance" translate="no">​</a></h2>
+<p>Data inheritance must be enabled in the class definition:</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance-d3f7b570853fa6071df1b863bc0ab85b.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/classes-data-inheritance-d3f7b570853fa6071df1b863bc0ab85b.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance-d3f7b570853fa6071df1b863bc0ab85b.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/classes-data-inheritance-d3f7b570853fa6071df1b863bc0ab85b.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance-d3f7b570853fa6071df1b863bc0ab85b.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>When enabled, if an attribute of an object is empty, HyperMDM retrieves the value from the nearest
+parent object of the same class. Inheritance between different classes is not supported.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-inherited-values-appear-in-hypermdm-studio">How Inherited Values Appear in HyperMDM Studio<a href="#how-inherited-values-appear-in-hypermdm-studio" class="hash-link" aria-label="Direct link to How Inherited Values Appear in Pimcore Studio" title="Direct link to How Inherited Values Appear in Pimcore Studio" translate="no">​</a></h2>
+<p>Inherited values are displayed with a grey, slightly transparent style and a green marker in the
+upper left corner. Click the green marker to open the source object that provides the inherited value.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance1-ff7dd91c55ea6cf33e07652dbe7cba08.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/classes-data-inheritance1-ff7dd91c55ea6cf33e07652dbe7cba08.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance1-ff7dd91c55ea6cf33e07652dbe7cba08.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/classes-data-inheritance1-ff7dd91c55ea6cf33e07652dbe7cba08.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance1-ff7dd91c55ea6cf33e07652dbe7cba08.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance2-de50d39407dfc9c9718bd407cd1a4ae5.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/classes-data-inheritance2-de50d39407dfc9c9718bd407cd1a4ae5.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance2-de50d39407dfc9c9718bd407cd1a4ae5.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/classes-data-inheritance2-de50d39407dfc9c9718bd407cd1a4ae5.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance2-de50d39407dfc9c9718bd407cd1a4ae5.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-10">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-10</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance3-170d43a480f6bfe92fd3a426cbd5ccf6.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-10">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/classes-data-inheritance3-170d43a480f6bfe92fd3a426cbd5ccf6.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-11">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-11</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance3-170d43a480f6bfe92fd3a426cbd5ccf6.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-11">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/classes-data-inheritance3-170d43a480f6bfe92fd3a426cbd5ccf6.png"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-12">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-12</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Inheritance</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-data-inheritance3-170d43a480f6bfe92fd3a426cbd5ccf6.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Additional_Class_Settings-Data_Inheritance-index-12">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<blockquote>
+<p><strong>Important: Changing the inheritance flag after creating objects</strong>
+If you toggle the inheritance flag after creating objects, the <code>object_*_query_*</code> tables may
+contain incorrect values even after saving the object again. HyperMDM disables dirty detection
+when the class is newer than the object, which should fix this issue.
+You can also call <code>DataObject::disableDirtyDetection()</code> before saving the object
+to explicitly fix this.</p>
+</blockquote>
+<blockquote>
+<p><strong>Default Values</strong>
+Make sure you understand the impact of defining a default value, which is described
+in the <a class="" href="../../Data_Types/index.html">Data Types</a> documentation.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="accessing-inherited-values-in-code">Accessing Inherited Values in Code<a href="#accessing-inherited-values-in-code" class="hash-link" aria-label="Direct link to Accessing Inherited Values in Code" title="Direct link to Accessing Inherited Values in Code" translate="no">​</a></h2>
+<p>To get inherited values, use the getter methods of the attributes. Accessing attributes directly
+does not return inherited values.</p>
+<p>Getting values from an object without inheritance:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">// Set the first argument to false so as not to inherit any values</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token class-name class-name-fully-qualified static-context">DataObject</span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">Service</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">useInheritedValues</span><span class="token punctuation" style="color:#393A34">(</span><span class="token constant boolean" style="color:#36acaa">false</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ... your code goes here</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<blockquote>
+<p><strong>Note</strong>
+Field Collections do not support inheritance.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="modifying-values-from-getters">Modifying Values from Getters<a href="#modifying-values-from-getters" class="hash-link" aria-label="Direct link to Modifying Values from Getters" title="Direct link to Modifying Values from Getters" translate="no">​</a></h2>
+<p>When inheritance is enabled, values returned by getters may be references to objects from the
+parent. Modifying these values could also alter the parent object. To prevent this, clone the
+returned object before making any changes.</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token variable" style="color:#36acaa">$silverCar</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token class-name static-context">Car</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">getById</span><span class="token punctuation" style="color:#393A34">(</span><span class="token number" style="color:#36acaa">262</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">if</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$silverCar</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">instanceof</span><span class="token plain"> </span><span class="token class-name">Car</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token variable" style="color:#36acaa">$location</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$silverCar</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getLocation</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">if</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$location</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">===</span><span class="token plain"> </span><span class="token constant" style="color:#36acaa">null</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token keyword" style="color:#00009f">throw</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">RuntimeException</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string double-quoted-string" style="color:#e3116c">"..."</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token variable" style="color:#36acaa">$locationClone</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">clone</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$location</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token variable" style="color:#36acaa">$locationClone</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setLongitude</span><span class="token punctuation" style="color:#393A34">(</span><span class="token number" style="color:#36acaa">99</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token variable" style="color:#36acaa">$locationClone</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setLatitude</span><span class="token punctuation" style="color:#393A34">(</span><span class="token number" style="color:#36acaa">99</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token variable" style="color:#36acaa">$silverCar</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setLocation</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$locationClone</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token variable" style="color:#36acaa">$silverCar</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">save</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../../search.js"></script>
+</body>
+</html>

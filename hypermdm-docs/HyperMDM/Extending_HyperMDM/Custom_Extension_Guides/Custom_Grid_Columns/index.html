@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Custom Grid Columns — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Custom Grid Columns</h1></header>
+<blockquote>
+<p><strong>Working example:</strong> The
+<a href="https://github.com/pimcore/studio-example-bundle" target="_blank" rel="noopener noreferrer" class="">studio-example-bundle</a>
+contains a complete progress bar custom grid column example
+covering all steps below.</p>
+</blockquote>
+<p>Adding a custom grid column to HyperMDM Studio requires registration
+across two layers:</p>
+<ul>
+<li class=""><strong>Studio Backend</strong> (column definition, resolver, collector)</li>
+<li class=""><strong>Studio UI</strong> (frontend cell type — only needed for custom
+frontend types)</li>
+</ul>
+<p>The <code>getFrontendType()</code> return value from the backend column
+definition is the key that ties the two layers together — it must
+match the <code>id</code> property of the frontend
+<code>DynamicTypeGridCellAbstract</code> subclass.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="when-is-the-ui-layer-needed">When Is the UI Layer Needed?<a href="#when-is-the-ui-layer-needed" class="hash-link" aria-label="Direct link to When Is the UI Layer Needed?" title="Direct link to When Is the UI Layer Needed?" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Frontend Type</th><th>UI Work Required?</th></tr></thead><tbody><tr><td><code>element_dropzone</code></td><td>No</td></tr><tr><td><code>input</code></td><td>No</td></tr><tr><td><code>id</code></td><td>No</td></tr><tr><td><code>textarea</code></td><td>No</td></tr><tr><td><code>select</code></td><td>No</td></tr><tr><td><code>multiselect</code></td><td>No</td></tr><tr><td><code>checkbox</code></td><td>No</td></tr><tr><td><code>datetime</code></td><td>No</td></tr><tr><td><code>image</code></td><td>No</td></tr><tr><td><code>asset-link</code></td><td>No</td></tr><tr><td><code>object-link</code></td><td>No</td></tr><tr><td><code>asset-preview</code></td><td>No</td></tr><tr><td><code>boolean</code></td><td>No</td></tr><tr><td>Any custom string (e.g. <code>progress-bar</code>)</td><td><strong>Yes</strong> — create a <code>DynamicTypeGridCellAbstract</code> subclass</td></tr></tbody></table></div>
+<p>If your column uses a built-in frontend type, you only need the
+backend layer. The Studio UI already knows how to render those
+cells. See the
+<a class="" href="../../../../Studio_Backend/Extending/Extending_Grid_with_Custom_Columns/index.html#built-in-frontend-types">Built-in Frontend Types</a>
+table in the Studio Backend documentation for the full
+<code>FrontendType</code> enum reference.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="backend">Backend<a href="#backend" class="hash-link" aria-label="Direct link to Backend" title="Direct link to Backend" translate="no">​</a></h2>
+<p>The backend layer has three components, each with its own service
+tag:</p>
+<div class="table-container"><table><thead><tr><th>Component</th><th>Interface</th><th>Tag</th></tr></thead><tbody><tr><td>Column Definition</td><td><code>ColumnDefinitionInterface</code></td><td><code>hypermdm.studio_backend.grid_column_definition</code></td></tr><tr><td>Column Resolver</td><td><code>ColumnResolverInterface</code></td><td><code>hypermdm.studio_backend.grid_column_resolver</code></td></tr><tr><td>Column Collector</td><td><code>ColumnCollectorInterface</code></td><td><code>hypermdm.studio_backend.grid_column_collector</code></td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="column-definition">Column Definition<a href="#column-definition" class="hash-link" aria-label="Direct link to Column Definition" title="Direct link to Column Definition" translate="no">​</a></h3>
+<p>Declares the column type, capabilities (<code>isSortable()</code>,
+<code>isFilterable()</code>, <code>isExportable()</code>), and the <code>getFrontendType()</code>
+value that determines cell rendering. See
+<a class="" href="../../../../Studio_Backend/Extending/Extending_Grid_with_Custom_Columns/index.html#column-definition">Column Definition</a>
+for the full interface reference and example.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="column-resolver">Column Resolver<a href="#column-resolver" class="hash-link" aria-label="Direct link to Column Resolver" title="Direct link to Column Resolver" translate="no">​</a></h3>
+<p>Fetches the column value for a given element. Implement
+<code>CoreElementColumnResolverInterface</code> (for <code>ElementInterface</code>) or
+<code>StudioElementColumnResolverInterface</code> (for <code>StudioElementInterface</code>
+from GDI). Both can be implemented; the core interface has higher
+priority. See
+<a class="" href="../../../../Studio_Backend/Extending/Extending_Grid_with_Custom_Columns/index.html#column-resolver">Column Resolver</a>
+for the <code>ColumnData</code> constructor signature and example.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="column-collector">Column Collector<a href="#column-collector" class="hash-link" aria-label="Direct link to Column Collector" title="Direct link to Column Collector" translate="no">​</a></h3>
+<p>Provides the list of available columns by returning
+<code>ColumnConfiguration</code> objects. Receives all registered column
+definitions keyed by type. See
+<a class="" href="../../../../Studio_Backend/Extending/Extending_Grid_with_Custom_Columns/index.html#column-collector">Column Collector</a>
+for the <code>ColumnConfiguration</code> constructor signature and example.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="service-registration">Service Registration<a href="#service-registration" class="hash-link" aria-label="Direct link to Service Registration" title="Direct link to Service Registration" translate="no">​</a></h3>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">services</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">App\Grid\Column\Definition\ProgressBarDefinition</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">tags</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> hypermdm.studio_backend.grid_column_definition </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">App\Grid\Column\Resolver\ProgressBarResolver</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">tags</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> hypermdm.studio_backend.grid_column_resolver </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">App\Grid\Column\Collector\ProgressBarCollector</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">tags</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> hypermdm.studio_backend.grid_column_collector </span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p>For full details and code examples, see
+<a class="" href="../../../../Studio_Backend/Extending/Extending_Grid_with_Custom_Columns/index.html">Extending Grid with Custom Columns</a>
+in the Studio Backend documentation.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="ui-custom-frontend-types-only">UI (Custom Frontend Types Only)<a href="#ui-custom-frontend-types-only" class="hash-link" aria-label="Direct link to UI (Custom Frontend Types Only)" title="Direct link to UI (Custom Frontend Types Only)" translate="no">​</a></h2>
+<p>If your <code>getFrontendType()</code> returns a custom string, you must
+register a matching grid cell dynamic type in the Studio UI.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-1--grid-cell-dynamic-type">Step 1 — Grid Cell Dynamic Type<a href="#step-1--grid-cell-dynamic-type" class="hash-link" aria-label="Direct link to Step 1 — Grid Cell Dynamic Type" title="Direct link to Step 1 — Grid Cell Dynamic Type" translate="no">​</a></h3>
+<p>Create a class extending <code>DynamicTypeGridCellAbstract</code> (from
+<code>@hypermdm/studio-ui-bundle/modules/element</code>).</p>
+<p>Key properties and methods:</p>
+<ul>
+<li class=""><code>id</code> — must match the <code>getFrontendType()</code> return value from the
+backend definition</li>
+<li class=""><code>getGridCellComponent()</code> — returns the React component that
+renders the cell</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-2--module">Step 2 — Module<a href="#step-2--module" class="hash-link" aria-label="Direct link to Step 2 — Module" title="Direct link to Step 2 — Module" translate="no">​</a></h3>
+<p>Create a module that registers the dynamic type in the
+<code>DynamicTypeGridCellRegistry</code>:</p>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">const</span><span class="token plain"> registry </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> container</span><span class="token punctuation" style="color:#393A34">.</span><span class="token generic-function function" style="color:#d73a49">get</span><span class="token generic-function generic class-name operator" style="color:#393A34">&lt;</span><span class="token generic-function generic class-name">DynamicTypeGridCellRegistry</span><span class="token generic-function generic class-name operator" style="color:#393A34">&gt;</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    serviceIds</span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">'DynamicTypes/GridCellRegistry'</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">registry</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">registerDynamicType</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">container</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">get</span><span class="token punctuation" style="color:#393A34">(</span><span class="token constant" style="color:#36acaa">MY_GRID_CELL_SERVICE_ID</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">)</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-3--plugin">Step 3 — Plugin<a href="#step-3--plugin" class="hash-link" aria-label="Direct link to Step 3 — Plugin" title="Direct link to Step 3 — Plugin" translate="no">​</a></h3>
+<p>In your plugin's <code>onInit</code>, bind the dynamic type class as a
+singleton. In <code>onStartup</code>, register the module.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="key-mapping">Key Mapping<a href="#key-mapping" class="hash-link" aria-label="Direct link to Key Mapping" title="Direct link to Key Mapping" translate="no">​</a></h3>
+<p>The connection between backend and frontend is:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">Backend:  getFrontendType() → 'progress-bar'</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                                    ↕</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Frontend: DynamicTypeGridCellAbstract.id = 'progress-bar'</span><br></span></code></pre></div></div>
+<p>These strings must match exactly.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="complete-example">Complete Example<a href="#complete-example" class="hash-link" aria-label="Direct link to Complete Example" title="Direct link to Complete Example" translate="no">​</a></h2>
+<p>The
+<a href="https://github.com/pimcore/studio-example-bundle" target="_blank" rel="noopener noreferrer" class="">studio-example-bundle</a>
+implements the complete progress bar custom grid column. See the
+<a class="" href="../../../../Studio_UI/Extending/Plugin_Development_Examples/Custom_Grid_Column/index.html">Custom Grid Column</a>
+plugin development example for an overview of the frontend files.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

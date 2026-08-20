@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Provider Compatibility Shim — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Provider Compatibility Shim</h1></header>
+<p>Localhost proxy that scrubs response-only fields the Copilot SDK echoes back
+on followup requests, for OpenAI-compatible providers whose validators don't
+accept them. Works for any provider that strict-validates the OpenAI request
+schema - <code>cerebras</code> (original) and <code>openai-strict</code> (Ollama, vLLM,
+HuggingFace TGI, etc.) are both supported through a single shared shim.</p>
+<p>Compatibility is configured <strong>per provider</strong>: set <code>compat:</code> on each provider
+block that needs it. A single always-on localhost proxy routes every such
+provider through its own <code>/p/&lt;name&gt;</code> route to that provider's own upstream, so
+any number of providers can run with <code>compat</code> set at the same time.</p>
+<blockquote>
+<p>For the bigger picture - when to reach for a strict OpenAI-compatible endpoint at all
+(self-hosted vs. cloud, and which model to run) - see <a class="" href="../../Inference/index.html">Inference</a>.
+For the full provider field schema, see <a class="" href="../Inference_Providers/index.html">Inference Providers</a>.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="when-to-enable">When to enable<a href="#when-to-enable" class="hash-link" aria-label="Direct link to When to enable" title="Direct link to When to enable" translate="no">​</a></h2>
+<p>Set <code>compat:</code> in a provider block when <strong>all</strong> of:</p>
+<ul>
+<li class=""><code>auth_mode: byok</code></li>
+<li class=""><code>provider: openai</code></li>
+<li class=""><code>base_url:</code> points at a strict OpenAI-compatible endpoint</li>
+</ul>
+<div class="table-container"><table><thead><tr><th>Value</th><th>Target provider(s)</th><th>Default upstream when <code>base_url</code> unset</th></tr></thead><tbody><tr><td><code>cerebras</code></td><td>Cerebras Cloud (<code>api.cerebras.ai</code>)</td><td><code>https://api.cerebras.ai/v1</code></td></tr><tr><td><code>openai-strict</code></td><td>Ollama, vLLM, HuggingFace TGI, any strict-spec endpoint</td><td>none - <code>base_url</code> is <strong>required</strong> (the endpoint varies per backend; startup fails if unset)</td></tr></tbody></table></div>
+<p>Leave <strong>off</strong> for OpenAI proper, Anthropic, and Azure OpenAI - they accept the
+extra SDK fields silently.</p>
+<p><strong>Symptom of running a strict provider with the shim off:</strong> tool-using
+turns fail with <code>400 status code (no body)</code> from the SDK. The actual provider
+error (<code>messages.N.assistant.refusal: property … is unsupported</code>, or
+<code>invalid message content type: &lt;nil&gt;</code> from Ollama) is swallowed by the
+openai-node APIError handler, so the chat appears to hang on the second LLM
+call after any tool runs.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-it-works">How it works<a href="#how-it-works" class="hash-link" aria-label="Direct link to How it works" title="Direct link to How it works" translate="no">​</a></h2>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">Copilot CLI ──► 127.0.0.1:8888/p/&lt;provider&gt; (shim) ──► that provider's strict upstream</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                       │</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                       │ request: scrub assistant.refusal &amp; assistant.parsed;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                       │          coerce content:null → "" on assistant/tool msgs</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                       │ response: pipe through unbuffered (SSE preserved)</span><br></span></code></pre></div></div>
+<p>A single localhost proxy starts early in <code>buildServer()</code> (<code>server.ts</code>) and is
+held by the compat registry (<code>src/adapters/strict-compat/compat-registry.ts</code>).
+It listens on <code>127.0.0.1:8888</code> by default; <code>AGENT_SERVER_STRICT_COMPAT_PORT</code>
+moves it. When the resolved port is the one the agent-server itself was assigned
+(<code>PORT</code>), the proxy takes an ephemeral port instead and logs a warning - it binds
+before the main server does, so claiming that port would leave the server unable
+to listen at all. If the port is already in use it logs a warning and boot
+continues - compat simply won't apply.</p>
+<p>The examples below use the default port. Read the actual value from the
+<code>strict-compat proxy active</code> log line, which carries the bound <code>proxyUrl</code>.</p>
+<p>The proxy serves <strong><code>/p/&lt;provider&gt;/...</code></strong> routes. Each time the inference config
+loads or reloads, <code>updateCompatRoutes()</code> rebuilds the route map
+<code>{ providerName → base_url }</code> for every provider whose <code>compat</code> is set and whose
+<code>base_url</code> is present. A request to <code>/p/&lt;provider&gt;/chat/completions</code> forwards to
+that provider's <code>base_url</code>, with the path remainder joined onto the upstream's
+path prefix. An unknown provider name returns <code>502</code>.</p>
+<p>When an agent resolves a BYOK provider that has <code>compat</code> set, the provider
+resolver points the SDK provider block's <code>baseUrl</code> at the proxy route
+(<code>http://127.0.0.1:8888/p/&lt;provider&gt;</code>) instead of the raw <code>base_url</code>. Providers
+without <code>compat</code> keep their raw <code>base_url</code>. For <code>cerebras</code>, <code>base_url</code> defaults
+to <code>https://api.cerebras.ai/v1</code>; for <code>openai-strict</code>, <code>base_url</code> is required.</p>
+<p>Responses stream back via <code>res.pipe()</code> - no buffering, no extra latency,
+SSE token deltas pass through unchanged.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<p>Set the <code>compat</code> field in the provider definition:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># config/packages/hypermdm_agent.yaml</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm_agent</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">inference</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">default_provider</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> local</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">cerebras</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">providers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">local-cerebras</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">driver</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> copilot</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">auth_mode</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> byok</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">provider</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> openai</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">base_url</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://api.cerebras.ai/v1'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">token</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'${CEREBRAS_API_KEY}'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">compat</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> cerebras</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">default_model</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> gpt</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">oss</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">120b</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">available_models</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">gpt-oss-120b</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_context_window_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">131072</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_prompt_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">120000</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_output_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">16384</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">gpt-oss-20b</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_context_window_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">131072</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_prompt_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">120000</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_output_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">16384</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">local-ollama</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">driver</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> copilot</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">auth_mode</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> byok</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">provider</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> openai</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">base_url</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'http://host.docker.internal:11434/v1'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">token</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'ollama'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">compat</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> openai</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">strict</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">default_model</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'gemma3:27b'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">available_models</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">'gemma3:27b'</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_context_window_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">128000</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_prompt_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">120000</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_output_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">8000</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">'llama3.1:8b'</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_context_window_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">131072</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_prompt_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">120000</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token key atrule" style="color:#00a4db">max_output_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">8000</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-gets-scrubbed--coerced">What gets scrubbed / coerced<a href="#what-gets-scrubbed--coerced" class="hash-link" aria-label="Direct link to What gets scrubbed / coerced" title="Direct link to What gets scrubbed / coerced" translate="no">​</a></h2>
+<p>The sanitizer modifies every <code>messages[]</code> object where applicable.
+Implementation: <code>agent-server/src/adapters/strict-compat/sanitize.ts</code>.</p>
+<div class="table-container"><table><thead><tr><th>Operation</th><th>Field(s)</th><th>Origin</th><th>Why</th></tr></thead><tbody><tr><td><strong>Strip</strong></td><td><code>refusal</code></td><td>OpenAI structured-outputs response field (2024)</td><td>Always <code>null</code> in practice; openai-node attaches it to every response; strict endpoints reject with <code>wrong_api_format</code></td></tr><tr><td><strong>Strip</strong></td><td><code>parsed</code></td><td>OpenAI SDK <code>.parse()</code> helper for structured outputs</td><td>SDK-internal - never belongs on the wire against any provider; OpenAI accepts silently, strict endpoints reject</td></tr><tr><td><strong>Coerce</strong></td><td><code>content: null → ""</code></td><td>Copilot CLI initialises assistant messages with <code>content: null</code> and only replaces it when the choice carries text</td><td>Strict validators (Ollama Go: <code>invalid message content type: &lt;nil&gt;</code>; vLLM/HF: Pydantic error) reject a null <code>content</code> on tool-call-only assistant turns. Applies defensively to <code>tool</code> role messages too. Coercing to <code>""</code> is safe - the OpenAI spec allows both <code>""</code> and <code>null</code>; strict servers require a string.</td></tr></tbody></table></div>
+<p><strong>Not stripped, deliberately:</strong> <code>reasoning</code> (gpt-oss chain-of-thought
+working memory, billed via <code>completion_tokens_details.reasoning_tokens</code>;
+stripping it caused observed runaway loops where the model lost track of
+its own plan), <code>tool_calls</code>, <code>tool_call_id</code>, <code>content</code> (when non-null).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="adding-a-new-field-to-the-scrub-list">Adding a new field to the scrub list<a href="#adding-a-new-field-to-the-scrub-list" class="hash-link" aria-label="Direct link to Adding a new field to the scrub list" title="Direct link to Adding a new field to the scrub list" translate="no">​</a></h2>
+<p>When a provider rejects a new property (look for <code>Model call failed</code> lines
+with <code>wrong_api_format</code> in the agent-server log):</p>
+<ol>
+<li class="">Add the destructure target and the <code>touched</code> predicate in
+<code>src/adapters/strict-compat/sanitize.ts</code>.</li>
+<li class="">Add a unit test in <code>tests/adapters/strict-compat-sanitize.test.ts</code> - both
+stripped-when-present and other-fields-untouched.</li>
+<li class="">Add a row to the scrub table above.</li>
+</ol>
+<p>Bar for stripping: the field must be <strong>unambiguously not in OpenAI's
+documented request schema for that role</strong> AND the upstream must hard-reject
+it. Documented OpenAI fields the upstream just doesn't implement (like
+<code>refusal</code>) are workarounds, not fixes.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="adding-support-for-a-new-provider">Adding support for a new provider<a href="#adding-support-for-a-new-provider" class="hash-link" aria-label="Direct link to Adding support for a new provider" title="Direct link to Adding support for a new provider" translate="no">​</a></h2>
+<p>To run another strict OpenAI-compat backend through the shim, just add a
+provider with <code>compat:</code> set and a <code>base_url:</code> - no code change is needed; the
+always-on proxy picks it up on the next config load via <code>updateCompatRoutes()</code>.</p>
+<p>Any non-empty <code>compat</code> value (e.g. <code>cerebras</code>, <code>openai-strict</code>) enables the shim
+for that provider - presence is what matters, not the specific value. The single
+shared <code>sanitizeForStrictCompat</code> in <code>src/adapters/strict-compat/sanitize.ts</code>
+handles the scrubbing - no new sanitizer module is needed unless the provider
+requires genuinely different field treatment.</p>
+<p>Only add a sibling sanitizer under <code>src/adapters/strict-compat/</code> if a
+provider needs field handling that would break other providers if applied
+universally (e.g. stripping <code>reasoning</code>, which Cerebras expects and uses).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="limitations">Limitations<a href="#limitations" class="hash-link" aria-label="Direct link to Limitations" title="Direct link to Limitations" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Localhost-only</strong> binding (<code>127.0.0.1</code>). Never expose externally. Logs
+are intentionally minimal - method + path + scrub count, never headers
+or bodies.</li>
+<li class=""><strong>No retry logic.</strong> Upstream 5xx propagates as 5xx; the Copilot SDK
+handles retries.</li>
+<li class=""><strong>Streaming preservation</strong> depends on <code>node:https.request</code> + <code>res.pipe()</code>.
+Switching to <code>fetch().arrayBuffer()</code> to add response-side sanitization
+would re-buffer the entire response and lose token-by-token SSE - don't.</li>
+<li class=""><strong>Request-side only.</strong> The shim never touches response bodies.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="context">Context<a href="#context" class="hash-link" aria-label="Direct link to Context" title="Direct link to Context" translate="no">​</a></h2>
+<p>Same class of bug landed client-side fixes in
+<a href="https://github.com/vercel/ai/issues/15042" target="_blank" rel="noopener noreferrer" class="">vercel/ai#15042</a> (Cerebras +
+<code>reasoning_content</code>),
+<a href="https://github.com/langchain-ai/langchainjs/issues/8643" target="_blank" rel="noopener noreferrer" class="">langchain-ai/langchainjs#8643</a>,
+<a href="https://github.com/zed-industries/zed/issues/36215" target="_blank" rel="noopener noreferrer" class="">zed-industries/zed#36215</a>.
+The <code>parsed</code> echo is a Copilot CLI bug regardless of provider -
+<a href="https://github.com/github/copilot-cli/issues/2553" target="_blank" rel="noopener noreferrer" class="">github/copilot-cli#2553</a>
+tracks the related class.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

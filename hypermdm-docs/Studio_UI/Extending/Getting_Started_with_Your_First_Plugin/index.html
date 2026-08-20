@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Getting Started With Your First Plugin — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Getting Started With Your First Plugin</h1></header>
+<p>The HyperMDM Studio plugin system allows developers to extend the functionality of HyperMDM Studio by creating custom plugins.</p>
+<p>Plugins provide additional tools, widgets, or settings that enhance the user experience within HyperMDM Studio.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="getting-started">Getting started<a href="#getting-started" class="hash-link" aria-label="Direct link to Getting started" title="Direct link to Getting started" translate="no">​</a></h2>
+<p>Create your HyperMDM Studio Plugin either in a <a href="../../../HyperMDM/Extending_HyperMDM/HyperMDM_Bundle_Developers_Guide/index.html" target="_blank" rel="noopener noreferrer" class="">HyperMDM Bundle</a>
+(the way to go when your Studio Plugin should be reused in multiple HyperMDM installations), or directly in your HyperMDM App
+without creating a HyperMDM Bundle.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="setup-js-assets">Setup JS assets<a href="#setup-js-assets" class="hash-link" aria-label="Direct link to Setup JS assets" title="Direct link to Setup JS assets" translate="no">​</a></h3>
+<p>To get started, create an assets root folder for your application (e.g. <code>/assets</code>) and install the
+<a href="https://www.npmjs.com/package/@pimcore/studio-ui-bundle?activeTab=readme" target="_blank" rel="noopener noreferrer" class="">HyperMDM Studio UI npm package</a>, which offers full TypeScript support for the HyperMDM SDK.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm install @hypermdm/studio-ui-bundle react@18.3.x react-dom@18.3.x</span><br></span></code></pre></div></div>
+<div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Studio_UI-Extending-Getting_Started_with_Your_First_Plugin-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Studio_UI-Extending-Getting_Started_with_Your_First_Plugin-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Studio_UI-Extending-Getting_Started_with_Your_First_Plugin-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>tip</div><div class="admonitionContent_BuS1"><p>To adapt early to new features, use the canary release that includes typings for the most recent .x-branch updates:</p></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm install @hypermdm/studio-ui-bundle@canary react@18.3.x react-dom@18.3.x</span><br></span></code></pre></div></div>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Studio_UI-Extending-Getting_Started_with_Your_First_Plugin-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Studio_UI-Extending-Getting_Started_with_Your_First_Plugin-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Studio_UI-Extending-Getting_Started_with_Your_First_Plugin-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>Ensure the React version matches the React version HyperMDM Studio uses.</p></div></div>
+<p>With our dependency in place we should now setup our bundling process. We recommend <a href="https://rsbuild.rs/" target="_blank" rel="noopener noreferrer" class="">Rsbuild</a>. Of course you also can choose your preferred custom bundling process,
+or add additional steps like linting etc. to the bundling process.</p>
+<p>For rsbuild you need to add additional <code>rsbuild</code> dependencies to bundle your application:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm add @rsbuild/core @rsbuild/plugin-react @module-federation/rsbuild-plugin -D</span><br></span></code></pre></div></div>
+<p>Then create a <code>rsbuild.config.ts</code> file in your assets root folder to configure the bundling:
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/rsbuild.config.ts" target="_blank" rel="noopener noreferrer" class="">Example Rsbuild configuration</a></p>
+<p>Additionally, we need to create a <code>main.ts</code> in a source folder (e.g. <code>/assets/js/src</code>) which serves as the entrypoint in the rsbuild and
+is referenced in the <a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/rsbuild.config.ts#L48" target="_blank" rel="noopener noreferrer" class="">rsbuild.config.ts</a>.
+Start with an empty file.</p>
+<p>Update your package.json with the following commands:
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/package.json#L5-L7" target="_blank" rel="noopener noreferrer" class="">npm commands</a></p>
+<p>Create the main plugin file <code>index.ts</code> and export it in the <code>plugins.ts</code> file in the source folder (e.g. <code>/assets/js/src</code>).
+Use our boilerplate to get started quickly:
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/boilerplate/index.ts" target="_blank" rel="noopener noreferrer" class="">Plugin boilerplate</a>
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/plugins.ts" target="_blank" rel="noopener noreferrer" class="">Plugins Export example file</a></p>
+<p>The assets folder should now contain these files:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">assets</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |- js</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    |- src</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        |- index.ts</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        |- main.ts</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        |- plugins.ts</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |- node_modules</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |- package-lock.json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |- package.json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> |- rsbuild.config.ts</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span></code></pre></div></div>
+<p>This will register a simple plugin in HyperMDM Studio.</p>
+<p>Now that everything is in place, it’s time to bundle the files. Run:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm run build        # production</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm run dev          # development with watch</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm run dev-server   # development with live reloading</span><br></span></code></pre></div></div>
+<p>When the command is finished you should have a few new files in your <code>./public/build</code> directory.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="register-js-entrypoint">Register JS Entrypoint<a href="#register-js-entrypoint" class="hash-link" aria-label="Direct link to Register JS Entrypoint" title="Direct link to Register JS Entrypoint" translate="no">​</a></h3>
+<p>Most important is the generated <code>entrypoints.json</code> manifest in <code>./public/build</code>, which tells HyperMDM where to find the generated frontend files.
+Register a <code>WebpackEntryPointProviderInterface</code> service in the HyperMDM service container:</p>
+<ul>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Webpack/WebpackEntryPointProvider.php" target="_blank" rel="noopener noreferrer" class="">WebpackEntryPointProvider.php</a></li>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/5715004cf377e91adfd1fce68b054181046edbc0/config/services.yaml#L12-L14" target="_blank" rel="noopener noreferrer" class="">services.yaml</a></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="check">Check<a href="#check" class="hash-link" aria-label="Direct link to Check" title="Direct link to Check" translate="no">​</a></h3>
+<p>Finally, we should ensure that our plugin is working.
+Place a <code>console.log()</code> in one of the plugin methods.
+Quickly recompile the app by using one of the npm commands listed above. On success, you should see your <code>console.log()</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further reading" title="Direct link to Further reading" translate="no">​</a></h3>
+<ul>
+<li class=""><a class="" href="../Plugin_Development_Examples/index.html">Plugin Development Examples</a></li>
+<li class=""><a class="" href="../../Development_Details/Studio_UI_Core_Development/index.html">Studio UI Core Development</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Communication Flows — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Communication Flows</h1></header>
+<p>The HyperMDM Agent Bundle is a distributed system: a browser (HyperMDM Studio), the Node.js <strong>agent-server</strong>, the HyperMDM
+<strong>PHP</strong> backend (bundle API + internal MCP servers + config export), a <strong>Mercure</strong> hub, one or more <strong>LLM inference
+providers</strong>, and optionally <strong>external MCP servers</strong>. This page is the map: it enumerates every runtime communication
+flow and shows, for each, <strong>which credential authenticates it and where the full detail lives</strong>.</p>
+<p>Each flow's authentication mechanics are documented in exactly one canonical page; this overview links to them rather
+than repeating them.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="system-map">System map<a href="#system-map" class="hash-link" aria-label="Direct link to System map" title="Direct link to System map" translate="no">​</a></h2>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">  Browser / HyperMDM Studio</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     │   ▲</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> (1) │   │ (6) Mercure SSE  (live updates to the user's own tabs)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">cookie   │</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     ▼   │</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  ┌─────────────────┐   (7) byok / github      ┌─────────────────────────┐</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  │   Agent-server  │ ───────────────────────▶ │  LLM inference provider  │</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  │    (Fastify)    │                           └─────────────────────────┘</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  └──┬───┬───┬───┬──┘   (4) per-YAML creds      ┌─────────────────────────┐</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     │   │   │   └─────────────────────────────▶│   External MCP servers   │</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     │   │   │                                   └─────────────────────────┘</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     │   │   │ (6) publisher JWT   ┌───────────┐</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     │   │   └────────────────────▶│  Mercure  │──▶ user's own tabs (private per-user topic)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     │   │                         │    hub    │</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     │   │ (5) admin bearer        └───────────┘</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     │   └──────────────▶ PHP: config export / reload</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     │</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     ├─ (2) Bearer pmcp_ ──────────▶ PHP internal MCP      (hypermdm_mcp firewall)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     │</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     └─ (3) cookie (sync) /</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            pmcp_ bearer (deferred) ▶ PHP bundle-API       (hypermdm_agent_bundle_api firewall)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">               sessions | proposals</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-flows-at-a-glance">The flows at a glance<a href="#the-flows-at-a-glance" class="hash-link" aria-label="Direct link to The flows at a glance" title="Direct link to The flows at a glance" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>#</th><th>Flow</th><th>Direction</th><th>Endpoint</th><th>Credential</th><th>Firewall / authenticator</th><th>Canonical detail</th></tr></thead><tbody><tr><td>1</td><td>Chat + SSE stream</td><td>Browser → agent-server</td><td><code>/agent-server/api/chat</code>, <code>/agent-server/api/chat/:id</code></td><td>HyperMDM session cookie (validated, cached)</td><td>agent-server auth middleware</td><td><a class="" href="../Request_Lifecycle/index.html">Request Lifecycle</a>, <a class="" href="../Authentication/index.html#user-session-cookie">Authentication</a></td></tr><tr><td>2</td><td>Internal MCP tool calls</td><td>Agent-server → PHP</td><td><code>/hypermdm-mcp/agent/*</code></td><td><code>Authorization: Bearer pmcp_…</code></td><td><code>hypermdm_mcp</code> → <code>McpAccessTokenAuthenticator</code></td><td><a class="" href="../MCP_Integration/index.html#authentication-forwarding">MCP Integration</a></td></tr><tr><td>3</td><td>Session / proposal persistence</td><td>Agent-server → PHP</td><td><code>/hypermdm-studio/api/bundle/agent/sessions|proposals</code></td><td>cookie (synchronous) / <code>pmcp_…</code> bearer (deferred)</td><td><code>hypermdm_agent_bundle_api</code> → <code>SessionBridge</code>, <code>McpAccessToken</code></td><td><a class="" href="../MCP_Integration/index.html#authentication-forwarding">MCP Integration</a>, <a class="" href="../Session_Storage/index.html">Session Storage</a></td></tr><tr><td>4</td><td>External MCP tool calls</td><td>Agent-server ↔ 3rd-party</td><td>per <code>mcpServers</code> YAML</td><td>per-server (neither cookie nor <code>pmcp_</code>)</td><td>n/a (remote server's own auth)</td><td><a class="" href="../MCP_Integration/index.html#external-mcp-servers">MCP Integration</a></td></tr><tr><td>5</td><td>Config export + reload</td><td>PHP ↔ agent-server</td><td><code>…/configurations/export</code>, <code>/agent-server/api/admin/*</code></td><td>admin bearer (<code>AGENT_SERVER_ADMIN_TOKEN</code>)</td><td><code>PUBLIC_ACCESS</code> + <code>hash_equals</code> (export)</td><td><a class="" href="../Configuration_System/index.html#export-endpoint-contract">Configuration System</a></td></tr><tr><td>6</td><td>Live cross-client sync</td><td>Agent-server → Mercure → browser</td><td><code>MERCURE_SERVER_URL</code> (per-user topic)</td><td>publisher JWT (HS256, <code>MERCURE_JWT_KEY</code>)</td><td>hub validates private-update scope</td><td><a class="" href="../Realtime_Sync/index.html#live-delivery-per-user-topic-private-updates">Real-time Sync</a></td></tr><tr><td>7</td><td>LLM / inference calls</td><td>Agent-server → provider</td><td>provider <code>baseUrl</code></td><td>per-provider <code>byok</code> (<code>apiKey</code>) / <code>github</code> token</td><td>provider's own auth</td><td><a class="" href="../Authentication/index.html#per-provider-llm-authentication">Authentication</a>, <a class="" href="../../Configuration/Inference_Providers/index.html">Inference Providers</a></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-authentication-works-flow-by-flow">How authentication works, flow by flow<a href="#how-authentication-works-flow-by-flow" class="hash-link" aria-label="Direct link to How authentication works, flow by flow" title="Direct link to How authentication works, flow by flow" translate="no">​</a></h2>
+<p><strong>(1) Chat + SSE - session cookie.</strong> The browser sends its HyperMDM <code>PHPSESSID</code> cookie; the agent-server's auth
+middleware validates it once against <code>GET /hypermdm-studio/api/user/current-user-information</code> and caches the resolved
+identity (keyed by <code>sha256(cookie)</code>, TTL <code>AGENT_SERVER_AUTH_CACHE_TTL</code>). The agent-server owns no users - it borrows
+HyperMDM's. → full detail: <a class="" href="../Authentication/index.html#user-session-cookie">Authentication → User session cookie</a>.</p>
+<p><strong>(2) Internal MCP tool calls - <code>pmcp_</code> bearer.</strong> When an agent calls a HyperMDM tool, the agent-server sends a
+chat-scoped MCP access token (<code>Authorization: Bearer pmcp_…</code>) to <code>/hypermdm-mcp/agent/*</code>. The <code>hypermdm_mcp</code> firewall's
+<code>McpAccessTokenAuthenticator</code> resolves it to the chat initiator's HyperMDM <code>User</code>, so the tool runs with exactly that
+user's permissions. The cookie is <strong>never</strong> forwarded here. → full detail:
+<a class="" href="../MCP_Integration/index.html#authentication-forwarding">MCP Integration → Authentication forwarding</a>.</p>
+<p><strong>(3) Session / proposal persistence - cookie <em>or</em> bearer.</strong> The agent-server persists chat state through the bundle
+API. Synchronous in-request work (create session, list, proposals) reuses the validated <strong>session cookie</strong>; deferred
+work that must outlive the browser session (the post-turn persistence flush) uses the <strong><code>pmcp_…</code> bearer</strong>. Both are
+accepted by the dedicated <code>hypermdm_agent_bundle_api</code> firewall (<code>SessionBridge → McpAccessToken</code>; PAT intentionally
+excluded). → full detail: <a class="" href="../MCP_Integration/index.html#authentication-forwarding">MCP Integration → Authentication forwarding</a>
+and <a class="" href="../Session_Storage/index.html">Session Storage</a>.</p>
+<p><strong>(4) External MCP servers - per-YAML.</strong> Third-party MCP servers configured under <code>mcpServers</code> receive neither the
+cookie nor the <code>pmcp_</code> bearer; they authenticate however their YAML defines (e.g. a static header). → full detail:
+<a class="" href="../MCP_Integration/index.html#external-mcp-servers">MCP Integration → External MCP servers</a>.</p>
+<p><strong>(5) Config export + reload - admin bearer.</strong> The agent-server fetches the merged config from PHP on startup and on
+every reload using the shared <code>AGENT_SERVER_ADMIN_TOKEN</code>; the export endpoint is verified with <code>hash_equals</code> and
+bypasses the user-session firewall via a <code>PUBLIC_ACCESS</code> rule. Operators hit the same-token <code>/agent-server/api/admin/*</code>
+endpoints to trigger reloads. → full detail:
+<a class="" href="../Configuration_System/index.html#export-endpoint-contract">Configuration System → Export endpoint contract</a>.</p>
+<p><strong>(6) Live cross-client sync - publisher JWT.</strong> Each turn event is published to Studio's per-user Mercure topic with a
+narrow HS256 publisher JWT signed by the shared <code>MERCURE_JWT_KEY</code>. It only <em>publishes</em>; private updates mean the hub
+delivers events to the owning user's tabs only. → full detail:
+<a class="" href="../Realtime_Sync/index.html#live-delivery-per-user-topic-private-updates">Real-time Sync → Live delivery</a>.</p>
+<p><strong>(7) LLM / inference calls - per provider.</strong> Each configured inference provider carries its own <code>auth_mode</code>: <code>byok</code>
+supplies an <code>apiKey</code>, <code>github</code> sets a session <code>gitHubToken</code>. Credentials are resolved once per SDK session. → full
+detail: <a class="" href="../Authentication/index.html#per-provider-llm-authentication">Authentication → Per-provider LLM authentication</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="credentials-at-a-glance">Credentials at a glance<a href="#credentials-at-a-glance" class="hash-link" aria-label="Direct link to Credentials at a glance" title="Direct link to Credentials at a glance" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Credential</th><th>Minted / owned by</th><th>Used on flows</th><th>Lifetime</th></tr></thead><tbody><tr><td>HyperMDM session cookie (<code>PHPSESSID</code>)</td><td>HyperMDM login</td><td>1, 3 (synchronous)</td><td>HyperMDM session; validation cached <code>AGENT_SERVER_AUTH_CACHE_TTL</code></td></tr><tr><td>MCP access token (<code>pmcp_…</code>)</td><td>studio-backend <code>McpAccessTokenService</code>, per chat session</td><td>2 (always), 3 (deferred)</td><td>Bundle-configured TTL (default 2h); refreshed/re-minted; revocable</td></tr><tr><td>Admin bearer (<code>AGENT_SERVER_ADMIN_TOKEN</code>)</td><td>Operator / deployment env</td><td>5</td><td>Static deployment secret</td></tr><tr><td>Mercure publisher JWT</td><td>Agent-server, in-process (<code>MERCURE_JWT_KEY</code>)</td><td>6</td><td>Per-publish, short-lived</td></tr><tr><td>Provider credential (<code>byok</code> / <code>github</code>)</td><td>Deployment config (<code>inference.providers</code>)</td><td>7</td><td>Per SDK session</td></tr></tbody></table></div>
+<p>External MCP credentials (flow 4) are defined entirely by the operator's <code>mcpServers</code> YAML and are outside this table.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

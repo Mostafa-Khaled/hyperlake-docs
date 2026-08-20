@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Auto Save — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Auto Save</h1></header>
+<p>HyperMDM Studio automatically saves drafts for Documents and Data Objects. Auto-save triggers on every value change
+with an 800ms debounce, creating a version with the <code>autoSave</code> task type.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-it-works">How it works<a href="#how-it-works" class="hash-link" aria-label="Direct link to How it works" title="Direct link to How it works" translate="no">​</a></h2>
+<ol>
+<li class="">When an editor modifies a document or data object, an auto-save fires after 800ms of inactivity.</li>
+<li class="">Each auto-save creates a version marked as <code>isAutoSave = true</code>. These versions are not published
+and changes remain visible only in the editor until explicitly published.</li>
+<li class="">Auto-save respects element permissions - it only runs if the user has the <code>save</code> permission on the element.</li>
+<li class="">If a manual save or publish is triggered while an auto-save is running, the manual operation is queued
+and executes after the auto-save completes.</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="draft-restoration">Draft restoration<a href="#draft-restoration" class="hash-link" aria-label="Direct link to Draft restoration" title="Direct link to Draft restoration" translate="no">​</a></h2>
+<p>When opening an element, if a newer auto-save version exists, the detail response includes draft data.
+The editor can choose to restore or discard the draft.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="publishing-and-auto-save-cleanup">Publishing and auto-save cleanup<a href="#publishing-and-auto-save-cleanup" class="hash-link" aria-label="Direct link to Publishing and auto-save cleanup" title="Direct link to Publishing and auto-save cleanup" translate="no">​</a></h2>
+<p>Publishing an element automatically deletes all auto-save versions for the current user.
+This ensures that stale drafts do not accumulate over time.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

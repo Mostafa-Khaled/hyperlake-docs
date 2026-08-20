@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Installation</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-installation">Bundle Installation<a href="#bundle-installation" class="hash-link" aria-label="Direct link to Bundle Installation" title="Direct link to Bundle Installation" translate="no">​</a></h2>
+<ol>
+<li class="">Install the required dependencies:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/data-quality-management-bundle</span><br></span></code></pre></div></div>
+<ol start="2">
+<li class="">Enable the bundle in <code>config/bundles.php</code>:</li>
+</ol>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Bundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataQualityManagementBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">HyperMDMDataQualityManagementBundle</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name static-context">HyperMDMDataQualityManagementBundle</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<ol start="3">
+<li class="">Install the bundle:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:bundle:install HyperMDMDataQualityManagementBundle</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-configuration">Bundle Configuration<a href="#bundle-configuration" class="hash-link" aria-label="Direct link to Bundle Configuration" title="Direct link to Bundle Configuration" translate="no">​</a></h2>
+<p>Score calculation runs asynchronously on the <a href="https://symfony.com/doc/current/messenger.html#consuming-messages-running-the-worker" target="_blank" rel="noopener noreferrer" class="">Symfony Messenger</a>
+queue. Once the bundle is installed, saving a Data Object automatically queues its score for recalculation.</p>
+<p>Messages are dispatched on the <code>hypermdm_data_quality_management</code> transport. Start one or more workers to process it:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console messenger:consume hypermdm_data_quality_management</span><br></span></code></pre></div></div>
+<p>Use a process manager such as Supervisor or systemd to keep the worker running.</p>
+<p>For further configuration, see <a class="" href="../Customization/Calculation_Rules/index.html">Calculation Rules</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="permissions">Permissions<a href="#permissions" class="hash-link" aria-label="Direct link to Permissions" title="Direct link to Permissions" translate="no">​</a></h2>
+<p>The Data Quality Management bundle does not register a permission of its own. Its HyperMDM Studio features are
+gated by two existing Studio Backend permissions, assigned per user or role under <strong>System &gt; User &amp; Roles</strong> in
+the HyperMDM Studio main navigation:</p>
+<div class="table-container"><table><thead><tr><th>Permission (key)</th><th>Required for</th></tr></thead><tbody><tr><td>Objects (<code>objects</code>)</td><td>The "Data Quality Details" tab in the object editor, and the Score, Worst Offenders and Rule Violations dashboard widgets.</td></tr><tr><td>Classes (<code>classes</code>)</td><td>The "Recommended Fields" picker in a Data Quality field's class editor configuration.</td></tr></tbody></table></div>
+<p>Both are enforced on the PHP controllers with <code>#[IsGranted]</code>, so they protect the API and not just the UI.</p>
+<p>Symfony expression validation and the color settings used to render score badges only require a valid HyperMDM
+Studio session; no additional permission applies.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="uninstallation">Uninstallation<a href="#uninstallation" class="hash-link" aria-label="Direct link to Uninstallation" title="Direct link to Uninstallation" translate="no">​</a></h2>
+<p>Uninstalling the bundle only cleans up the <code>bundle_data_quality_management_calculation_queue</code> table, which stores
+the queue for score recalculation. To also remove the other tables the bundle created (for example
+<code>translations_dataQualityManagement</code> for translations), do so manually.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Autoloading Config and Routing — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Autoloading Config and Routing Definitions</h1></header>
+<p>Symfony does not load configuration or routing definitions from bundles by default,
+expecting everything in <code>config/</code>. HyperMDM extends this by automatically loading
+<code>config.yaml</code> and <code>routing.yaml</code> (<code>php</code> and <code>xml</code> types are also supported) from
+every active bundle when placed in the <code>config/hypermdm</code> directory.</p>
+<p>The <code>BundleConfigLocator</code> checks two paths for each bundle:</p>
+<ol>
+<li class=""><code>config/hypermdm</code> (recommended for new bundles)</li>
+<li class=""><code>Resources/config/hypermdm</code> (legacy path, still supported)</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="environment-specific-loading">Environment-Specific Loading<a href="#environment-specific-loading" class="hash-link" aria-label="Direct link to Environment-Specific Loading" title="Direct link to Environment-Specific Loading" translate="no">​</a></h2>
+<p>HyperMDM first tries to load an environment-specific config file (e.g. <code>config_dev.yaml</code>)
+from each bundle and falls back to <code>config.yaml</code> if no environment-specific file exists.
+If multiple files with different extensions exist, all of them load.</p>
+<p>For example, if a bundle defines both <code>config_dev.yaml</code> and <code>config_dev.php</code>, both load,
+but there is no fallback attempt to load <code>config.yaml</code> without the environment suffix.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="lookup-order">Lookup Order<a href="#lookup-order" class="hash-link" aria-label="Direct link to Lookup Order" title="Direct link to Lookup Order" translate="no">​</a></h2>
+<p>For each bundle and each config type (config, routing), the <code>BundleConfigLocator</code>
+searches in this order:</p>
+<ol>
+<li class="">
+<p><strong>Environment-specific files</strong> (all extensions checked):</p>
+<ul>
+<li class=""><code>config/hypermdm/config_dev.php</code></li>
+<li class=""><code>config/hypermdm/config_dev.yaml</code></li>
+<li class=""><code>config/hypermdm/config_dev.xml</code></li>
+</ul>
+</li>
+<li class="">
+<p><strong>Fallback</strong> (only if no environment-specific file was found):</p>
+<ul>
+<li class=""><code>config/hypermdm/config.php</code></li>
+<li class=""><code>config/hypermdm/config.yaml</code></li>
+<li class=""><code>config/hypermdm/config.xml</code></li>
+</ul>
+</li>
+</ol>
+<p>If multiple files with different extensions exist at the same level (e.g. both
+<code>config_dev.yaml</code> and <code>config_dev.php</code>), all of them load. Be careful not to
+define conflicting configuration across different file formats.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

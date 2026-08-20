@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cron Jobs — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Cron Jobs</h1></header>
+<p>CMF needs the following cron jobs. Depending on your project's requirements, the execution interval can differ, and
+some of these jobs might not be needed at all.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="segment-building-queue">Segment Building Queue<a href="#segment-building-queue" class="hash-link" aria-label="Direct link to Segment Building Queue" title="Direct link to Segment Building Queue" translate="no">​</a></h2>
+<p>Handles the calculation of asynchronous segments by processing the
+<a class="" href="../CustomerSegments/index.html">segment building queue</a>. This is needed for segments that could not be calculated directly
+for performance reasons.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">* * * * * php /home/project/www/bin/console cmf:build-segments -v &gt; /home/project/www/log/cmf-build-segments-queue-lastrun.log </span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="action-trigger-queue">Action Trigger Queue<a href="#action-trigger-queue" class="hash-link" aria-label="Direct link to Action Trigger Queue" title="Direct link to Action Trigger Queue" translate="no">​</a></h2>
+<p>Handles the execution of delayed actions in <a class="" href="../ActionTrigger/index.html">ActionTrigger rules</a>.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">* * * * * php /home/project/www/bin/console cmf:process-actiontrigger-queue -v &gt; /home/customerdataframework/www/website/var/log/cmf-process-actiontrigger-queue-lastrun.log </span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cron-trigger">Cron Trigger<a href="#cron-trigger" class="hash-link" aria-label="Direct link to Cron Trigger" title="Direct link to Cron Trigger" translate="no">​</a></h2>
+<p>Needed if cron triggers are used in <a class="" href="../ActionTrigger/index.html">ActionTrigger rules</a>. This job must run once per minute.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">* * * * * php /home/project/www/bin/console cmf:handle-cron-triggers -v &gt; /home/project/www/log/cmf-cron-trigger-lastrun.log </span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="calculate-potential-duplicates">Calculate Potential Duplicates<a href="#calculate-potential-duplicates" class="hash-link" aria-label="Direct link to Calculate Potential Duplicates" title="Direct link to Calculate Potential Duplicates" translate="no">​</a></h2>
+<p>Analyzes the <a class="" href="../CustomerDuplicatesService/index.html">duplicates index</a> and calculates the potential duplicates shown in
+the potential duplicates list view.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">0 0 * * * php /home/project/www/bin/console cmf:duplicates-index -c -v &gt; /home/project/www/log/cmf-potential-duplicates-lastrun.log</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cmf-maintenance">CMF Maintenance<a href="#cmf-maintenance" class="hash-link" aria-label="Direct link to CMF Maintenance" title="Direct link to CMF Maintenance" translate="no">​</a></h2>
+<p>Run this job on a regular basis. It calls the maintenance methods the bundle wires up by default in its own
+<code>services.yml</code>:</p>
+<ul>
+<li class=""><code>executeSegmentBuilderMaintenance</code> on <code>SegmentBuilderExecutorInterface</code></li>
+<li class=""><code>processQueue</code> on the segment assignment <code>IndexerInterface</code> (see <a class="" href="../SegmentAssignment/index.html">Segment Assignment</a>)</li>
+<li class=""><code>cleanUpFilterDefinitions</code> on the customer view filter definition maintenance service</li>
+<li class=""><code>cleanUpTemporaryCustomers</code> on the customer view maintenance service</li>
+</ul>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">* * * * * php /home/project/www/bin/console cmf:maintenance -v &gt; /home/project/www/log/cmf-cron-maintenance-lastrun.log </span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="newsletter-queue">Newsletter Queue<a href="#newsletter-queue" class="hash-link" aria-label="Direct link to Newsletter Queue" title="Direct link to Newsletter Queue" translate="no">​</a></h2>
+<p>Processes the <a class="" href="../NewsletterSync/index.html">newsletter queue</a>. Run this every few minutes (for example every 5
+minutes) when the newsletter/Mailchimp sync feature is enabled.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">*/5 * * * * php /home/project/www/bin/console cmf:newsletter-sync -c &gt; /home/project/www/log/cmf-newsletter-sync-lastrun.log</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="mailchimp-status-sync">Mailchimp Status Sync<a href="#mailchimp-status-sync" class="hash-link" aria-label="Direct link to Mailchimp Status Sync" title="Direct link to Mailchimp Status Sync" translate="no">​</a></h2>
+<p>Run this as a nightly job. It synchronizes status updates from Mailchimp to HyperMDM for cases where webhook calls
+failed, which matters for data integrity when the system was down for several hours.</p>
+<p>Configure a dedicated HyperMDM username (for example <code>mailchimp-cli</code>) in the CMF config; this user shows up in the
+version history (see <a class="" href="../Configuration/index.html">Configuration</a>). The CLI user needs no special permissions, it only
+identifies the updates in the version history.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">0 0 * * * php /home/project/www/bin/console cmf:newsletter-sync -m &gt; /home/project/www/log/cmf-mailchimp-status-sync-lastrun.log</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

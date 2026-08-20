@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Extending — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Extending</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="custom-layouts">Custom Layouts<a href="#custom-layouts" class="hash-link" aria-label="Direct link to Custom Layouts" title="Direct link to Custom Layouts" translate="no">​</a></h2>
+<p>Register a new <a class="" href="../Template_Configuration/Layouts/index.html">layout type</a> as a tagged service, see
+<a class="" href="../Template_Configuration/Layouts/Adding_Custom_Layout/index.html">Adding a Custom Layout</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-api-events">Studio API Events<a href="#studio-api-events" class="hash-link" aria-label="Direct link to Studio API Events" title="Direct link to Studio API Events" translate="no">​</a></h2>
+<p>The Headless Documents configuration panels (Headless Templates, Headless Bricks, and the Datahub configuration
+detail view) are HyperMDM Studio plugins. Before one of their endpoints returns, the bundle dispatches a pre-response
+event carrying the response schema. Listen for it to add your own data to the response.</p>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Description</th></tr></thead><tbody><tr><td><code>pre_response.headless_documents.template_list</code></td><td>The list of template IDs and names.</td></tr><tr><td><code>pre_response.headless_documents.template_tree</code></td><td>One template node in the template tree.</td></tr><tr><td><code>pre_response.headless_documents.template_tree_folder</code></td><td>One group (folder) node in the template tree.</td></tr><tr><td><code>pre_response.headless_documents.template_detail</code></td><td>A single template configuration.</td></tr><tr><td><code>pre_response.headless_documents.template_help</code></td><td>The inline help content for templates (layouts and editables).</td></tr><tr><td><code>pre_response.headless_documents.brick_list</code></td><td>The list of brick IDs and names.</td></tr><tr><td><code>pre_response.headless_documents.brick_tree</code></td><td>One brick node in the brick tree.</td></tr><tr><td><code>pre_response.headless_documents.brick_tree_folder</code></td><td>One group (folder) node in the brick tree.</td></tr><tr><td><code>pre_response.headless_documents.brick_detail</code></td><td>A single brick configuration.</td></tr><tr><td><code>pre_response.headless_documents.brick_help</code></td><td>The inline help content for bricks (editables).</td></tr><tr><td><code>pre_response.headless_documents.datahub_configuration_detail</code></td><td>A single Headless Documents Datahub configuration.</td></tr><tr><td><code>pre_response.headless_documents.datahub_configuration_update</code></td><td>The result of saving a Datahub configuration. The payload carries only the new <code>modificationDate</code>, not the saved configuration.</td></tr></tbody></table></div>
+<p>Every event extends the Studio Backend <code>AbstractPreResponseEvent</code>, so a listener can attach additional attributes to
+the response schema. See
+<a class="" href="../../Studio_Backend/Extending/Extending_via_Events/index.html">Extending via Events</a>
+for the subscriber pattern, and
+<a class="" href="../../Studio_Backend/Extending/Additional_and_Custom_Attributes/index.html">Additional and Custom Attributes</a>
+for the attribute mechanism itself.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Headless_Documents-Extending-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Headless_Documents-Extending-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Headless_Documents-Extending-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The endpoints themselves are not a supported public API. Every Studio controller in this bundle is marked
+<code>@internal</code> and may change in any release without a deprecation path. Do not build integrations against them.</p></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

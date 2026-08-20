@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Information — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Information</h1></header>
+<p>Following steps are necessary during updating to newer versions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-admin-classic-ui--extjs">Removed Admin Classic UI / ExtJS<a href="#removed-admin-classic-ui--extjs" class="hash-link" aria-label="Direct link to Removed Admin Classic UI / ExtJS" title="Direct link to Removed Admin Classic UI / ExtJS" translate="no">​</a></h3>
+<ul>
+<li class="">All ExtJS-based JavaScript (tag editors, class definition editors, admin panels, the
+configuration tree and editor panel) has been removed.</li>
+<li class="">The legacy <code>BackendController</code> (<code>src/Controller/Legacy/BackendController.php</code>) and all
+Classic Admin routes (<code>hypermdm_asset_metadata_classdefinitions_legacy</code> prefix) have been
+removed.</li>
+<li class="">The service configuration file <code>config/admin-classic.yaml</code> has been deleted. Services are
+now registered unconditionally in <code>config/services.yaml</code>.</li>
+<li class="">The dependency on <code>hypermdm/admin-ui-classic-bundle</code> has been dropped entirely. Remove it
+from your project if it was only required by this bundle.</li>
+<li class=""><code>MainListener</code> no longer subscribes to any Classic Admin events. The following
+<code>AdminEvents</code> subscriptions have been removed — if you relied on any of them, migrate to
+the appropriate Studio UI events:<!-- -->
+<ul>
+<li class=""><code>AdminEvents::ASSET_GET_PRE_SEND_DATA</code></li>
+<li class=""><code>AdminEvents::ASSET_LIST_BEFORE_BATCH_UPDATE</code></li>
+<li class=""><code>AdminEvents::ASSET_LIST_BEFORE_UPDATE</code></li>
+<li class=""><code>AdminEvents::ASSET_METADATA_PRE_SET</code></li>
+<li class=""><code>AdminEvents::INDEX_ACTION_SETTINGS</code></li>
+<li class=""><code>AdminEvents::ASSET_GET_FIELD_GRID_CONFIG</code></li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-ui">Studio UI<a href="#studio-ui" class="hash-link" aria-label="Direct link to Studio UI" title="Direct link to Studio UI" translate="no">​</a></h3>
+<ul>
+<li class="">The Metadata Definition editor and the full asset class editor (supporting all definition
+types with individual settings panels) are now implemented in HyperMDM Studio UI.</li>
+<li class="">A new <code>StudioContextPermissionsSubscriber</code> has been added to handle Studio context
+permission checks.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="bc-break-collectionssave-signature-change">BC Break: <code>Collections::save()</code> Signature Change<a href="#bc-break-collectionssave-signature-change" class="hash-link" aria-label="Direct link to bc-break-collectionssave-signature-change" title="Direct link to bc-break-collectionssave-signature-change" translate="no">​</a></h3>
+<ul>
+<li class=""><code>Collections::save()</code> now formally accepts <code>array $parameters = []</code> as its signature.
+The previously deprecated <code>func_get_arg()</code>-based workaround (introduced in <code>v2.1.0</code>) has
+been removed entirely. Update any custom code that relied on the old implicit argument
+passing to use the explicit parameter instead.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="return-type-and-phpstan-compliance-fixes">Return Type and PHPStan Compliance Fixes<a href="#return-type-and-phpstan-compliance-fixes" class="hash-link" aria-label="Direct link to Return Type and PHPStan Compliance Fixes" title="Direct link to Return Type and PHPStan Compliance Fixes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>Helper::getFieldDefinition(string $name, ?Configuration &amp;$configuration = null)</code>: the
+<code>$configuration</code> out-parameter type was corrected from <code>?Data</code> to <code>?Configuration</code>
+(annotated with <code>@param-out Configuration|null</code>).</li>
+<li class=""><code>Numeric::$minValue</code> and <code>Numeric::$maxValue</code> are now typed <code>float|null</code> (previously
+documented as <code>float</code>). The return types of <code>getMinValue()</code> and <code>getMaxValue()</code> are
+corrected accordingly to <code>float|null</code>.</li>
+<li class=""><code>ManyToManyRelation::getClasses()</code>: PHPDoc return type corrected to <code>array{classes?: string}</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php-and-dependency-updates">PHP and Dependency Updates<a href="#php-and-dependency-updates" class="hash-link" aria-label="Direct link to PHP and Dependency Updates" title="Direct link to PHP and Dependency Updates" translate="no">​</a></h3>
+<ul>
+<li class="">PHP minimum requirement raised to <code>~8.4</code>. PHP <code>8.5</code> is now supported.</li>
+<li class="">Support for PHP <code>8.3</code> and Symfony <code>v6</code> has been dropped. Symfony <code>^7.3</code> is now required.</li>
+<li class="">Doctrine DBAL <code>enum → string</code> type mapping has been removed from the test configuration.
+Remove it from your project's Doctrine configuration if it was only required by this bundle.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="installer">Installer<a href="#installer" class="hash-link" aria-label="Direct link to Installer" title="Direct link to Installer" translate="no">​</a></h3>
+<ul>
+<li class=""><code>Installer::needsReloadAfterInstall()</code> has been removed. The bundle installation no longer
+requires a page reload after completing.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-320">Upgrade to 3.2.0<a href="#upgrade-to-320" class="hash-link" aria-label="Direct link to Upgrade to 3.2.0" title="Direct link to Upgrade to 3.2.0" translate="no">​</a></h2>
+<ul>
+<li class="">Added support for <code>zircote/swagger-php</code> <code>v5</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-110">Upgrade to 1.1.0<a href="#upgrade-to-110" class="hash-link" aria-label="Direct link to Upgrade to 1.1.0" title="Direct link to Upgrade to 1.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">Make sure to run all bundle migrations with <code>bin/console hypermdm:bundle:migrate -b HyperMDMAssetMetadataClassDefinitionsBundle</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-hypermdm-x">Upgrade to HyperMDM X<a href="#upgrade-to-hypermdm-x" class="hash-link" aria-label="Direct link to Upgrade to Pimcore X" title="Direct link to Upgrade to Pimcore X" translate="no">​</a></h2>
+<ul>
+<li class="">Update to latest (allowed) bundle version in HyperMDM 6.9 and execute all migrations.</li>
+<li class="">Then update to HyperMDM X.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

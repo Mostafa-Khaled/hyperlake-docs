@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Add a Custom Document Editable — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>How to Add a Custom Document Editable</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="overview">Overview<a href="#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h2>
+<p>This example adds a custom <code>markdown</code> document editable type to HyperMDM Studio. Custom editables
+appear inline in the document editor alongside built-in types like input, textarea, and wysiwyg.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="details">Details<a href="#details" class="hash-link" aria-label="Direct link to Details" title="Direct link to Details" translate="no">​</a></h2>
+<p>Adding a custom document editable requires both a PHP backend and a HyperMDM Studio frontend plugin:</p>
+<p><strong>Backend (PHP):</strong></p>
+<ul>
+<li class="">An editable model class extending <code>HyperMDM\Model\Document\Editable</code> and implementing <code>EditmodeDataInterface</code></li>
+<li class="">Registration via <code>hypermdm.documents.editables.map</code> configuration</li>
+</ul>
+<p><strong>Frontend (Studio Plugin):</strong></p>
+<ul>
+<li class="">A <code>DynamicTypeDocumentEditableAbstract</code> subclass with <code>getEditableDataComponent()</code> returning a React component</li>
+<li class="">The component receives <code>value</code> and <code>onChange</code> props injected by the framework via <code>React.cloneElement</code> on the root element</li>
+<li class="">Registration in the <code>DynamicTypeDocumentEditableRegistry</code> via a module</li>
+<li class=""><code>InheritanceOverlay</code> from the SDK to support document inheritance</li>
+<li class="">Theme-aware styling via <code>createStyles</code> from <code>antd-style</code></li>
+</ul>
+<p><strong>Service Configuration:</strong></p>
+<ul>
+<li class="">The bundle's <code>WebpackEntryPointProvider</code> must be tagged with both
+<code>hypermdm_studio_ui.webpack_entry_point_provider</code> and
+<code>hypermdm_studio_ui.webpack_entry_point_provider.document_editor_iframe</code>,
+since document editables render inside an iframe with its own plugin bootstrap</li>
+</ul>
+<p>The example implements the <code>markdown</code> type as a plain <code>&lt;textarea&gt;</code> with monospace font,
+demonstrating the full pattern without external dependencies.</p>
+<p>For the full backend + frontend guide, see the
+<a class="" href="../../../../HyperMDM/Extending_HyperMDM/Custom_Extension_Guides/Adding_Document_Editables/index.html">Adding Document Editables</a>
+documentation in the HyperMDM core.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="code-example-on-github">Code Example on GitHub<a href="#code-example-on-github" class="hash-link" aria-label="Direct link to Code Example on GitHub" title="Direct link to Code Example on GitHub" translate="no">​</a></h2>
+<blockquote>
+<p><a href="https://github.com/pimcore/studio-example-bundle/tree/main/assets/js/src/examples/custom-document-editable" target="_blank" rel="noopener noreferrer" class="">Custom Document Editable example on GitHub</a>.</p>
+</blockquote>
+<ul>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-document-editable/index.ts" target="_blank" rel="noopener noreferrer" class="">Plugin entry (index.ts)</a> - binds the dynamic type and registers the module</li>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-document-editable/modules/markdown-editable-module.tsx" target="_blank" rel="noopener noreferrer" class="">Module (markdown-editable-module.tsx)</a> - registers the type in the <code>DynamicTypeDocumentEditableRegistry</code></li>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-document-editable/dynamic-types/definitions/dynamic-type-document-editable-markdown.tsx" target="_blank" rel="noopener noreferrer" class="">Dynamic type (dynamic-type-document-editable-markdown.tsx)</a> - extends <code>DynamicTypeDocumentEditableAbstract</code> with a <code>&lt;textarea&gt;</code> component</li>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-document-editable/dynamic-types/definitions/dynamic-type-document-editable-markdown.styles.ts" target="_blank" rel="noopener noreferrer" class="">Styles (dynamic-type-document-editable-markdown.styles.ts)</a> - theme-aware styling via <code>createStyles</code></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

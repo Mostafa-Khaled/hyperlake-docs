@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation and Configuration — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Installation and Configuration</h1></header>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Worfklow_Designer-Installation_and_Configuration-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Worfklow_Designer-Installation_and_Configuration-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Worfklow_Designer-Installation_and_Configuration-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>Workflow Designer is an enterprise bundle. It requires a HyperMDM enterprise subscription.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<p>The bundle requires HyperMDM 2026.1 or later and PHP 8.4 or 8.5.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-installation">Bundle Installation<a href="#bundle-installation" class="hash-link" aria-label="Direct link to Bundle Installation" title="Direct link to Bundle Installation" translate="no">​</a></h2>
+<ol>
+<li class="">Install the package:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/workflow-designer</span><br></span></code></pre></div></div>
+<ol start="2">
+<li class="">Enable the bundle in <code>config/bundles.php</code>:</li>
+</ol>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Bundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">WorkflowDesignerBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">HyperMDMWorkflowDesignerBundle</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name static-context">HyperMDMWorkflowDesignerBundle</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<ol start="3">
+<li class="">Install the bundle:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:bundle:install HyperMDMWorkflowDesignerBundle</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="system-requirements">System Requirements<a href="#system-requirements" class="hash-link" aria-label="Direct link to System Requirements" title="Direct link to System Requirements" translate="no">​</a></h2>
+<p>HyperMDM workflows are Symfony configuration. The Workflow Designer therefore writes a Symfony configuration file, and
+HyperMDM has to be able to rebuild its container afterwards.</p>
+<p>Grant HyperMDM write access to <code>var/config/workflow-designer/workflows.yaml</code>, or to whichever path you configure below.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="user-permissions">User Permissions<a href="#user-permissions" class="hash-link" aria-label="Direct link to User Permissions" title="Direct link to User Permissions" translate="no">​</a></h2>
+<p>The installer creates three permissions in the <code>Workflow Designer</code> category:</p>
+<div class="table-container"><table><thead><tr><th>Permission</th><th>Grants</th></tr></thead><tbody><tr><td><code>permission_workflow_designer</code></td><td>Opens the Workflow Designer and manages workflow definitions. Required by every endpoint of the bundle, so a user without it gets a 403.</td></tr><tr><td><code>permission_workflow_designer_place_permissions</code></td><td>Edits the per-place permissions of a workflow.</td></tr><tr><td><code>permission_workflow_designer_trans_notifications</code></td><td>Edits the notification settings of a transition.</td></tr></tbody></table></div>
+<p>Grant <code>permission_workflow_designer</code> to every user or role that works with the designer. The other two reveal the
+corresponding settings tabs inside the designer, and existing values stay untouched for users who lack them. Both are
+enforced in HyperMDM Studio only, they do not block a request to the save endpoint.</p>
+<p>The bundle also registers the context permission <code>system.workflowDesigner</code>, which controls whether the
+<strong>System</strong> &gt; <strong>Workflow Designer</strong> entry appears in a perspective. It is enabled by default, so it only matters for
+custom perspectives that restrict the main navigation.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="workflow-save-file">Workflow Save File<a href="#workflow-save-file" class="hash-link" aria-label="Direct link to Workflow Save File" title="Direct link to Workflow Save File" translate="no">​</a></h2>
+<p><code>configuration_file_path</code> sets where the workflow definitions are written. It defaults to a file under <code>var/config</code>.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_workflow_designer</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">configuration_file_path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%kernel.project_dir%/var/config/workflow-designer/workflows.yaml'</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next Steps<a href="#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="Upgrade/index.html">Upgrade Notes</a>: what changed between versions.</li>
+<li class=""><a class="" href="../Workflow_Configuration/index.html">Workflow Configuration</a>: build a workflow in the designer.</li>
+<li class=""><a class="" href="../Technical_Aspects/index.html">Technical Aspects</a>: how the generated configuration is loaded, and the events it dispatches.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tool Security — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Tool Security</h1></header>
+<p>Tool security is the set of runtime controls that decide which SDK tools an agent can invoke, and with which arguments.
+It is enforced in a single hook registered on every Copilot SDK session, and it is <strong>mechanism-only</strong> on this page -
+for the catalog of tools and which are safe to enable, see <a class="" href="../../Configuration/Tool_Security_Reference/index.html">Configuration → Tool Security Reference</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-pre-tool-use-hook">The pre-tool-use hook<a href="#the-pre-tool-use-hook" class="hash-link" aria-label="Direct link to The pre-tool-use hook" title="Direct link to The pre-tool-use hook" translate="no">​</a></h2>
+<p>Every SDK session is configured with a <code>PreToolUseHook</code>. It fires before any SDK built-in tool is invoked and has four
+layers of defence, in order:</p>
+<ol>
+<li class=""><strong>Always-denied tools.</strong> <code>bash</code>, <code>list_bash</code>, <code>read_bash</code>, <code>write_bash</code>, <code>stop_bash</code>, <code>task</code>.
+Rejected unconditionally; no configuration can enable them.</li>
+<li class=""><strong>Whitelist check.</strong> The <code>excludedTools</code> list is computed from the agent's configuration -
+everything not in the agent's allowed set is excluded - and passed to the SDK as a session-level block list.</li>
+<li class=""><strong>Path sandboxing.</strong> For <code>view</code>, <code>grep</code>, <code>glob</code>, <code>create</code>, <code>edit</code>, the hook resolves the path argument,
+neutralises <code>../</code> traversal, and checks it against the session's allowed directories
+(<code>/app/uploads/{chatSessionId}/{uploaded,staged}</code>). Reads against <code>/tmp/*</code> are permitted on specific files
+(for large MCP tool outputs) but directory listings are denied.</li>
+<li class=""><strong>Audit log.</strong> Every denial is recorded via <code>logger.audit()</code> with the request kind, tool name, and session id.</li>
+</ol>
+<p>The hook is wired in the Copilot adapter and cannot be disabled per session - a session without it will not be created.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="mcp-tools-are-not-governed-by-this-hook">MCP tools are not governed by this hook<a href="#mcp-tools-are-not-governed-by-this-hook" class="hash-link" aria-label="Direct link to MCP tools are not governed by this hook" title="Direct link to MCP tools are not governed by this hook" translate="no">​</a></h2>
+<p>The hook is only about <strong>SDK tools</strong> (tools built into the Copilot SDK itself). <strong>MCP tools</strong> - the ones the agent
+reaches through <code>/hypermdm-mcp/*</code> or an external MCP server - use a different mechanism:</p>
+<ul>
+<li class=""><strong>Internal MCP tools</strong> run on the HyperMDM PHP side. Permission is enforced per call by HyperMDM's standard permission
+system, using the user's session cookie forwarded by the agent-server. An agent never has more access than the
+logged-in user. Which groups an agent can reach at all is controlled by <code>hypermdmMcpServers</code> / <code>hypermdmMetaGroups</code>
+in its YAML.</li>
+<li class=""><strong>External MCP tools</strong> use whatever auth is configured in the agent's <code>mcpServers</code> entry. No user-cookie forwarding,
+no HyperMDM permission check.</li>
+</ul>
+<p>In short: SDK tools are gated by this hook; internal MCP tools are gated by HyperMDM; external MCP tools are gated by their own auth.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="agent-level-run-permission-gates-using-an-agent">Agent-level run permission gates using an agent<a href="#agent-level-run-permission-gates-using-an-agent" class="hash-link" aria-label="Direct link to Agent-level run permission gates using an agent" title="Direct link to Agent-level run permission gates using an agent" translate="no">​</a></h2>
+<p>Using a specific agent additionally requires the <code>run</code> level on that agent, when the agent defines a <code>permissions</code>
+block, on top of the global <code>hypermdm_agent_use</code> permission. The <code>run</code> check is enforced at every point an agent can
+be used, before the pre-tool-use hook or any MCP-level check comes into play: starting a chat session with the
+agent, switching an existing session to it, and listing agents in the chat selector and the switch-suggestion
+prompt. The agent-server fetches the per-user runnable set from a HyperMDM endpoint gated by <code>hypermdm_agent_use</code>, so
+the permission evaluation stays authoritative in HyperMDM. See
+<a class="" href="../../Configuration/Agents/index.html#permissions">Configuration → Agents → Permissions</a> for the full per-agent
+permission model.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-user-and-information-disclosure">Execution user and information disclosure<a href="#execution-user-and-information-disclosure" class="hash-link" aria-label="Direct link to Execution user and information disclosure" title="Direct link to Execution user and information disclosure" translate="no">​</a></h2>
+<p>An agent configuration can optionally set <code>executionUser</code>, a HyperMDM username the whole session runs as instead of
+the chat initiator (see <a class="" href="../../Configuration/Agents/index.html#execution-user">Configuration → Agents → Execution user</a>).
+When it is set, the effective user resolved at session creation, described in
+<a class="" href="../Authentication/index.html#execution-user-resolution">Authentication → Execution user resolution</a>, owns every tool
+call, MCP call, and permission check for that session - not the person who typed the message.</p>
+<p>This is a deliberate escalation path and needs to be treated as one. The execution user can hold more permissions
+than the users who chat with the agent, so the agent's responses can surface information (object content, listings,
+search results, proposal values) that the chatting users cannot access directly. HITL proposals created during such
+a session are computed with the execution user's permissions as well, so an approver may see proposed values
+derived from data outside their own visibility.</p>
+<p>Only administrators can set, change, or clear <code>executionUser</code>; the server rejects a changed value coming from a
+non-admin request, and HyperMDM Studio shows the field read only to non-admins. The recommended mitigation for the
+information-disclosure risk above is to combine an execution user with the agent's own
+<a class="" href="../../Configuration/Agents/index.html#permissions"><code>run</code> permission</a>, so only an intended audience can start sessions
+with that agent at all.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="task-session-tool-overrides">Task-session tool overrides<a href="#task-session-tool-overrides" class="hash-link" aria-label="Direct link to Task-session tool overrides" title="Direct link to Task-session tool overrides" translate="no">​</a></h2>
+<p>A <a class="" href="../Agent_Tasks/index.html">headless agent task</a> runs its turns with two overrides layered on top of whatever the
+agent's own configuration allows, applied by the agent-server for every turn dispatched against a task-type
+session (never a regular chat session):</p>
+<ul>
+<li class="">The <strong><code>hypermdm-task</code></strong> MCP tool group - the <code>finalize_task</code> tool - is force-injected regardless of the agent's
+<code>hypermdmMcpServers</code> / <code>hypermdmMetaGroups</code> configuration. It is the only way a task-session turn ends with a
+machine-readable result, so every task-type session needs it whether or not the agent was configured with it
+in mind. It is never injected into a regular chat session.</li>
+<li class="">The <strong><code>ask_user</code></strong> SDK tool (see <a class="" href="../../Configuration/Tool_Security_Reference/index.html#task-session-ask_user-exclusion">Configuration → Tool Security Reference</a>)
+is force-excluded, even for an agent whose YAML lists it under <code>includeSdkTools</code>. An unattended task has no human
+to answer a mid-turn question; the automatic <code>pauseAfter</code> continue/stop checkpoint is the only steering
+mechanism a task turn has.</li>
+<li class="">The <strong><code>hypermdm_switch_agent</code></strong> rich chat widget is never offered, regardless of the running agent's
+<code>allowAgentSwitch</code> setting (see <a class="" href="../../Configuration/Agents/index.html#field-reference">Configuration → Agents</a>).
+Agent switching is a human-confirmed, one-click action; a task has no human present to confirm one, and a
+switch can need to mint a fresh MCP access token for a different execution identity, something only HyperMDM
+PHP can do at session-create time, not mid-turn from the agent-server. See
+<a class="" href="../../Features/Agents_and_Switching/index.html#turning-switching-off-for-an-agent">Features → Agents and Switching</a>
+for the chat-side behavior.</li>
+</ul>
+<p>These overrides are applied server-side, at dispatch time, from the session's <code>type</code> column - an agent
+configuration cannot opt out of any of them for its own task runs. See
+<a class="" href="../Agent_Tasks/index.html#running-the-turn">Architecture → Agent Tasks → Running the turn</a> for where these
+overrides are applied and <a class="" href="../../Features/Agent_Tasks/index.html">Features → Agent Tasks</a> for the consumer-facing
+feature.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further reading" title="Direct link to Further reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Configuration/Tool_Security_Reference/index.html">Configuration → Tool Security Reference</a> - full SDK tool catalog, defaults, opt-in list.</li>
+<li class=""><a class="" href="../../Configuration/Agents/index.html#execution-user">Configuration → Agents → Execution user</a> - the <code>executionUser</code> field, fail-closed and admin-only rules.</li>
+<li class=""><a class="" href="../Authentication/index.html">Authentication</a> - how user cookies reach MCP tools and what the audit log captures.</li>
+<li class=""><a class="" href="../../Features/File_Attachments/index.html">File Attachments</a> - the <code>/app/uploads/{sessionId}/</code> layout that sandboxing relies on.</li>
+<li class=""><a class="" href="../File_Staging/index.html">File Staging</a> - read-only project file sets, read through this same sandbox.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quick Start: Existing Project — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Quick Start: Existing Project</h1></header>
+<p>This guide walks you through adding HyperMDM PaaS deployment capabilities to an existing HyperMDM project. If you're starting from scratch, see <a class="" href="../Quick_Start_New_Project/index.html">Quick Start: New Project</a> instead.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<p>Before starting, ensure you have:</p>
+<ul>
+<li class=""><strong>Existing HyperMDM project</strong> with Git version control initialized</li>
+<li class=""><strong>HyperMDM license token</strong> and <strong>Composer repository URL</strong> (from your license certificate)</li>
+<li class=""><strong>HyperMDM PaaS Console account</strong> at <a href="https://console.pimcore.cloud/" target="_blank" rel="noopener noreferrer" class="">https://console.hypermdm.cloud/</a> with a project created</li>
+<li class=""><strong>HyperMDM CLI</strong> installed (<a href="https://cli.pimcore.cloud" target="_blank" rel="noopener noreferrer" class="">installation guide</a>)</li>
+<li class=""><strong>Project backup</strong> (recommended before making infrastructure changes)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="verifying-prerequisites">Verifying Prerequisites<a href="#verifying-prerequisites" class="hash-link" aria-label="Direct link to Verifying Prerequisites" title="Direct link to Verifying Prerequisites" translate="no">​</a></h3>
+<p>Before proceeding, verify your environment meets the requirements:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">git --version              # Should show Git is installed</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">hypermdm-cloud --version    # Should show HyperMDM CLI is installed</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">composer --version         # Should show Composer is installed</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">git status                 # Should show you're in a Git repository</span><br></span></code></pre></div></div>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-by-step-guide">Step-by-Step Guide<a href="#step-by-step-guide" class="hash-link" aria-label="Direct link to Step-by-Step Guide" title="Direct link to Step-by-Step Guide" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-1-local-install-paas-bundle">Step 1: [LOCAL] Install PaaS Bundle<a href="#step-1-local-install-paas-bundle" class="hash-link" aria-label="Direct link to Step 1: [LOCAL] Install PaaS Bundle" title="Direct link to Step 1: [LOCAL] Install PaaS Bundle" translate="no">​</a></h3>
+<p>Add the HyperMDM PaaS bundle to your existing project. First, configure Composer authentication (replace <code>YOUR_HYPERMDM_TOKEN</code> and <code>YOUR_REPO_NAME</code> with actual values from your license certificate):</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer config --auth http-basic.repo.hypermdm.com token YOUR_HYPERMDM_TOKEN</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">composer config repositories.hypermdm_enterprise composer https://repo.hypermdm.com/YOUR_REPO_NAME/</span><br></span></code></pre></div></div>
+<p>Install the PaaS bundle:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/paas</span><br></span></code></pre></div></div>
+<p>Enable the Enterprise Subscription Tools bundle in your <code>/config/bundles.php</code> by adding this line:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">HyperMDM</span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">Bundle</span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">EnterpriseSubscriptionToolsBundle</span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">HyperMDMEnterpriseSubscriptionToolsBundle</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-2-local-install-paas-config-files">Step 2: [LOCAL] Install PaaS Config Files<a href="#step-2-local-install-paas-config-files" class="hash-link" aria-label="Direct link to Step 2: [LOCAL] Install PaaS Config Files" title="Direct link to Step 2: [LOCAL] Install PaaS Config Files" translate="no">​</a></h3>
+<p>Install the PaaS-specific configuration files to your project:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">./vendor/bin/hypermdm-paas-install-config</span><br></span></code></pre></div></div>
+<p>This command creates several configuration files and directories in your project:</p>
+<div class="table-container"><table><thead><tr><th>Files/Directories</th><th>Purpose</th></tr></thead><tbody><tr><td><code>.platform/*</code></td><td>PaaS infrastructure configuration (services, routes, etc.)</td></tr><tr><td><code>.platform-scripts/*</code></td><td>Build and deploy scripts</td></tr><tr><td><code>config/hypermdm/startup.php</code></td><td>Dynamic service configuration mapping (runtime)</td></tr><tr><td><code>config/platform.yaml</code></td><td>HyperMDM generic PaaS configuration</td></tr><tr><td><code>.env.dev</code> and <code>.env.prod</code></td><td>Example environment configuration files</td></tr></tbody></table></div>
+<p><strong>Important:</strong> Review these files and commit them to your Git repository. All configurations can be customized to fit your project's needs.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-3-local-configure-service-environment-variables">Step 3: [LOCAL] Configure Service Environment Variables<a href="#step-3-local-configure-service-environment-variables" class="hash-link" aria-label="Direct link to Step 3: [LOCAL] Configure Service Environment Variables" title="Direct link to Step 3: [LOCAL] Configure Service Environment Variables" translate="no">​</a></h3>
+<p>Add service configuration variables to your <code>.env</code> file. These are required during the PaaS build phase and for local development.</p>
+<p><strong>⚠️ Why are these variables needed?</strong></p>
+<p>During the PaaS build phase, your application is compiled <strong>before</strong> services like MariaDB, Redis, and OpenSearch are available. However, Symfony and HyperMDM require certain environment variables to be defined during the build. These placeholder values satisfy the build-time requirements. At runtime, <code>config/hypermdm/startup.php</code> automatically replaces them with real service credentials from <code>PLATFORM_RELATIONSHIPS</code>.</p>
+<p>For local development, update these values to point to your actual local services.</p>
+<p>Add the following variables to your <code>.env</code> file:</p>
+<div class="language-dotenv codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-dotenv codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Service configuration (placeholders for PaaS build, update for local development)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">DATABASE_URL=mysql://user:pass@mariadb:3306/hypermdm</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">REDIS_URL=redis://redis:6379</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">REDIS_SESSIONS_URL=redis://redis:6379</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">GOTENBERG_BASE_URL=http://localhost:3000</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">HYPERMDM_ELASTICSEARCH_DSN=elasticsearch://elastic:9200</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">CHROMIUM_HOST=chrome</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">CHROMIUM_PORT=1234</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX=amqp://user:pass@rabbitmq:5672/%2f/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">HYPERMDM_OPENSEARCH_DSN=opensearch://opensearch:9200</span><br></span></code></pre></div></div>
+<blockquote>
+<p><strong>For local development:</strong> Update these values to match your actual local services (e.g., <code>DATABASE_URL=mysql://root:root@127.0.0.1:3306/hypermdm</code>, <code>REDIS_URL=redis://127.0.0.1:6379</code>). If you're not using a service locally, the placeholder values are fine.</p>
+<p><strong>Reference:</strong> See <code>.platform-scripts/build/export-vars.sh</code> for how these variables are used during the PaaS build phase. For more details, consult the <a class="" href="../Environment_Variables_Reference/index.html">Environment Variables Reference</a> guide.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-4-local-run-product-registration">Step 4: [LOCAL] Run Product Registration<a href="#step-4-local-run-product-registration" class="hash-link" aria-label="Direct link to Step 4: [LOCAL] Run Product Registration" title="Direct link to Step 4: [LOCAL] Run Product Registration" translate="no">​</a></h3>
+<p>Product registration is required for HyperMDM Platform version <strong>2025.1</strong> or later.</p>
+<p>Check your version:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">grep '"hypermdm/hypermdm"' composer.json</span><br></span></code></pre></div></div>
+<p>If your version is 2025.1 or later, run the registration:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">./vendor/bin/hypermdm-paas-product-registration</span><br></span></code></pre></div></div>
+<p>This command generates the registration parameters. Follow the URL provided to complete the registration. You'll need:</p>
+<ul>
+<li class=""><code>HYPERMDM_PRODUCT_KEY</code></li>
+<li class=""><code>HYPERMDM_INSTANCE_IDENTIFIER</code></li>
+<li class=""><code>HYPERMDM_ENCRYPTION_SECRET</code></li>
+</ul>
+<p>Save these values—you'll need them for the PaaS Console configuration in Step 6.</p>
+<blockquote>
+<p><strong>Note:</strong> If you've already registered your product instance, you can skip this step.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-5-local-prepare-git-repository">Step 5: [LOCAL] Prepare Git Repository<a href="#step-5-local-prepare-git-repository" class="hash-link" aria-label="Direct link to Step 5: [LOCAL] Prepare Git Repository" title="Direct link to Step 5: [LOCAL] Prepare Git Repository" translate="no">​</a></h3>
+<p>Ensure your project is on the <code>main</code> branch. HyperMDM PaaS requires <code>main</code> as the production branch.</p>
+<p>Check your current branch:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">git branch</span><br></span></code></pre></div></div>
+<p><strong>⚠️ CRITICAL:</strong> If you're on <code>master</code> or any other branch, rename it to <code>main</code>:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">git branch -M main</span><br></span></code></pre></div></div>
+<blockquote>
+<p><strong>Why?</strong> HyperMDM PaaS expects the production environment to deploy from the <code>main</code> branch. The <code>-M</code> flag renames your current branch to <code>main</code> regardless of its current name. If your default branch is named <code>master</code> (common in older Git projects), deployments will fail until you rename it.</p>
+</blockquote>
+<p>Verify you're now on <code>main</code>:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">git branch</span><br></span></code></pre></div></div>
+<p>You should see <code>* main</code> in the output.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-6-console-configure-paas-console-variables">Step 6: [CONSOLE] Configure PaaS Console Variables<a href="#step-6-console-configure-paas-console-variables" class="hash-link" aria-label="Direct link to Step 6: [CONSOLE] Configure PaaS Console Variables" title="Direct link to Step 6: [CONSOLE] Configure PaaS Console Variables" translate="no">​</a></h3>
+<p>Log in to the <a href="https://console.pimcore.cloud/" target="_blank" rel="noopener noreferrer" class="">HyperMDM PaaS Console</a> and navigate to your project. Go to <strong>Settings → Variables</strong> and create the following environment variables:</p>
+<div class="table-container"><table><thead><tr><th>Variable Name</th><th>Description</th><th>Value Example</th><th>Sensitive</th><th>Available at build time</th></tr></thead><tbody><tr><td><code>env:APP_ENV</code></td><td>Application environment</td><td><code>dev</code> or <code>prod</code></td><td>No</td><td>Yes (recommended)</td></tr><tr><td><code>env:HYPERMDM_TOKEN</code></td><td>HyperMDM license token</td><td><code>&lt;your-hypermdm-license-token&gt;</code></td><td>Yes ✓</td><td><strong>Yes (required)</strong></td></tr><tr><td><code>env:HYPERMDM_REPO</code></td><td>Enterprise Composer repository name (path segment of <code>https://repo.hypermdm.com/&lt;name&gt;/</code>)</td><td><code>&lt;your-repo-name&gt;</code></td><td>No</td><td><strong>Yes (required)</strong></td></tr><tr><td><code>env:HYPERMDM_ADMIN_USER</code></td><td>Admin username for first login</td><td><code>&lt;your-admin-username&gt;</code></td><td>Yes ✓</td><td>No</td></tr><tr><td><code>env:HYPERMDM_ADMIN_PASSWORD</code></td><td>Admin password for first login</td><td><code>&lt;your-secure-password&gt;</code></td><td>Yes ✓</td><td>No</td></tr><tr><td><code>env:HYPERMDM_PRODUCT_KEY</code></td><td>Product key from Step 4</td><td><code>&lt;product-key-from-registration&gt;</code></td><td>No</td><td>Yes (recommended)</td></tr><tr><td><code>env:HYPERMDM_INSTANCE_IDENTIFIER</code></td><td>Instance identifier from Step 4</td><td><code>&lt;instance-identifier&gt;</code></td><td>No</td><td>Yes (recommended)</td></tr><tr><td><code>env:HYPERMDM_ENCRYPTION_SECRET</code></td><td>Encryption secret from Step 4</td><td><code>&lt;encryption-secret&gt;</code></td><td>Yes ✓</td><td>Yes (recommended)</td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Note:</strong> Mark <code>HYPERMDM_TOKEN</code>, <code>HYPERMDM_ADMIN_USER</code>, <code>HYPERMDM_ADMIN_PASSWORD</code>, and <code>HYPERMDM_ENCRYPTION_SECRET</code> as <strong>sensitive</strong> (check the "sensitive" checkbox). The license token is used as a Composer authentication credential, and the encryption secret is used as the Symfony app secret and for data encryption.</p>
+<p><strong>Build-time visibility:</strong> <code>HYPERMDM_TOKEN</code> and <code>HYPERMDM_REPO</code> are consumed during the build phase by <code>.platform-scripts/build/composer.sh</code> (Composer authentication and enterprise repository registration). They <strong>must</strong> be marked as available during build. Marking <code>APP_ENV</code>, <code>HYPERMDM_ENCRYPTION_SECRET</code>, <code>HYPERMDM_PRODUCT_KEY</code>, and <code>HYPERMDM_INSTANCE_IDENTIFIER</code> as available at build time as well is recommended: <code>APP_ENV</code> ensures the build hook's <code>bin/console assets:install</code> runs in the correct environment, and the others avoid container cache invalidation on the first runtime request. See the <a class="" href="../Environment_Variables_Reference/index.html#build-time-vs-runtime-visibility-on-paas-upsun">Environment Variables Reference</a> for details.</p>
+</blockquote>
+<p>These variables configure your runtime environment on PaaS and are used during the initial deployment.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-7-local-connect-to-paas-remote">Step 7: [LOCAL] Connect to PaaS Remote<a href="#step-7-local-connect-to-paas-remote" class="hash-link" aria-label="Direct link to Step 7: [LOCAL] Connect to PaaS Remote" title="Direct link to Step 7: [LOCAL] Connect to PaaS Remote" translate="no">​</a></h3>
+<p>Connect your local repository to the PaaS remote using the HyperMDM CLI:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">hypermdm-cloud project:set-remote &lt;project-id&gt;</span><br></span></code></pre></div></div>
+<p>Replace <code>&lt;project-id&gt;</code> with your project ID from the PaaS Console (format: <code>abcdefg123456</code>).</p>
+<p>This command adds a Git remote named <code>hypermdm</code> to your repository and generates a <code>.platform.app.yaml</code> file.</p>
+<p><strong>⚠️ CRITICAL:</strong> Delete the generated <code>.platform.app.yaml</code> file immediately:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># If .platform.app.yaml was already added to Git, use git rm:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">git rm -f .platform.app.yaml</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">git commit -m "Remove unneeded .platform.app.yaml"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Otherwise, simply delete it:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">rm -f .platform.app.yaml</span><br></span></code></pre></div></div>
+<blockquote>
+<p><strong>Why?</strong> The <code>project:set-remote</code> command generates a <code>.platform.app.yaml</code> file for legacy compatibility, but HyperMDM PaaS uses <code>.platform/applications.yaml</code> instead. If you leave the old file in place, it will cause configuration conflicts during deployment. The <code>.platform/applications.yaml</code> file was already created in Step 2.</p>
+</blockquote>
+<p>Verify the remote was added:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">git remote -v</span><br></span></code></pre></div></div>
+<p>You should see a <code>hypermdm</code> remote pointing to your PaaS project.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-8-localcli-sync-existing-data">Step 8: [LOCAL/CLI] Sync Existing Data<a href="#step-8-localcli-sync-existing-data" class="hash-link" aria-label="Direct link to Step 8: [LOCAL/CLI] Sync Existing Data" title="Direct link to Step 8: [LOCAL/CLI] Sync Existing Data" translate="no">​</a></h3>
+<p>If your existing project has data in the <code>var/</code> and <code>public/var/</code> directories (assets, logs, cache, etc.), you need to upload them to PaaS before deploying.</p>
+<p><strong>Upload the <code>var/</code> directory:</strong></p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">hypermdm-cloud mount:upload --mount var --source ./var</span><br></span></code></pre></div></div>
+<p><strong>Upload the <code>public/var/</code> directory:</strong></p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">hypermdm-cloud mount:upload --mount web/var --source ./public/var</span><br></span></code></pre></div></div>
+<p>These commands transfer your local files to the corresponding mounted volumes on PaaS.</p>
+<blockquote>
+<p><strong>Note about database:</strong> The PaaS environment will have an empty database on first deploy. If you need to migrate your existing database, consider using database dump/restore tools separately after the initial deployment. See the <a class="" href="../Migration/index.html">Migration Guide</a> for database migration strategies.</p>
+</blockquote>
+<blockquote>
+<p><strong>Optional:</strong> If you have large amounts of data, you may want to selectively sync only essential files (e.g., exclude cache or temporary files) to reduce upload time.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-9-local-push-to-deploy">Step 9: [LOCAL] Push to Deploy<a href="#step-9-local-push-to-deploy" class="hash-link" aria-label="Direct link to Step 9: [LOCAL] Push to Deploy" title="Direct link to Step 9: [LOCAL] Push to Deploy" translate="no">​</a></h3>
+<p>Commit all your PaaS configuration changes and push to deploy:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">git add -A</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">git commit -m "Add PaaS configuration"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">git push hypermdm main</span><br></span></code></pre></div></div>
+<p>The deployment process will:</p>
+<ol>
+<li class="">Build your application</li>
+<li class="">Install dependencies</li>
+<li class="">Deploy services (MariaDB, Redis, OpenSearch, etc.)</li>
+<li class="">Run the PaaS install profile (<code>HyperMDM\Paas\Install\PaasProfile</code>) to set up the database schema and initial HyperMDM configuration</li>
+<li class="">Install enabled bundles</li>
+<li class="">Run database migrations</li>
+<li class="">Make your site available</li>
+</ol>
+<p>This first deployment typically takes 10-15 minutes.</p>
+<p><strong>Watch the deployment progress:</strong></p>
+<ul>
+<li class=""><strong>In the Console:</strong> Navigate to your project in the <a href="https://console.pimcore.cloud/" target="_blank" rel="noopener noreferrer" class="">PaaS Console</a> → <strong>Environments</strong> tab → <code>main</code> environment</li>
+<li class=""><strong>From the CLI:</strong> Run <code>hypermdm-cloud activity:log</code> to view real-time deployment logs</li>
+</ul>
+<p><strong>Verify deployment success:</strong></p>
+<ol>
+<li class="">Wait for the <code>main</code> environment to show <strong>Active</strong> status in the Console</li>
+<li class="">Click the generated URL to access your site</li>
+<li class="">Log in to the admin panel at <code>https://your-site-url/admin</code> using the credentials you configured in Step 6</li>
+</ol>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next Steps<a href="#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h2>
+<p>Now that your existing HyperMDM project is deployed on PaaS:</p>
+<ul>
+<li class=""><strong><a class="" href="../Environment_Variables_Reference/index.html">Environment Variables Reference</a></strong> - Learn about all available environment variables and how they work</li>
+<li class=""><strong><a class="" href="../Configuration/index.html">Configuration Guide</a></strong> - Customize your PaaS setup (RabbitMQ, OpenSearch, S3, etc.)</li>
+<li class=""><strong><a class="" href="../Good_to_know/index.html">Good to Know</a></strong> - Operational tips for running HyperMDM on PaaS (logs, commands, cache, etc.)</li>
+<li class=""><strong><a class="" href="../Migration/index.html">Migration Guide</a></strong> - Additional migration strategies for complex projects</li>
+<li class=""><strong><a class="" href="../Faq/index.html">FAQ &amp; Troubleshooting</a></strong> - Common issues and solutions</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="common-issues">Common Issues<a href="#common-issues" class="hash-link" aria-label="Direct link to Common Issues" title="Direct link to Common Issues" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="deployment-fails-with-branch-not-found">Deployment fails with "branch not found"<a href="#deployment-fails-with-branch-not-found" class="hash-link" aria-label="Direct link to Deployment fails with &quot;branch not found&quot;" title="Direct link to Deployment fails with &quot;branch not found&quot;" translate="no">​</a></h3>
+<p>Make sure you renamed your branch to <code>main</code> (see Step 5). PaaS looks for the <code>main</code> branch by default.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-conflicts-during-deployment">Configuration conflicts during deployment<a href="#configuration-conflicts-during-deployment" class="hash-link" aria-label="Direct link to Configuration conflicts during deployment" title="Direct link to Configuration conflicts during deployment" translate="no">​</a></h3>
+<p>Check if <code>.platform.app.yaml</code> exists in your repository. If it does, delete it (see Step 7). PaaS uses <code>.platform/applications.yaml</code> instead.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="build-fails-with-environment-variable-not-defined">Build fails with "environment variable not defined"<a href="#build-fails-with-environment-variable-not-defined" class="hash-link" aria-label="Direct link to Build fails with &quot;environment variable not defined&quot;" title="Direct link to Build fails with &quot;environment variable not defined&quot;" translate="no">​</a></h3>
+<p>Verify that you added all service configuration variables to your <code>.env</code> file (see Step 3). These placeholder values are required during the PaaS build phase.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="admin-login-doesnt-work-after-deployment">Admin login doesn't work after deployment<a href="#admin-login-doesnt-work-after-deployment" class="hash-link" aria-label="Direct link to Admin login doesn't work after deployment" title="Direct link to Admin login doesn't work after deployment" translate="no">​</a></h3>
+<p>Verify that you set <code>HYPERMDM_ADMIN_USER</code> and <code>HYPERMDM_ADMIN_PASSWORD</code> in the PaaS Console (Step 6). These variables are required for the initial admin user creation.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-or-assets-are-missing-after-deployment">Data or assets are missing after deployment<a href="#data-or-assets-are-missing-after-deployment" class="hash-link" aria-label="Direct link to Data or assets are missing after deployment" title="Direct link to Data or assets are missing after deployment" translate="no">​</a></h3>
+<p>Make sure you ran the <code>mount:upload</code> commands in Step 8 before pushing your code. You can run them again after deployment to sync any missing files.</p>
+<p>For more troubleshooting help, see the <a class="" href="../Faq/index.html">FAQ &amp; Troubleshooting guide</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

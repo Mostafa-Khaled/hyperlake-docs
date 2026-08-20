@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hugging Face Zero Shot Text Classification — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Hugging Face Zero Shot Text Classification</h1></header>
+<p>This action can be executed on data object level and lets
+you automatically send predefined template to a configurable Hugging Face endpoint to classify the data object. There are different variants to configure the classification.
+For more information about the Hugging Face Zero Shot Text Classification, please visit <a href="https://huggingface.co/tasks/zero-shot-classification" target="_blank" rel="noopener noreferrer" class="">Hugging Face Zero Shot Text Classification</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="available-context">Available Context<a href="#available-context" class="hash-link" aria-label="Direct link to Available Context" title="Direct link to Available Context" translate="no">​</a></h3>
+<p>For more information on context limitations refer to the <a class="" href="../../index.html">Available Context section</a>.</p>
+<p><strong>Multiselect</strong>: Yes
+<strong>Elements</strong>: Data Objects</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="classification-variants">Classification Variants<a href="#classification-variants" class="hash-link" aria-label="Direct link to Classification Variants" title="Direct link to Classification Variants" translate="no">​</a></h3>
+<ul>
+<li class=""><a href="#apply-classification-on-a-select-or-multiselect-field" class="">Apply classification on a select or multiselect field</a></li>
+<li class=""><a href="#apply-classification-on-the-hypermdm-tags" class="">Apply classification on the hypermdm tags</a></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="apply-classification-on-a-select-or-multiselect-field">Apply classification on a select or multiselect field<a href="#apply-classification-on-a-select-or-multiselect-field" class="hash-link" aria-label="Direct link to Apply classification on a select or multiselect field" title="Direct link to Apply classification on a select or multiselect field" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-options">Configuration Options<a href="#configuration-options" class="hash-link" aria-label="Direct link to Configuration Options" title="Direct link to Configuration Options" translate="no">​</a></h3>
+<p>This variant of the action can be used to classify the data object based on the values of a select or multiselect field. The configuration options for this variant are as follows:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">template</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"{{ subject.name }} is a {{ subject.type }} of {{ subject.color|join(', ') }} color."</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">select_attribute_field</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> brand</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">replace_existing_selection</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">minimum_confidence</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">0.8</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">best_match_only</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">model_endpoint</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'&lt;YOUR_ENDPOINT_URL&gt;'</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="detailed-configuration-options">Detailed Configuration Options<a href="#detailed-configuration-options" class="hash-link" aria-label="Direct link to Detailed Configuration Options" title="Direct link to Detailed Configuration Options" translate="no">​</a></h4>
+<ul>
+<li class=""><code>template</code>: Required string. A Twig template string that defines the input to be sent to the AI model. All attributes of the data object can be used in the template using the <code>subject</code> variable.</li>
+<li class=""><code>select_attribute_field</code>: Required string. The name of the select or multiselect field to be used for classification.</li>
+<li class=""><code>replace_existing_selection</code>: Type: Boolean. Default: <code>false</code>. If true, existing selection will be replaced with the new ones. This only applies to multiselect fields.</li>
+<li class=""><code>minimum_confidence</code>: Type: Float. Default: <code>0.8</code>. The minimum confidence for a selection to be added to the data object.</li>
+<li class=""><code>best_match_only</code>: Type: Boolean. Default: <code>true</code>. If true, only the best match will be used otherwise the minimum confidence will be used and all selection with a confidence higher than the minimum confidence will be used. This only applies to multiselect fields.</li>
+<li class=""><code>model_endpoint</code>: Type: String. Endpoint url of the Hugging Face model to use.</li>
+<li class=""><code>label_limit</code>: Type: Integer. Default: <code>10</code>. The maximum number of labels that can be passed to the classification model. Currently, the Hugging Face model only supports up to 10 labels.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="apply-classification-on-the-hypermdm-tags">Apply classification on the hypermdm tags<a href="#apply-classification-on-the-hypermdm-tags" class="hash-link" aria-label="Direct link to Apply classification on the pimcore tags" title="Direct link to Apply classification on the pimcore tags" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-options-1">Configuration Options<a href="#configuration-options-1" class="hash-link" aria-label="Direct link to Configuration Options" title="Direct link to Configuration Options" translate="no">​</a></h3>
+<p>This variant of the action can be used to classify the data object based on the hypermdm tags. The configuration options for this variant are as follows:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">template</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"{{ subject.name }} is a {{ subject.type }} of {{ subject.color|join(', ') }} color."</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">replace_existing_tags</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">tag_root_node</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">0</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">tag_only_leaf_nodes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">minimum_confidence</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">0.8</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">best_match_only</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">model_endpoint</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'&lt;YOUR_ENDPOINT_URL&gt;'</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="detailed-configuration-options-1">Detailed Configuration Options<a href="#detailed-configuration-options-1" class="hash-link" aria-label="Direct link to Detailed Configuration Options" title="Direct link to Detailed Configuration Options" translate="no">​</a></h4>
+<ul>
+<li class=""><code>template</code>: Required string. A Twig template string that defines the input to be sent to the AI model. All attributes of the data object can be used in the template using the <code>subject</code> variable.</li>
+<li class=""><code>replace_existing_tag</code>: Type: Boolean. Default: <code>false</code>. If true, existing tags will be replaced with the new ones.</li>
+<li class=""><code>minimum_confidence</code>: Type: Float. Default: <code>0.8</code>. The minimum confidence for a tag to be added to the data object.</li>
+<li class=""><code>tag_root_node</code>: Type: Integer. Default: <code>0</code>. The root node of the tag to be used for classification.</li>
+<li class=""><code>tag_only_leaf_nodes</code>: Type: Boolean. Default: <code>true</code>. If true, only the leaf nodes of the tag will be used for classification.</li>
+<li class=""><code>best_match_only</code>: Type: Boolean. Default: <code>true</code>. If true, only the best match will be used otherwise the minimum confidence will be used and all selection with a confidence higher than the minimum confidence will be used. This only applies to multiselect fields.</li>
+<li class=""><code>model_endpoint</code>: Type: String. Endpoint url of the Hugging Face model to use.</li>
+<li class=""><code>tag_limit</code>: Type: Integer. Default: <code>10</code>. The maximum number of tags that can be passed to the classification model. Currently, the Hugging Face model only supports up to 10 tags.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="available-models-to-use">Available Models to Use<a href="#available-models-to-use" class="hash-link" aria-label="Direct link to Available Models to Use" title="Direct link to Available Models to Use" translate="no">​</a></h3>
+<ul>
+<li class=""><a href="https://huggingface.co/facebook/bart-large-mnli" target="_blank" rel="noopener noreferrer" class="">facebook/bart-large-mnli</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

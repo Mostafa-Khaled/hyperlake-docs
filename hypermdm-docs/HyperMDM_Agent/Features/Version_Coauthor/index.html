@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Version Coauthor — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Version Coauthor</h1></header>
+<p>Every element save that an agent performs is attributed twice: the version's user stays the human who owns the
+chat session, and the version additionally carries a coauthor that names the agent. This makes agent-driven
+changes auditable in the Versions tab of HyperMDM Studio, which shows a "Co-authored by" tag on every stamped
+version.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-gets-stored">What gets stored<a href="#what-gets-stored" class="hash-link" aria-label="Direct link to What gets stored" title="Direct link to What gets stored" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td><code>coauthorType</code></td><td><code>agent</code></td></tr><tr><td><code>coauthor</code></td><td>The agent name of the chat session, for example <code>data-management</code></td></tr></tbody></table></div>
+<p>The agent name comes from the persisted chat session (<code>AgentSession::agentName</code>), resolved through the trusted
+MCP token binding. For MCP tool calls the token reference identifies the session; for proposal approvals the
+session id comes from the proposal payload. In both cases the session lookup is scoped to the authenticated
+user, so a coauthor can only ever name an agent from one of the user's own sessions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="when-stamping-happens">When stamping happens<a href="#when-stamping-happens" class="hash-link" aria-label="Direct link to When stamping happens" title="Direct link to When stamping happens" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>MCP tool calls</strong>: every request authenticated with a chat-session MCP token activates the coauthor context
+for the duration of the request. All element writes performed by MCP tools during that request stamp their
+versions, including tools added in the future.</li>
+<li class=""><strong>HITL proposal approvals</strong>: when a user approves a proposal, the resolver applies the change with the
+coauthor context active for the session that produced the proposal.</li>
+</ul>
+<p>Saves performed by the same user outside a chat session are not stamped, and stamping never overrides a
+coauthor that was set explicitly. Bulk writes that run through asynchronous execution-engine jobs are outside
+the request scope and are not stamped.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="external-mcp-clients">External MCP clients<a href="#external-mcp-clients" class="hash-link" aria-label="Direct link to External MCP clients" title="Direct link to External MCP clients" translate="no">​</a></h2>
+<p>External MCP clients (Claude Desktop, Cursor, or a custom orchestrator authenticated with a personal access
+token) reach the same <code>/hypermdm-mcp/</code> write tools without a chat session. Their writes are stamped with a
+distinct coauthor type:</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td><code>coauthorType</code></td><td><code>mcp-client</code></td></tr><tr><td><code>coauthor</code></td><td>The client name from the MCP <code>initialize</code> handshake, for example <code>Claude Desktop</code></td></tr></tbody></table></div>
+<p>The client name is entirely client-claimed: any MCP client can send any name at <code>initialize</code>. Treat it as
+informational, not verified identity. The value is sanitized before it is stored: trimmed, stripped of control
+characters, and truncated to 100 characters. A missing or empty name is not stamped.</p>
+<p>Internal chat sessions always take precedence. If a request already carries an <code>agent</code> coauthor from
+<code>McpCoauthorSubscriber</code>, the handshake-derived stamp never applies. Tool payloads cannot set the coauthor
+either: <code>update_asset</code> strips any <code>coauthorType</code>/<code>coauthor</code> keys from its JSON payload before it reaches the
+patch service, so an MCP client cannot claim an arbitrary coauthor through tool arguments.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<p>Stamping is enabled by default. Disable it project-wide:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_agent</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">version_coauthor</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">enabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related">Related<a href="#related" class="hash-link" aria-label="Direct link to Related" title="Direct link to Related" translate="no">​</a></h2>
+<ul>
+<li class="">The underlying mechanism (<code>CoauthorContextInterface</code>) is part of HyperMDM core, see the Versioning chapter of
+the HyperMDM documentation.</li>
+<li class=""><a class="" href="../HITL_Proposals/index.html">HITL Proposals</a></li>
+<li class=""><a class="" href="../Built_in_HyperMDM_MCP_Servers/index.html">Built-in HyperMDM MCP Servers</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

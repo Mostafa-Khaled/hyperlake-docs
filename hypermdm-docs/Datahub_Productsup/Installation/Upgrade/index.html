@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Information — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Information</h1></header>
+<p>Following steps are necessary during updating to newer versions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="improvements">Improvements<a href="#improvements" class="hash-link" aria-label="Direct link to Improvements" title="Direct link to Improvements" translate="no">​</a></h3>
+<ul>
+<li class="">Request parameter retrieval refactored to use <code>ParameterBagHelper</code> for full Symfony 7 compatibility.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php--dependency-updates">PHP / Dependency Updates<a href="#php--dependency-updates" class="hash-link" aria-label="Direct link to PHP / Dependency Updates" title="Direct link to PHP / Dependency Updates" translate="no">​</a></h3>
+<ul>
+<li class="">PHP minimum requirement raised to <code>8.4</code>. PHP <code>8.5</code> is now supported.</li>
+<li class="">Dropped support for PHP <code>8.3</code> and Symfony <code>v6</code>.</li>
+<li class="">Removed the <code>hypermdm/compatibility-bridge-v10</code> dependency.</li>
+<li class="">Removed Doctrine DBAL enum mapping support.</li>
+<li class="">Implemented <code>getFile()</code> and <code>getFileStorage()</code> methods in <code>Productsup</code> and <code>StudioProductsup</code> exporters
+to comply with the updated <code>ExporterInterface</code> from <code>data-hub-file-export</code>.
+These methods throw an <code>UnsupportedFeatureException</code> (a <code>\LogicException</code>) as productsup exporters use
+database-based caching instead of file-based export.
+If you have custom exporters extending these classes, no action is required unless you override
+<code>ExporterInterface</code> methods directly.</li>
+<li class="">Marked several classes as <code>@internal</code> to reduce the public API surface.</li>
+<li class="">Removed empty migration <code>Version20210305134111</code></li>
+</ul>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Datahub_Productsup-Installation-Upgrade-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_Productsup-Installation-Upgrade-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Datahub_Productsup-Installation-Upgrade-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>Releases <code>2026.1.0</code> to <code>2026.1.3</code> removed <code>AdminSubscriber</code> and marked <code>StudioProductsup</code> as <code>final</code>, on the
+assumption that the classic admin UI integration was no longer needed. That broke the "reset and clear queue"
+action (still reachable through the Studio Backend API) and third-party exporters extending <code>StudioProductsup</code>.
+Both changes were reverted in <code>2026.1.4</code>, where the class is no longer <code>final</code> and <code>AdminSubscriber</code> is back.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="breaking-data-export-refactoring">Breaking: Data Export Refactoring<a href="#breaking-data-export-refactoring" class="hash-link" aria-label="Direct link to Breaking: Data Export Refactoring" title="Direct link to Breaking: Data Export Refactoring" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="studioproductsup-constructor-removed"><code>StudioProductsup</code> constructor removed<a href="#studioproductsup-constructor-removed" class="hash-link" aria-label="Direct link to studioproductsup-constructor-removed" title="Direct link to studioproductsup-constructor-removed" translate="no">​</a></h4>
+<p>The custom constructor on <code>StudioProductsup</code> has been removed. The <code>$gridService</code> (<code>GridServiceInterface</code>)
+and <code>$formatterLoader</code> (<code>OutputFormatterLoaderInterface</code>) properties are now inherited from the upstream
+<code>AbstractExporter</code> (from <code>data-hub-file-export</code>). If you have service definitions that explicitly pass
+constructor arguments matching the old signature (beyond what autowiring provides), review and update
+them accordingly. <code>StudioProductsup</code> is not <code>final</code> and can still be extended, see
+<a class="" href="../../Customize_and_Extend/index.html">Customize and Extend</a>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="productsupgetitemdata-return-type-declaration-added"><code>Productsup::getItemData()</code> return type declaration added<a href="#productsupgetitemdata-return-type-declaration-added" class="hash-link" aria-label="Direct link to productsupgetitemdata-return-type-declaration-added" title="Direct link to productsupgetitemdata-return-type-declaration-added" translate="no">​</a></h4>
+<p><code>Productsup::getItemData(Concrete $object)</code> now has an explicit <code>array|bool</code> return type declaration.
+If you extend the <code>Productsup</code> class and override this method, you must add the matching return type
+to your override.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="applicationlogger-component-prefix-no-longer-set-in-studioproductsup"><code>ApplicationLogger</code> component prefix no longer set in <code>StudioProductsup</code><a href="#applicationlogger-component-prefix-no-longer-set-in-studioproductsup" class="hash-link" aria-label="Direct link to applicationlogger-component-prefix-no-longer-set-in-studioproductsup" title="Direct link to applicationlogger-component-prefix-no-longer-set-in-studioproductsup" translate="no">​</a></h4>
+<p>The <code>StudioProductsup::execute()</code> method no longer explicitly sets the <code>ApplicationLogger</code> component
+prefix via <code>setComponent()</code>. Log entries from the Studio exporter will use the default logger component
+instead of the <code>HyperMDMDataHubProductsupBundle::LOGGER_COMPONENT_PREFIX</code> prefix. If you rely on
+filtering log entries by this component name, adjust your log queries accordingly.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-240">Upgrade to 2.4.0<a href="#upgrade-to-240" class="hash-link" aria-label="Direct link to Upgrade to 2.4.0" title="Direct link to Upgrade to 2.4.0" translate="no">​</a></h2>
+<p>With this version and the HyperMDM Studio integration, we introduced a new architecture for schema definitions.
+We are moving from the tree-based schema definition (also used in the grid configuration of the Admin Classic UI)
+to a pipeline-based approach (also used in HyperMDM Studio grids).
+This change is driven by technical and maintenance considerations, as the tree-based implementation has limitations in
+terms of consistency, flexibility, and extensibility.
+The new architecture aligns with how HyperMDM Studio grids work internally, streamlining the implementation across
+adapters and improving consistency, stability, and extensibility.</p>
+<p>Existing configurations created in the Classic UI remain functional and continue to execute without changes.
+However, a configuration must be fully migrated to the new pipeline-based format before it can be edited in
+HyperMDM Studio.
+Migration must be done manually by following the steps provided in HyperMDM Studio.</p>
+<p>Read-only support for the legacy tree-based schema definitions will be removed in version 2027.1.0.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-200">Upgrade to 2.0.0<a href="#upgrade-to-200" class="hash-link" aria-label="Direct link to Upgrade to 2.0.0" title="Direct link to Upgrade to 2.0.0" translate="no">​</a></h2>
+<ul>
+<li class="">Added support for HyperMDM v11 and dropped support for all previous HyperMDM versions.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-110">Upgrade to 1.1.0<a href="#upgrade-to-110" class="hash-link" aria-label="Direct link to Upgrade to 1.1.0" title="Direct link to Upgrade to 1.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">Execute all migrations of the bundle.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-hypermdm-x">Upgrade to HyperMDM X<a href="#upgrade-to-hypermdm-x" class="hash-link" aria-label="Direct link to Upgrade to Pimcore X" title="Direct link to Upgrade to Pimcore X" translate="no">​</a></h2>
+<ul>
+<li class="">Update to latest (allowed) bundle version in HyperMDM 6.9 and execute all migrations.</li>
+<li class="">Then update to HyperMDM X.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

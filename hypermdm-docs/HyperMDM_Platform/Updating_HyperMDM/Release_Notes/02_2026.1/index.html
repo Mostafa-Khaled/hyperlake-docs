@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Release 2026.1 — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Release 2026.1</h1></header>
+<p>Here you will find all the important breaking changes, removals, new features and release notes of
+the Platform Version 2026.1 release.
+Please also make sure to run all migrations after update as always.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="unified-platform-versioning">Unified Platform Versioning<a href="#unified-platform-versioning" class="hash-link" aria-label="Direct link to Unified Platform Versioning" title="Direct link to Unified Platform Versioning" translate="no">​</a></h2>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-HyperMDM_Platform-Updating_HyperMDM-Release_Notes-02_2026-1-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM_Platform-Updating_HyperMDM-Release_Notes-02_2026-1-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-HyperMDM_Platform-Updating_HyperMDM-Release_Notes-02_2026-1-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>Informational - no action required</div><div class="admonitionContent_BuS1"><p>Starting with Platform Version 2026.1, all HyperMDM repositories follow a unified branch and release naming scheme
+aligned with the platform version. Individual per-repository versioning is no longer used. All bundles are now
+tagged and maintained under the common <code>2026.1.*</code> platform version.</p><p>The switch to 2026.1.x is the next logical major release step. For example, the last data-hub release was <code>2.4.0</code>;
+the next is <code>2026.1.0</code>. There will be no <code>2.*</code> or <code>3.*</code> releases in between.</p><p>Subsequent releases follow semantic versioning: <code>2026.1.1</code> for the next bug fix, <code>2026.2.0</code> for the next minor
+release, <code>2027.1.0</code> for the next yearly major.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="most-important-changes">Most Important Changes<a href="#most-important-changes" class="hash-link" aria-label="Direct link to Most Important Changes" title="Direct link to Most Important Changes" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-studio-replaces-admin-ui-classic">HyperMDM Studio Replaces Admin UI Classic<a href="#hypermdm-studio-replaces-admin-ui-classic" class="hash-link" aria-label="Direct link to Pimcore Studio Replaces Admin UI Classic" title="Direct link to Pimcore Studio Replaces Admin UI Classic" translate="no">​</a></h3>
+<p>Admin UI Classic support has been fully removed across all bundles. HyperMDM Studio is now the only supported
+administration interface. Specifically:</p>
+<ul>
+<li class="">All ExtJS JavaScript and CSS files have been removed</li>
+<li class="">All classic admin controllers have been removed</li>
+<li class=""><code>HyperMDMBundleAdminClassicInterface</code> implementations and <code>BundleAdminClassicTrait</code> have been removed</li>
+<li class="">Legacy admin event listeners, <code>AdminSubscriber</code>, and ACL integrations have been removed</li>
+<li class="">All bundle configuration and management is now exclusively handled through HyperMDM Studio</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removal-of-deprecated-bundles">Removal of Deprecated Bundles<a href="#removal-of-deprecated-bundles" class="hash-link" aria-label="Direct link to Removal of Deprecated Bundles" title="Direct link to Removal of Deprecated Bundles" translate="no">​</a></h3>
+<p>The following bundles deprecated in Platform Version 2025.4 have been removed.
+Remove them from your <code>composer.json</code> and clean up any related service configuration.</p>
+<p>Functionality now part of HyperMDM Studio:</p>
+<ul>
+<li class="">Advanced Object Search Bundle</li>
+<li class="">Perspective Editor Bundle</li>
+<li class="">Simple Backend Search Bundle</li>
+</ul>
+<p>Discontinued and completely removed:</p>
+<ul>
+<li class="">File Explorer Bundle</li>
+<li class="">Glossary Bundle</li>
+<li class="">Google Marketing Bundle</li>
+<li class="">Newsletter Bundle</li>
+<li class="">SEO Bundle (redirects, robots.txt, and sitemaps remain in the core)</li>
+<li class="">Static Routes Bundle</li>
+<li class="">System Info Bundle</li>
+<li class="">Word Export Bundle</li>
+<li class="">Output Data Config Toolkit Bundle</li>
+<li class="">Web2Print Tools Bundle</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php-and-symfony-version-requirements">PHP and Symfony Version Requirements<a href="#php-and-symfony-version-requirements" class="hash-link" aria-label="Direct link to PHP and Symfony Version Requirements" title="Direct link to PHP and Symfony Version Requirements" translate="no">​</a></h3>
+<ul>
+<li class="">PHP 8.3 support has been removed; PHP 8.4 or 8.5 is now required</li>
+<li class="">Symfony 6.x support has been removed; Symfony 7.x is now required</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="installer-profile-architecture">Installer Profile Architecture<a href="#installer-profile-architecture" class="hash-link" aria-label="Direct link to Installer Profile Architecture" title="Direct link to Installer Profile Architecture" translate="no">​</a></h3>
+<p>The HyperMDM installer has been redesigned with a profile-based architecture. The install command format has
+changed and now requires the <code>--install-profile</code> option. This is a breaking change for any automated
+deployment pipelines that invoke the installer directly. See the
+<a class="" href="../../../../HyperMDM/Upgrade_Notes/index.html#hypermdm-202610">Core Framework upgrade notes</a>
+for the updated command format.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="database-collation-change">Database Collation Change<a href="#database-collation-change" class="hash-link" aria-label="Direct link to Database Collation Change" title="Direct link to Database Collation Change" translate="no">​</a></h3>
+<p>All <code>utf8mb4</code> tables and columns now explicitly use <code>utf8mb4_unicode_520_ci</code> as their collation. Previously,
+no collation was specified, which caused MySQL/MariaDB to apply its own defaults (<code>utf8mb4_general_ci</code> on
+MySQL 5.7/MariaDB, <code>utf8mb4_0900_ai_ci</code> on MySQL 8). This mismatch can cause issues with foreign key
+constraints and unexpected sort behavior.
+See <a class="" href="/platform/Pimcore_Platform/Updating_Pimcore/Release_Notes/02_2026.1/Migration_Guide">01_Migration_Guide.md</a> for details.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="messenger-transport-dsn-standardization">Messenger Transport DSN Standardization<a href="#messenger-transport-dsn-standardization" class="hash-link" aria-label="Direct link to Messenger Transport DSN Standardization" title="Direct link to Messenger Transport DSN Standardization" translate="no">​</a></h3>
+<p>The Messenger transport DSN configuration has been standardized across all bundles. The parameter is now
+consistently named <code>%hypermdm.messenger.transport_dsn_prefix%</code> with a trailing separator format. Check the
+upgrade notes of each bundle you use for the specific parameter name changes.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="additional-changes">Additional Changes<a href="#additional-changes" class="hash-link" aria-label="Direct link to Additional Changes" title="Direct link to Additional Changes" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="datahub-configuration-schema-changes">Datahub Configuration Schema Changes<a href="#datahub-configuration-schema-changes" class="hash-link" aria-label="Direct link to Datahub Configuration Schema Changes" title="Direct link to Datahub Configuration Schema Changes" translate="no">​</a></h3>
+<p><strong>Affected adapters:</strong> Datahub File Export, Datahub Productsup, Datahub Simple REST, Datahub Webhooks.</p>
+<p>With the HyperMDM Studio integration, we introduced a new architecture for schema definitions of the mentioned Datahub
+adapters. We are moving from the tree-based schema definition (also used in the grid configuration of the Admin Classic UI)
+to a pipeline-based approach (also used in Studio UI grids).
+This change is driven by technical and maintenance considerations, as the tree-based implementation has limitations in
+terms of consistency, flexibility, and extensibility.
+The new architecture aligns with how HyperMDM Studio UI grids work internally, streamlining the implementation across
+adapters and improving consistency, stability, and extensibility.</p>
+<p>Existing configurations created in the Classic UI remain functional and continue to execute without changes.
+However, a configuration must be fully migrated to the new pipeline-based format before it can be edited in
+HyperMDM Studio.
+Migration must be done manually by following the steps provided in the HyperMDM Studio UI.</p>
+<p>Read-only support for the legacy tree-based schema definitions will be removed in version 2027.1.0.</p>
+<p>All other Datahub configurations (not listed above) are unaffected and can be modified without migration.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="e-commerce-framework">E-Commerce Framework<a href="#e-commerce-framework" class="hash-link" aria-label="Direct link to E-Commerce Framework" title="Direct link to E-Commerce Framework" translate="no">​</a></h3>
+<ul>
+<li class=""><strong>GA4 migration (breaking):</strong> The GoogleTagManager tracker has been updated from Universal Analytics Enhanced
+Ecommerce to the GA4 ecommerce schema. Event names, data structure, and item field names have all changed.
+See the upgrade notes for the full mapping.</li>
+<li class="">Legacy Universal Analytics (<code>analytics.js</code>) tracker classes have been removed following Google's sunset of
+UA in July 2023.</li>
+<li class="">New <code>Gtag</code> tracker added for direct <code>gtag.js</code> integration.</li>
+<li class="">Four new GA4 tracking interfaces added: <code>ProductSelectInterface</code>, <code>CartViewInterface</code>, <code>CheckoutShippingInfoInterface</code>, <code>CheckoutPaymentInfoInterface</code>.</li>
+<li class=""><code>TrackingManagerInterface</code> now extends the four new GA4 interfaces - custom implementations must add the new methods.</li>
+<li class=""><code>formatPrice()</code> now returns <code>?float</code> instead of <code>string</code>; <code>getCartValue()</code> now returns <code>?float</code> instead of <code>string</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="personalization-bundle">Personalization Bundle<a href="#personalization-bundle" class="hash-link" aria-label="Direct link to Personalization Bundle" title="Direct link to Personalization Bundle" translate="no">​</a></h3>
+<ul>
+<li class=""><strong>Breaking:</strong> The GeoIP2 library has been updated from 2.x to 3.x. The response data structure has changed.
+Update any code that reads GeoIP2 response objects directly to use the v3 API. See the
+<a class="" href="../../../../Targeting/Installation/Upgrade/index.html#upgrade-to-202610">Personalization Bundle upgrade notes</a>
+for migration details.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-notes">Upgrade Notes<a href="#upgrade-notes" class="hash-link" aria-label="Direct link to Upgrade Notes" title="Direct link to Upgrade Notes" translate="no">​</a></h2>
+<p>Before updating, review the upgrade notes for each component you use:</p>
+<ul>
+<li class=""><a class="" href="../../../../HyperMDM/Upgrade_Notes/index.html#hypermdm-202610">Core Framework</a></li>
+<li class=""><a class="" href="../../../../Enterprise_Metadata/Installation/Update/index.html#upgrade-to-202610">Asset Metadata Class Definitions</a></li>
+<li class=""><a class="" href="../../../../Backend_Power_Tools/Installation/Upgrade/index.html#upgrade-to-202610">Backend Power Tools</a></li>
+<li class=""><a class="" href="../../../../Copilot/Installation/Upgrade/index.html#upgrade-to-202610">Copilot Bundle</a></li>
+<li class=""><a class="" href="../../../../Customer_Management_Framework/Installation/Update/index.html#upgrade-to-202610">Customer Data Framework</a></li>
+<li class=""><a class="" href="../../../../Datahub/Installation_and_Upgrade/Upgrade_Notes/index.html#upgrade-to-202610">Datahub</a></li>
+<li class=""><a class="" href="../../../../Datahub_File_Export/Installation/Upgrade/index.html#upgrade-to-202610">Datahub File Export</a></li>
+<li class=""><a class="" href="../../../../Datahub_Productsup/Installation/Upgrade/index.html#upgrade-to-202610">Datahub Productsup</a></li>
+<li class=""><a class="" href="../../../../Datahub_Simple_Rest/Installation/Upgrade_Notes/index.html#upgrade-to-202610">Datahub Simple REST</a></li>
+<li class=""><a class="" href="../../../../Datahub_Webhooks/Installation/Upgrade_notes/index.html#upgrade-to-202610">Datahub Webhooks</a></li>
+<li class=""><a class="" href="../../../../Data_Importer/Installation/Upgrade/index.html#upgrade-to-202610">Data Importer</a></li>
+<li class=""><a class="" href="../../../../Data_Quality_Management/Installation/Upgrade/index.html#upgrade-to-202610">Data Quality Management</a></li>
+<li class=""><a class="" href="../../../../Direct_Edit/Installation/Upgrade_notes/index.html#upgrade-to-202610">Direct Edit</a></li>
+<li class=""><a class="" href="../../../../Ecommerce_Framework/Upgrade_Notes/index.html#version-202610">E-Commerce Framework</a></li>
+<li class=""><a class="" href="../../../../Generic_Data_Index/Installation/Upgrade/index.html#upgrade-to-202610">Generic Data Index</a></li>
+<li class=""><a class="" href="../../../../Headless_Documents/Installation/Upgrade/index.html#update-to-202610">Headless Documents</a></li>
+<li class=""><a class="" href="../../../../OpenID_Connect/Installation/Upgrade/index.html#202610">OpenID Connect</a></li>
+<li class=""><a class="" href="../../../../Targeting/Installation/Upgrade/index.html#upgrade-to-202610">Personalization Bundle</a></li>
+<li class=""><a class="" href="../../../../Portal_Engine/Installation/Upgrade/index.html#upgrade-to-202610">Portal Engine</a></li>
+<li class=""><a class="" href="../../../../Quill_WYSWIYG_Editor/Installation/Upgrade/index.html#upgrade-to-202610">Quill Bundle</a></li>
+<li class=""><a class="" href="../../../../Statistics_Explorer/Installation_and_Configuration/Upgrade/index.html#upgrade-to-202610">Statistics Explorer</a></li>
+<li class=""><a class="" href="../../../../TinyMCE_WYSWIYG_Editor/Installation/Upgrade/index.html#upgrade-to-202610">TinyMCE Bundle</a></li>
+<li class=""><a class="" href="../../../../Translation_Provider_Interfaces/Installation_and_Configuration/Upgrade/index.html#update-to-202610">Translation Provider Interfaces</a></li>
+<li class=""><a class="" href="../../../../Web_To_Print/Installation/Upgrade/index.html#upgrade-to-202610">Web-to-Print Bundle</a></li>
+<li class=""><a class="" href="../../../../Workflow_Automation/Installation/Upgrade/index.html#upgrade-to-202610">Workflow Automation Integration</a></li>
+<li class=""><a class="" href="../../../../Worfklow_Designer/Installation_and_Configuration/Upgrade/index.html#upgrade-to-202610">Workflow Designer</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

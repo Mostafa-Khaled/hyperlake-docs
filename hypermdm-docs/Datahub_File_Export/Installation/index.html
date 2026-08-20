@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Installation</h1></header>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Datahub_File_Export-Installation-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_File_Export-Installation-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Datahub_File_Export-Installation-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>Datahub File Export is an enterprise bundle. It requires a HyperMDM enterprise subscription.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<p>The bundle requires HyperMDM 2026.1 or later and PHP 8.4 or 8.5.</p>
+<p><a class="" href="../../Datahub/Installation_and_Upgrade/index.html">Datahub</a>
+(<code>hypermdm/data-hub</code>), <code>hypermdm/studio-backend-bundle</code> and <code>hypermdm/studio-ui-bundle</code> are Composer dependencies, so
+Composer pulls them in. The bundle additionally registers Datahub, the Application Logger bundle and the Enterprise
+Subscription Tools bundle as dependent bundles, which loads them into the kernel without manual bundle ordering.</p>
+<p>Loading a bundle is not installing it, and <code>hypermdm:bundle:install</code> does not cascade. Datahub has to be installed on
+its own, see step 3.</p>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Datahub_File_Export-Installation-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_File_Export-Installation-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Datahub_File_Export-Installation-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>A custom bundle that extends File Export has to be loaded after <code>HyperMDMDataHubFileExportBundle</code>. Set its priority in
+<code>config/bundles.php</code> accordingly.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="installation-process">Installation Process<a href="#installation-process" class="hash-link" aria-label="Direct link to Installation Process" title="Direct link to Installation Process" translate="no">​</a></h2>
+<ol>
+<li class="">Install the package:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/data-hub-file-export</span><br></span></code></pre></div></div>
+<ol start="2">
+<li class="">Enable the bundle in <code>config/bundles.php</code>:</li>
+</ol>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Bundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataHubFileExportBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">HyperMDMDataHubFileExportBundle</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name static-context">HyperMDMDataHubFileExportBundle</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<ol start="3">
+<li class="">Install Datahub, if it is not installed yet. Enabling it as a dependent bundle only loads it, it does not create
+the <code>plugin_datahub_config</code> permission and the Datahub permission category that File Export depends on:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:bundle:install HyperMDMDataHubBundle</span><br></span></code></pre></div></div>
+<ol start="4">
+<li class="">Install the bundle. Its installer creates the <code>plugin_datahub_adapter_fileExport</code> permission and the
+<code>plugin_datahub_queue_item</code> table, and installs the Application Logger bundle if it is not installed yet:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:bundle:install HyperMDMDataHubFileExportBundle</span><br></span></code></pre></div></div>
+<p>Depending on how exports are triggered, a Symfony Messenger worker and additional cron jobs are needed. See
+<a class="" href="../Export_Setup/index.html">Export Setup</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="verify-the-installation">Verify the Installation<a href="#verify-the-installation" class="hash-link" aria-label="Direct link to Verify the Installation" title="Direct link to Verify the Installation" translate="no">​</a></h2>
+<p>Open <strong>Automation &amp; Integration</strong> &gt; <strong>Data Hub Configuration</strong> in HyperMDM Studio. <strong>File Export</strong> now appears in the
+<strong>New</strong> menu at the bottom of the configuration tree.</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Datahub_File_Export-Installation-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_File_Export-Installation-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">File Export in the New menu of the Datahub configuration tree</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/adapter-1188c33b5444bd9144773766bc5c7ee2.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Datahub_File_Export-Installation-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/adapter-1188c33b5444bd9144773766bc5c7ee2.jpg"><figure class="visual-placeholder" id="fig-Datahub_File_Export-Installation-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_File_Export-Installation-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">File Export in the New menu of the Datahub configuration tree</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/adapter-1188c33b5444bd9144773766bc5c7ee2.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Datahub_File_Export-Installation-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/adapter-1188c33b5444bd9144773766bc5c7ee2.jpg"><figure class="visual-placeholder" id="fig-Datahub_File_Export-Installation-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_File_Export-Installation-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">File Export in the New menu of the Datahub configuration tree</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/adapter-1188c33b5444bd9144773766bc5c7ee2.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Datahub_File_Export-Installation-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="user-permissions">User Permissions<a href="#user-permissions" class="hash-link" aria-label="Direct link to User Permissions" title="Direct link to User Permissions" translate="no">​</a></h2>
+<p>The installer adds one permission, <code>plugin_datahub_adapter_fileExport</code> ("Datahub Adapter - File Export"), to the
+<code>Datahub</code> permission category. The other permissions involved come from Datahub itself.</p>
+<div class="table-container"><table><thead><tr><th>Permission</th><th>Effect</th></tr></thead><tbody><tr><td><code>plugin_datahub_config</code></td><td>Opens the <strong>Data Hub Configuration</strong> entry in HyperMDM Studio, and is enforced on every File Export API endpoint with <code>#[IsGranted]</code>. Without it the panel is neither reachable nor callable.</td></tr><tr><td><code>plugin_datahub_adapter_fileExport</code></td><td>Offers <strong>File Export</strong> in the tree's <strong>New</strong> menu, and grants access to File Export configurations that carry no entries in their <strong>Permissions</strong> tab.</td></tr><tr><td><code>plugin_datahub_admin</code></td><td>Grants full access to every Datahub configuration of every adapter, so it overrides <code>plugin_datahub_adapter_fileExport</code> and the per-configuration permissions. It does not replace <code>plugin_datahub_config</code>, which the endpoints still require.</td></tr></tbody></table></div>
+<p>Access to a single configuration resolves like this, and the read, update and delete checks run server-side:</p>
+<ul>
+<li class="">An <code>admin</code> user or a holder of <code>plugin_datahub_admin</code> is always allowed.</li>
+<li class="">If the configuration's <strong>Permissions</strong> tab is empty, <code>plugin_datahub_adapter_fileExport</code> decides.</li>
+<li class="">As soon as the <strong>Permissions</strong> tab lists any user or role, <code>plugin_datahub_adapter_fileExport</code> is ignored and only
+the listed entries count. A user who is not listed, directly or through a role, has no access.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next Steps<a href="#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../Basic_Configuration/index.html">Basics</a>: configure an export.</li>
+<li class=""><a class="" href="../Export_Setup/index.html">Export Setup</a>: schedule and trigger exports.</li>
+<li class=""><a class="" href="Upgrade/index.html">Upgrade Notes</a>: breaking changes per release.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

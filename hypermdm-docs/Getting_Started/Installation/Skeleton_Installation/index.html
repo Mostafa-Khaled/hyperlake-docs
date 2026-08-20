@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skeleton Installation — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Skeleton Installation</h1></header>
+<p>The skeleton is a minimal HyperMDM project for building from scratch. It already includes HyperMDM
+Studio and ships a ready-to-run Docker environment, so you can get a working instance in four steps.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="installation">Installation<a href="#installation" class="hash-link" aria-label="Direct link to Installation" title="Direct link to Installation" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-create-the-project">1. Create the project<a href="#1-create-the-project" class="hash-link" aria-label="Direct link to 1. Create the project" title="Direct link to 1. Create the project" translate="no">​</a></h3>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker run -u `id -u`:`id -g` --rm -v `pwd`:/var/www/html hypermdm/hypermdm:php8.5-latest composer create-project hypermdm/skeleton --no-scripts my-project</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">cd my-project/</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-start-the-services">2. Start the services<a href="#2-start-the-services" class="hash-link" aria-label="Direct link to 2. Start the services" title="Direct link to 2. Start the services" translate="no">​</a></h3>
+<p>Match the container user to your local user, then start everything:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">sed -i "s|user: '1000:1000'|user: '$(id -u):$(id -g)'|g" docker-compose.yaml</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">docker compose up -d</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-run-the-installer">3. Run the installer<a href="#3-run-the-installer" class="hash-link" aria-label="Direct link to 3. Run the installer" title="Direct link to 3. Run the installer" translate="no">​</a></h3>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec php vendor/bin/hypermdm-install --install-profile='App\Installer\SkeletonProfile'</span><br></span></code></pre></div></div>
+<p>The skeleton's <code>.env</code> already holds every connection and credential, so the installer only prompts
+for a <strong>product key</strong> (product registration is mandatory — it prints a registration link). Everything
+else, including building the search index, runs automatically.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-open-hypermdm">4. Open HyperMDM<a href="#4-open-hypermdm" class="hash-link" aria-label="Direct link to 4. Open Pimcore" title="Direct link to 4. Open Pimcore" translate="no">​</a></h3>
+<ul>
+<li class="">Frontend: <a href="http://localhost" target="_blank" rel="noopener noreferrer" class="">http://localhost</a></li>
+<li class="">HyperMDM Studio: <a href="http://localhost/pimcore-studio" target="_blank" rel="noopener noreferrer" class="">http://localhost/hypermdm-studio</a> — log in with <code>admin</code> / <code>admin</code></li>
+</ul>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Getting_Started-Installation-Skeleton_Installation-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Getting_Started-Installation-Skeleton_Installation-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Getting_Started-Installation-Skeleton_Installation-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>caution</div><div class="admonitionContent_BuS1"><p>The shipped credentials and secrets are insecure development placeholders. Change them before any
+shared or production deployment — see <a href="#production-hardening" class="">Production hardening</a> below.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="additional-information">Additional Information<a href="#additional-information" class="hash-link" aria-label="Direct link to Additional Information" title="Direct link to Additional Information" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="whats-pre-configured">What's pre-configured<a href="#whats-pre-configured" class="hash-link" aria-label="Direct link to What's pre-configured" title="Direct link to What's pre-configured" translate="no">​</a></h3>
+<p>The committed <code>docker-compose.yaml</code> defines every service HyperMDM needs — PHP, Nginx, MariaDB,
+Redis, RabbitMQ, OpenSearch (plus OpenSearch Dashboards), Mercure, and a Supervisord service that
+runs the messenger workers. The matching configuration ships too (<code>.env</code>, the <code>.docker/</code> files, and
+the YAML under <code>config/</code>), so the OpenSearch client, security firewall, Mercure, and messenger
+transports are already wired up. You do not need to add or configure these yourself.</p>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Getting_Started-Installation-Skeleton_Installation-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Getting_Started-Installation-Skeleton_Installation-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Getting_Started-Installation-Skeleton_Installation-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>caution</div><div class="admonitionContent_BuS1"><p>Do not replace the bundled <code>opensearch</code> and <code>mercure</code> containers with definitions from other
+guides — <code>.env</code> and <code>config/</code> are wired to the bundled ones. In particular, the bundled OpenSearch
+runs with the security plugin enabled over HTTPS
+(<code>HYPERMDM_OPENSEARCH_DSN=opensearch://admin:...@opensearch:9200?ssl=true&amp;ssl_verify=false</code>).
+Swapping in a plain-HTTP OpenSearch breaks installation and indexing.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-the-installer-does">What the installer does<a href="#what-the-installer-does" class="hash-link" aria-label="Direct link to What the installer does" title="Direct link to What the installer does" translate="no">​</a></h3>
+<p>Because <code>.env</code> already provides the database, OpenSearch, RabbitMQ, Mercure, admin, and
+application-secret values, the installer validates them (connecting to the database, pinging
+OpenSearch) instead of prompting, then:</p>
+<ul>
+<li class="">Writes the resolved configuration to <code>.env.local</code></li>
+<li class="">Installs and registers the profile's bundles and their assets</li>
+<li class="">Creates the database schema and the <code>admin</code> user</li>
+<li class="">Runs all post-install commands, including building the search index</li>
+</ul>
+<p>For non-interactive (CI) installs, provide the product-registration values as environment variables
+and add <code>--no-interaction</code>. See <a class="" href="../Advanced_Installation_Topics/index.html">Advanced Installation Topics</a>
+for the full list of environment variables, and
+<a class="" href="../Advanced_Installation_Topics/HyperMDM_Studio_Setup/index.html">HyperMDM Studio Setup</a> to understand
+or customize the Studio configuration.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="default-credentials-and-product-registration">Default credentials and product registration<a href="#default-credentials-and-product-registration" class="hash-link" aria-label="Direct link to Default credentials and product registration" title="Direct link to Default credentials and product registration" translate="no">​</a></h3>
+<p>The default login is <code>admin</code> / <code>admin</code> (from <code>HYPERMDM_ADMIN_USER</code> / <code>HYPERMDM_ADMIN_PASSWORD</code> in
+<code>.env</code>). Because they are pre-set, the installer does not ask you to choose them; to be prompted
+instead, remove those two lines before installing.</p>
+<p>Product registration is mandatory. The installer auto-generates the instance identifier and
+encryption secret and prompts only for the product key.
+See <a class="" href="../../Product_Registration/index.html">Product Registration</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="rebuilding-the-search-index">Rebuilding the search index<a href="#rebuilding-the-search-index" class="hash-link" aria-label="Direct link to Rebuilding the search index" title="Direct link to Rebuilding the search index" translate="no">​</a></h3>
+<p>The index is built during installation. To rebuild it later (for example after changing the index
+configuration):</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec php bin/console generic-data-index:update:index -r</span><br></span></code></pre></div></div>
+<p>The <code>-r</code> flag recreates the indices from scratch; the Supervisord service keeps them up to date as
+you create and edit elements.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="production-hardening">Production hardening<a href="#production-hardening" class="hash-link" aria-label="Direct link to Production hardening" title="Direct link to Production hardening" translate="no">​</a></h3>
+<p>The skeleton is configured for local development. Before deploying anywhere shared or public,
+replace all placeholder secrets with strong, private values — the admin login (<code>admin</code> / <code>admin</code>),
+the database and OpenSearch passwords, the Mercure JWT key (<code>CHANGE_ME_...</code>), and the
+<code>APPLICATION_SECRET</code>. Once you use a trusted certificate, also drop <code>ssl_verify=false</code> from the
+OpenSearch DSN.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="first-steps-in-studio">First steps in Studio<a href="#first-steps-in-studio" class="hash-link" aria-label="Direct link to First steps in Studio" title="Direct link to First steps in Studio" translate="no">​</a></h3>
+<p>A fresh skeleton has no homepage document, so <a href="http://localhost" target="_blank" rel="noopener noreferrer" class="">http://localhost</a> shows the
+built-in example page. Create your first document in Studio to replace it — see
+<a class="" href="../../Create_a_First_Project/index.html">Create a First Project</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

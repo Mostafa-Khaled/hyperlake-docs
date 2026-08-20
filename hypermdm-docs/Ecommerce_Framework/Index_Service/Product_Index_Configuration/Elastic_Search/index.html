@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Special Aspects for Elasticsearch — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Special Aspects for Elasticsearch</h1></header>
+<p>Basically Elasticsearch worker works as described in the <a class="" href="../index.html">optimized architecture</a>.
+Currently, Elasticsearch 8 is supported.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="installation">Installation<a href="#installation" class="hash-link" aria-label="Direct link to Installation" title="Direct link to Installation" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elasticsearch-8">Elasticsearch 8<a href="#elasticsearch-8" class="hash-link" aria-label="Direct link to Elasticsearch 8" title="Direct link to Elasticsearch 8" translate="no">​</a></h3>
+<p>To work properly HyperMDM requires the Elasticsearch client, install them with: <code>composer require hypermdm/elasticsearch-client</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="index-configuration">Index Configuration<a href="#index-configuration" class="hash-link" aria-label="Direct link to Index Configuration" title="Direct link to Index Configuration" translate="no">​</a></h2>
+<p>Elasticsearch provides a couple of additional configuration options for the index to utilize elasticsearch features.
+See <a class="" href="Configuration_Details/index.html">Configuration Details</a> for more information.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="reindexing-mode">Reindexing Mode<a href="#reindexing-mode" class="hash-link" aria-label="Direct link to Reindexing Mode" title="Direct link to Reindexing Mode" translate="no">​</a></h2>
+<p>It is possible that elasticsearch cannot update the mapping, e.g. if data types of attributes change on the fly.
+For this case, a reindex is necessary. If it is necessary, a native ES reindex is executed automatically during
+<code>bin/console ecommerce:indexservice:bootstrap --create-or-update-index-structure</code>.</p>
+<p>While reindex is executed, no updates are written to the ES index. The changes remain in store table and are transferred
+to index during next execution of <code>bin/console ecommerce:indexservice:process-update-queue</code> after reindex is finished.</p>
+<p>All queries that take place during reindex go to the old index. As soon the reindex is finished, the current index is switched
+to the newly created index and the old index is deleted.<br>
+<!-- -->As a result, during reindex the results delivered by Product Lists can contain old data.</p>
+<p>To manually start a reindex, following command can be used: <code>bin/console ecommerce:indexservice:search-index-sync reindex</code>.</p>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Elastic_Search-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Elastic_Search-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Elastic_Search-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>caution</div><div class="admonitionContent_BuS1"><p>The command <code>bin/console ecommerce:indexservice:search-elasticsearch-sync reindex</code> was removed in 2.0.0.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="indexing-of-classification-store-attributes">Indexing of Classification Store Attributes<a href="#indexing-of-classification-store-attributes" class="hash-link" aria-label="Direct link to Indexing of Classification Store Attributes" title="Direct link to Indexing of Classification Store Attributes" translate="no">​</a></h2>
+<p>With elasticsearch it is possible to index all attributes of <a href="https://github.com/pimcore/pimcore/tree/2026.x/doc/03_Objects/01_Object_Classes/01_Data_Types/15_Classification_Store.md" target="_blank" rel="noopener noreferrer" class="">Classification Store</a>
+data without defining an attribute for each single classification store key.</p>
+<p>For details see <a class="" href="../../../Filter_Service/Elastic_Search/Filter_Classification_Store/index.html">Filter Classification Store</a>
+in Filter Service documentation.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="synonyms">Synonyms<a href="#synonyms" class="hash-link" aria-label="Direct link to Synonyms" title="Direct link to Synonyms" translate="no">​</a></h2>
+<p>HyperMDM provides an out-of-the box integration for synonyms in elasticsearch.
+See <a class="" href="Synonyms/index.html">Synonyms</a> for details.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

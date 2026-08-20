@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hugging Face Image Classification — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Hugging Face Image Classification</h1></header>
+<p>This action can be executed on an image level and lets you automatically send selected images to a configurable Hugging Face endpoint to classify the images by using tags.</p>
+<p>To get the best results, you should use your own predefined model for this action. In comparison to the 'Hugging Face Zero Shot Image Classification', there is no need to include the possible results in the request as they are already predefined. This also leads to the omission of the limitation of possible results.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="available-context">Available Context<a href="#available-context" class="hash-link" aria-label="Direct link to Available Context" title="Direct link to Available Context" translate="no">​</a></h3>
+<p>For more information on context limitations refer to the <a class="" href="../../index.html">Available Context section</a>.</p>
+<p><strong>Multiselect</strong>: Yes
+<strong>Elements</strong>: Images</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-options">Configuration Options<a href="#configuration-options" class="hash-link" aria-label="Direct link to Configuration Options" title="Direct link to Configuration Options" translate="no">​</a></h3>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">tag_root_node</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">1</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">tag_only_leaf_nodes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">replace_existing_tags</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">minimum_confidence</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">0.8</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">model_endpoint</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://your-hugging-face.huggingface.cloud/'</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="detailed-configuration-options">Detailed Configuration Options<a href="#detailed-configuration-options" class="hash-link" aria-label="Direct link to Detailed Configuration Options" title="Direct link to Detailed Configuration Options" translate="no">​</a></h4>
+<ul>
+<li class=""><code>tag_root_node</code>: Type: Integer. Default: <code>0</code>. The Root Tag to be used for the classification</li>
+<li class=""><code>tag_only_leaf_nodes</code>: Type: Boolean. Default: <code>false</code>. If true, only leaf nodes of the tag tree will be used for the classification</li>
+<li class=""><code>replace_existing_tags</code>: Type: Boolean. Default: <code>false</code>. If true, existing tags will be replaced with the new ones</li>
+<li class=""><code>minimum_confidence</code>: Type: Float. Default: <code>0.8</code>. The minimum confidence for a tag to be added to the image.</li>
+<li class=""><code>model_endpoint</code>: Type: String. Endpoint url of the Hugging Face model to use.</li>
+<li class=""><code>asset_thumbnail_configuration_name</code>: Type: String. Default: ''. The name of the asset thumbnail configuration to use for the image classification.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

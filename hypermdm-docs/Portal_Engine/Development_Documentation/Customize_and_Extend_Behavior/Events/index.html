@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Events — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Events</h1></header>
+<p>Within the portal engine the following events are triggered to allow influencing certain behaviors. All of these events
+are triggered via the Symfony event dispatcher. Therefore, the related
+<a href="https://symfony.com/doc/current/event_dispatcher.html" target="_blank" rel="noopener noreferrer" class="">Symfony Events and Event Listeners</a> documentation is a good starting
+point if you do not know how it works already.</p>
+<p>The events do not have dedicated event names but are represented by there full class name and namespace. You will find
+one example how to listen to a portal engine event <a class="" href="../Name_Extractor/index.html">here</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="list-of-events">List of Events<a href="#list-of-events" class="hash-link" aria-label="Direct link to List of Events" title="Direct link to List of Events" translate="no">​</a></h2>
+<p>Take a look at the event PHP classes. You will find a hint for the purpose of the events as PHP doc. Additionally, the
+getters and setters describe which attributes can be influenced by event listeners.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="asset">Asset<a href="#asset" class="hash-link" aria-label="Direct link to Asset" title="Direct link to Asset" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Asset\ExtractNameEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Asset\Upload\PreAssetCreateEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Asset\Upload\PostAssetCreateEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Asset\Upload\PostUploadEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Asset\DirectEditPermissionEvent</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-object">Data Object<a href="#data-object" class="hash-link" aria-label="Direct link to Data Object" title="Direct link to Data Object" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\DataObject\ExtractMainImageEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\DataObject\ExtractNameEvent</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="auth">Auth<a href="#auth" class="hash-link" aria-label="Direct link to Auth" title="Direct link to Auth" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Auth\LoginCheckPasswordEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Auth\LoginFieldTypeEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Auth\LoginGetUserEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Auth\LoginPasswordChangeableEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Auth\RecoverPasswordEmailTemplateEvent</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="download">Download<a href="#download" class="hash-link" aria-label="Direct link to Download" title="Direct link to Download" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Download\DownloadAssetEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Download\DownloadAssetPathInZipEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Download\DownloadSourcesEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Download\DownloadTypesEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Download\DownloadZipFilenameEvent</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="element">Element<a href="#element" class="hash-link" aria-label="Direct link to Element" title="Direct link to Element" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Element\VersionHistoryEvent</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="permission">Permission<a href="#permission" class="hash-link" aria-label="Direct link to Permission" title="Direct link to Permission" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolAccessEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolCreateItemEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolDeleteItemEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolDownloadAccessEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolDownloadItemEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolEditItemEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolShowItemEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolSubfolderItemEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolUpdateItemEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolVersionHistoryEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\DataPoolViewOwnedAssetsOnlyEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\PortalAccessEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\PublicShareEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\ResolveAssetDataPoolWorkspacesEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\ResolveDataObjectDataPoolWorkspacesEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\ResolveUserAssetWorkspacesEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Permission\ResolveUserDataObjectWorkspacesEvent</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="search">Search<a href="#search" class="hash-link" aria-label="Direct link to Search" title="Direct link to Search" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Search\FilterableFieldsEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Search\ListableFieldsEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Search\SearchQueryEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Search\SortableFieldsEvent</code></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general">General<a href="#general" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+<li class="">Removed support for <code>hypermdm/admin-ui-classic-bundle</code> in favor of HyperMDM Studio.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-admin-classic--extjs-support">Removed Admin Classic / ExtJS Support<a href="#removed-admin-classic--extjs-support" class="hash-link" aria-label="Direct link to Removed Admin Classic / ExtJS Support" title="Direct link to Removed Admin Classic / ExtJS Support" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMWorkflowDesignerBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code> and no longer uses <code>BundleAdminClassicTrait</code>. The methods <code>getJsPaths()</code> and <code>getCssPaths()</code> returning ExtJS assets have been removed.</li>
+<li class=""><code>HyperMDMAdminBundle</code> is no longer added as a dependent bundle.</li>
+<li class="">The following legacy ExtJS JS/CSS assets have been removed:<!-- -->
+<ul>
+<li class=""><code>public/js/hypermdm/startup.js</code></li>
+<li class=""><code>public/js/hypermdm/ext_extensions.js</code></li>
+<li class=""><code>public/js/hypermdm/configuration/configurationItem.js</code></li>
+<li class=""><code>public/js/hypermdm/configuration/configurationTree.js</code></li>
+<li class=""><code>public/js/hypermdm/configuration/item/additionalField.js</code></li>
+<li class=""><code>public/js/hypermdm/configuration/item/globalActionSettings.js</code></li>
+<li class=""><code>public/js/hypermdm/configuration/item/placeSettings.js</code></li>
+<li class=""><code>public/js/hypermdm/configuration/item/transitionSettings.js</code></li>
+<li class=""><code>public/css/admin.css</code></li>
+<li class=""><code>public/css/fixes.css</code></li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-legacy-controllers-and-routing">Removed Legacy Controllers and Routing<a href="#removed-legacy-controllers-and-routing" class="hash-link" aria-label="Direct link to Removed Legacy Controllers and Routing" title="Direct link to Removed Legacy Controllers and Routing" translate="no">​</a></h3>
+<ul>
+<li class="">Removed <code>Controller\AdminController</code>: the ExtJS-based admin controller providing list, get, create, delete, save,
+userSearch and roleSearch actions is no longer available.</li>
+<li class="">Removed <code>Controller\ConfigController</code>: the ExtJS-based config export/import controller is no longer available.
+Config import/export is now handled via HyperMDM Studio.</li>
+<li class="">Removed <code>Routing\StudioRouteLoader</code>: Studio routes are now registered via standard Symfony configuration.</li>
+<li class="">Removed <code>Resources/config/hypermdm/studio_routing.yaml</code>.</li>
+<li class="">Admin routing configuration <code>Resources/config/hypermdm/routing.yml</code> has been reduced to Studio-only routes.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="service--configuration-changes">Service / Configuration Changes<a href="#service--configuration-changes" class="hash-link" aria-label="Direct link to Service / Configuration Changes" title="Direct link to Service / Configuration Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMWorkflowDesignerExtension</code> no longer conditionally loads <code>studio_backend.yaml</code>: it is always loaded.</li>
+<li class="">Removed the CSP header exclusion admin path entries from <code>Resources/config/hypermdm/config.yaml</code>.</li>
+<li class="">Removed the <code>index.html.twig</code> view previously used as the ExtJS wrapper page.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="internal-service-changes">Internal Service Changes<a href="#internal-service-changes" class="hash-link" aria-label="Direct link to Internal Service Changes" title="Direct link to Internal Service Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>UserRoleSearchService</code>: Removed <code>is_array()</code> guard around <code>$list-&gt;getUsers()</code> and <code>$list-&gt;getRoles()</code>: the list
+methods are now assumed to always return an iterable. Implementations relying on these lists returning <code>null</code> will
+need to be updated.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="update-to-version-14">Update to Version 1.4<a href="#update-to-version-14" class="hash-link" aria-label="Direct link to Update to Version 1.4" title="Direct link to Update to Version 1.4" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-1">General<a href="#general-1" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<ul>
+<li class="">Dropped support of HyperMDM 10, bumped minimum requirement of <code>hypermdm/hypermdm</code> to <code>^11.2</code>. Replaced all <code>$request-&gt;get()</code> with their explicit input source.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Installation</h1></header>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-OpenID_Connect-Installation-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-OpenID_Connect-Installation-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-OpenID_Connect-Installation-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>OpenID Connect is an enterprise bundle. It requires a HyperMDM enterprise subscription.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<p>The bundle requires PHP 8.4 or 8.5 and HyperMDM 2026.1 or later.</p>
+<p>Composer pulls in the Studio Backend and Studio UI bundles, and the bundle registers the Enterprise Subscription
+Tools bundle as a dependent bundle. Registering a dependent bundle only loads it into the kernel, and
+<code>hypermdm:bundle:install</code> does not cascade: install Studio Backend separately with
+<code>bin/console hypermdm:bundle:install HyperMDMStudioBackendBundle</code>, because its own installer creates the tables and
+user permissions HyperMDM Studio needs.</p>
+<p>Depending on the algorithm a provider uses to sign tokens, installing the <code>bcmath</code> or <code>gmp</code> PHP extension improves
+performance for RSA-based algorithms.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-installation">Bundle Installation<a href="#bundle-installation" class="hash-link" aria-label="Direct link to Bundle Installation" title="Direct link to Bundle Installation" translate="no">​</a></h2>
+<ol>
+<li class="">Install the package:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/openid-connect</span><br></span></code></pre></div></div>
+<ol start="2">
+<li class="">Enable the bundle in <code>config/bundles.php</code>:</li>
+</ol>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Bundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">OpenIdConnectBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">HyperMDMOpenIdConnectBundle</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name static-context">HyperMDMOpenIdConnectBundle</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<ol start="3">
+<li class="">Install the bundle:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:bundle:install HyperMDMOpenIdConnectBundle</span><br></span></code></pre></div></div>
+<p>The installer creates the <code>permission_oidc_config</code> user permission described below.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="user-permissions">User Permissions<a href="#user-permissions" class="hash-link" aria-label="Direct link to User Permissions" title="Direct link to User Permissions" translate="no">​</a></h2>
+<p>Access to the OpenID Connect integration is controlled by a single permission:</p>
+<ul>
+<li class=""><strong>OpenID Connect Configuration</strong> (<code>permission_oidc_config</code>). Grants access to the <strong>OpenId Connect Configuration</strong>
+and <strong>Debugging Tool</strong> entries under <strong>System &gt; User &amp; Roles &gt; OpenId Connect</strong> in HyperMDM Studio, and to the
+configuration and debug endpoints behind them. Users without this permission do not see the menu entries.</li>
+</ul>
+<p>Grant it to every user or role that manages OpenID Connect providers. See <a class="" href="../Configuration/index.html">Configuration</a> for
+what the configuration screen and the debugging tool do.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="public-routes-for-the-login-flow">Public Routes for the Login Flow<a href="#public-routes-for-the-login-flow" class="hash-link" aria-label="Direct link to Public Routes for the Login Flow" title="Direct link to Public Routes for the Login Flow" translate="no">​</a></h2>
+<p>HyperMDM Studio's API firewall requires an authenticated session for every request under <code>/hypermdm-studio/api</code> by
+default. The OAuth2 login flow runs before that session exists, so its callback, login and script routes must be
+publicly reachable. Add the following <code>access_control</code> rule to <code>config/packages/security.yaml</code>, <strong>before</strong> the
+catch-all Studio API rule:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">security</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">access_control</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># ... other rules, see the Studio Backend installation guide ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^/hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">studio/api/bundle/openid</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">connect/auth/</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> PUBLIC_ACCESS </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^/hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">studio/api</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ROLE_HYPERMDM_USER </span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p>Rules are evaluated in order and the first match wins, so the OpenID Connect rule must come before the catch-all
+<code>^/hypermdm-studio/api</code> rule. Otherwise the firewall rejects the unauthenticated request before the OAuth2 flow can
+complete. See the Studio Backend Bundle's
+<a class="" href="../../Studio_Backend/Installation_and_Configuration/index.html">baseline firewall setup</a>
+for the rest of the <code>access_control</code> list this rule extends, and its
+<a class="" href="../../Studio_Backend/Installation_and_Configuration/index.html#changing-the-prefix-of-the-studio-backend">prefix configuration</a>
+if you changed <code>/hypermdm-studio/api</code> to a custom path.</p>
+<p>The bundle registers its authenticator (<code>OpenIdConnectAuthenticator</code>) into the Studio firewall automatically; no
+manual <code>security.yaml</code> firewall changes beyond the <code>access_control</code> rule above are required.</p>
+<p>If another bundle adds its own firewall in front of HyperMDM Studio, verify that its public-route configuration also
+excludes these OpenID Connect routes, or the OAuth2 callback never reaches HyperMDM. For the Portal Engine, list the
+route names in <code>custom_public_routes</code>:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_portal_engine</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">custom_public_routes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> hypermdm_studio_api_bundle_openid_connect_auth_endpoint</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> hypermdm_studio_api_bundle_openid_connect_auth_login</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> hypermdm_studio_api_bundle_openid_connect_auth_script</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

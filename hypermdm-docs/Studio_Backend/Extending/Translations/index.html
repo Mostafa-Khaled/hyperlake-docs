@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Translations — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Translations</h1></header>
+<p>HyperMDM Studio uses the Symfony translation system with two custom domains for its UI and
+API documentation. Bundles can contribute translation strings to both domains by placing YAML
+files in a conventional directory — no extra configuration is needed.</p>
+<div class="table-container"><table><thead><tr><th>Domain</th><th>Purpose</th><th>Backed by Database</th></tr></thead><tbody><tr><td><code>studio</code></td><td>Studio React frontend (i18n)</td><td>Yes — <code>translations_studio</code> table</td></tr><tr><td><code>studio_api_docs</code></td><td>OpenAPI endpoint descriptions</td><td>No — file-based only</td></tr></tbody></table></div>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-translations-are-loaded">How Translations Are Loaded<a href="#how-translations-are-loaded" class="hash-link" aria-label="Direct link to How Translations Are Loaded" title="Direct link to How Translations Are Loaded" translate="no">​</a></h2>
+<p>When the Studio React frontend starts, it sends a <code>POST</code> request to <code>/hypermdm-studio/api/translations</code>
+to fetch all translation strings for the user's locale. The backend resolves translations
+through the Symfony translator, which loads from both file-based YAML catalogues and the
+<code>translations_studio</code> database table. The resulting catalogue is returned as a JSON object to
+the frontend.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="authenticated-vs-public-split">Authenticated vs. Public Split<a href="#authenticated-vs-public-split" class="hash-link" aria-label="Direct link to Authenticated vs. Public Split" title="Direct link to Authenticated vs. Public Split" translate="no">​</a></h3>
+<p>Not all translations are served to unauthenticated users. The controller checks the login
+state and returns different sets:</p>
+<div class="table-container"><table><thead><tr><th>User State</th><th>Translations Returned</th></tr></thead><tbody><tr><td><strong>Authenticated</strong></td><td>Full <code>studio</code> catalogue for the requested locale</td></tr><tr><td><strong>Not authenticated</strong></td><td>Only keys listed in <code>PublicTranslations::PUBLIC_KEYS</code> (login form strings)</td></tr></tbody></table></div>
+<p>This keeps the full catalogue private until the user has logged in.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="openapi-documentation-translations">OpenAPI Documentation Translations<a href="#openapi-documentation-translations" class="hash-link" aria-label="Direct link to OpenAPI Documentation Translations" title="Direct link to OpenAPI Documentation Translations" translate="no">​</a></h2>
+<p>Endpoint descriptions, summaries, and success response texts in OpenAPI attributes are
+translation keys resolved from the <code>studio_api_docs</code> domain. This domain is <strong>file-based
+only</strong> — it has no database table and no UI editor.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="file-placement">File Placement<a href="#file-placement" class="hash-link" aria-label="Direct link to File Placement" title="Direct link to File Placement" translate="no">​</a></h3>
+<p>Place a <code>studio_api_docs.{locale}.yaml</code> file alongside your UI translation files:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">vendor/my-vendor/my-bundle/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">└── translations/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    ├── studio.en.yaml</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    └── studio_api_docs.en.yaml</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="key-naming-convention">Key Naming Convention<a href="#key-naming-convention" class="hash-link" aria-label="Direct link to Key Naming Convention" title="Direct link to Key Naming Convention" translate="no">​</a></h3>
+<p>Keys follow the pattern used in controller OpenAPI attributes:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># translations/studio_api_docs.en.yaml</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Tag description</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">bundle_tag_my_bundle_description</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> My Bundle endpoints</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Endpoint translations (operationId is the base)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">bundle_my_bundle_config_get_description</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">|</span><span class="token scalar string" style="color:#e3116c"></span><br></span><span class="token-line" style="color:#393A34"><span class="token scalar string" style="color:#e3116c">  Returns the configuration for the given name.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">bundle_my_bundle_config_get_summary</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> Get configuration by name</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">bundle_my_bundle_config_get_success_response</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> Configuration data</span><br></span></code></pre></div></div>
+<p>Each controller action typically needs three keys:</p>
+<div class="table-container"><table><thead><tr><th>Suffix</th><th>OpenAPI Attribute</th></tr></thead><tbody><tr><td><code>_description</code></td><td><code>#[Get]</code> / <code>#[Post]</code> <code>description</code> parameter</td></tr><tr><td><code>_summary</code></td><td><code>#[Get]</code> / <code>#[Post]</code> <code>summary</code> parameter</td></tr><tr><td><code>_success_response</code></td><td><code>#[SuccessResponse]</code> <code>description</code> parameter</td></tr></tbody></table></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

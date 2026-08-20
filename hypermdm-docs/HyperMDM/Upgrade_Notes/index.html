@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-202625">HyperMDM 2026.2.5<a href="#hypermdm-202625" class="hash-link" aria-label="Direct link to Pimcore 2026.2.5" title="Direct link to Pimcore 2026.2.5" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="custom-reports">[Custom Reports]<a href="#custom-reports" class="hash-link" aria-label="Direct link to [Custom Reports]" title="Direct link to [Custom Reports]" translate="no">​</a></h3>
+<ul>
+<li class="">Added a <code>hypermdm_custom_reports.enabled_adapters</code> config option to enable/disable individual Custom Report data-source adapters (e.g. the built-in <code>sql</code> adapter) per project. Adapters not listed default to enabled; a disabled adapter is removed from the shared <code>hypermdm.custom_report.adapter.factories</code> service locator, so it becomes unavailable to every consumer (the classic admin controller and the Studio backend bundle alike).<!-- -->
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_custom_reports</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">enabled_adapters</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">sql</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><br></span></code></pre></div></div>
+<!-- -->We recommend disabling the built-in <code>sql</code> adapter unless specifically needed: any user with the <code>reports_config</code> permission can otherwise define arbitrary <code>SELECT</code> statements against the application's database, including tables never intended to be exposed. See <a class="" href="../Reporting/Custom_Reports/index.html">Custom Reports</a>  for details.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="assets">[Assets]<a href="#assets" class="hash-link" aria-label="Direct link to [Assets]" title="Direct link to [Assets]" translate="no">​</a></h3>
+<ul>
+<li class="">[Thumbnails] Automatic clipping (<code>hypermdm.assets.image.thumbnails.clip_auto_support</code>) is only applied again when the image actually carries a clipping path, i.e. the Photoshop image resource <code>8BIM 2999</code> ('Name of clipping path'). Images that only contain saved Photoshop paths (<code>8BIM 2000</code> - <code>2998</code>) are no longer clipped, since clipping them by an arbitrary path removed their whole content and resulted in empty thumbnails. Existing thumbnails of such images have to be cleared to be re-generated.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-202620">HyperMDM 2026.2.0<a href="#hypermdm-202620" class="hash-link" aria-label="Direct link to Pimcore 2026.2.0" title="Direct link to Pimcore 2026.2.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general">[General]<a href="#general" class="hash-link" aria-label="Direct link to [General]" title="Direct link to [General]" translate="no">​</a></h3>
+<ul>
+<li class="">
+<p>[Assets][Thumbnails][CDN] New core events for thumbnail-config lifecycle were introduced to support CDN purge integration:</p>
+<ul>
+<li class=""><code>HyperMDM\Event\ImageThumbnailConfigEvents::POST_UPDATE</code> and <code>POST_DELETE</code></li>
+<li class=""><code>HyperMDM\Event\VideoThumbnailConfigEvents::POST_UPDATE</code> and <code>POST_DELETE</code></li>
+<li class="">Payload classes: <code>HyperMDM\Event\Model\Asset\Image\Thumbnail\ConfigEvent</code> and <code>HyperMDM\Event\Model\Asset\Video\Thumbnail\ConfigEvent</code> (both expose <code>getConfig(): Config</code>).</li>
+<li class="">The events are dispatched from <code>Asset\Image\Thumbnail\Config\Dao::save()/delete()</code> and <code>Asset\Video\Thumbnail\Config\Dao::save()/delete()</code> after the underlying settings store and cache writes succeed. They fire on every save/delete path, including admin UI, API and programmatic changes (the magic <code>__call</code> delegation also routes through the Dao). Subscribers can use them to react to thumbnail-pipeline changes — HyperMDM's bundled <code>CdnPurgeListener</code> uses them to dispatch <code>thumb-{configName}</code> CDN purges.</li>
+</ul>
+</li>
+<li class="">
+<p>[Composer] Bumped minimum requirement of <code>friendsofsymfony/jsrouting-bundle</code> to <code>3.6.0</code>.</p>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="maintenance-mode">[Maintenance Mode]<a href="#maintenance-mode" class="hash-link" aria-label="Direct link to [Maintenance Mode]" title="Direct link to [Maintenance Mode]" translate="no">​</a></h3>
+<ul>
+<li class="">
+<p>The legacy file-based maintenance mode backward-compatibility layer has been fully removed. The following deprecated static methods have been deleted from <code>HyperMDM\Tool\Admin</code>:</p>
+<ul>
+<li class=""><code>getMaintenanceModeFile()</code></li>
+<li class=""><code>getMaintenanceModeScheduleLoginFile()</code></li>
+<li class=""><code>activateMaintenanceMode()</code></li>
+<li class=""><code>deactivateMaintenanceMode()</code></li>
+<li class=""><code>isInMaintenanceMode()</code></li>
+<li class=""><code>isMaintenanceModeScheduledForLogin()</code></li>
+<li class=""><code>scheduleMaintenanceModeOnLogin()</code></li>
+<li class=""><code>unscheduleMaintenanceModeOnLogin()</code></li>
+</ul>
+<p>If you are still using any of these methods, replace them with the <code>HyperMDM\Maintenance\Mode\MaintenanceModeHelperInterface</code> service. Inject it via the service container and use <code>activate()</code>, <code>deactivate()</code>, and <code>isActive()</code> instead.</p>
+</li>
+<li class="">
+<p>The BC fallback that read the legacy <code>maintenance.php</code> configuration file has also been removed from <code>MaintenanceModeCommand</code>, <code>MaintenancePageListener</code>, <code>Bootstrap</code>, and <code>Console\Application</code>. Any existing <code>var/config/maintenance.php</code> file will be ignored. Ensure maintenance mode is managed exclusively through <code>MaintenanceModeHelperInterface</code>.</p>
+</li>
+<li class="">
+<p><code>Admin::getMinimizedScriptPath()</code> has been removed from <code>HyperMDM\Tool\Admin</code>.</p>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="translations">[Translations]<a href="#translations" class="hash-link" aria-label="Direct link to [Translations]" title="Direct link to [Translations]" translate="no">​</a></h3>
+<ul>
+<li class=""><code>Translation::DOMAIN_ADMIN</code> constant is deprecated since 2026.2 and will be removed in a future release. Avoid referencing the <code>admin</code> translation domain directly.</li>
+<li class=""><code>Translator::$adminPath</code> and <code>Translator::$adminTranslationMapping</code> properties are deprecated since 2026.2.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-202610">HyperMDM 2026.1.0<a href="#hypermdm-202610" class="hash-link" aria-label="Direct link to Pimcore 2026.1.0" title="Direct link to Pimcore 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="tasks-to-do-prior-the-update">Tasks to Do Prior the Update<a href="#tasks-to-do-prior-the-update" class="hash-link" aria-label="Direct link to Tasks to Do Prior the Update" title="Direct link to Tasks to Do Prior the Update" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="symfony-73-required">Symfony 7.3+ Required<a href="#symfony-73-required" class="hash-link" aria-label="Direct link to Symfony 7.3+ Required" title="Direct link to Symfony 7.3+ Required" translate="no">​</a></h4>
+<p>HyperMDM 13 requires <strong>Symfony 7.3 or higher</strong>. All Symfony 6.x components are no longer supported.</p>
+<ol>
+<li class="">Update all Symfony components to version 7.3 or higher</li>
+<li class="">Test your application thoroughly with Symfony 7.x</li>
+<li class="">Remove any explicit Symfony 6.x version constraints from your <code>composer.json</code></li>
+</ol>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="migrate-folder-structure-for-email-logs">Migrate Folder structure for email logs<a href="#migrate-folder-structure-for-email-logs" class="hash-link" aria-label="Direct link to Migrate Folder structure for email logs" title="Direct link to Migrate Folder structure for email logs" translate="no">​</a></h4>
+<p>The folder structure for email logs has changed to YYYY/MM/DD/&lt;log filename&gt;.
+Please execute the command <code>hypermdm:migrate:mail-logs-folder-structure</code> to move the files into the new folder structure or move the files manually.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="database-collation-utf8mb4_unicode_520_ci">Database Collation: utf8mb4_unicode_520_ci<a href="#database-collation-utf8mb4_unicode_520_ci" class="hash-link" aria-label="Direct link to Database Collation: utf8mb4_unicode_520_ci" title="Direct link to Database Collation: utf8mb4_unicode_520_ci" translate="no">​</a></h4>
+<p>HyperMDM 2026.1 now explicitly uses <code>utf8mb4_unicode_520_ci</code> as the collation for all <code>utf8mb4</code> tables and columns. Previous versions specified <code>DEFAULT CHARSET=utf8mb4</code> without an explicit <code>COLLATE</code> clause in <code>install.sql</code> and Dao <code>CREATE TABLE</code> statements. Due to MySQL/MariaDB behavior, this caused the charset's built-in default collation (for example <code>utf8mb4_general_ci</code> on MySQL 5.7 / MariaDB or <code>utf8mb4_0900_ai_ci</code> on MySQL 8) to be used instead of the database-level default (<code>utf8mb4_unicode_520_ci</code>).</p>
+<p>This mismatch can cause issues with foreign key constraints between tables that have different collations and may lead to unexpected sorting behavior.</p>
+<p><strong>Important:</strong> Some columns intentionally use a different collation (e.g. <code>utf8mb4_bin</code> for case-sensitive keys and JSON data). These columns must <strong>not</strong> be changed. The queries below only target columns that use the typical default, non-binary <code>utf8mb4</code> collations (<code>utf8mb4_general_ci</code> and <code>utf8mb4_0900_ai_ci</code>); adjust this list if your server uses a different default.</p>
+<p>Use the following SQL to identify all affected tables and columns in your database:</p>
+<div class="language-sql codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-sql codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">-- List all tables with default non-binary utf8mb4 table collations</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">SELECT</span><span class="token plain"> TABLE_NAME</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> TABLE_COLLATION</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">FROM</span><span class="token plain"> INFORMATION_SCHEMA</span><span class="token punctuation" style="color:#393A34">.</span><span class="token keyword" style="color:#00009f">TABLES</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">WHERE</span><span class="token plain"> TABLE_SCHEMA </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'your_database_name'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token operator" style="color:#393A34">AND</span><span class="token plain"> TABLE_TYPE </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'BASE TABLE'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token operator" style="color:#393A34">AND</span><span class="token plain"> TABLE_COLLATION </span><span class="token operator" style="color:#393A34">IN</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'utf8mb4_general_ci'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'utf8mb4_0900_ai_ci'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">ORDER</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">BY</span><span class="token plain"> TABLE_NAME</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">-- List all columns with default non-binary utf8mb4 collations</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">SELECT</span><span class="token plain"> TABLE_NAME</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> COLUMN_NAME</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> COLUMN_TYPE</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> COLLATION_NAME</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">FROM</span><span class="token plain"> INFORMATION_SCHEMA</span><span class="token punctuation" style="color:#393A34">.</span><span class="token keyword" style="color:#00009f">COLUMNS</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">WHERE</span><span class="token plain"> TABLE_SCHEMA </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'your_database_name'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token operator" style="color:#393A34">AND</span><span class="token plain"> COLLATION_NAME </span><span class="token operator" style="color:#393A34">IN</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'utf8mb4_general_ci'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'utf8mb4_0900_ai_ci'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">ORDER</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">BY</span><span class="token plain"> TABLE_NAME</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> COLUMN_NAME</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-1">[General]<a href="#general-1" class="hash-link" aria-label="Direct link to [General]" title="Direct link to [General]" translate="no">​</a></h3>
+<ul>
+<li class="">Thumbnail generation adapters now implement <code>Video\AdapterInterface</code> and <code>Document\AdapterInterface</code> and improved adapters' initialization.</li>
+<li class="">The abstract class <code>HyperMDM\Video\Adapter</code> has been removed. <code>HyperMDM\Video\Adapter\Ffmpeg</code> now directly implements <code>HyperMDM\Video\AdapterInterface</code>. If you extended <code>HyperMDM\Video\Adapter</code>, update your class to implement <code>HyperMDM\Video\AdapterInterface</code> directly.</li>
+<li class="">The hard-coded space between quantity value and unit has been removed for class definition quantity fields (e.g. <code>AbstractQuantityValue</code>, <code>QuantityValueRange</code>). Spacing and formatting between value and unit is now controlled by locale- and translation-based formatting instead of being fixed in the code.</li>
+<li class="">The <code>reset_password</code> rate limiter configuration has been moved to the studio-backend bundle and is no longer part of HyperMDM's core configuration.</li>
+<li class="">Removed legacy Admin UI (Classic UI) <code>EditmodeListener</code>.</li>
+<li class="">Added support for PHP <code>8.5</code> and bumped minimum requirement of Symfony to <code>7.4</code>.</li>
+<li class="">Dropped support for PHP <code>8.3</code> and Symfony <code>6</code>.</li>
+<li class="">[QuantityValue] Introduced foreign key constraints on <code>__unit</code> columns in object store, query, localized, objectbrick and fieldcollection tables for <code>QuantityValue</code>, <code>InputQuantityValue</code> and <code>QuantityValueRange</code> fields. These constraints reference <code>quantityvalue_units(id)</code> with <code>ON DELETE SET NULL</code> and <code>ON UPDATE CASCADE</code>, ensuring referential integrity. The migration automatically cleans up orphaned unit references (setting them to <code>NULL</code>) and changes the <code>__unit</code> column type from <code>varchar(64)</code> to <code>varchar(50)</code> to match the referenced <code>quantityvalue_units.id</code> column. If you have custom unit IDs longer than 50 characters, they will be truncated.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-deprecated-and-discontinued-bundles">Removed deprecated and discontinued bundles<a href="#removed-deprecated-and-discontinued-bundles" class="hash-link" aria-label="Direct link to Removed deprecated and discontinued bundles" title="Direct link to Removed deprecated and discontinued bundles" translate="no">​</a></h4>
+<p>The following bundles have been removed:</p>
+<ul>
+<li class="">GlossaryBundle</li>
+<li class="">SimpleBackendSearchBundle</li>
+<li class="">SeoBundle: dropped <code>http_error_log</code> feature and DB Table, and removed Document SEO Editor</li>
+<li class="">StaticRouteBundle</li>
+<li class="">WordExportBundle</li>
+<li class="">XliffBundle</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="dataobjects">[DataObjects]<a href="#dataobjects" class="hash-link" aria-label="Direct link to [DataObjects]" title="Direct link to [DataObjects]" translate="no">​</a></h3>
+<ul>
+<li class="">Add a new optional <code>$parameters</code> argument to <code>Concrete::saveVersion()</code> to allow passing of arguments to events.</li>
+<li class="">Removed the following methods from <code>HyperMDM\Model\DataObject\Service</code> as part of the Admin UI removal:<!-- -->
+<ul>
+<li class=""><code>calculateCellValue()</code></li>
+<li class=""><code>mapFieldname()</code></li>
+<li class=""><code>getDataForEditmode()</code> in <code>ManyToManyObjectRelation</code> and <code>AdvancedManyToManyObjectRelation</code> now uses <code>Element\Service::gridElementData()</code> instead of the removed <code>Service::gridObjectData()</code>. As a result, the returned data for each related object no longer includes computed grid columns (e.g. brick fields, localized fields, classification store values, or helper columns). Only the base element data (id, type, path, etc.) is returned. If you rely on additional field data being present in the editmode payload of these relations, you need to fetch it separately.</li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="database">[Database]<a href="#database" class="hash-link" aria-label="Direct link to [Database]" title="Direct link to [Database]" translate="no">​</a></h3>
+<ul>
+<li class="">All <code>utf8mb4</code> tables now use <code>utf8mb4_unicode_520_ci</code> as their default collation to match Doctrine's <code>default_table_options</code>
+configuration. Columns inherit this collation unless a different one is explicitly defined (for example <code>utf8mb4_bin</code>
+for case-sensitive keys). Previously, <code>install.sql</code> and Dao <code>CREATE TABLE</code> statements specified <code>DEFAULT CHARSET=utf8mb4</code>
+without an explicit <code>COLLATE</code> clause, which caused MySQL/MariaDB to assign the charset's built-in default collation
+(<code>utf8mb4_general_ci</code>) instead of the intended <code>utf8mb4_unicode_520_ci</code>.
+Existing installations need to update the collation of their tables and columns manually, details see
+'Tasks to Do Prior the Update' chapter above.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="models">[Models]<a href="#models" class="hash-link" aria-label="Direct link to [Models]" title="Direct link to [Models]" translate="no">​</a></h3>
+<ul>
+<li class="">Added a new optional <code>$parameters</code> argument to <code>AbstractUser::save()</code> and <code>AbstractUser::delete()</code>, as well as their interface methods, to allow passing of arguments to <code>UserRoleEvent</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="generic-execution-engine">[Generic Execution Engine]<a href="#generic-execution-engine" class="hash-link" aria-label="Direct link to [Generic Execution Engine]" title="Direct link to [Generic Execution Engine]" translate="no">​</a></h3>
+<ul>
+<li class="">Added an <code>$offset</code> parameter to support paging in <code>getRunningJobsByUserId()</code> in <code>JobRunRepositoryInterface</code>.</li>
+<li class="">Added the possibility to pass an optional <code>$criteria</code> array to <code>getTotalCount()</code>, <code>getJobRunById()</code>, <code>getJobRunsByUserId()</code> and <code>getRunningJobsByUserId()</code> in <code>JobRunRepositoryInterface</code>.</li>
+<li class="">Added the possibility to pass optional <code>$ownerId</code> and <code>$executionContext</code> parameters to <code>getTotalCount()</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="installer">[Installer]<a href="#installer" class="hash-link" aria-label="Direct link to [Installer]" title="Direct link to [Installer]" translate="no">​</a></h3>
+<p>The installer has been completely redesigned with a <strong>profile-based architecture</strong>. The old individual CLI options for <code>hypermdm:install</code> have been removed, and the command now uses a profile-driven setup via <code>--install-profile</code>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="new-command-invocation">New Command Invocation<a href="#new-command-invocation" class="hash-link" aria-label="Direct link to New Command Invocation" title="Direct link to New Command Invocation" translate="no">​</a></h4>
+<p>The installer is now invoked with:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">vendor/bin/hypermdm-install --install-profile=App\\Install\\MyProfile</span><br></span></code></pre></div></div>
+<p>If you have scripts or CI pipelines that invoke <code>hypermdm:install</code> with the old options, update them to use <code>--install-profile</code> with a profile class. Create an install profile implementing <code>InstallProfileInterface</code> for your project.</p>
+<p>Please see the documentation for further information: <a href="../../index.html" target="_blank" rel="noopener noreferrer" class="">https://docs.hypermdm.com/platform/</a></p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-cli-options">Removed CLI Options<a href="#removed-cli-options" class="hash-link" aria-label="Direct link to Removed CLI Options" title="Direct link to Removed CLI Options" translate="no">​</a></h4>
+<p>The following CLI options have been <strong>removed</strong>:</p>
+<div class="table-container"><table><thead><tr><th>Old Option</th><th>Replacement</th></tr></thead><tbody><tr><td><code>--mysql-host-socket</code></td><td>Use <code>DATABASE_URL</code> env var (Doctrine DSN format)</td></tr><tr><td><code>--mysql-username</code></td><td>Use <code>DATABASE_URL</code> env var</td></tr><tr><td><code>--mysql-password</code></td><td>Use <code>DATABASE_URL</code> env var</td></tr><tr><td><code>--mysql-database</code></td><td>Use <code>DATABASE_URL</code> env var</td></tr><tr><td><code>--mysql-port</code></td><td>Use <code>DATABASE_URL</code> env var</td></tr><tr><td><code>--mysql-ssl-cert-path</code></td><td>Use <code>DATABASE_URL</code> env var</td></tr><tr><td><code>--encryption-secret</code></td><td>Use <code>HYPERMDM_ENCRYPTION_SECRET</code> env var directly</td></tr><tr><td><code>--instance-identifier</code></td><td>Use <code>HYPERMDM_INSTANCE_IDENTIFIER</code> env var directly</td></tr><tr><td><code>--product-key</code></td><td>Use <code>HYPERMDM_PRODUCT_KEY</code> env var directly</td></tr><tr><td><code>--install-bundles</code></td><td>Bundles are now defined by the install profile's <code>getBundles()</code> method</td></tr><tr><td><code>--skip-database-structure</code></td><td>Use <code>InstallStepFilterInterface</code> in your profile to skip steps</td></tr><tr><td><code>--skip-database-data</code></td><td>Use <code>InstallStepFilterInterface</code> in your profile to skip steps</td></tr><tr><td><code>--skip-database-data-dump</code></td><td>Use <code>InstallStepFilterInterface</code> in your profile to skip steps</td></tr><tr><td><code>--skip-database-config</code></td><td>Configuration is now written to <code>.env.local</code>; to avoid writing installer-generated config, use <code>InstallStepFilterInterface</code> to skip <code>WriteEnv</code> and, if needed, <code>WriteDoctrineConfig</code></td></tr><tr><td><code>--skip-product-registration-config</code></td><td>Configuration is now written to <code>.env.local</code>; to avoid writing installer-generated config, use <code>InstallStepFilterInterface</code> to skip <code>WriteEnv</code></td></tr><tr><td><code>--only-steps</code></td><td>Use <code>InstallStepFilterInterface</code> to control which <code>InstallStep</code> enum values are skipped</td></tr></tbody></table></div>
+<p>The options <code>--admin-username</code> and <code>--admin-password</code> are <strong>retained</strong> but now also accept the env vars <code>HYPERMDM_ADMIN_USER</code> and <code>HYPERMDM_ADMIN_PASSWORD</code> respectively.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="new-cli-options">New CLI Options<a href="#new-cli-options" class="hash-link" aria-label="Direct link to New CLI Options" title="Direct link to New CLI Options" translate="no">​</a></h4>
+<div class="table-container"><table><thead><tr><th>New Option</th><th>Description</th></tr></thead><tbody><tr><td><code>--install-profile</code></td><td><strong>(Required)</strong> FQCN of the install profile class implementing <code>InstallProfileInterface</code></td></tr><tr><td><code>--env-definition</code></td><td>FQCN(s) of additional <code>EnvVarDefinitionInterface</code> implementations (repeatable)</td></tr><tr><td><code>--post-install-commands</code></td><td>FQCN(s) of <code>PostInstallCommandsProviderInterface</code> implementations (repeatable)</td></tr><tr><td><code>--skip-validation</code></td><td>Skip env var validation (no value = skip all; with value = skip by key/class/FQCN)</td></tr></tbody></table></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-environment-variables-hypermdm_install_-prefix">Removed Environment Variables (<code>HYPERMDM_INSTALL_*</code> Prefix)<a href="#removed-environment-variables-hypermdm_install_-prefix" class="hash-link" aria-label="Direct link to removed-environment-variables-pimcore_install_-prefix" title="Direct link to removed-environment-variables-pimcore_install_-prefix" translate="no">​</a></h4>
+<p>All <code>HYPERMDM_INSTALL_*</code> environment variables have been <strong>removed</strong>. The old installer derived env vars by prepending <code>HYPERMDM_INSTALL_</code> to the uppercased option name. These are replaced by standard env var names:</p>
+<p><code>DATABASE_URL</code> uses Doctrine DSN syntax and can describe either a TCP connection (for example <code>mysql://user:pass@host:3306/dbname</code>) or a unix socket connection.</p>
+<div class="table-container"><table><thead><tr><th>Old Env Var</th><th>New Env Var</th></tr></thead><tbody><tr><td><code>HYPERMDM_INSTALL_ADMIN_USERNAME</code></td><td><code>HYPERMDM_ADMIN_USER</code></td></tr><tr><td><code>HYPERMDM_INSTALL_ADMIN_PASSWORD</code></td><td><code>HYPERMDM_ADMIN_PASSWORD</code></td></tr><tr><td><code>HYPERMDM_INSTALL_MYSQL_HOST_SOCKET</code></td><td><code>DATABASE_URL</code> (Doctrine DSN format, e.g. <code>mysql://user:pass@localhost/dbname?unix_socket=/var/run/mysqld/mysqld.sock</code>)</td></tr><tr><td><code>HYPERMDM_INSTALL_MYSQL_USERNAME</code></td><td><code>DATABASE_URL</code></td></tr><tr><td><code>HYPERMDM_INSTALL_MYSQL_PASSWORD</code></td><td><code>DATABASE_URL</code></td></tr><tr><td><code>HYPERMDM_INSTALL_MYSQL_DATABASE</code></td><td><code>DATABASE_URL</code></td></tr><tr><td><code>HYPERMDM_INSTALL_MYSQL_PORT</code></td><td><code>DATABASE_URL</code></td></tr><tr><td><code>HYPERMDM_INSTALL_MYSQL_SSL_CERT_PATH</code></td><td><code>DATABASE_URL</code></td></tr><tr><td><code>HYPERMDM_INSTALL_ENCRYPTION_SECRET</code></td><td><code>HYPERMDM_ENCRYPTION_SECRET</code></td></tr><tr><td><code>HYPERMDM_INSTALL_INSTANCE_IDENTIFIER</code></td><td><code>HYPERMDM_INSTANCE_IDENTIFIER</code></td></tr><tr><td><code>HYPERMDM_INSTALL_PRODUCT_KEY</code></td><td><code>HYPERMDM_PRODUCT_KEY</code></td></tr><tr><td><code>HYPERMDM_INSTALL_INSTALL_BUNDLES</code></td><td>Removed — bundles are defined by the profile</td></tr></tbody></table></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-output-changes">Configuration Output Changes<a href="#configuration-output-changes" class="hash-link" aria-label="Direct link to Configuration Output Changes" title="Direct link to Configuration Output Changes" translate="no">​</a></h4>
+<p>The installer no longer writes the former local/user configuration YAML files for database and product registration settings. These values are now written to <strong><code>.env.local</code></strong> using Symfony Flex-style section markers (<code>###&gt; section-name ###</code> / <code>###&lt; section-name ###</code>). The installer still generates <code>config/packages/doctrine_mapping_types.yaml</code> for Doctrine mapping types.</p>
+<div class="table-container"><table><thead><tr><th>Old Config File</th><th>New Location</th></tr></thead><tbody><tr><td><code>config/local/database.yaml</code></td><td><code>.env.local</code> (<code>DATABASE_URL</code>)</td></tr><tr><td><code>config/local/product_registration.yaml</code></td><td><code>.env.local</code> (<code>HYPERMDM_ENCRYPTION_SECRET</code>, <code>HYPERMDM_INSTANCE_IDENTIFIER</code>, <code>HYPERMDM_PRODUCT_KEY</code>)</td></tr><tr><td><code>system.yml</code> / <code>system.template.yml</code></td><td>Legacy system config files are no longer written by the installer</td></tr></tbody></table></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-classes-and-events">Removed Classes and Events<a href="#removed-classes-and-events" class="hash-link" aria-label="Direct link to Removed Classes and Events" title="Direct link to Removed Classes and Events" translate="no">​</a></h4>
+<ul>
+<li class=""><code>HyperMDM\Bundle\InstallBundle\SystemConfig\ConfigWriter</code> — removed (no more YAML config writing)</li>
+<li class=""><code>HyperMDM\Bundle\InstallBundle\Event\BundleSetupEvent</code> — removed (bundles are now defined by the profile)</li>
+<li class=""><code>HyperMDM\Bundle\InstallBundle\DependencyInjection\Configuration</code> — removed (no more <code>hypermdm_install.parameters.database_credentials</code> config tree)</li>
+<li class="">The <code>config/installer.yaml</code> option <code>hypermdm_install.parameters.database_credentials</code> is no longer supported. Use <code>DATABASE_URL</code> env var or the interactive installer prompts instead.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="two-phase-architecture">Two-Phase Architecture<a href="#two-phase-architecture" class="hash-link" aria-label="Direct link to Two-Phase Architecture" title="Direct link to Two-Phase Architecture" translate="no">​</a></h4>
+<p>The installer now runs in two phases:</p>
+<ol>
+<li class=""><strong>Phase 1</strong> (lightweight <code>InstallerKernel</code>): Collects and validates all env vars from the profile's <code>EnvVarDefinitionInterface</code> implementations, writes <code>.env.local</code>, writes Doctrine config.</li>
+<li class=""><strong>Phase 2</strong> (real <code>App\Kernel</code>): Sets up the database, imports data sources, creates admin user, registers and installs bundles, runs post-install commands.</li>
+</ol>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="profile-extensibility">Profile Extensibility<a href="#profile-extensibility" class="hash-link" aria-label="Direct link to Profile Extensibility" title="Direct link to Profile Extensibility" translate="no">​</a></h4>
+<p>Install profiles can implement additional interfaces for advanced control:</p>
+<ul>
+<li class=""><code>InstallStepFilterInterface</code> — skip specific install steps (useful for PaaS environments)</li>
+<li class=""><code>PostInstallHookInterface</code> — run custom PHP code near the end of phase 2, before finalization steps such as cache clearing and install marker cleanup</li>
+<li class=""><code>DataSourceInterface</code> — import SQL dumps or other data during installation</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="doctrine-enum-mapping-type-removed">Doctrine <code>enum</code> Mapping Type Removed<a href="#doctrine-enum-mapping-type-removed" class="hash-link" aria-label="Direct link to doctrine-enum-mapping-type-removed" title="Direct link to doctrine-enum-mapping-type-removed" translate="no">​</a></h3>
+<p>The <code>enum: string</code> Doctrine mapping type is no longer registered; only the <code>bit: boolean</code> mapping remains. The minimum <code>doctrine/dbal</code> requirement was raised to <code>^4.4</code>, where the explicit <code>enum</code> mapping is no longer needed.</p>
+<p><strong>Action required for existing installations:</strong> Please check your Doctrine configuration for any registered mapping types and remove the <code>enum: string</code> mapping if it is present.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="opensearch--elasticsearch-dsn-configuration">[OpenSearch / Elasticsearch DSN Configuration]<a href="#opensearch--elasticsearch-dsn-configuration" class="hash-link" aria-label="Direct link to [OpenSearch / Elasticsearch DSN Configuration]" title="Direct link to [OpenSearch / Elasticsearch DSN Configuration]" translate="no">​</a></h3>
+<p>Search engine configuration now uses DSN-based env vars instead of separate host/port/authentication parameters:</p>
+<ul>
+<li class=""><strong>OpenSearch:</strong> <code>HYPERMDM_OPENSEARCH_DSN=opensearch://admin:admin@localhost:9200?ssl=true</code></li>
+<li class=""><strong>Elasticsearch:</strong> <code>HYPERMDM_ELASTICSEARCH_DSN=elasticsearch://elastic:changeme@localhost:9200</code></li>
+</ul>
+<p>The DSN is parsed at runtime in the client factory.
+The old configuration approach with separate <code>hosts</code> arrays in YAML is replaced by a single <code>dsn</code> config option.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="messenger-transport-dsn-changes">[Messenger Transport DSN Changes]<a href="#messenger-transport-dsn-changes" class="hash-link" aria-label="Direct link to [Messenger Transport DSN Changes]" title="Direct link to [Messenger Transport DSN Changes]" translate="no">​</a></h3>
+<p><strong>This is a breaking change for existing installations.</strong></p>
+<p>The <code>HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX</code> env var (previously named <code>HYPERMDM_MESSENGER_TRANSPORT_DSN</code>) format has changed.
+It must now include a <strong>trailing separator</strong> for queue name concatenation, because HyperMDM bundle configs append queue names directly to this value.</p>
+<p><strong>Before (old format):</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">HYPERMDM_MESSENGER_TRANSPORT_DSN=doctrine://default</span><br></span></code></pre></div></div>
+<p><strong>After (new format):</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Doctrine</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX=doctrine://default?queue_name=</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># AMQP</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX=amqp://guest:guest@rabbit:5672/%2f/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Redis</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX=redis://localhost:6379/</span><br></span></code></pre></div></div>
+<p>All HyperMDM bundle transport configs now use the container parameter <code>%hypermdm.messenger.transport_dsn_prefix%</code> with direct concatenation:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">framework</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">messenger</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">transports</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">hypermdm_core</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%hypermdm.messenger.transport_dsn_prefix%hypermdm_core'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">hypermdm_maintenance</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%hypermdm.messenger.transport_dsn_prefix%hypermdm_maintenance'</span><br></span></code></pre></div></div>
+<p>A container-level default is provided in <code>bundles/CoreBundle/config/hypermdm/default.yaml</code>:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">parameters</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">env(HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'doctrine://default?queue_name='</span><br></span></code></pre></div></div>
+<p>If you have <code>HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX</code> (or the old <code>HYPERMDM_MESSENGER_TRANSPORT_DSN</code>) explicitly set in your <code>.env</code> or environment, update its value to include the trailing separator and use the new name. For Doctrine, change <code>doctrine://default</code> to <code>doctrine://default?queue_name=</code>. Failure to do this will result in invalid transport DSNs like <code>doctrine://defaulthypermdm_core</code>.
+If you have custom transport definitions in your bundle or project YAML that hardcode <code>doctrine://default?queue_name=</code>, replace them with <code>'%hypermdm.messenger.transport_dsn_prefix%'</code> concatenation to support backend-agnostic transport switching.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="symfony-templating-component-removed">Symfony Templating Component Removed<a href="#symfony-templating-component-removed" class="hash-link" aria-label="Direct link to Symfony Templating Component Removed" title="Direct link to Symfony Templating Component Removed" translate="no">​</a></h3>
+<p>The <code>Symfony\Component\Templating\EngineInterface</code> and related services have been completely removed.</p>
+<p><strong>What's Removed:</strong></p>
+<ul>
+<li class=""><code>hypermdm.templating.engine.delegating</code> service</li>
+<li class=""><code>Symfony\Component\Templating\EngineInterface</code> support</li>
+<li class=""><code>HyperMDM\Templating\TwigDefaultDelegatingEngine</code> class</li>
+</ul>
+<p><strong>Action Required:</strong>
+Update your code to use <code>Twig\Environment</code> directly instead of <code>EngineInterface</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="quantityvalue-formatting-changes">QuantityValue Formatting Changes<a href="#quantityvalue-formatting-changes" class="hash-link" aria-label="Direct link to QuantityValue Formatting Changes" title="Direct link to QuantityValue Formatting Changes" translate="no">​</a></h3>
+<ul>
+<li class="">The space between QuantityValue value and unit is going to be removed. Please make sure any custom code that relies on the space is updated accordingly.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="deprecated-kernel-extension-hooks">Deprecated Kernel Extension Hooks<a href="#deprecated-kernel-extension-hooks" class="hash-link" aria-label="Direct link to Deprecated Kernel Extension Hooks" title="Direct link to Deprecated Kernel Extension Hooks" translate="no">​</a></h3>
+<p>Overriding <code>HyperMDM\Kernel::configureContainer()</code> and <code>HyperMDM\Kernel::configureRoutes()</code> is now deprecated and will be removed in <strong>HyperMDM 2027.1</strong>.</p>
+<p>These methods were exposed as <code>protected</code> on <code>HyperMDM\Kernel</code> via trait aliases of <code>Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait</code>'s <strong>private</strong> methods. Symfony does not consider them part of its public API and has changed their signatures between minor versions, which can break HyperMDM subclasses on Symfony upgrades.</p>
+<p><strong>Migration:</strong></p>
+<p>Replace overrides of <code>configureContainer()</code> with one of the following stable, public extension points:</p>
+<ul>
+<li class="">Move container configuration to <code>config/packages/*.yaml</code> (or <code>config/packages/&lt;env&gt;/*.yaml</code>).</li>
+<li class="">Add a <a href="https://symfony.com/doc/current/service_container/compiler_passes.html" target="_blank" rel="noopener noreferrer" class="">compiler pass</a> for programmatic container manipulation.</li>
+<li class="">Override the public <code>HyperMDM\Kernel::registerContainerConfiguration(LoaderInterface $loader)</code> method directly. Call <code>parent::registerContainerConfiguration($loader)</code> first, then load additional configuration via <code>$loader-&gt;load(...)</code>.</li>
+</ul>
+<p>Replace overrides of <code>configureRoutes()</code> with one of the following:</p>
+<ul>
+<li class="">Move routes to <code>config/routes/*.yaml</code>.</li>
+<li class="">Register a custom routing loader as a service tagged <code>routing.loader</code>.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

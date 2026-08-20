@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Import Execution Details — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Import Execution Details</h1></header>
+<p>An import never runs in one go. It splits into two phases that are decoupled by a queue:</p>
+<!-- -->
+<p>Preparation runs inside the process that triggered the import. Processing runs in a queue worker. This is why an import
+that is started successfully still imports nothing until a worker runs, and why queue processing has to be set up during
+<a class="" href="../Installation/index.html#queue-processing">installation</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-preparation">1. Preparation<a href="#1-preparation" class="hash-link" aria-label="Direct link to 1. Preparation" title="Direct link to 1. Preparation" translate="no">​</a></h2>
+<p>Preparation loads the source data, interprets it according to the file format, splits it into records, and writes a
+queue item per record. With <a class="" href="../Configuration/Processing_Settings/index.html#delta-check">Delta Check</a> enabled, records
+whose data is unchanged since the previous run are skipped and never reach the queue.</p>
+<p>It starts when:</p>
+<ul>
+<li class=""><strong>Start Import</strong> is selected in the <strong>Execution</strong> tab.</li>
+<li class=""><code>datahub:data-importer:execute-cron</code> finds a due cron or one-time schedule. Every run of the command starts every
+import that has become due since the previous run.</li>
+<li class=""><code>datahub:data-importer:prepare-import</code> is run for a configuration.</li>
+<li class="">Data is pushed to the endpoint of a <code>Push</code> data source.</li>
+</ul>
+<p>See <a class="" href="../Configuration/Execution_Configuration/index.html">Execution Configuration</a>.</p>
+<p>Preparation performs these steps:</p>
+<ol>
+<li class="">Load the data from the data source.</li>
+<li class="">Interpret the data, split it into records, and create queue items.</li>
+<li class="">If <a class="" href="../Configuration/Processing_Settings/index.html#cleanup">cleanup</a> is enabled, determine which existing data objects
+are missing from the import data and create cleanup queue items for them.</li>
+</ol>
+<p>Preparation only runs when the queue of that import configuration is empty. This prevents two imports of the same
+configuration from racing each other. A <code>Push</code> data source can override this with <strong>Ignore Not Empty Queue</strong>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-processing">2. Processing<a href="#2-processing" class="hash-link" aria-label="Direct link to 2. Processing" title="Direct link to 2. Processing" translate="no">​</a></h2>
+<p>A queue worker takes the queue items and applies them. The
+<a class="" href="../Configuration/Processing_Settings/index.html#execution-type">execution type</a> decides which worker is responsible:</p>
+<ul>
+<li class=""><strong>Sequential</strong> items are processed one after another, in the order they were queued. Necessary when records depend on
+each other, for example when the import builds a hierarchy.</li>
+<li class=""><strong>Parallel</strong> items are processed concurrently. Faster, but without a guaranteed order.</li>
+</ul>
+<p>Both are processed either by the <code>datahub:data-importer:process-queue-sequential</code> and
+<code>datahub:data-importer:process-queue-parallel</code> commands, or by Symfony Messenger.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="import-jobs">Import Jobs<a href="#import-jobs" class="hash-link" aria-label="Direct link to Import Jobs" title="Direct link to Import Jobs" translate="no">​</a></h3>
+<p>For each import queue item the worker:</p>
+<ol>
+<li class="">Loads the existing data object based on the loading strategy, or creates a new one.</li>
+<li class="">Moves the data object based on the location strategy.</li>
+<li class="">Sets its published state based on the publish strategy.</li>
+<li class="">Runs the transformation pipeline of every mapping entry.</li>
+<li class="">Assigns each result to its data target.</li>
+<li class="">Records the modifying user on the data object where possible.</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="cleanup-jobs">Cleanup Jobs<a href="#cleanup-jobs" class="hash-link" aria-label="Direct link to Cleanup Jobs" title="Direct link to Cleanup Jobs" translate="no">​</a></h3>
+<p>For each cleanup queue item the worker:</p>
+<ol>
+<li class="">Loads the existing data object based on the loading strategy.</li>
+<li class="">Unpublishes or deletes it, based on the cleanup strategy.</li>
+</ol>
+<p>For the strategies referenced above, see <a class="" href="../Configuration/index.html">Configuration</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="driving-imports-from-outside-hypermdm">Driving Imports from Outside HyperMDM<a href="#driving-imports-from-outside-hypermdm" class="hash-link" aria-label="Direct link to Driving Imports from Outside Pimcore" title="Direct link to Driving Imports from Outside Pimcore" translate="no">​</a></h2>
+<p>The panel calls a set of internal Studio endpoints, but building against them directly is not supported. Use these
+interfaces instead:</p>
+<div class="table-container"><table><thead><tr><th>Goal</th><th>Interface</th></tr></thead><tbody><tr><td>Send data into HyperMDM from another system</td><td>The <a class="" href="../Configuration/Data_Sources/index.html#push"><code>Push</code> data source</a> endpoint, authenticated with an API key.</td></tr><tr><td>Start an import from a deployment script or external scheduler</td><td><code>bin/console datahub:data-importer:prepare-import &lt;config_name&gt;</code></td></tr><tr><td>Process the import queue</td><td><code>bin/console datahub:data-importer:process-queue-parallel</code> and <code>datahub:data-importer:process-queue-sequential</code>, or a Symfony Messenger worker.</td></tr><tr><td>React to imported elements</td><td>The <a class="" href="../Extending/Events/index.html">import events</a>.</td></tr></tbody></table></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

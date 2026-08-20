@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<p>The following steps are necessary when updating to newer versions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php--dependency-updates">PHP / Dependency Updates<a href="#php--dependency-updates" class="hash-link" aria-label="Direct link to PHP / Dependency Updates" title="Direct link to PHP / Dependency Updates" translate="no">​</a></h3>
+<ul>
+<li class="">PHP minimum requirement raised to <code>8.4</code>. PHP <code>8.5</code> is now supported.</li>
+<li class="">Dropped support for PHP <code>8.3</code> and Symfony <code>v6</code>.</li>
+<li class="">Removed the <code>hypermdm/admin-ui-classic-bundle</code> dependency.</li>
+<li class="">Removed Doctrine DBAL enum mapping support.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-extjs--admin-classic-ui">Removed ExtJS / Admin Classic UI<a href="#removed-extjs--admin-classic-ui" class="hash-link" aria-label="Direct link to Removed ExtJS / Admin Classic UI" title="Direct link to Removed ExtJS / Admin Classic UI" translate="no">​</a></h3>
+<ul>
+<li class="">Removed all ExtJS-based frontend JavaScript files (<code>src/Resources/public/js/</code>), including the full configuration UI,
+execution UI, log tab, transmitter configuration, workspace editor, and startup script. The configuration UI is now a
+HyperMDM Studio plugin.</li>
+<li class="">Removed <code>StudioRouteLoader</code>: Studio routes are now registered directly via <code>routing.yml</code> using attribute-based
+routing.</li>
+<li class=""><code>HyperMDMDataHubFileExportBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code> and no longer uses
+<code>BundleAdminClassicTrait</code>.</li>
+<li class=""><code>HyperMDMDataHubFileExportBundle::registerDependentBundles()</code> no longer registers <code>HyperMDMAdminBundle</code>.</li>
+<li class=""><code>HyperMDMDataHubFileExportBundle</code> is <strong>not</strong> <code>final</code>, because other bundles extend it (for example
+<code>data-hub-productsup</code>).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="new-features">New Features<a href="#new-features" class="hash-link" aria-label="Direct link to New Features" title="Direct link to New Features" translate="no">​</a></h3>
+<ul>
+<li class="">The CSV delimiter character is now configurable per export configuration. The default value remains <code>,</code>.</li>
+<li class="">Transmitters now access the exported file and its storage through the <code>ExporterInterface</code> instead of directly via the
+<code>ExporterTypeInterface</code>.
+This decoupling enables post-export file manipulation (e.g. bundling assets into a zip archive).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="bc-breaks--configuration-changes">BC Breaks / Configuration Changes<a href="#bc-breaks--configuration-changes" class="hash-link" aria-label="Direct link to BC Breaks / Configuration Changes" title="Direct link to BC Breaks / Configuration Changes" translate="no">​</a></h3>
+<ul>
+<li class="">The Symfony Messenger transport DSN parameter has been renamed from <code>%hypermdm.messenger.transport_dsn%</code> to
+<code>%hypermdm.messenger.transport_dsn_prefix%</code>. Update your <code>config.yml</code> or environment variables accordingly.</li>
+<li class=""><code>TransmitterInterface</code> and <code>AbstractTransmitter</code> no longer depend on <code>ExporterTypeInterface</code>.
+The methods <code>setExporterType()</code>/<code>getExporterType()</code> have been replaced by
+<code>setExporter(ExporterInterface)</code>/<code>getExporter()</code>.
+Custom transmitters must be updated to use the new <code>ExporterInterface</code> to access the file and storage.</li>
+<li class=""><code>ExporterInterface</code> has two new methods: <code>getFile(): string</code> and <code>getFileStorage(): FilesystemOperator</code>.
+Custom exporter implementations must implement these methods.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-studiofile-class-merged-into-abstractexporter">Removed <code>StudioFile</code> Class: Merged into <code>AbstractExporter</code><a href="#removed-studiofile-class-merged-into-abstractexporter" class="hash-link" aria-label="Direct link to removed-studiofile-class-merged-into-abstractexporter" title="Direct link to removed-studiofile-class-merged-into-abstractexporter" translate="no">​</a></h3>
+<ul>
+<li class=""><strong><code>HyperMDM\Bundle\DataHubFileExportBundle\Exporter\StudioFile</code> has been removed.</strong> All Studio GridService-based data
+extraction logic has been moved into <code>AbstractExporter</code>. Custom classes that extended <code>StudioFile</code> must now extend
+<code>File</code> instead.</li>
+<li class="">The service ID <code>hypermdm.datahub.fileExport.exporter.studioFile</code> has been renamed to
+<code>hypermdm.datahub.fileExport.exporter.file</code>. The <code>Helper::STUDIO_EXPORTER_SERVICE</code> constant has been updated
+accordingly. Update any service configuration or code that references the old service ID.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="constructor-signature-change-in-abstractexporter">Constructor Signature Change in <code>AbstractExporter</code><a href="#constructor-signature-change-in-abstractexporter" class="hash-link" aria-label="Direct link to constructor-signature-change-in-abstractexporter" title="Direct link to constructor-signature-change-in-abstractexporter" translate="no">​</a></h3>
+<ul>
+<li class=""><code>AbstractExporter::__construct()</code> now requires two additional parameters: <code>GridServiceInterface $gridService</code> and
+<code>OutputFormatterLoaderInterface $formatterLoader</code>, inserted <strong>before</strong> the <code>$exporterTypes</code> array parameter. The new
+signature is:<!-- -->
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">__construct</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name type-declaration">LocaleServiceInterface</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$localeService</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name type-declaration">EventDispatcherInterface</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$eventDispatcher</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name type-declaration">RouterInterface</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$router</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name type-declaration">AssetRelationFixer</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$assetRelationFixer</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name type-declaration">LoggerInterface</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$applicationLogger</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name type-declaration">GridServiceInterface</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$gridService</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain">          </span><span class="token comment" style="color:#999988;font-style:italic">// NEW</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token class-name">OutputFormatterLoaderInterface</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$formatterLoader</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">// NEW</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword type-declaration" style="color:#00009f">array</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$exporterTypes</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword type-hint" style="color:#00009f">array</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$transmitter</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">)</span><br></span></code></pre></div></div>
+<!-- -->Custom exporters that extend <code>AbstractExporter</code> or <code>File</code> and override the constructor must update their signatures to
+include these parameters and pass them to <code>parent::__construct()</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-extraction-now-uses-studio-gridservice-exclusively">Data Extraction Now Uses Studio GridService Exclusively<a href="#data-extraction-now-uses-studio-gridservice-exclusively" class="hash-link" aria-label="Direct link to Data Extraction Now Uses Studio GridService Exclusively" title="Direct link to Data Extraction Now Uses Studio GridService Exclusively" translate="no">​</a></h3>
+<ul>
+<li class=""><code>AbstractExporter</code> no longer calls <code>DataObject\Service::getCsvDataForObject()</code>. All data extraction is now performed
+through the Studio <code>GridServiceInterface::getGridDataForElement()</code>.</li>
+<li class="">The legacy grid config format (<code>schema.config.columns</code> with <code>helperDefinitions</code>) is no longer supported by the base
+exporter. Configurations must use the Studio column format (<code>schema.columns</code>).</li>
+<li class=""><code>getGridConfigData()</code> now returns <code>array{columns: array, language: ?string}</code> instead of the previous
+<code>array{fields: array, helperDefinitions: array, language: ?string}</code>. Code that relied on the <code>fields</code> or
+<code>helperDefinitions</code> keys must be updated.</li>
+<li class=""><code>getFieldMapping()</code> now derives headers from <code>column['label'] ?? column['key']</code> instead of
+<code>DataObject\Service::getCsvDataForObject()</code>.</li>
+<li class=""><code>getItemData()</code> now has an explicit return type of <code>array|bool</code>.</li>
+<li class="">The protected method <code>fixAssetRelations()</code> has been removed and replaced by the private method
+<code>fixStudioAssetRelations()</code>, which delegates to registered <code>OutputFormatter</code> instances. Custom exporters that overrode
+<code>fixAssetRelations()</code> must migrate to the <code>OutputFormatter</code> system instead.</li>
+<li class="">The protected method <code>mapLabelToOperatorId()</code> is no longer called from <code>getItemData()</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="logger-interface-change">Logger Interface Change<a href="#logger-interface-change" class="hash-link" aria-label="Direct link to Logger Interface Change" title="Direct link to Logger Interface Change" translate="no">​</a></h3>
+<ul>
+<li class=""><code>AbstractExporter::$applicationLogger</code>, <code>AbstractExporter::__construct()</code> and
+<code>AbstractTransmitter::setApplicationLogger()</code> now type-hint against <code>Psr\Log\LoggerInterface</code> instead of
+<code>HyperMDM\Log\ApplicationLogger</code>. Custom exporter and transmitter classes that override these must update their type
+hints accordingly.</li>
+<li class=""><code>Exporter\Type\AbstractExporter::__construct()</code> constructor parameter <code>$applicationLogger</code> changed from
+<code>ApplicationLogger</code> to <code>LoggerInterface</code>.</li>
+<li class="">The <code>ApplicationLogger</code> namespace was updated from <code>HyperMDM\Log\ApplicationLogger</code> to
+<code>HyperMDM\Bundle\ApplicationLoggerBundle\ApplicationLogger</code>. Update your imports if you referenced the old namespace
+directly.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="classes-marked-as-final--internal">Classes Marked as Final / Internal<a href="#classes-marked-as-final--internal" class="hash-link" aria-label="Direct link to Classes Marked as Final / Internal" title="Direct link to Classes Marked as Final / Internal" translate="no">​</a></h3>
+<p>The following classes are now marked <code>@internal</code> and/or <code>final</code>. If you have extended or relied on these classes, you
+must refactor your implementation:</p>
+<ul>
+<li class=""><code>CronExecutionCommand</code>: now <code>final</code> and <code>@internal</code></li>
+<li class=""><code>ExportFileCommand</code>: now <code>final</code> and <code>@internal</code></li>
+<li class=""><code>ExportExecutionDispatcher</code>: now <code>final</code> and <code>@internal</code></li>
+<li class=""><code>ExportExecutionHandler</code>: now <code>final</code> and <code>@internal</code></li>
+<li class=""><code>ExportExecutionMessage</code>: now <code>final readonly</code> and <code>@internal</code></li>
+<li class=""><code>ConfigurationEventSubscriber</code>: now <code>final</code> and <code>@internal</code></li>
+<li class=""><code>CronExecutionService</code>: now <code>final</code> and <code>@internal</code></li>
+<li class=""><code>ExporterServiceCollector</code>: now <code>final</code> and <code>@internal</code></li>
+<li class=""><code>Installer</code>: now <code>final</code> and <code>@internal</code></li>
+<li class=""><code>ResetConfigEvent</code>: now <code>final</code>; properties changed from <code>protected</code> to <code>private</code></li>
+<li class=""><code>ValidateConfigEvent</code>: now <code>final</code>; property changed from <code>protected</code> to <code>private</code></li>
+<li class=""><code>DataObjectSubscriber</code>: now <code>@internal</code> (<strong>not</strong> <code>final</code>, as it is extended by <code>data-hub-productsup</code>)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="return-type-changes">Return Type Changes<a href="#return-type-changes" class="hash-link" aria-label="Direct link to Return Type Changes" title="Direct link to Return Type Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>Installer::getLastMigrationVersionClassName()</code> return type changed from <code>?string</code> to <code>string</code> (non-nullable).</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-340">Upgrade to 3.4.0<a href="#upgrade-to-340" class="hash-link" aria-label="Direct link to Upgrade to 3.4.0" title="Direct link to Upgrade to 3.4.0" translate="no">​</a></h2>
+<p>The HyperMDM Studio integration replaces the tree-based schema definition with the pipeline-based column format that
+HyperMDM Studio grids use.</p>
+<ul>
+<li class="">In 3.4.x, configurations created in the Admin Classic UI kept executing unchanged.</li>
+<li class="">A configuration has to be migrated to the pipeline-based format before it can be edited in HyperMDM Studio. HyperMDM
+Studio guides you through the migration when you open such a configuration.</li>
+</ul>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Datahub_File_Export-Installation-Upgrade-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_File_Export-Installation-Upgrade-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Datahub_File_Export-Installation-Upgrade-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The read-only execution support for legacy tree-based schemas was removed in 2026.1.0, earlier than the 2027.1.0
+originally announced. <code>AbstractExporter::getGridConfigData()</code> now reads <code>schema.columns</code> only, and the shipped
+<code>defaultExporter</code> (<code>hypermdm.datahub.fileExport.exporter.file</code>) is that same Studio-based exporter. A configuration that
+was never migrated fails at export time with
+<code>No schema columns defined for config: "&lt;name&gt;"</code>. Migrate every configuration in HyperMDM Studio while still on 3.4.x,
+before upgrading to 2026.1.0.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-300">Upgrade to 3.0.0<a href="#upgrade-to-300" class="hash-link" aria-label="Direct link to Upgrade to 3.0.0" title="Direct link to Upgrade to 3.0.0" translate="no">​</a></h2>
+<ul>
+<li class="">File name configuration has been changed. Extract the date/time format options into the new "date
+format for filename" field.
+Additionally, the format options have to be adjusted to the Carbon format. For example, <code>%Y-%m-%d_%H-%i-%s</code> has to be
+changed to <code>Y-m-d_H-i-s</code>.
+Further documentation on Carbon format options is available <a href="https://carbon.nesbot.com/docs/#api-introduction" target="_blank" rel="noopener noreferrer" class="">here</a>.</li>
+<li class="">Change return type to <code>bool</code> of <code>exportData</code> in <code>ExporterTypeInterface</code> and <code>AbstractExporter</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-220">Upgrade to 2.2.0<a href="#upgrade-to-220" class="hash-link" aria-label="Direct link to Upgrade to 2.2.0" title="Direct link to Upgrade to 2.2.0" translate="no">​</a></h2>
+<ul>
+<li class="">The folder where the temporary file and the output file will be generated can now be configured in the flysystem
+configuration.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-210">Upgrade to 2.1.0<a href="#upgrade-to-210" class="hash-link" aria-label="Direct link to Upgrade to 2.1.0" title="Direct link to Upgrade to 2.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">Make sure all running exports are done prior to upgrading to version 2.1.0.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-200">Upgrade to 2.0.0<a href="#upgrade-to-200" class="hash-link" aria-label="Direct link to Upgrade to 2.0.0" title="Direct link to Upgrade to 2.0.0" translate="no">​</a></h2>
+<ul>
+<li class="">Make sure all running exports are done prior to upgrading to version 2.0.0.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-110">Upgrade to 1.1.0<a href="#upgrade-to-110" class="hash-link" aria-label="Direct link to Upgrade to 1.1.0" title="Direct link to Upgrade to 1.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">Execute all migrations of the bundle.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-hypermdm-x">Upgrade to HyperMDM X<a href="#upgrade-to-hypermdm-x" class="hash-link" aria-label="Direct link to Upgrade to Pimcore X" title="Direct link to Upgrade to Pimcore X" translate="no">​</a></h2>
+<ul>
+<li class="">Update to latest (allowed) bundle version in HyperMDM 6.9 and execute all migrations.</li>
+<li class="">Then update to HyperMDM X.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Routing and URLs — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Routing and URLs</h1></header>
+<p>Routing defines which controller handles a request based on its URL.
+HyperMDM's routing builds on top of
+<a href="https://symfony.com/doc/current/routing.html" target="_blank" rel="noopener noreferrer" class="">Symfony routing</a>
+and adds document-based routing, custom routes, URL slugs, and redirects.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="routing-priority">Routing Priority<a href="#routing-priority" class="hash-link" aria-label="Direct link to Routing Priority" title="Direct link to Routing Priority" translate="no">​</a></h2>
+<p>HyperMDM processes routes in the following order:</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-system--symfony-routes">1. System / Symfony Routes<a href="#1-system--symfony-routes" class="hash-link" aria-label="Direct link to 1. System / Symfony Routes" title="Direct link to 1. System / Symfony Routes" translate="no">​</a></h4>
+<p>Routes defined by HyperMDM core, Symfony, or custom bundles. These are standard Symfony routes
+and have the highest priority.</p>
+<p>Use the router debugger to list all configured Symfony routes:
+<code>./bin/console debug:router</code></p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-redirects-with-priority-99">2. Redirects with Priority 99<a href="#2-redirects-with-priority-99" class="hash-link" aria-label="Direct link to 2. Redirects with Priority 99" title="Direct link to 2. Redirects with Priority 99" translate="no">​</a></h4>
+<p>Redirects configured with priority 99 override all other dynamic routes.
+See <a class="" href="Redirects/index.html">Redirects</a> for details.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-hypermdm-documents-and-pretty-urls">3. HyperMDM Documents and Pretty URLs<a href="#3-hypermdm-documents-and-pretty-urls" class="hash-link" aria-label="Direct link to 3. Pimcore Documents and Pretty URLs" title="Direct link to 3. Pimcore Documents and Pretty URLs" translate="no">​</a></h4>
+<p>The document tree path defines the public URL. Individual documents can also have Pretty URLs
+configured as alternative paths.
+See <a class="" href="Documents_and_Pretty_URLs/index.html">Documents and Pretty URLs</a> for details.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-url-slugs-of-data-objects">4. URL Slugs of Data Objects<a href="#4-url-slugs-of-data-objects" class="hash-link" aria-label="Direct link to 4. URL Slugs of Data Objects" title="Direct link to 4. URL Slugs of Data Objects" translate="no">​</a></h4>
+<p>The <a class="" href="../../Objects/Object_Classes/Data_Types/Others/index.html#url-slug">URL Slug</a> data type
+allows defining URLs for data objects. These must be unique and are evaluated per site.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-custom-routes">5. Custom Routes<a href="#5-custom-routes" class="hash-link" aria-label="Direct link to 5. Custom Routes" title="Direct link to 5. Custom Routes" translate="no">​</a></h4>
+<p>For pages without a corresponding document (product lists, checkout flows, etc.),
+Custom Routes map URL patterns to specific controllers.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-redirects">6. Redirects<a href="#6-redirects" class="hash-link" aria-label="Direct link to 6. Redirects" title="Direct link to 6. Redirects" translate="no">​</a></h4>
+<p>All redirects with priority lower than 99 are processed last, ordered by their configured priority.
+See <a class="" href="Redirects/index.html">Redirects</a> for details.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="multi-domain-sites">Multi-domain Sites<a href="#multi-domain-sites" class="hash-link" aria-label="Direct link to Multi-domain Sites" title="Direct link to Multi-domain Sites" translate="no">​</a></h4>
+<p>The routing process supports multi-domain sites.
+See <a class="" href="../Working_with_Sites/index.html">Working with Sites</a> for details.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

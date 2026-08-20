@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Template Generation — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Agent Template Generation</h1></header>
+<p>This is the <em>write</em> path for Twig templates: how an agent's proposed template is validated, test-rendered, persisted, and wired into HyperMDM's rendering stack. The user-facing flow is described in <a class="" href="../../Features/Agent_Templates/index.html">Features → Agent Templates</a>; this page covers the internals.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="private-root-and-twig-namespace">Private root and Twig namespace<a href="#private-root-and-twig-namespace" class="hash-link" aria-label="Direct link to Private root and Twig namespace" title="Direct link to Private root and Twig namespace" translate="no">​</a></h2>
+<p>Approved templates are written to a <strong>private root</strong> - <code>var/agent-templates/</code> by default - as one flat file per slug:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">var/agent-templates/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── landing.html.twig</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">└── shared-header.html.twig</span><br></span></code></pre></div></div>
+<p>The directory is never web-served; generated files stay out of hand-authored project source so ownership is clear and the write path stays reversible.</p>
+<p><code>AgentTemplateTwigLoader</code> sits in HyperMDM's Twig loader chain and resolves <code>@HyperMDMAgentTemplates/&lt;slug&gt;.html.twig</code> to <code>&lt;private-root&gt;/&lt;slug&gt;.html.twig</code>. Cross-template <code>{% include %}</code> / <code>{% extends %}</code> must use this namespaced form - bare relative paths are rejected, because Twig's namespace loader cannot resolve relative paths from inside a namespaced template.</p>
+<p><code>AgentTemplateProvider</code> contributes approved templates to the Studio document-<code>template</code> dropdown through HyperMDM's <code>hypermdm.template_provider</code> extension point, filtered by type: <code>page</code> templates for Page documents, <code>snippet</code> for Snippet documents. <code>partial</code> templates are include-only and never appear.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="validation-pipeline">Validation pipeline<a href="#validation-pipeline" class="hash-link" aria-label="Direct link to Validation pipeline" title="Direct link to Validation pipeline" translate="no">​</a></h2>
+<p><code>propose_agent_template</code> runs a pure, write-free validation before a proposal is stored:</p>
+<ol>
+<li class=""><strong>Forbidden-construct rejection.</strong> <code>TemplateValidator</code> parses the template and walks the AST with <code>ForbiddenConstructVisitor</code>, rejecting any tag, filter, or function outside a positive allowlist.</li>
+<li class=""><strong>CSS scan.</strong> <code>&lt;style&gt;</code> blocks and inline <code>style=""</code> attributes are rejected for external <code>@import</code>, external <code>url()</code>, <code>expression(</code>, and <code>-moz-binding</code>.</li>
+<li class=""><strong>Path-traversal guards.</strong> Slugs are constrained to <code>[a-z0-9_-]</code>; <code>..</code> segments in template names and include/extends targets are rejected; every write target is verified to resolve under the private root.</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="implicit-hypermdm_-allow-listing">Implicit <code>hypermdm_*</code> allow-listing<a href="#implicit-hypermdm_-allow-listing" class="hash-link" aria-label="Direct link to implicit-pimcore_-allow-listing" title="Direct link to implicit-pimcore_-allow-listing" translate="no">​</a></h3>
+<p>HyperMDM registers every document editable through one <code>hypermdm_*</code> wildcard function resolved by a prefix loader - there is no enumerable list. Mirroring HyperMDM core's own sandbox, the bundle allows <strong>any <code>hypermdm_*</code> function by prefix</strong> (<code>HyperMDMFunctionPolicy</code>), so every editable - current or future, core or bundle - works without being listed. The sole denied <code>hypermdm_*</code> function is <code>hypermdm_inc</code>. The same policy backs both the propose-time validator and the render-time sandbox.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sandboxed-test-render">Sandboxed test-render<a href="#sandboxed-test-render" class="hash-link" aria-label="Direct link to Sandboxed test-render" title="Direct link to Sandboxed test-render" translate="no">​</a></h2>
+<p>A valid template is smoke-rendered in a sandboxed Twig environment (<code>SandboxSecurityPolicy</code>, the same allowlist as the validator). The renderer populates context through a configurable controller (<code>TestRenderController</code> by default) and wires the framework's form runtime so <code>{{ form(form) }}</code> renders against a throwaway form view. Output is bounded by a byte cap (checked after render) and a wall-clock timeout (the hard stop). Only a template that validates and renders reaches the reviewer; nothing is written to disk.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="persistence">Persistence<a href="#persistence" class="hash-link" aria-label="Direct link to Persistence" title="Direct link to Persistence" translate="no">​</a></h2>
+<p>On approval the resolver writes the file to a temp path and renames it into the private root atomically, then creates or updates the <code>AgentTemplate</code> entity (<code>bundle_agent_templates</code>: slug, label, type, status, owner, <code>include_deps</code>). A failure before the rename leaves no on-disk trace. Update and delete proposals are <strong>user-scoped</strong> - an agent may only change templates created by the current Studio user's sessions; HyperMDM admins bypass the check.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-documents-and-clone-and-reassign">Sample documents and clone-and-reassign<a href="#sample-documents-and-clone-and-reassign" class="hash-link" aria-label="Direct link to Sample documents and clone-and-reassign" title="Direct link to Sample documents and clone-and-reassign" translate="no">​</a></h2>
+<p>A document counts as a <strong>sample</strong> for a slug when it lives under the configured sample folder <em>and</em> its <code>template</code> field equals <code>@HyperMDMAgentTemplates/&lt;slug&gt;.html.twig</code> - there is no registration step. The approve resolver returns the resolved <code>contextDocumentId</code>, so a just-created sample can be opened and refreshed.</p>
+<p><strong>Clone-and-reassign</strong> lets the agent refine a document that uses a non-agent (project) template: it proposes a <code>create</code> with <code>reassignDocument=true</code>, and on approve the resolver writes the new template and repoints the document's <code>template</code> field. The reassign flag is recomputed at propose time and dropped to <code>false</code> when the document already uses the slug, and the resolver is idempotent on retry. Reassigning only changes the <code>template</code> field - it has no effect if the document's controller renders a hard-coded template instead of the document's configured one.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="drift-guard-lint">Drift-guard lint<a href="#drift-guard-lint" class="hash-link" aria-label="Direct link to Drift-guard lint" title="Direct link to Drift-guard lint" translate="no">​</a></h2>
+<p>A HyperMDM upgrade can change the editable registry or the sandbox allowlist after templates were approved. The lint command re-validates every persisted template and cross-checks each entity's <code>include_deps</code> against the actual sources:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm-agent:agent-templates:lint            # errors fail (exit 1); warnings advisory</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm-agent:agent-templates:lint --strict   # warnings also fail - for CI</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further reading" title="Direct link to Further reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Features/Agent_Templates/index.html">Features → Agent Templates</a> - the user-facing capability.</li>
+<li class=""><a class="" href="../../Features/HITL_Proposals/index.html">HITL Proposals</a> - the propose → review → resolve pattern.</li>
+<li class=""><a class="" href="../File_Staging/index.html">File Staging</a> - how the agent reads project context before drafting.</li>
+<li class=""><a class="" href="../../Configuration/Agent_Templates/index.html">Configuration → Agent Templates</a> - private root, test-render budget, sandbox allowlists.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

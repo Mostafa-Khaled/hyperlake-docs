@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Information — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Information</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php-and-dependency-requirements">PHP and Dependency Requirements<a href="#php-and-dependency-requirements" class="hash-link" aria-label="Direct link to PHP and Dependency Requirements" title="Direct link to PHP and Dependency Requirements" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-extjs--admin-classic">Removed ExtJS / Admin Classic<a href="#removed-extjs--admin-classic" class="hash-link" aria-label="Direct link to Removed ExtJS / Admin Classic" title="Direct link to Removed ExtJS / Admin Classic" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMGenericDataIndexBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code>.</li>
+<li class="">Removed <code>BundleAdminClassicTrait</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="interface-changes">Interface Changes<a href="#interface-changes" class="hash-link" aria-label="Direct link to Interface Changes" title="Direct link to Interface Changes" translate="no">​</a></h3>
+<ul>
+<li class="">Added optional <code>bool $forceReload = false</code> parameter to the <code>byId()</code> method on the following interfaces:<!-- -->
+<ul>
+<li class=""><code>AssetSearchServiceInterface::byId(int $id, ?User $user = null, bool $forceReload = false)</code></li>
+<li class=""><code>DataObjectSearchServiceInterface::byId(int $id, ?User $user = null, bool $forceReload = false)</code></li>
+<li class=""><code>DocumentSearchServiceInterface::byId(int $id, ?User $user = null, bool $forceReload = false)</code></li>
+<li class=""><code>ElementSearchServiceInterface::byId(ElementType $elementType, int $id, ?User $user = null, bool $forceReload = false)</code></li>
+</ul>
+</li>
+<li class="">[Indexing] <strong>BC Break</strong>: <code>IndexQueueRepository::generateSelectQuery()</code> signature changed. The method now accepts an associative <code>$columnAliases</code> array (<code>alias =&gt; expression</code>) instead of the previous positional <code>$fields</code> array with a separate <code>$idField</code> parameter. Passing a numerically-indexed array will throw an <code>InvalidArgumentException</code>. All enqueue methods in <code>EnqueueService</code> and the element type adapters (<code>AssetTypeAdapter</code>, <code>DocumentTypeAdapter</code>, <code>DataObjectTypeAdapter</code>) have been updated accordingly. The <code>quoteParameters()</code> helper method has been removed.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="installer--messenger-transport-changes">Installer / Messenger Transport Changes<a href="#installer--messenger-transport-changes" class="hash-link" aria-label="Direct link to Installer / Messenger Transport Changes" title="Direct link to Installer / Messenger Transport Changes" translate="no">​</a></h3>
+<ul>
+<li class="">The bundle installer now implements <code>PostInstallCommandsProviderInterface</code>. The post-install command
+<code>generic-data-index:update:index -r</code> is automatically executed during <code>hypermdm:install</code> when using
+Install Profiles. Manual execution after <code>hypermdm:bundle:install</code> is still required.</li>
+<li class="">The messenger transport DSN is now configurable via the <code>%hypermdm.messenger.transport_dsn_prefix%</code>
+container parameter (env: <code>HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX</code>) instead of being hardcoded to
+<code>doctrine://default</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-259">Upgrade to 2.5.9<a href="#upgrade-to-259" class="hash-link" aria-label="Direct link to Upgrade to 2.5.9" title="Direct link to Upgrade to 2.5.9" translate="no">​</a></h2>
+<ul>
+<li class="">[Indexing] Moving or renaming an element with children now rewrites the children's <code>path</code>/<code>fullPath</code> in the search
+index for <strong>all</strong> element types: data objects are rewritten across all per-class indexes (previously only the
+folder index was updated, so concrete objects kept their old path after a folder move), and documents are
+rewritten for any parent document type (previously only moves of document <em>folders</em> were handled, so children of
+a moved/renamed page kept their old path). Stale index paths also affected path-based workspace permission
+filtering of search results.</li>
+<li class="">[Configuration] <strong>BC break:</strong> the undocumented <code>max_synchronous_children_rename_limit</code> setting
+(<code>hypermdm_generic_data_index.index_service.search_settings</code>) was removed, together with
+<code>SearchIndexConfigServiceInterface::getMaxSynchronousChildrenRenameLimit()</code> (<code>@internal</code>). Above that limit the
+children path rewrite was silently skipped and never performed by any asynchronous process, leaving the index
+permanently stale — the rewrite now always runs. Remove the setting from your configuration if you had set it;
+Symfony will otherwise fail with an "Unrecognized option" error on container build.</li>
+<li class="">[Commands] <code>generic-data-index:update:index</code> now exits with a non-zero status code when one or more of its
+update sections (class definition, asset index, full update) fail, instead of always returning <code>0</code>. All sections
+are still attempted and the queue is still dispatched; the command only reports the failure at the end. Deployment
+pipelines that treated a partial failure as success will now fail visibly — this mirrors the same change made for
+<code>generic-data-index:deployment:reindex</code> and <code>generic-data-index:reindex</code> in 2.5.6.</li>
+<li class="">[Commands] Added a read-only <code>generic-data-index:status</code> command that reports the index queue depth (and whether
+items are still pending dispatch), every live index with its document count and size, and a warning for any index
+present in both the <code>-even</code> and <code>-odd</code> version at once (the fingerprint of an interrupted reindex).</li>
+<li class="">[Logging] Generic Data Index now logs to a dedicated <code>hypermdm_generic_data_index</code> Monolog channel, so its output
+can be filtered, raised to debug, or routed separately. Handlers without a channel restriction pick it up
+automatically; if you restrict a handler to an explicit channel allow-list (e.g. <code>channels: ["hypermdm"]</code>), add
+<code>hypermdm_generic_data_index</code> to that list so its records are not dropped.</li>
+<li class="">[Logging] Failure paths (index checksum read, queue enqueue, dispatch handler) now log with structured context and
+the original exception, a claimed queue batch's dispatch id is logged across dispatch and processing for
+correlation, and the per-class mapping-checksum reindex decision (skip vs. reindex, with stored vs. current
+checksum) is logged.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-258">Upgrade to 2.5.8<a href="#upgrade-to-258" class="hash-link" aria-label="Direct link to Upgrade to 2.5.8" title="Direct link to Upgrade to 2.5.8" translate="no">​</a></h2>
+<ul>
+<li class="">[Indexing] The class mapping checksum is now calculated independently of the array key order, so that a changed
+order of e.g. the configured system languages no longer marks unchanged class definitions as changed and triggers
+a native reindex. Checksums stored by earlier versions are recognised and updated automatically, so upgrading by
+itself does <strong>not</strong> reindex existing class definitions. Only if the mapping actually changes in the same
+deployment as the upgrade — including a changed key order, since the previous checksum still depends on it — are
+the affected class definitions reindexed once, as they would have been before. From then on, order-only changes
+no longer trigger a reindex.</li>
+<li class="">[Indexing] A failed native reindex no longer triggers a forced recreation of the live index. Recreation now only
+happens when the reindex reports that the existing documents are incompatible with the new mapping (e.g. after a
+field type change); genuine errors — unreachable search cluster, timeouts, rejected requests — propagate and fail
+the operation instead, so a transient connection failure during deployment can no longer purge the index.</li>
+<li class="">[Indexing] Transient failures of single task-status requests during a long-running reindex are now retried instead
+of aborting the reindex, and an aborted reindex cancels the server-side task before cleaning up its target index.</li>
+<li class="">[Indexing] <code>SearchIndexServiceInterface::reindex()</code> (<code>@internal</code>) now returns a <code>ReindexResult</code> enum instead of <code>void</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-256">Upgrade to 2.5.6<a href="#upgrade-to-256" class="hash-link" aria-label="Direct link to Upgrade to 2.5.6" title="Direct link to Upgrade to 2.5.6" translate="no">​</a></h2>
+<ul>
+<li class="">[Commands] <code>generic-data-index:deployment:reindex</code> and <code>generic-data-index:reindex</code> now exit with a non-zero status
+code when reindexing fails, instead of always returning <code>0</code>. Deployment pipelines executing these commands will now
+fail visibly on reindex errors — previously such errors were only printed while the process reported success.</li>
+<li class="">[Indexing] Reindexing failures are no longer silently swallowed: if both the reindex and the fallback index
+recreation fail, the exception now propagates and the mapping checksum is not stored, so the reindex of the class
+definition is retried on the next run.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-254">Upgrade to 2.5.4<a href="#upgrade-to-254" class="hash-link" aria-label="Direct link to Upgrade to 2.5.4" title="Direct link to Upgrade to 2.5.4" translate="no">​</a></h2>
+<ul>
+<li class="">[Searching] The full-text search (<code>FullTextSearch</code> modifier) now defaults to <code>default_operator: AND</code> and
+<code>flags: PHRASE|WHITESPACE</code> for better relevance and to treat characters like <code>-</code> and <code>.</code> as literal text.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-253">Upgrade to 2.5.3<a href="#upgrade-to-253" class="hash-link" aria-label="Direct link to Upgrade to 2.5.3" title="Direct link to Upgrade to 2.5.3" translate="no">​</a></h2>
+<ul>
+<li class="">[Indexing] Added <code>isReferenced</code> field to asset index to support filtering for unreferenced assets.</li>
+<li class="">[Indexing] Fixed: Unpublished data objects are now correctly indexed in relation fields (ManyToOne, ManyToMany, AdvancedManyToMany)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="re-indexing-required">Re-indexing required<a href="#re-indexing-required" class="hash-link" aria-label="Direct link to Re-indexing required" title="Direct link to Re-indexing required" translate="no">​</a></h3>
+<p>After upgrading, execute the following command to re-index elements to include all modifications:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:update:index -r</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-220">Upgrade to 2.2.0<a href="#upgrade-to-220" class="hash-link" aria-label="Direct link to Upgrade to 2.2.0" title="Direct link to Upgrade to 2.2.0" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>[Indexing]</strong> Added <code>id</code> column as new primary key to <code>generic_data_index_queue</code>.
+Run migrations after updating.</li>
+<li class=""><strong>[Searching]</strong> Added <code>trackTotalHits</code> parameter to <code>DefaultSearchService</code> and
+<code>SearchExecutionService</code>. Default value: <code>true</code> (always compute accurate total hits,
+even beyond the search engine's threshold). Set to <code>null</code> to use the engine's default
+threshold, or pass an integer for a specific limit.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-210">Upgrade to 2.1.0<a href="#upgrade-to-210" class="hash-link" aria-label="Direct link to Upgrade to 2.1.0" title="Direct link to Upgrade to 2.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">Added support for Symfony 7</li>
+<li class=""><strong>[Indexing]</strong> Added sort index for documents</li>
+<li class=""><strong>[Indexing]</strong> Improved field collection indexing to prevent mapping conflicts when
+properties share a name but differ in type</li>
+<li class="">Reindex all elements to use the new features:<!-- -->
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:update:index -r</span><br></span></code></pre></div></div>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-200">Upgrade to 2.0.0<a href="#upgrade-to-200" class="hash-link" aria-label="Direct link to Upgrade to 2.0.0" title="Direct link to Upgrade to 2.0.0" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>[Indexing]</strong> Added inherited fields indicator to data object indexing</li>
+<li class=""><strong>[Indexing]</strong> Added functionality to enqueue dependent items</li>
+<li class=""><strong>[Indexing]</strong> Added class ID field for data object elements</li>
+<li class=""><strong>[Indexing]</strong> Index name prefix changed from e.g. <code>hypermdm_car</code> to
+<code>hypermdm_data-object_car</code>. Old indices are <strong>not deleted</strong> automatically -
+delete them manually if necessary.</li>
+<li class=""><strong>[Searching]</strong> Added <code>ClassIdsFilter</code> modifier to filter data objects by class ID
+or class name</li>
+<li class="">Added <code>isElementLocked()</code> to <code>ElementLockService</code> for retrieving element lock status
+from the index</li>
+<li class="">Reindex all elements to use the new features:<!-- -->
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:update:index -r</span><br></span></code></pre></div></div>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="breaking-changes">Breaking Changes<a href="#breaking-changes" class="hash-link" aria-label="Direct link to Breaking Changes" title="Direct link to Breaking Changes" translate="no">​</a></h3>
+<ul>
+<li class="">Removed deprecated alias <code>generic-data-index.opensearch-client</code>.
+Use <code>generic-data-index.search-client</code> instead.</li>
+<li class="">Replaced all deprecated OpenSearch namespace classes with DefaultSearch equivalents:<!-- -->
+<ul>
+<li class=""><code>HyperMDM\...\Model\OpenSearch</code> → <code>HyperMDM\...\Model\DefaultSearch</code></li>
+<li class=""><code>HyperMDM\...\Enum\SearchIndex\OpenSearch</code> → <code>HyperMDM\...\Enum\SearchIndex\DefaultSearch</code></li>
+</ul>
+</li>
+<li class="">Removed deprecated class <code>HyperMDM\...\Exception\OpenSearch\SearchFailedException</code>.
+Use <code>HyperMDM\...\Exception\DefaultSearch\SearchFailedException</code> instead.</li>
+<li class="">Removed deprecated class <code>AsSearchModifierHandler</code> from OpenSearch namespace.
+Use <code>HyperMDM\...\Attribute\Search\AsSearchModifierHandler</code> instead.</li>
+<li class="">Removed deprecated <code>AbstractAdapter</code> classes from OpenSearch namespace.
+Use <code>HyperMDM\...\SearchIndexAdapter\DefaultSearch\...\AbstractAdapter</code> instead.</li>
+<li class="">Added default <code>data-object_</code> prefix to all data object class definition index names
+to avoid conflicts with other index names.</li>
+<li class="">Added element type parameter to <code>getIds</code> method of <code>ElementSearchResult</code>.</li>
+<li class="">Added <code>getSpecialPermissions</code> method to <code>ElementPermissionServiceInterface</code>
+for workspace language permissions.</li>
+<li class="">Removed layout permission from <code>DataObjectPermissions</code> (not index-relevant).</li>
+<li class="">Removed <code>isLocked</code> property from index elements (now dynamically calculated).</li>
+<li class="">Changed workspace permissions evaluation to align with Admin Classic permission system.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="interface-changes-1">Interface Changes<a href="#interface-changes-1" class="hash-link" aria-label="Direct link to Interface Changes" title="Direct link to Interface Changes" translate="no">​</a></h4>
+<ul>
+<li class="">Added <code>PermissionTypes $permissionType</code> parameter (default: <code>PermissionTypes::LIST</code>) to:<!-- -->
+<ul>
+<li class=""><code>AssetSearchServiceInterface::search</code></li>
+<li class=""><code>DocumentSearchServiceInterface::search</code></li>
+<li class=""><code>DataObjectSearchServiceInterface::search</code></li>
+<li class=""><code>ElementSearchServiceInterface::search</code></li>
+</ul>
+</li>
+<li class="">Search service <code>byId</code> methods now return elements based on <code>PermissionTypes::VIEW</code></li>
+<li class="">Added type-specific interfaces:<!-- -->
+<ul>
+<li class=""><code>AssetSearch</code> → <code>AssetSearchInterface</code></li>
+<li class=""><code>DocumentSearch</code> → <code>DocumentSearchInterface</code></li>
+<li class=""><code>ElementSearch</code> → <code>ElementSearchInterface</code></li>
+</ul>
+</li>
+<li class="">Search services now require type-specific search objects:<!-- -->
+<ul>
+<li class=""><code>AssetSearchServiceInterface::search</code> requires <code>AssetSearchInterface</code></li>
+<li class=""><code>DocumentSearchServiceInterface::search</code> requires <code>DocumentSearchInterface</code></li>
+<li class=""><code>ElementSearchServiceInterface::search</code> requires <code>ElementSearchInterface</code></li>
+</ul>
+</li>
+<li class=""><code>SearchProviderInterface</code> now returns type-specific search interfaces.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-130">Upgrade to 1.3.0<a href="#upgrade-to-130" class="hash-link" aria-label="Direct link to Upgrade to 1.3.0" title="Direct link to Upgrade to 1.3.0" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>[Indexing]</strong> Added Elasticsearch support alongside OpenSearch (OpenSearch remains
+the default). To use Elasticsearch, update your Symfony configuration:</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_generic_data_index</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">index_service</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">client_params</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">client_name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> default</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">client_type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'elasticsearch'</span><br></span></code></pre></div></div>
+<ul>
+<li class=""><strong>[Indexing]</strong> Introduced service alias <code>generic-data-index.search-client</code>, replacing
+the deprecated <code>generic-data-index.opensearch-client</code> (removed in 2.0). The alias
+provides a <code>HyperMDM\SearchClient\SearchClientInterface</code> instance compatible with both
+OpenSearch and Elasticsearch.</li>
+<li class="">OpenSearch namespace classes are deprecated. Use DefaultSearch namespace instead.</li>
+<li class="">Reindex all elements after upgrading or switching search engines:<!-- -->
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:update:index</span><br></span></code></pre></div></div>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-110">Upgrade to 1.1.0<a href="#upgrade-to-110" class="hash-link" aria-label="Direct link to Upgrade to 1.1.0" title="Direct link to Upgrade to 1.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">Reindex all elements to use the new features:<!-- -->
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:update:index</span><br></span></code></pre></div></div>
+</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

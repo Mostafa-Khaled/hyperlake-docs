@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Product List — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Product List</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="working-with-product-lists">Working with Product Lists<a href="#working-with-product-lists" class="hash-link" aria-label="Direct link to Working with Product Lists" title="Direct link to Working with Product Lists" translate="no">​</a></h2>
+<p>The API for getting (and filtering, ...) products out of the <em>Product Index</em> are so called Product Lists. They all
+implement the interface <code>\HyperMDM\Bundle\EcommerceFrameworkBundle\IndexService\ProductList\ProductListInterface</code> and need to be
+Product Index implementation specific. Detailed method documentation is available in
+<a href="https://github.com/pimcore/ecommerce-framework-bundle/blob/1.x/src/IndexService/ProductList/ProductListInterface.php" target="_blank" rel="noopener noreferrer" class="">in-source documentation</a>.</p>
+<p>For how to get a Product List instance suitable for the current Product Index implementation and filter for products see
+following code sample:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter important">&lt;?php</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$list</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">HyperMDM</span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">Bundle</span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">EcommerceFrameworkBundle</span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">Factory</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">getInstance</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getIndexService</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getProductListForCurrentTenant</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$list</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">addCondition</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string double-quoted-string" style="color:#e3116c">"name = 'testproduct'"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'name'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$list</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">addRelationCondition</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'category'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string double-quoted-string" style="color:#e3116c">"dest IN (1024,1025,1026)"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$list</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setOrder</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string double-quoted-string" style="color:#e3116c">"ASC"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$list</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setOrderKey</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'name'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$list</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">load</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p>All filtered attributes need to be in the <em>Product Index</em>. The Product List implements all iterator and paginator
+interfaces and can be used in foreach loops and in combination with <code>Knp\Paginator</code>.</p>
+<blockquote>
+<p>For logging standard Symfony logging is used. E-Commerce Framework Product Indices log into special channels like
+<code>hypermdm_ecommerce_indexupdater</code>, <code>hypermdm_ecommerce_sql</code>, <code>hypermdm_ecommerce_es</code>
+and <code>hypermdm_ecommerce_findologic</code>.</p>
+</blockquote></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Development Details — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Development Details</h1></header>
+<p>This section covers the technical details relevant to developing with HyperMDM. Topics include configuration
+and system settings, caching strategies, debugging tools, testing approaches, and the console CLI. Use these
+references alongside the core component documentation when building and maintaining HyperMDM applications.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="topics">Topics<a href="#topics" class="hash-link" aria-label="Direct link to Topics" title="Direct link to Topics" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration"><a class="" href="Configuration/index.html">Configuration</a><a href="#configuration" class="hash-link" aria-label="Direct link to configuration" title="Direct link to configuration" translate="no">​</a></h3>
+<p>HyperMDM configuration relies on the Symfony config tree. This chapter explains system settings, HyperMDM constants,
+environment-specific overrides, and the storage locations where configuration files reside.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="database-model"><a class="" href="Database_Model/index.html">Database Model</a><a href="#database-model" class="hash-link" aria-label="Direct link to database-model" title="Direct link to database-model" translate="no">​</a></h3>
+<p>HyperMDM ships a set of default database tables and creates additional tables dynamically for each data object class.
+This reference documents the table structure and naming conventions.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="cache"><a class="" href="Cache/index.html">Cache</a><a href="#cache" class="hash-link" aria-label="Direct link to cache" title="Direct link to cache" translate="no">​</a></h3>
+<p>HyperMDM uses three caching layers: the element cache for documents, assets, and data objects; the full page cache
+for HTTP responses; and the runtime cache for in-request data reuse. This chapter covers configuration and
+invalidation for each layer.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="debugging"><a class="" href="Debugging/index.html">Debugging</a><a href="#debugging" class="hash-link" aria-label="Direct link to debugging" title="Direct link to debugging" translate="no">​</a></h3>
+<p>Debug mode, dev mode, server-side debugging techniques, and HTTP response headers for troubleshooting request
+handling. Activate and configure these tools during development and issue analysis.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="extending-the-hypermdm-user"><a class="" href="Extending_the_HyperMDM_User/index.html">Extending the HyperMDM User</a><a href="#extending-the-hypermdm-user" class="hash-link" aria-label="Direct link to extending-the-pimcore-user" title="Direct link to extending-the-pimcore-user" translate="no">​</a></h3>
+<p>Associate HyperMDM user accounts with data objects to store additional profile data, preferences, or
+application-specific attributes beyond the built-in user model.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="working-with-sessions"><a class="" href="Working_with_Sessions/index.html">Working with Sessions</a><a href="#working-with-sessions" class="hash-link" aria-label="Direct link to working-with-sessions" title="Direct link to working-with-sessions" translate="no">​</a></h3>
+<p>Session handling in HyperMDM builds on Symfony's session component. This chapter explains session configuration,
+custom session bags, and best practices for session data access in controllers and services.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="preview-scheduled-content"><a class="" href="Preview_Scheduled_Content/index.html">Preview Scheduled Content</a><a href="#preview-scheduled-content" class="hash-link" aria-label="Direct link to preview-scheduled-content" title="Direct link to preview-scheduled-content" translate="no">​</a></h3>
+<p>The time slider preview lets editors see how content will look at a future point in time. This feature uses the
+OutputTimestampResolver to render pages as they will appear after scheduled changes take effect.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="testing"><a class="" href="Testing/index.html">Testing</a><a href="#testing" class="hash-link" aria-label="Direct link to testing" title="Direct link to testing" translate="no">​</a></h3>
+<p>Application testing with PHPUnit and Codeception, running the HyperMDM core test suite, and strategies for testing
+services, controllers, and data object logic in isolation.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="cli-and-hypermdm-console"><a class="" href="CLI_and_HyperMDM_Console/index.html">CLI and HyperMDM Console</a><a href="#cli-and-hypermdm-console" class="hash-link" aria-label="Direct link to cli-and-pimcore-console" title="Direct link to cli-and-pimcore-console" translate="no">​</a></h3>
+<p>HyperMDM provides a console application based on the Symfony Console component. This chapter covers built-in
+commands, creating custom commands, running maintenance jobs, and working in maintenance mode.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

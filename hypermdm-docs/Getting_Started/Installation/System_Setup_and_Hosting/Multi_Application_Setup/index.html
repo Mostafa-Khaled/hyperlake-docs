@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Multi-Application Setup — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Multi-Application Setup</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sessions">Sessions<a href="#sessions" class="hash-link" aria-label="Direct link to Sessions" title="Direct link to Sessions" translate="no">​</a></h2>
+<p>When running multiple applications on the same domain,
+session cookie collisions can prevent you from logging in to both systems at the same time.</p>
+<p>For example, if you run a web shop on <code>http://example.org</code> and HyperMDM on <code>http://pim.example.org</code>,
+you may end up with two cookies named <code>PHPSESSID</code> (if <code>session.name</code> in <code>php.ini</code> is the same for both):</p>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Value</th><th>Domain</th><th>Path</th></tr></thead><tbody><tr><td>PHPSESSID</td><td>5a9b08750387d9e11c738a2947d93e38</td><td>.example.org</td><td>/</td></tr><tr><td>PHPSESSID</td><td>irqnjh5p96gp2i8iu743ulm32p</td><td>pim.example.org</td><td>/</td></tr></tbody></table></div>
+<p>The first cookie comes from the web shop, the second from HyperMDM.
+Trying to log in at <code>http://example.org/hypermdm-studio</code> will result in a 403 Forbidden error
+because the browser sends both cookies, and the web shop's cookie for <code>.example.org</code> takes precedence.</p>
+<p>Prevent this by setting a unique session name in your <code>config.yaml</code>:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">framework</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">session</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"HYPERMDM_SESSION_ID"</span><br></span></code></pre></div></div>
+<p>This ensures the session cookies do not conflict, and you can log in to both applications at the same time.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

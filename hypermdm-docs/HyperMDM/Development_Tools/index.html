@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Development Tools — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Development Tools</h1></header>
+<p>HyperMDM ships a set of developer-facing tools and APIs that support common application development tasks.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="generic-execution-engine"><a class="" href="Generic_Execution_Engine/index.html">Generic Execution Engine</a><a href="#generic-execution-engine" class="hash-link" aria-label="Direct link to generic-execution-engine" title="Direct link to generic-execution-engine" translate="no">​</a></h2>
+<p>Asynchronous job execution via Symfony Messenger.
+Define multi-step jobs, track their state, and manage runs (start, cancel, restart)
+with built-in logging and error handling.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="logging"><a class="" href="Logging/index.html">Logging</a><a href="#logging" class="hash-link" aria-label="Direct link to logging" title="Direct link to logging" translate="no">​</a></h2>
+<p>HyperMDM log types (<code>&lt;env&gt;-debug.log</code>, <code>&lt;env&gt;-error.log</code>, <code>usage.log</code>, <code>redirect.log</code>),
+custom log channels via Monolog, and the Application Logger bundle
+for database-backed log entries with email notifications.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="security-and-authentication"><a class="" href="Security_and_Authentication/index.html">Security and Authentication</a><a href="#security-and-authentication" class="hash-link" aria-label="Direct link to security-and-authentication" title="Direct link to security-and-authentication" translate="no">​</a></h2>
+<p>Symfony Security Component integration for frontend authentication.
+Configure firewalls, user providers backed by HyperMDM data objects,
+and password hashing with the <code>PasswordFieldHasher</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cloning-elements"><a class="" href="Cloning_Elements/index.html">Cloning Elements</a><a href="#cloning-elements" class="hash-link" aria-label="Direct link to cloning-elements" title="Direct link to cloning-elements" translate="no">​</a></h2>
+<p>Clone and copy documents, assets, and data objects programmatically.
+Use <code>Service::cloneMe()</code> for in-memory copies or <code>copyAsChild()</code> for persistent duplicates
+with automatic key generation.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="email-framework"><a class="" href="Email_Framework/index.html">Email Framework</a><a href="#email-framework" class="hash-link" aria-label="Direct link to email-framework" title="Direct link to email-framework" translate="no">​</a></h2>
+<p>Send emails with <code>HyperMDM\Mail</code>, use Document Email templates with Twig expressions,
+configure transports, and leverage debug mode to redirect all outgoing mail
+to test recipients.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="uuid-support"><a class="" href="UUID_Support/index.html">UUID Support</a><a href="#uuid-support" class="hash-link" aria-label="Direct link to uuid-support" title="Direct link to uuid-support" translate="no">​</a></h2>
+<p>Assign and retrieve universally unique identifiers for documents, assets, and data objects
+via the UUID bundle.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="settings-store"><a class="" href="Settings_Store/index.html">Settings Store</a><a href="#settings-store" class="hash-link" aria-label="Direct link to settings-store" title="Direct link to settings-store" translate="no">​</a></h2>
+<p>A key-value store API for persisting bundle and application settings
+in the HyperMDM database, with optional scoping.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="migrations"><a class="" href="Migrations/index.html">Migrations</a><a href="#migrations" class="hash-link" aria-label="Direct link to migrations" title="Direct link to migrations" translate="no">​</a></h2>
+<p>Doctrine Migrations integration with HyperMDM's <code>--prefix</code> option
+for filtering migrations by namespace (core, bundle, or project).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="maintenance-mode"><a class="" href="Maintenance_Mode/index.html">Maintenance Mode</a><a href="#maintenance-mode" class="hash-link" aria-label="Direct link to maintenance-mode" title="Direct link to maintenance-mode" translate="no">​</a></h2>
+<p>Restrict access to the application during maintenance.
+Only the session that activated maintenance mode retains access;
+all other users see a configurable maintenance page.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="static-helpers"><a class="" href="Static_Helpers/index.html">Static Helpers</a><a href="#static-helpers" class="hash-link" aria-label="Direct link to static-helpers" title="Direct link to static-helpers" translate="no">​</a></h2>
+<p>Utility classes for common operations: <code>HyperMDM\Tool</code> (validation, hostnames, mail),
+<code>Element\Service</code> (path lookups, element types, folder creation),
+and <code>Document\Service</code> (rendering documents outside views).</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

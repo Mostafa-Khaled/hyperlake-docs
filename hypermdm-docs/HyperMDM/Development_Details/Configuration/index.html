@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Configuration — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Configuration</h1></header>
+<p>HyperMDM uses the following configuration mechanisms:</p>
+<ul>
+<li class=""><strong>Symfony configuration tree</strong> - distributed throughout <code>*.yaml</code> files, covering all Symfony and most
+HyperMDM-related settings.</li>
+<li class=""><strong>Runtime-writable configs</strong> in <code>var/config/*.(php|yaml)</code> - written from HyperMDM Studio. For example,
+<code>system.yaml</code> stores the <a class="" href="System_Settings/index.html">System Settings</a>.</li>
+<li class=""><strong><code>HYPERMDM_*</code> constants</strong> - resolve filesystem paths at bootstrap time.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="symfony-configuration">Symfony Configuration<a href="#symfony-configuration" class="hash-link" aria-label="Direct link to Symfony Configuration" title="Direct link to Symfony Configuration" translate="no">​</a></h2>
+<p>Configure many aspects of HyperMDM through the
+<a href="https://symfony.com/doc/current/bundles/configuration.html" target="_blank" rel="noopener noreferrer" class="">Symfony Config</a> tree defined under the <code>hypermdm</code>
+and other <code>hypermdm_*</code> extensions. Place your overrides in config files under <code>config/</code>
+(e.g. <code>config/config.yaml</code>).</p>
+<p>HyperMDM ships a set of standard configuration files located not in <code>config/</code> but in the
+<a href="https://github.com/pimcore/pimcore/tree/2026.x/bundles/CoreBundle/config/pimcore" target="_blank" rel="noopener noreferrer" class="">HyperMDMCoreBundle</a>.
+This allows shipping and updating default configurations without affecting project code. See
+<a class="" href="../../Extending_HyperMDM/HyperMDM_Bundle_Developers_Guide/Auto_Loading_Config_and_Routing/index.html">Auto loading config and routing definitions</a>
+for details on how this works.</p>
+<p>Standard configs merge with your custom config in <code>config/</code> to build the final config tree. Debug the
+resolved values with the following command:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Core Symfony command - works for every bundle. Omit the</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># "hypermdm" argument to list all bundles.</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console debug:config hypermdm</span><br></span></code></pre></div></div>
+<p>Print a reference of valid configuration sections:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console config:dump-reference hypermdm</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-constants">HyperMDM Constants<a href="#hypermdm-constants" class="hash-link" aria-label="Direct link to Pimcore Constants" title="Direct link to Pimcore Constants" translate="no">​</a></h2>
+<p>HyperMDM uses several constants for locating directories such as logging, assets, and versions. These
+constants are defined in
+<a href="https://github.com/pimcore/pimcore/blob/2026.x/lib/Bootstrap.php" target="_blank" rel="noopener noreferrer" class=""><code>lib/Bootstrap.php</code></a>.</p>
+<p>To overwrite these constants (e.g. to point assets or versions at an AWS S3 object store), use one of the
+following approaches:</p>
+<ul>
+<li class="">Create a file at <code>/config/hypermdm/constants.php</code> that sets the constants you need. HyperMDM skips any
+constant that is already defined.</li>
+<li class="">Define an environment variable named after the constant. When defining a constant, HyperMDM checks for an
+env variable with the same name and uses it instead of the default value.</li>
+<li class="">Define an environment variable in a <code>/.env</code> file, which the
+<a href="https://github.com/symfony/dotenv" target="_blank" rel="noopener noreferrer" class="">Symfony DotEnv</a> component loads automatically. Environment variables
+defined here behave identically to real environment variables. See
+<a class="" href="Configuration_Environments/index.html">Configuration Environments</a> for more details.</li>
+</ul>
+<p>The <a href="https://github.com/pimcore/skeleton" target="_blank" rel="noopener noreferrer" class="">HyperMDM Skeleton</a> repository contains an example file,
+<a href="https://github.com/pimcore/skeleton/blob/2026.x/config/pimcore/constants.example.php" target="_blank" rel="noopener noreferrer" class=""><code>constants.example.php</code></a>.
+The following snippet shows how to overwrite a path:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter important">&lt;?php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// to use this file you have to rename it to constants.php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// you can use this file to overwrite the constants defined in lib/Bootstrap.php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token function" style="color:#d73a49">define</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string double-quoted-string" style="color:#e3116c">"HYPERMDM_CLASS_DIRECTORY"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string double-quoted-string" style="color:#e3116c">"/my/tmp/path"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span></code></pre></div></div>
+<p>See <a href="https://github.com/pimcore/pimcore/blob/2026.x/lib/Bootstrap.php" target="_blank" rel="noopener noreferrer" class=""><code>lib/Bootstrap.php</code></a> for a full list
+of defined constants.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-hypermdm_project_root-constant">The HYPERMDM_PROJECT_ROOT Constant<a href="#the-hypermdm_project_root-constant" class="hash-link" aria-label="Direct link to The PIMCORE_PROJECT_ROOT Constant" title="Direct link to The PIMCORE_PROJECT_ROOT Constant" translate="no">​</a></h3>
+<p>The <code>HYPERMDM_PROJECT_ROOT</code> constant resolves the application root directory (see
+<a class="" href="../../../Getting_Started/Create_a_First_Project/Directory_Structure/index.html">Directory Structure</a>). Unlike the other constants,
+it is not defined in <code>constants.php</code> because HyperMDM needs it to locate that file in the first place. Instead,
+<code>\HyperMDM\Bootstrap::setProjectRoot()</code> defines it during bootstrapping.</p>
+<p>You can override the project root through an env variable (or by defining the constant before loading the
+entry point). If unset, HyperMDM falls back to its standard value. When using the standard directory layout
+shipped with the skeleton, no changes are necessary. For non-standard layouts, you control all resolved
+paths through this constant.</p>
+<p><code>HYPERMDM_PROJECT_ROOT</code> cannot be set via <code>.env</code> because HyperMDM does not yet know where to look for that
+file at this point in the bootstrap sequence.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="adding-logic-to-the-startup-process">Adding Logic to the Startup Process<a href="#adding-logic-to-the-startup-process" class="hash-link" aria-label="Direct link to Adding Logic to the Startup Process" title="Direct link to Adding Logic to the Startup Process" translate="no">​</a></h2>
+<p>To execute code that influences HyperMDM's startup, add a file at <code>/config/hypermdm/startup.php</code>. HyperMDM
+includes this file automatically as part of the bootstrap process - specifically after all other bootstrapping
+(loading the autoloader, parsing constants, etc.) completes, but <strong>before</strong> the kernel loads and boots. This
+lets you reconfigure environment settings before they take effect. Examples:</p>
+<ul>
+<li class="">Defining the <a href="https://symfony.com/doc/current/deployment/proxies.html" target="_blank" rel="noopener noreferrer" class="">Trusted Proxies</a> configuration on
+the <code>Request</code> object</li>
+<li class="">Influencing the default <a class="" href="Configuration_Environments/index.html">environment handling</a></li>
+</ul>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter important">&lt;?php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// /config/hypermdm/startup.php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Symfony</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Component</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">HttpFoundation</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Request</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token class-name static-context">Request</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">setTrustedProxies</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'192.0.0.1'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'10.0.0.0/8'</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token class-name static-context">Request</span><span class="token operator" style="color:#393A34">::</span><span class="token constant" style="color:#36acaa">HEADER_X_FORWARDED_ALL</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

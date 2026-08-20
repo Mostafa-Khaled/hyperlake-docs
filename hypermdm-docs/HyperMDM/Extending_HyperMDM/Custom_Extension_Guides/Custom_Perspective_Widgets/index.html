@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Custom Perspective Widgets — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Custom Perspective Widgets</h1></header>
+<blockquote>
+<p><strong>Working example:</strong> The
+<a href="https://github.com/pimcore/studio-example-bundle" target="_blank" rel="noopener noreferrer" class="">studio-example-bundle</a>
+contains a complete <code>example_iframe</code> custom widget covering
+all steps below.</p>
+</blockquote>
+<p>Adding a custom perspective widget to HyperMDM Studio requires
+registration across two layers:</p>
+<ul>
+<li class=""><strong>Studio Backend</strong> — widget type config, repository,
+hydrator, schema</li>
+<li class=""><strong>Studio UI</strong> — Widget Editor dynamic type (perspective
+editor integration) and Widget Manager component (rendering)</li>
+</ul>
+<p>The widget type string (e.g. <code>'example_iframe'</code>) is the common
+identifier that ties both layers together — it must match
+between the backend config, repository, hydrator, and the
+frontend dynamic type <code>id</code> property.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-backend">Studio Backend<a href="#studio-backend" class="hash-link" aria-label="Direct link to Studio Backend" title="Direct link to Studio Backend" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-1--register-the-widget-type">Step 1 — Register the Widget Type<a href="#step-1--register-the-widget-type" class="hash-link" aria-label="Direct link to Step 1 — Register the Widget Type" title="Direct link to Step 1 — Register the Widget Type" translate="no">​</a></h3>
+<p>Extend the <code>hypermdm_studio_backend.widget_types</code> configuration.
+Load this via your bundle extension's <code>prepend()</code> method.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/pimcore/studio_backend.yaml" target="_blank" rel="noopener noreferrer" class="">studio_backend.yaml</a>
+and
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/DependencyInjection/PimcoreStudioExampleExtension.php" target="_blank" rel="noopener noreferrer" class="">HyperMDMStudioExampleExtension.php</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-2--widget-config-schema">Step 2 — Widget Config Schema<a href="#step-2--widget-config-schema" class="hash-link" aria-label="Direct link to Step 2 — Widget Config Schema" title="Direct link to Step 2 — Widget Config Schema" translate="no">​</a></h3>
+<p>Create a class extending
+<code>HyperMDM\Bundle\StudioBackendBundle\Perspective\Schema\WidgetConfig</code>.
+Add custom properties your widget needs (e.g. URL, height).</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Perspective/Schema/IframeWidgetConfig.php" target="_blank" rel="noopener noreferrer" class="">IframeWidgetConfig.php</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-3--widget-config-repository">Step 3 — Widget Config Repository<a href="#step-3--widget-config-repository" class="hash-link" aria-label="Direct link to Step 3 — Widget Config Repository" title="Direct link to Step 3 — Widget Config Repository" translate="no">​</a></h3>
+<p>Implement <code>WidgetConfigRepositoryInterface</code> with CRUD methods.
+Use <code>LocationAwareConfigRepository</code> with the <strong>settings-store</strong>
+backend for persistent storage — this stores data in the
+database and works without container recompilation. Register
+with the <code>hypermdm.studio_backend.widget_repository</code> service
+tag.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Perspective/Repository/IframeWidgetConfigRepository.php" target="_blank" rel="noopener noreferrer" class="">IframeWidgetConfigRepository.php</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-4--widget-config-hydrator">Step 4 — Widget Config Hydrator<a href="#step-4--widget-config-hydrator" class="hash-link" aria-label="Direct link to Step 4 — Widget Config Hydrator" title="Direct link to Step 4 — Widget Config Hydrator" translate="no">​</a></h3>
+<p>Implement <code>WidgetConfigHydratorInterface</code> to transform raw
+config arrays into your typed schema object. Register with the
+<code>hypermdm.studio_backend.widget_hydrator</code> service tag.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Perspective/Hydrator/IframeWidgetConfigHydrator.php" target="_blank" rel="noopener noreferrer" class="">IframeWidgetConfigHydrator.php</a>
+in the example bundle.</p>
+</blockquote>
+<p>For detailed backend documentation including configuration
+storage options, wrapper repositories, and restrictions, see
+<a class="" href="../../../../Studio_Backend/Extending/Perspectives/Extending_Widgets/index.html">Extending Widgets</a>.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-ui-frontend">Studio UI (Frontend)<a href="#studio-ui-frontend" class="hash-link" aria-label="Direct link to Studio UI (Frontend)" title="Direct link to Studio UI (Frontend)" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-5--widget-editor-dynamic-type">Step 5 — Widget Editor Dynamic Type<a href="#step-5--widget-editor-dynamic-type" class="hash-link" aria-label="Direct link to Step 5 — Widget Editor Dynamic Type" title="Direct link to Step 5 — Widget Editor Dynamic Type" translate="no">​</a></h3>
+<p>Create a class extending <code>DynamicTypeWidgetTypeAbstract</code> (from
+<code>@hypermdm/studio-ui-bundle/modules/widget-editor</code>). This
+registers your widget type in the perspective editor's "add
+widget" dropdown and provides the configuration form.</p>
+<p>Key properties:</p>
+<ul>
+<li class=""><code>id</code> — must match the backend widget type string</li>
+<li class=""><code>name</code> — display name in the dropdown</li>
+<li class=""><code>group</code> — groups related widget types together</li>
+<li class=""><code>icon</code> — icon from the HyperMDM icon library</li>
+<li class=""><code>form()</code> — returns a React form component for widget
+configuration</li>
+</ul>
+<p>Use the <code>@injectable()</code> decorator and bind the class in your
+plugin's <code>onInit</code>. Register it in the
+<code>DynamicTypeWidgetTypeRegistry</code> via a module.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-widgets/dynamic-types/definitions/dynamic-type-widget-type-iframe.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-widget-type-iframe.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-6--widget-rendering-component">Step 6 — Widget Rendering Component<a href="#step-6--widget-rendering-component" class="hash-link" aria-label="Direct link to Step 6 — Widget Rendering Component" title="Direct link to Step 6 — Widget Rendering Component" translate="no">​</a></h3>
+<p>Register a React component in the <code>WidgetRegistry</code> (from
+<code>@hypermdm/studio-ui-bundle/modules/widget-manager</code>) so
+perspectives can render your widget type at runtime.</p>
+<p>The component name registered in <code>WidgetRegistry</code> should match
+your widget type string:</p>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">widgetRegistry</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">registerWidget</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  name</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'example_iframe'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  component</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> IframeWidget</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><br></span></code></pre></div></div>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-widgets/components/iframe-widget.tsx" target="_blank" rel="noopener noreferrer" class="">iframe-widget.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-HyperMDM-Extending_HyperMDM-Custom_Extension_Guides-Custom_Perspective_Widgets-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Extending_HyperMDM-Custom_Extension_Guides-Custom_Perspective_Widgets-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-HyperMDM-Extending_HyperMDM-Custom_Extension_Guides-Custom_Perspective_Widgets-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>When embedding external content via <code>&lt;iframe&gt;</code>, two CSP
+layers apply:</p><ol>
+<li class=""><strong>Your HyperMDM Studio CSP</strong> — the <code>frame-src</code> directive
+must allow the target origin. Add allowed origins via the
+<code>hypermdm_studio_ui</code> configuration:</li>
+</ol><div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># config/hypermdm_studio_ui.yaml</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm_studio_ui</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">csp_header</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">additional_urls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">frame-src</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://example.com/'</span><br></span></code></pre></div></div><ol start="2">
+<li class=""><strong>The target site's CSP</strong> — most third-party sites set
+<code>X-Frame-Options: DENY</code> or a <code>frame-ancestors</code> directive
+that blocks embedding. Only URLs you control or that
+explicitly allow framing will render.</li>
+</ol></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-7--plugin-registration">Step 7 — Plugin Registration<a href="#step-7--plugin-registration" class="hash-link" aria-label="Direct link to Step 7 — Plugin Registration" title="Direct link to Step 7 — Plugin Registration" translate="no">​</a></h3>
+<p>Create a plugin that binds the dynamic type class in <code>onInit</code>
+and registers the module in <code>onStartup</code>.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-widgets/index.ts" target="_blank" rel="noopener noreferrer" class="">index.ts</a>
+and
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-widgets/modules/custom-widgets-extension.tsx" target="_blank" rel="noopener noreferrer" class="">custom-widgets-extension.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<p>For detailed frontend documentation, see
+<a class="" href="../../../../Studio_UI/Extending/Plugin_Development_Examples/Use_the_Widget_Manager/index.html">Widgets: Widget Manager and Widget Editor</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Customizing Results — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Customizing Results</h1></header>
+<p>Depending on context and use case it might be necessary to customize the result before
+printing it to the reports.</p>
+<p><strong>Use cases might be</strong></p>
+<ul>
+<li class="">Adding additional filters due to user permissions</li>
+<li class="">Enriching result data with additional information, e.g. nice names, links, ...</li>
+<li class="">Customizing table template for including links etc.</li>
+</ul>
+<p>With statistics explorer, this can be achieved by subscribing to events.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="event-datafiltermodificationevent">Event <code>DataFilterModificationEvent</code><a href="#event-datafiltermodificationevent" class="hash-link" aria-label="Direct link to event-datafiltermodificationevent" title="Direct link to event-datafiltermodificationevent" translate="no">​</a></h4>
+<ul>
+<li class="">Fires after filter condition for data request is generated and allows you to modify the filter</li>
+<li class="">Available information<!-- -->
+<ul>
+<li class="">Context</li>
+<li class="">Configuration (if it is a saved configuration)</li>
+<li class="">Data source name</li>
+<li class="">Statistics mode (<code>statistic</code> or <code>list</code>)</li>
+</ul>
+</li>
+<li class="">Changeable information<!-- -->
+<ul>
+<li class="">Filter</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="event-dataprequeryevent">Event <code>DataPreQueryEvent</code><a href="#event-dataprequeryevent" class="hash-link" aria-label="Direct link to event-dataprequeryevent" title="Direct link to event-dataprequeryevent" translate="no">​</a></h4>
+<ul>
+<li class="">Fires just before query is sent to storage backend and allows you to modify the query</li>
+<li class="">Available information<!-- -->
+<ul>
+<li class="">Context</li>
+<li class="">Configuration (if it is a saved configuration)</li>
+<li class="">Data source name</li>
+<li class="">Statistics mode (<code>statistic</code> or <code>list</code>)</li>
+</ul>
+</li>
+<li class="">Changeable information<!-- -->
+<ul>
+<li class="">Query (Elasticsearch/Opensearch query array, sql statement)</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="event-dataresultevent">Event <code>DataResultEvent</code><a href="#event-dataresultevent" class="hash-link" aria-label="Direct link to event-dataresultevent" title="Direct link to event-dataresultevent" translate="no">​</a></h4>
+<ul>
+<li class="">Fires before statistics data result is returned to controller and allows you to modify the result</li>
+<li class="">Available information<!-- -->
+<ul>
+<li class="">Context</li>
+<li class="">Configuration (if it is a saved configuration)</li>
+<li class="">Data source name</li>
+<li class="">Statistics mode (<code>statistic</code> or <code>list</code>)</li>
+</ul>
+</li>
+<li class="">Changeable information<!-- -->
+<ul>
+<li class="">StatisticsResult</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="event-tablerenderevent">Event <code>TableRenderEvent</code><a href="#event-tablerenderevent" class="hash-link" aria-label="Direct link to event-tablerenderevent" title="Direct link to event-tablerenderevent" translate="no">​</a></h4>
+<ul>
+<li class="">Fires before table template is rendered and allows you to modify template name and its parameters</li>
+<li class="">Available information<!-- -->
+<ul>
+<li class="">Context</li>
+<li class="">Configuration (if it is a saved configuration)</li>
+<li class="">Data source name</li>
+<li class="">Statistics mode (<code>statistic</code> or <code>list</code>)</li>
+</ul>
+</li>
+<li class="">Changeable information<!-- -->
+<ul>
+<li class="">template</li>
+<li class="">parameters</li>
+</ul>
+</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

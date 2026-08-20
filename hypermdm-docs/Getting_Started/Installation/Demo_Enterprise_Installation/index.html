@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo Enterprise Installation — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Demo Enterprise Installation</h1></header>
+<p>The demo enterprise package includes all enterprise extensions, HyperMDM Studio, and pre-built
+blueprints showcasing advanced features.
+All Docker services (OpenSearch, Mercure, Redis, Gotenberg, Supervisord) are pre-configured.
+It requires credentials for the HyperMDM enterprise repository.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-1-create-the-project">Step 1: Create the Project<a href="#step-1-create-the-project" class="hash-link" aria-label="Direct link to Step 1: Create the Project" title="Direct link to Step 1: Create the Project" translate="no">​</a></h2>
+<p>Configure enterprise repository credentials and create the project.
+Replace <code>&lt;YOUR_USERNAME&gt;</code> and <code>&lt;YOUR_TOKEN&gt;</code> with your HyperMDM enterprise credentials:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker run --rm -v `pwd`:/var/www/html -it hypermdm/hypermdm:php8.5-latest sh -c \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  'composer --global config repositories.hypermdm composer https://repo.hypermdm.com/&lt;YOUR_USERNAME&gt;/ ; \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   composer create-project --no-scripts hypermdm/demo-enterprise my-project \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   --repository="{\"url\": \"https://token:&lt;YOUR_TOKEN&gt;@repo.hypermdm.com/&lt;YOUR_USERNAME&gt;/\", \"type\": \"composer\"}" \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   -n --ignore-platform-req=php --no-scripts'</span><br></span></code></pre></div></div>
+<p>Switch to the project directory:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">cd my-project/</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-2-configure-and-start-docker-services">Step 2: Configure and Start Docker Services<a href="#step-2-configure-and-start-docker-services" class="hash-link" aria-label="Direct link to Step 2: Configure and Start Docker Services" title="Direct link to Step 2: Configure and Start Docker Services" translate="no">​</a></h2>
+<ol>
+<li class="">Run <code>echo `id -u`:`id -g`</code> to retrieve your local user and group ID.</li>
+<li class="">Open <code>docker-compose.yaml</code>, uncomment all <code>user: '1000:1000'</code> lines,
+and update the IDs if they differ from your local user.</li>
+<li class="">Start the services:</li>
+</ol>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose up -d</span><br></span></code></pre></div></div>
+<p>The demo enterprise <code>docker-compose.yaml</code> already includes all required services
+(MariaDB, Redis, OpenSearch, Mercure, Gotenberg, Supervisord for messenger workers).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-3-run-the-installer">Step 3: Run the Installer<a href="#step-3-run-the-installer" class="hash-link" aria-label="Direct link to Step 3: Run the Installer" title="Direct link to Step 3: Run the Installer" translate="no">​</a></h2>
+<p>Run the HyperMDM installer with the demo enterprise profile:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec php vendor/bin/hypermdm-install \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  --install-profile='App\Installer\DemoEnterpriseProfile'</span><br></span></code></pre></div></div>
+<p>The installer will interactively prompt for all required configuration values.
+Product registration is mandatory and the installer requires a valid product key
+before installation can complete.
+See <a class="" href="../../Product_Registration/index.html">Product Registration</a> for details.</p>
+<p>The installer automatically:</p>
+<ul>
+<li class="">Writes all configuration to <code>.env.local</code></li>
+<li class="">Imports the demo enterprise database (pre-built content and blueprints)</li>
+<li class="">Installs and registers all bundles</li>
+<li class="">Creates the database schema and admin user</li>
+<li class="">Installs assets, builds search indices, and runs all post-install commands</li>
+</ul>
+<p>This can take up to 20 minutes for the demo enterprise package.</p>
+<p>For non-interactive (CI) installations, set env vars in <code>.env</code> or <code>docker-compose.yaml</code>
+before running the installer with <code>--no-interaction</code>.
+See <a class="" href="../Advanced_Installation_Topics/index.html">Advanced Installation Topics</a>
+for the full list of supported environment variables.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-4-done">Step 4: Done<a href="#step-4-done" class="hash-link" aria-label="Direct link to Step 4: Done" title="Direct link to Step 4: Done" translate="no">​</a></h2>
+<p>Visit your HyperMDM instance:</p>
+<ul>
+<li class="">Frontend: <a href="http://localhost" target="_blank" rel="noopener noreferrer" class="">http://localhost</a></li>
+<li class="">HyperMDM Studio: <a href="http://localhost/pimcore-studio" target="_blank" rel="noopener noreferrer" class="">http://localhost/hypermdm-studio</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Date — HyperMDM</title>
+<link rel="stylesheet" href="../../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Date Editable</h1></header>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>format</code></td><td>string</td><td>A string which describes how to format the date in editmode and frontend (when outputFormat/outputIsoFormat is not defined), <a href="https://docs.sencha.com/extjs/7.0.0/modern/Ext.Date.html" target="_blank" rel="noopener noreferrer" class="">see possible formats</a></td></tr><tr><td><code>outputFormat</code></td><td>string</td><td><strong>Deprecated:</strong> A string which describes how to format the date in frontend, <a href="https://www.php.net/manual/en/function.strftime.php#refsect1-function.strftime-parameters" target="_blank" rel="noopener noreferrer" class="">see possible formats</a></td></tr><tr><td><code>outputIsoFormat</code></td><td>string</td><td>A string which describes how to format the date in frontend, <a href="https://carbon.nesbot.com/docs/#iso-format-available-replacements" target="_blank" rel="noopener noreferrer" class="">see possible formats</a></td></tr><tr><td><code>class</code></td><td>string</td><td>A CSS class that is added to the surrounding container of this element in editmode</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="methods">Methods<a href="#methods" class="hash-link" aria-label="Direct link to Methods" title="Direct link to Methods" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Return</th><th>Description</th></tr></thead><tbody><tr><td><code>isEmpty()</code></td><td>boolean</td><td>Whether the editable is empty or not</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="simple-example">Simple Example<a href="#simple-example" class="hash-link" aria-label="Direct link to Simple Example" title="Direct link to Simple Example" translate="no">​</a></h2>
+<p>The following code will create a simple date widget in editmode.
+In frontend it will format the date as defined in <code>outputIsoFormat</code>.</p>
+<p>Localization (output-format, ...) is automatically used from the globally registered locale.
+Please read the topic <a class="" href="../../../../Multi_Language_i18n/index.html">Localization</a>.</p>
+<div class="language-twig codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-twig codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter punctuation" style="color:#393A34">{{</span><span class="token plain"> hypermdm_date</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">myDate</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">format</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">d.m.Y</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">outputIsoFormat</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">DD.MM.YYYY</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token delimiter punctuation" style="color:#393A34">}}</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../../search.js"></script>
+</body>
+</html>

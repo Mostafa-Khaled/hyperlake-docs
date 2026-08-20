@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperMDM Agent Bundle — HyperMDM</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>HyperMDM Agent Bundle</h1></header>
+<p>AI-powered chat agents for HyperMDM Studio with human-in-the-loop write control. Agents search, read, and propose changes
+to data objects, assets, documents, and tags through interactive chat.
+<strong>Start here → <a class="" href="Getting_Started/index.html">docs/01_Getting_Started/</a></strong> for core concepts.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="features">Features<a href="#features" class="hash-link" aria-label="Direct link to Features" title="Direct link to Features" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Multi-agent system</strong> - Agents with a per-agent model/provider, tools, skills, and permissions, configured via YAML
+or HyperMDM Studio. Users switch agents mid-conversation without losing history.</li>
+<li class=""><strong>MCP tool integration</strong> - 35+ PHP tools spanning data objects, assets, documents, tags, and agent templates,
+grouped by read / propose (HITL) / direct-write access. Extensible via Symfony service tags; supports meta-tool
+discovery, third-party MCP servers, and access from external MCP clients.</li>
+<li class=""><strong>Human-in-the-loop proposals</strong> - Propose / review / approve pipeline for every write operation. Interactive diff
+modals, batch approval, and refinement. No direct writes unless explicitly configured.</li>
+<li class=""><strong>Interactive input</strong> - <code>ask_user</code> mid-turn questions and <code>pauseAfter</code> "continue or stop" checkpoints replace hard
+timeouts with interactive decisions.</li>
+<li class=""><strong>Rich chat widgets</strong> - Eight interactive React components rendered in the chat: proposal cards, data tables, element
+links, agent-switch suggestions, and more.</li>
+<li class=""><strong>Background task execution</strong> - Agent tasks run independently of the browser connection with SSE streaming,
+reconnection support, and cancel capability.</li>
+<li class=""><strong>Real-time multi-client sync</strong> - Live turn delivery to every open tab and device via Studio's Mercure per-user topic;
+PHP remains the durable record, so a reload always reconstructs the session.</li>
+<li class=""><strong>File attachments</strong> - Upload files into a session; agents read them through session-scoped, read-only staging.</li>
+<li class=""><strong>Document &amp; areabrick schema for LLMs</strong> - Twig-template AST analysis combined with co-located JSON example
+fixtures lets agents read, edit, and create HyperMDM documents and areabricks in one shot. Third-party editable types
+are picked up automatically from HyperMDM's registry; project-specific bricks ship example fixtures alongside their
+templates.</li>
+<li class=""><strong>Template generation</strong> - Agents generate, validate, and HITL-propose Twig page/snippet/partial templates from a
+sandboxed private root.</li>
+<li class=""><strong>Field hint system</strong> - Provider-based format hints for all HyperMDM data types. Agents receive <code>editableDataFormat</code>
+and metadata for every field, enabling correct data composition.</li>
+<li class=""><strong>Skills</strong> - Reusable Markdown instruction files that teach agents domain-specific workflows
+(PQL search, proposal flows, data-import patterns).</li>
+<li class=""><strong>Tool security</strong> - SDK tool control with path sandboxing, system-denied tools, and agent-configurable opt-in.</li>
+<li class=""><strong>Session storage</strong> - Database-backed persistence via HyperMDM. Sessions, messages, proposals, and statuses
+survive server restarts.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="documentation">Documentation<a href="#documentation" class="hash-link" aria-label="Direct link to Documentation" title="Direct link to Documentation" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="getting-started">Getting Started<a href="#getting-started" class="hash-link" aria-label="Direct link to Getting Started" title="Direct link to Getting Started" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Page</th><th>Description</th></tr></thead><tbody><tr><td><a class="" href="Installation/index.html">Installation</a></td><td>Bundle installation, Docker, Nginx, security, env vars</td></tr><tr><td><a class="" href="Getting_Started/Concepts/index.html">Core Concepts</a></td><td>Glossary - read this once before the rest</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="architecture">Architecture<a href="#architecture" class="hash-link" aria-label="Direct link to Architecture" title="Direct link to Architecture" translate="no">​</a></h3>
+<p>Internals - how the system works end-to-end.</p>
+<div class="table-container"><table><thead><tr><th>Page</th><th>Description</th></tr></thead><tbody><tr><td><a class="" href="Architecture/Agent_Framework/index.html">Agent Framework</a></td><td>Copilot SDK integration, adapters, LLM auth modes, model configuration</td></tr><tr><td><a class="" href="Architecture/Communication_Flows/index.html">Communication Flows</a></td><td>The system map - every runtime flow (chat/SSE, MCP, persistence, config export, Mercure, LLM) and the credential each uses</td></tr><tr><td><a class="" href="Architecture/Request_Lifecycle/index.html">Request Lifecycle</a></td><td>End-to-end chat request, TaskRunner, the three event sinks, SSE streaming, reconnection</td></tr><tr><td><a class="" href="Architecture/Authentication/index.html">Authentication</a></td><td>Session cookie + identity cache, the <code>pmcp_</code> bearer scope, admin bearer token, per-provider LLM auth, rate limits, audit log</td></tr><tr><td><a class="" href="Architecture/MCP_Integration/index.html">MCP Integration</a></td><td>Internal vs external servers, the meta-tool, bearer + session-id forwarding, token lifecycle</td></tr><tr><td><a class="" href="Architecture/Session_Storage/index.html">Session Storage</a></td><td>HyperMDM DB persistence model</td></tr><tr><td><a class="" href="Architecture/Tool_Security/index.html">Tool Security</a></td><td>Pre-tool-use hook, path sandboxing (mechanism)</td></tr><tr><td><a class="" href="Architecture/Configuration_System/index.html">Configuration System</a></td><td>Three-layer merge, export endpoint, reload paths, skill materialization</td></tr><tr><td><a class="" href="Architecture/Field_Hint_System/index.html">Field Hint System</a></td><td>How the agent learns the correct JSON shape for every HyperMDM field type</td></tr><tr><td><a class="" href="Architecture/Document_Schema/index.html">Document Schema</a></td><td>How <code>get_document_schema</code> / <code>get_area_brick</code> work - AST analyzer + co-located example fixtures + the <code>&lt;index&gt;</code> placeholder convention</td></tr><tr><td><a class="" href="Architecture/File_Staging/index.html">File Staging</a></td><td>The read-only file-set primitive: developer-configured sets, staging, the roots/denylist model</td></tr><tr><td><a class="" href="Architecture/Agent_Template_Generation/index.html">Agent Template Generation</a></td><td>The Twig template write path: private root + namespace, validator/sandbox, test-render, drift-guard lint</td></tr><tr><td><a class="" href="Architecture/Realtime_Sync/index.html">Real-time Sync</a></td><td>Live multi-client chat via Mercure + <code>GlobalMessageBus</code>, PHP as the record, catch-up/reconnect model</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="features-1">Features<a href="#features-1" class="hash-link" aria-label="Direct link to Features" title="Direct link to Features" translate="no">​</a></h3>
+<p>What the product does, for operators and end users.</p>
+<div class="table-container"><table><thead><tr><th>Page</th><th>Description</th></tr></thead><tbody><tr><td><a class="" href="Features/Agents_and_Switching/index.html">Agents and Switching</a></td><td>Shipped presets + how mid-conversation switching feels</td></tr><tr><td><a class="" href="Features/Rich_Chat_Widgets/index.html">Rich Chat Widgets</a></td><td>Canonical catalog of the eight built-in widgets</td></tr><tr><td><a class="" href="Features/HITL_Proposals/index.html">HITL Proposals</a></td><td>Propose → review → resolve workflow</td></tr><tr><td><a class="" href="Features/Interactive_Input/index.html">Interactive Input</a></td><td><code>ask_user</code> questions + <code>pauseAfter</code> checkpoints</td></tr><tr><td><a class="" href="Features/File_Attachments/index.html">File Attachments</a></td><td>Upload flow, staging, session-scoped file access</td></tr><tr><td><a class="" href="Features/Agent_Templates/index.html">Agent Templates</a></td><td>Generate, validate, and HITL-propose Twig page/snippet/partial templates</td></tr><tr><td><a class="" href="Features/Built_in_HyperMDM_MCP_Servers/index.html">Built-in HyperMDM MCP Servers</a></td><td>The built-in tool-group catalog + how to use it from the built-in HyperMDM Agent or an external MCP client</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h3>
+<p>Field-by-field reference.</p>
+<div class="table-container"><table><thead><tr><th>Page</th><th>Description</th></tr></thead><tbody><tr><td><a class="" href="Configuration/Agents/index.html">Agents</a></td><td>YAML schema, editing in Studio, pause thresholds, model validation, hot reload</td></tr><tr><td><a class="" href="Configuration/Skills/index.html">Skills</a></td><td>Skill file format, discovery, user vs bundle skills</td></tr><tr><td><a class="" href="Configuration/MCP_Servers/index.html">MCP Servers</a></td><td>Configuring an agent's MCP access - direct vs meta-tool, env interpolation, TTL knob</td></tr><tr><td><a class="" href="Configuration/Tool_Security_Reference/index.html">Tool Security Reference</a></td><td>SDK tool catalog, defaults, auto-derived permissions, path sandboxing rules</td></tr><tr><td><a class="" href="Configuration/Environment_Variables/index.html">Environment Variables</a></td><td>Complete env-var reference, LLM adapter modes, BYOK limitations</td></tr><tr><td><a class="" href="Configuration/Shipping_Presets/index.html">Shipping Presets</a></td><td>Ship agents / skills from your own bundle (hard vs optional dependency)</td></tr><tr><td><a class="" href="Configuration/File_Staging/index.html">File Staging</a></td><td>Configuring the read-only file sets agents can stage</td></tr><tr><td><a class="" href="Configuration/Agent_Templates/index.html">Agent Templates</a></td><td>Configuration for agent template generation</td></tr><tr><td><a class="" href="Configuration/Provider_Compatibility/index.html">Provider Compatibility</a></td><td>The localhost compatibility shim for strict LLM providers</td></tr><tr><td><a class="" href="Configuration/Inference_Providers/index.html">Inference Providers</a></td><td>Defining LLM backends: auth, endpoint, default model, per-agent selection</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="inference">Inference<a href="#inference" class="hash-link" aria-label="Direct link to Inference" title="Direct link to Inference" translate="no">​</a></h3>
+<p>Choosing and evaluating the LLM behind each agent turn.</p>
+<div class="table-container"><table><thead><tr><th>Page</th><th>Description</th></tr></thead><tbody><tr><td><a class="" href="Inference/Model_Requirements/index.html">Model Requirements</a></td><td>What each agent needs from a model, by task complexity</td></tr><tr><td><a class="" href="Inference/Model_Evaluation/index.html">Model Evaluation</a></td><td>Results of evaluating models against the bundle's real agent tasks</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="extending">Extending<a href="#extending" class="hash-link" aria-label="Direct link to Extending" title="Direct link to Extending" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Page</th><th>Description</th></tr></thead><tbody><tr><td><a class="" href="Extending/Custom_MCP_Tools/index.html">Custom MCP Tools</a></td><td>Add tools via PHP service tags, group management</td></tr><tr><td><a class="" href="Extending/Rich_Chat_Widgets/index.html">Custom Rich Chat Widgets</a></td><td>YAML definition + React renderer</td></tr><tr><td><a class="" href="Extending/Custom_Proposal_Types/index.html">Custom Proposal Types</a></td><td>Add HITL-controlled writes with approval flows</td></tr><tr><td><a class="" href="Extending/Custom_Field_Hint_Providers/index.html">Custom Field Hint Providers</a></td><td>Format hints for custom HyperMDM data types</td></tr><tr><td><a class="" href="Extending/Template_Examples/index.html">Template Examples</a></td><td>JSON example fixtures + dev-time SKILL + CLI helpers for areabricks and document templates</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="operations">Operations<a href="#operations" class="hash-link" aria-label="Direct link to Operations" title="Direct link to Operations" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Page</th><th>Description</th></tr></thead><tbody><tr><td><a class="" href="Development/index.html">Development</a></td><td>Build commands, testing, linting, Docker dev override</td></tr><tr><td><a class="" href="Troubleshooting/index.html">Troubleshooting</a></td><td>Symptoms → causes → diagnostic commands</td></tr></tbody></table></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

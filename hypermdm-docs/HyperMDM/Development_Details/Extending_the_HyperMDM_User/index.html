@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Extending the HyperMDM User — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Extending the HyperMDM User</h1></header>
+<p>HyperMDM does not support extending the user directly. Instead it allows creating a relation
+between a user and one or more HyperMDM objects. This can add information to a user
+or associate one or more objects directly with a system user.</p>
+<p>This article presents an example where the <code>member</code> object is associated with a HyperMDM user.
+The screenshots show how to achieve this through HyperMDM Studio. Further below
+is an example of how to create and associate user and member objects programmatically.</p>
+<p>Regardless of the creation method, define the member class first in
+the class editor in HyperMDM Studio
+(<code>Data Management</code> -&gt; <code>Data Model Definitions</code> -&gt; <code>Classes</code>).</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Member Class Config</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/object-user1-d3fba175adb4e6ba58733572f90e2102.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/object-user1-d3fba175adb4e6ba58733572f90e2102.png"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Member Class Config</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/object-user1-d3fba175adb4e6ba58733572f90e2102.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/object-user1-d3fba175adb4e6ba58733572f90e2102.png"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Member Class Config</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/object-user1-d3fba175adb4e6ba58733572f90e2102.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>In this example, the class <code>member</code> has the three properties <code>name</code>, <code>user</code> and <code>location</code>.
+The class can have an arbitrary number of properties. What is important in this context is,
+that it has a property of the type <code>User</code>. Speaking in code this would be a
+<code>\HyperMDM\Model\DataObject\ClassDefinition\Data\User</code>.</p>
+<p>When creating the first object instance of the member class, you can see the input widget
+for the user property. It is a combo box where a user can be selected from all available
+HyperMDM users.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Member Class object</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/object-user2-307f254b812a0c2fb0fcf26acffb0ae2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/object-user2-307f254b812a0c2fb0fcf26acffb0ae2.png"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Member Class object</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/object-user2-307f254b812a0c2fb0fcf26acffb0ae2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/object-user2-307f254b812a0c2fb0fcf26acffb0ae2.png"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Member Class object</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/object-user2-307f254b812a0c2fb0fcf26acffb0ae2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>In this example the user "sam jackman" was selected.</p>
+<p>In HyperMDM Studio (<code>System</code> -&gt; <code>User &amp; Roles</code> -&gt; <code>Users</code>) this relation appears in the third tab of each
+user, labeled <code>This user is referenced in the following objects:</code></p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">User Object Relations</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/object-user3-f5f26f3c2e0eee3f89650aa42a2ba323.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/object-user3-f5f26f3c2e0eee3f89650aa42a2ba323.png"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">User Object Relations</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/object-user3-f5f26f3c2e0eee3f89650aa42a2ba323.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/object-user3-f5f26f3c2e0eee3f89650aa42a2ba323.png"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">User Object Relations</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/object-user3-f5f26f3c2e0eee3f89650aa42a2ba323.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Extending_the_HyperMDM_User-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Objects and users are not necessarily always created through user input in HyperMDM Studio.
+Sometimes these objects are created programmatically in the context of importers. The
+following code snippet shows how to first create the user and then the member object with
+the relation to the previously created user:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">User</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataObject</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token operator" style="color:#393A34">...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">//create a new user for Sydney</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$user</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token class-name static-context">User</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">create</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string double-quoted-string" style="color:#e3116c">"parentId"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token keyword type-casting" style="color:#00009f">int</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$userGroup</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getId</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string double-quoted-string" style="color:#e3116c">"username"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token string double-quoted-string" style="color:#e3116c">"sydney"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string double-quoted-string" style="color:#e3116c">"password"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token string double-quoted-string" style="color:#e3116c">"password1234"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string double-quoted-string" style="color:#e3116c">"hasCredentials"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string double-quoted-string" style="color:#e3116c">"active"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token operator" style="color:#393A34">...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">//create the Sydney member object</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name class-name-fully-qualified">DataObject</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">Member</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setCreationDate</span><span class="token punctuation" style="color:#393A34">(</span><span class="token function" style="color:#d73a49">time</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setUserOwner</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$currentUser</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getId</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setUserModification</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$currentUser</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getId</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setPublished</span><span class="token punctuation" style="color:#393A34">(</span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setName</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string double-quoted-string" style="color:#e3116c">"Sydney Subsidiary"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setKey</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string double-quoted-string" style="color:#e3116c">"member1234"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">//select the user belonging to this object</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setUser</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$user</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getId</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setParentId</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$parentFolderId</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">save</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token operator" style="color:#393A34">...</span><br></span></code></pre></div></div>
+<p>Aside from creating these objects, one might need to find out what objects are associated with a certain user.
+There is a convenient method available to find all objects associated with a specific user:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token variable" style="color:#36acaa">$objects</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">HyperMDM</span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">Model</span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">DataObject</span><span class="token class-name class-name-fully-qualified static-context punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified static-context">Service</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">getObjectsReferencingUser</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$userId</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div></div></article></div></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

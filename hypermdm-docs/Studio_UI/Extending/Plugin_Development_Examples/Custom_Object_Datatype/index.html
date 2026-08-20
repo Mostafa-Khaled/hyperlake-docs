@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Add a Custom Object Datatype — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>How to Add a Custom Object Datatype</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="overview">Overview<a href="#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h2>
+<p>This example adds a custom <code>simpleText</code> data object field type to
+HyperMDM Studio. Custom datatypes appear in the class definition
+editor's field type dropdown and render as editable fields in the
+data object editor and grid.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="files-overview">Files Overview<a href="#files-overview" class="hash-link" aria-label="Direct link to Files Overview" title="Direct link to Files Overview" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Layer</th><th>File</th><th>Purpose</th></tr></thead><tbody><tr><td>Core</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Model/DataObject/ClassDefinition/Data/SimpleText.php" target="_blank" rel="noopener noreferrer" class="">SimpleText.php</a></td><td>Field definition class</td></tr><tr><td>Core</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/pimcore/config.yaml" target="_blank" rel="noopener noreferrer" class="">config.yaml</a></td><td>Field type registration</td></tr><tr><td>GDI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/generic-data-index.yaml" target="_blank" rel="noopener noreferrer" class="">generic-data-index.yaml</a></td><td>Search index adapter</td></tr><tr><td>Studio Backend</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/pimcore/studio_backend.yaml" target="_blank" rel="noopener noreferrer" class="">studio_backend.yaml</a></td><td>Data adapter mapping</td></tr><tr><td>Studio Backend</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Grid/Column/Definition/SimpleTextDefinition.php" target="_blank" rel="noopener noreferrer" class="">SimpleTextDefinition.php</a></td><td>Grid column definition</td></tr><tr><td>Studio Backend</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/DependencyInjection/PimcoreStudioExampleExtension.php" target="_blank" rel="noopener noreferrer" class="">HyperMDMStudioExampleExtension.php</a></td><td>Config loading</td></tr><tr><td>Studio Backend</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/services.yaml" target="_blank" rel="noopener noreferrer" class="">services.yaml</a></td><td>Service registrations</td></tr><tr><td>Studio UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-datatype/dynamic-types/definitions/dynamic-type-object-data-simple-text.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-object-data-simple-text.tsx</a></td><td>Object editor + grid</td></tr><tr><td>Studio UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-datatype/dynamic-types/definitions/dynamic-type-field-definition-simple-text.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-field-definition-simple-text.tsx</a></td><td>Class editor</td></tr><tr><td>Studio UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-datatype/modules/simple-text-datatype-module.tsx" target="_blank" rel="noopener noreferrer" class="">simple-text-datatype-module.tsx</a></td><td>Registry registration</td></tr><tr><td>Studio UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-datatype/index.ts" target="_blank" rel="noopener noreferrer" class="">index.ts</a></td><td>Plugin entry point</td></tr><tr><td>Studio UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/plugins.ts" target="_blank" rel="noopener noreferrer" class="">plugins.ts</a></td><td>Plugin export</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="details">Details<a href="#details" class="hash-link" aria-label="Direct link to Details" title="Direct link to Details" translate="no">​</a></h2>
+<p>Adding a custom object datatype requires registration across four
+layers:</p>
+<p><strong>HyperMDM Core:</strong></p>
+<ul>
+<li class="">A field definition class extending
+<code>HyperMDM\Model\DataObject\ClassDefinition\Data</code></li>
+<li class="">Registration via <code>hypermdm.objects.class_definitions.data.map</code></li>
+</ul>
+<p><strong>Generic Data Index:</strong></p>
+<ul>
+<li class="">A field definition adapter tagged with
+<code>hypermdm.generic_data_index.data-object.search_index_field_definition</code>
+for search index support (reuses <code>TextKeywordAdapter</code> for text
+fields)</li>
+</ul>
+<p><strong>Studio Backend:</strong></p>
+<ul>
+<li class="">A data adapter mapping via
+<code>hypermdm_studio_backend.data_object_data_adapter_mapping</code> for
+save/load (reuses <code>StringAdapter</code> for text fields)</li>
+<li class="">A <code>ColumnDefinitionInterface</code> tagged with
+<code>hypermdm.studio_backend.grid_column_definition</code> for data object
+grid column and filter support</li>
+</ul>
+<p><strong>Studio UI (Frontend):</strong></p>
+<ul>
+<li class="">A <code>DynamicTypeObjectDataAbstractInput</code> subclass for the data
+object editor and grid, with <code>dynamicTypeFieldFilterType</code> set for
+grid filter support</li>
+<li class="">A <code>DynamicTypeFieldDefinitionDataAbstract</code> subclass for the class
+definition editor</li>
+<li class="">Registration of both types via a module and plugin</li>
+</ul>
+<p>The example implements <code>simpleText</code> as a simple text input,
+demonstrating the full pattern without additional complexity.</p>
+<p>For the step-by-step guide, see
+<a class="" href="../../../../HyperMDM/Extending_HyperMDM/Custom_Extension_Guides/Adding_Object_Datatypes/index.html">Adding Object Datatypes</a>
+in the HyperMDM core documentation.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

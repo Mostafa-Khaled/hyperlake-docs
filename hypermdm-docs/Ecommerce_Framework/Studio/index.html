@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio Integration — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Studio Integration</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-api-endpoints">Studio API Endpoints<a href="#studio-api-endpoints" class="hash-link" aria-label="Direct link to Studio API Endpoints" title="Direct link to Studio API Endpoints" translate="no">​</a></h2>
+<p>The Ecommerce Framework Bundle provides a RESTful API for the HyperMDM Studio interface, enabling management of
+pricing rules, access to product index data, and back-office order management. All endpoints are prefixed with
+<code>/hypermdm-studio/api/bundle/ecommerce</code> and require appropriate permissions.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="index">Index<a href="#index" class="hash-link" aria-label="Direct link to Index" title="Direct link to Index" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="list-tenants">List Tenants<a href="#list-tenants" class="hash-link" aria-label="Direct link to List Tenants" title="Direct link to List Tenants" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>GET /tenants</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_tenants_collection</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Returns a list of all configured ecommerce tenants.</p>
+<p><strong>Response:</strong> Paginated collection of <code>Tenant</code> objects</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="list-index-fields">List Index Fields<a href="#list-index-fields" class="hash-link" aria-label="Direct link to List Index Fields" title="Direct link to List Index Fields" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>GET /fields</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_fields_collection</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Returns a list of product index fields, with optional filtering by filter group, tenant, and visibility.</p>
+<p><strong>Query Parameters:</strong></p>
+<ul>
+<li class=""><code>filtergroup</code> (string, optional): Filter by specific filter groups, comma-separated (e.g. <code>category,price</code>)</li>
+<li class=""><code>tenant</code> (string, optional): Filter by tenant</li>
+<li class=""><code>showAllFields</code> (boolean, optional): Include hidden fields (default: <code>false</code>)</li>
+<li class=""><code>addEmpty</code> (boolean, optional): Prepend an empty option to the list (default: <code>false</code>)</li>
+<li class=""><code>specificPriceField</code> (boolean, optional): Append the specific price field (default: <code>false</code>)</li>
+</ul>
+<p><strong>Response:</strong> Paginated collection of <code>IndexField</code> objects</p>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /fields?filtergroup=category,price&amp;tenant=default&amp;showAllFields=true</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="list-filter-groups">List Filter Groups<a href="#list-filter-groups" class="hash-link" aria-label="Direct link to List Filter Groups" title="Direct link to List Filter Groups" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>GET /filter-groups</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_filter_groups_collection</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Returns a list of all available filter groups for the product index.</p>
+<p><strong>Response:</strong> Paginated collection of <code>FilterGroup</code> objects</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="list-filter-field-values">List Filter Field Values<a href="#list-filter-field-values" class="hash-link" aria-label="Direct link to List Filter Field Values" title="Direct link to List Filter Field Values" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>GET /index/filter-field-values</code>
+<strong>Operation ID:</strong> <code>ecommerce_index_get_filter_field_values_collection</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Returns all distinct values for a given filter field, enabling filter configuration in the back office.</p>
+<p><strong>Query Parameters:</strong></p>
+<ul>
+<li class=""><code>field</code> (string, required): The filter field to retrieve values for (e.g. <code>categoryIds</code>)</li>
+<li class=""><code>tenant</code> (string, optional): The tenant to use for filtering (e.g. <code>default</code>)</li>
+</ul>
+<p><strong>Response:</strong> Paginated collection of <code>FilterFieldValue</code> objects</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: The specified field does not exist in the index</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /index/filter-field-values?field=categoryIds&amp;tenant=default</span><br></span></code></pre></div></div>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="pricing-rules">Pricing Rules<a href="#pricing-rules" class="hash-link" aria-label="Direct link to Pricing Rules" title="Direct link to Pricing Rules" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="list-pricing-rules">List Pricing Rules<a href="#list-pricing-rules" class="hash-link" aria-label="Direct link to List Pricing Rules" title="Direct link to List Pricing Rules" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>GET /pricing/rules</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_pricing_rules_collection</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Returns a list of all configured pricing rules with their basic properties.</p>
+<p><strong>Response:</strong> Paginated collection of <code>PricingRuleListItem</code> objects</p>
+<p>Each item contains:</p>
+<ul>
+<li class=""><code>id</code> (integer): Rule ID</li>
+<li class=""><code>name</code> (string): Internal rule name</li>
+<li class=""><code>label</code> (string): Localized display label (current locale)</li>
+<li class=""><code>behavior</code> (string): Rule behavior — <code>additiv</code> or <code>stopExecute</code></li>
+<li class=""><code>active</code> (boolean): Whether the rule is currently active</li>
+<li class=""><code>prio</code> (integer): Display/execution priority</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="get-pricing-rule">Get Pricing Rule<a href="#get-pricing-rule" class="hash-link" aria-label="Direct link to Get Pricing Rule" title="Direct link to Get Pricing Rule" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>GET /pricing/rules/{id}</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_pricing_rules_item</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Returns the full details of a single pricing rule, including its localized labels and descriptions,
+condition tree, and action configurations.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the pricing rule</li>
+</ul>
+<p><strong>Response:</strong> <code>PricingRuleDetail</code> object</p>
+<p>The detail object contains:</p>
+<ul>
+<li class=""><code>id</code>, <code>name</code>, <code>behavior</code>, <code>active</code>, <code>prio</code> — same as list item</li>
+<li class=""><code>label</code> (object): Localized labels keyed by language code (e.g. <code>{"en": "Summer Sale", "de": "Sommerschluss"}</code>)</li>
+<li class=""><code>description</code> (object): Localized descriptions keyed by language code</li>
+<li class=""><code>condition</code> (object|null): Decoded condition tree, or <code>null</code> if no condition is set</li>
+<li class=""><code>actions</code> (array): List of action configuration objects</li>
+</ul>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No pricing rule with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /pricing/rules/6</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="get-pricing-config">Get Pricing Config<a href="#get-pricing-config" class="hash-link" aria-label="Direct link to Get Pricing Config" title="Direct link to Get Pricing Config" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>GET /pricing/config</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_pricing_config</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Returns the list of all registered condition type keys and action type keys available for building
+pricing rule conditions and actions.</p>
+<p><strong>Response:</strong> <code>PricingConfig</code> object</p>
+<ul>
+<li class=""><code>conditions</code> (string[]): Available condition type identifiers (e.g. <code>CartAmount</code>, <code>Voucher</code>, <code>DateRange</code>, ...)</li>
+<li class=""><code>actions</code> (string[]): Available action type identifiers (e.g. <code>CartDiscount</code>, <code>Gift</code>, <code>FreeShipping</code>, ...)</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="create-pricing-rule">Create Pricing Rule<a href="#create-pricing-rule" class="hash-link" aria-label="Direct link to Create Pricing Rule" title="Direct link to Create Pricing Rule" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>POST /pricing/rules</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_pricing_rules_create</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Creates a new pricing rule with the given name. The rule is created with default settings and must be
+fully configured via the save endpoint afterwards.</p>
+<p><strong>Request Body:</strong> JSON object</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>name</code></td><td>string</td><td>yes</td><td>Internal name for the rule. Must be non-empty, max 190 characters, and</td></tr><tr><td></td><td></td><td></td><td>contain only letters, digits, <code>-</code>, and <code>_</code>.</td></tr></tbody></table></div>
+<p><strong>Response:</strong> JSON object with the ID of the newly created rule:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{ "id": 42 }</span><br></span></code></pre></div></div>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">422 Unprocessable Entity: Name is empty, too long, contains invalid characters,
+or a rule with that name already exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">POST /pricing/rules</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Content-Type: application/json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{ "name": "summer_sale" }</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="save-pricing-rule">Save Pricing Rule<a href="#save-pricing-rule" class="hash-link" aria-label="Direct link to Save Pricing Rule" title="Direct link to Save Pricing Rule" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>PUT /pricing/rules/{id}</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_pricing_rules_save</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Updates a pricing rule's full configuration, including behavior, active state, priority, localized
+labels and descriptions, condition tree, and actions. Returns the updated rule detail.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the pricing rule to update</li>
+</ul>
+<p><strong>Request Body:</strong> JSON object (<code>PricingRuleSaveParameters</code>)</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>behavior</code></td><td>string</td><td>yes</td><td><code>additiv</code> or <code>stopExecute</code></td></tr><tr><td><code>active</code></td><td>boolean</td><td>yes</td><td>Whether the rule is active</td></tr><tr><td><code>prio</code></td><td>integer</td><td>yes</td><td>Execution/display priority</td></tr><tr><td><code>label</code></td><td>object</td><td>yes</td><td>Localized labels keyed by language code (e.g. <code>{"en": "Summer Sale"}</code>)</td></tr><tr><td><code>description</code></td><td>object</td><td>yes</td><td>Localized descriptions keyed by language code</td></tr><tr><td><code>condition</code></td><td>object|null</td><td>no</td><td>Condition tree as a decoded JSON object, or <code>null</code> to remove</td></tr><tr><td><code>actions</code></td><td>array</td><td>yes</td><td>List of action configuration objects</td></tr></tbody></table></div>
+<p><strong>Response:</strong> Updated <code>PricingRuleDetail</code> object</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No pricing rule with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">PUT /pricing/rules/6</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Content-Type: application/json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "behavior": "stopExecute",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "active": true,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "prio": 1,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "label": { "en": "Summer Sale", "de": "Sommerschluss" },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "description": { "en": "10% off all products" },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "condition": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "type": "HyperMDM\\Bundle\\EcommerceFrameworkBundle\\PricingManager\\Condition\\CartAmount",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "config": { "limit": 100 }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "actions": [{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "type": "HyperMDM\\Bundle\\EcommerceFrameworkBundle\\PricingManager\\Action\\CartDiscount",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "config": { "percent": 10 }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  }]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="delete-pricing-rule">Delete Pricing Rule<a href="#delete-pricing-rule" class="hash-link" aria-label="Direct link to Delete Pricing Rule" title="Direct link to Delete Pricing Rule" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>DELETE /pricing/rules/{id}</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_pricing_rules_delete</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Permanently deletes a pricing rule.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the pricing rule to delete</li>
+</ul>
+<p><strong>Response:</strong> HTTP 200 OK (empty body)</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No pricing rule with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">DELETE /pricing/rules/6</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="copy-pricing-rule">Copy Pricing Rule<a href="#copy-pricing-rule" class="hash-link" aria-label="Direct link to Copy Pricing Rule" title="Direct link to Copy Pricing Rule" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>POST /pricing/rules/{id}/copy</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_pricing_rules_copy</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Creates a duplicate of an existing pricing rule. The copy is given an auto-generated name based on the original.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the pricing rule to copy</li>
+</ul>
+<p><strong>Response:</strong> HTTP 200 OK (empty body)</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No pricing rule with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">POST /pricing/rules/6/copy</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="rename-pricing-rule">Rename Pricing Rule<a href="#rename-pricing-rule" class="hash-link" aria-label="Direct link to Rename Pricing Rule" title="Direct link to Rename Pricing Rule" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>PUT /pricing/rules/{id}/rename</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_pricing_rules_rename</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Renames an existing pricing rule's internal name.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the pricing rule to rename</li>
+</ul>
+<p><strong>Request Body:</strong> JSON object</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>name</code></td><td>string</td><td>yes</td><td>New internal name. Same validation rules as for create: non-empty,</td></tr><tr><td></td><td></td><td></td><td>max 190 characters, letters/digits/<code>-</code>/<code>_</code> only.</td></tr></tbody></table></div>
+<p><strong>Response:</strong> HTTP 200 OK (empty body)</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No pricing rule with the given ID exists</li>
+<li class="">422 Unprocessable Entity: Name is empty, too long, contains invalid characters,
+or a rule with that name already exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">PUT /pricing/rules/6/rename</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Content-Type: application/json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{ "name": "winter_sale" }</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="save-pricing-rule-order">Save Pricing Rule Order<a href="#save-pricing-rule-order" class="hash-link" aria-label="Direct link to Save Pricing Rule Order" title="Direct link to Save Pricing Rule Order" translate="no">​</a></h3>
+<p><strong>Endpoint:</strong> <code>PUT /pricing/rules/order</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_pricing_rules_save_order</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Updates the priority (display and execution order) of multiple pricing rules at once.
+Rules not included in the map are left unchanged. Unknown IDs are silently ignored.</p>
+<p><strong>Request Body:</strong> JSON object</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>rules</code></td><td>object</td><td>yes</td><td>Map of rule ID (string key) to new priority value (integer).</td></tr></tbody></table></div>
+<p><strong>Response:</strong> HTTP 200 OK (empty body)</p>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">PUT /pricing/rules/order</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Content-Type: application/json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "rules": { "6": 0, "7": 1, "8": 2, "9": 3, "10": 4 }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="permissions">Permissions<a href="#permissions" class="hash-link" aria-label="Direct link to Permissions" title="Direct link to Permissions" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Constant</th><th>Value</th><th>Used For</th></tr></thead><tbody><tr><td><code>BUNDLE_ECOMMERCE_BACK_OFFICE_ORDER</code></td><td><code>bundle_ecommerce_back-office_order</code></td><td>Index endpoints</td></tr><tr><td><code>BUNDLE_ECOMMERCE_PRICING_RULES</code></td><td><code>bundle_ecommerce_pricing_rules</code></td><td>Pricing rule endpoints</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="common-response-codes">Common Response Codes<a href="#common-response-codes" class="hash-link" aria-label="Direct link to Common Response Codes" title="Direct link to Common Response Codes" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>200 OK</strong>: Successful request</li>
+<li class=""><strong>401 Unauthorized</strong>: Missing or invalid authentication</li>
+<li class=""><strong>404 Not Found</strong>: Resource not found</li>
+<li class=""><strong>422 Unprocessable Entity</strong>: Validation failure (e.g. invalid or duplicate rule name)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="api-tags">API Tags<a href="#api-tags" class="hash-link" aria-label="Direct link to API Tags" title="Direct link to API Tags" translate="no">​</a></h2>
+<p>All endpoints are tagged with <code>Ecommerce</code> for OpenAPI documentation grouping.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="usage-examples">Usage Examples<a href="#usage-examples" class="hash-link" aria-label="Direct link to Usage Examples" title="Direct link to Usage Examples" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="managing-pricing-rules">Managing Pricing Rules<a href="#managing-pricing-rules" class="hash-link" aria-label="Direct link to Managing Pricing Rules" title="Direct link to Managing Pricing Rules" translate="no">​</a></h3>
+<ol>
+<li class="">
+<p><strong>List all rules:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /pricing/rules</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>Get full details of a rule:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /pricing/rules/6</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>Create a new rule:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">POST /pricing/rules</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{ "name": "black_friday" }</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>Configure the new rule:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">PUT /pricing/rules/42</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "behavior": "stopExecute", "active": true, "prio": 0,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "label": { "en": "Black Friday" }, "description": {}, "actions": [...]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>Reorder all rules:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">PUT /pricing/rules/order</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{ "rules": { "42": 0, "6": 1, "7": 2 } }</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>Copy an existing rule as a starting point:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">POST /pricing/rules/6/copy</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>Delete a rule:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">DELETE /pricing/rules/6</span><br></span></code></pre></div></div>
+</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="browsing-index-data">Browsing Index Data<a href="#browsing-index-data" class="hash-link" aria-label="Direct link to Browsing Index Data" title="Direct link to Browsing Index Data" translate="no">​</a></h3>
+<ol>
+<li class="">
+<p><strong>List all tenants:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /tenants</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>List fields for a specific tenant:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /fields?tenant=default</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>List all filter groups:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /filter-groups</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p><strong>Get all values for a filter field:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /index/filter-field-values?field=categoryIds&amp;tenant=default</span><br></span></code></pre></div></div>
+</li>
+</ol>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="orders">Orders<a href="#orders" class="hash-link" aria-label="Direct link to Orders" title="Direct link to Orders" translate="no">​</a></h2>
+<p>The order endpoints are split into two groups:</p>
+<ul>
+<li class=""><strong>View endpoints</strong> return rendered HTML (Twig templates) intended for iframe embedding in the
+HyperMDM Studio UI. They respond with <code>Content-Type: text/html</code>.</li>
+<li class=""><strong>Mutation endpoints</strong> perform actions (cancel, edit, complaint) and return an empty <code>200 OK</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="order-views">Order Views<a href="#order-views" class="hash-link" aria-label="Direct link to Order Views" title="Direct link to Order Views" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="list-orders">List Orders<a href="#list-orders" class="hash-link" aria-label="Direct link to List Orders" title="Direct link to List Orders" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>GET /orders/view/list</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_orders_view_list</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Returns a rendered HTML page listing orders with pagination, filtering by date range, search
+query, and pricing rule. The response is the rendered <code>list.html.twig</code> template.</p>
+<p><strong>Query Parameters:</strong></p>
+<ul>
+<li class=""><code>type</code> (string, optional): List type — <code>order</code> (default) or <code>order_item</code></li>
+<li class=""><code>q</code> (string, optional): Free-text search query</li>
+<li class=""><code>search</code> (string, optional): Search scope — <code>order</code> (default) or <code>productType</code></li>
+<li class=""><code>from</code> (string, optional): Filter from date in <code>Y-m-d</code> format (e.g. <code>2024-01-01</code>). Defaults to first day of current month if neither <code>from</code> nor <code>till</code> is provided.</li>
+<li class=""><code>till</code> (string, optional): Filter till date in <code>Y-m-d</code> format (e.g. <code>2024-12-31</code>)</li>
+<li class=""><code>pricingRule</code> (integer, optional): Filter by pricing rule ID</li>
+<li class=""><code>page</code> (integer, optional): Page number, 1-based (default: <code>1</code>)</li>
+<li class=""><code>limit</code> (integer, optional): Number of results per page (default: <code>10</code>)</li>
+</ul>
+<p><strong>Response:</strong> <code>text/html</code> — rendered order list page</p>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /orders/view/list?type=order&amp;q=Jane&amp;from=2024-01-01&amp;till=2024-12-31&amp;page=1&amp;limit=10</span><br></span></code></pre></div></div>
+<hr>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="view-order-detail">View Order Detail<a href="#view-order-detail" class="hash-link" aria-label="Direct link to View Order Detail" title="Direct link to View Order Detail" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>GET /orders/{id}/view/detail</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_orders_view_detail</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Returns a rendered HTML page showing the full details of a single order, including order items,
+payment information, invoice/delivery address geocoding, a chronological change log timeline,
+and customer account summary. The response is the rendered <code>detail.html.twig</code> template.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the order</li>
+</ul>
+<p><strong>Response:</strong> <code>text/html</code> — rendered order detail page</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No order with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /orders/42/view/detail</span><br></span></code></pre></div></div>
+<hr>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="view-order-item-cancel-form">View Order Item Cancel Form<a href="#view-order-item-cancel-form" class="hash-link" aria-label="Direct link to View Order Item Cancel Form" title="Direct link to View Order Item Cancel Form" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>GET /orders/items/{id}/view/cancel</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_orders_view_item_cancel</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Returns a rendered HTML form for cancelling an order item. The response is the rendered
+<code>item_cancel.html.twig</code> template, which displays the item details and a cancellation form.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the order item</li>
+</ul>
+<p><strong>Response:</strong> <code>text/html</code> — rendered cancel form</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No order item with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /orders/items/5/view/cancel</span><br></span></code></pre></div></div>
+<hr>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="view-order-item-edit-form">View Order Item Edit Form<a href="#view-order-item-edit-form" class="hash-link" aria-label="Direct link to View Order Item Edit Form" title="Direct link to View Order Item Edit Form" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>GET /orders/items/{id}/view/edit</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_orders_view_item_edit</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Returns a rendered HTML form for editing the quantity of an order item. The response is the
+rendered <code>item_edit.html.twig</code> template.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the order item</li>
+</ul>
+<p><strong>Response:</strong> <code>text/html</code> — rendered edit form</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No order item with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /orders/items/5/view/edit</span><br></span></code></pre></div></div>
+<hr>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="view-order-item-complaint-form">View Order Item Complaint Form<a href="#view-order-item-complaint-form" class="hash-link" aria-label="Direct link to View Order Item Complaint Form" title="Direct link to View Order Item Complaint Form" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>GET /orders/items/{id}/view/complaint</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_orders_view_item_complaint</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Returns a rendered HTML form for filing a complaint about an order item. The response is the
+rendered <code>item_complaint.html.twig</code> template.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the order item</li>
+</ul>
+<p><strong>Response:</strong> <code>text/html</code> — rendered complaint form</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No order item with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /orders/items/5/view/complaint</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="order-item-mutations">Order Item Mutations<a href="#order-item-mutations" class="hash-link" aria-label="Direct link to Order Item Mutations" title="Direct link to Order Item Mutations" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="cancel-order-item">Cancel Order Item<a href="#cancel-order-item" class="hash-link" aria-label="Direct link to Cancel Order Item" title="Direct link to Cancel Order Item" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>POST /orders/items/{id}/cancel</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_orders_item_cancel_post</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Cancels the specified order item. An optional message can be attached to the cancellation note
+for audit trail purposes. Returns an empty <code>200 OK</code> response on success.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the order item to cancel</li>
+</ul>
+<p><strong>Request Body:</strong> JSON object (<code>OrderItemCancelParameters</code>)</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>message</code></td><td>string</td><td>no</td><td>Optional message to attach to the cancel note (default: empty string)</td></tr></tbody></table></div>
+<p><strong>Response:</strong> Empty <code>200 OK</code></p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No order item with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">POST /orders/items/5/cancel</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Content-Type: application/json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{ "message": "Customer requested cancellation." }</span><br></span></code></pre></div></div>
+<hr>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="edit-order-item">Edit Order Item<a href="#edit-order-item" class="hash-link" aria-label="Direct link to Edit Order Item" title="Direct link to Edit Order Item" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>PUT /orders/items/{id}/edit</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_orders_item_edit_put</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Updates the quantity of the specified order item. An optional message can be attached to the edit
+note for audit trail purposes. Returns an empty <code>200 OK</code> response on success.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the order item to edit</li>
+</ul>
+<p><strong>Request Body:</strong> JSON object (<code>OrderItemEditParameters</code>)</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>quantity</code></td><td>number (float)</td><td>yes</td><td>New quantity for the order item</td></tr><tr><td><code>message</code></td><td>string</td><td>no</td><td>Optional message to attach to the edit note (default: empty string)</td></tr></tbody></table></div>
+<p><strong>Response:</strong> Empty <code>200 OK</code></p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No order item with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">PUT /orders/items/5/edit</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Content-Type: application/json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{ "quantity": 3.0, "message": "Customer changed mind." }</span><br></span></code></pre></div></div>
+<hr>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="file-order-item-complaint">File Order Item Complaint<a href="#file-order-item-complaint" class="hash-link" aria-label="Direct link to File Order Item Complaint" title="Direct link to File Order Item Complaint" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>POST /orders/items/{id}/complaint</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_orders_item_complaint_post</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_back-office_order</code></p>
+<p>Files a complaint for the specified order item for a given quantity. An optional message can be
+attached to the complaint note for audit trail purposes. Returns an empty <code>200 OK</code> response on success.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the order item to complain about</li>
+</ul>
+<p><strong>Request Body:</strong> JSON object (<code>OrderItemComplaintParameters</code>)</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>quantity</code></td><td>number (float)</td><td>yes</td><td>Quantity subject to the complaint</td></tr><tr><td><code>message</code></td><td>string</td><td>no</td><td>Optional message to attach to the complaint note (default: empty string)</td></tr></tbody></table></div>
+<p><strong>Response:</strong> Empty <code>200 OK</code></p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No order item with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">POST /orders/items/5/complaint</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Content-Type: application/json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{ "quantity": 1.0, "message": "Item arrived damaged." }</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="context-aware-routing-and-form-interception">Context-Aware Routing and Form Interception<a href="#context-aware-routing-and-form-interception" class="hash-link" aria-label="Direct link to Context-Aware Routing and Form Interception" title="Direct link to Context-Aware Routing and Form Interception" translate="no">​</a></h3>
+<p>The order Twig templates are shared between the legacy admin interface and the HyperMDM Studio
+iframe context. Since the Studio iframe operates under the <code>hypermdm-studio</code> firewall, all URLs
+within the templates must resolve to Studio routes when rendered in that context.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-it-works">How It Works<a href="#how-it-works" class="hash-link" aria-label="Direct link to How It Works" title="Direct link to How It Works" translate="no">​</a></h4>
+<p>The <code>OrderViewService</code> passes <code>studioContext: true</code> to every <code>twig-&gt;render()</code> call. Each
+template checks <code>{% set studioContext = studioContext|default(false) %}</code> and conditionally
+switches route names:</p>
+<ul>
+<li class=""><strong>View links</strong> (list, detail, edit form, cancel form, complaint form) use
+<code>hypermdm_studio_api_ecommerce_orders_view_*</code> routes in Studio context and
+<code>hypermdm_ecommerce_backend_admin-order_*</code> routes in the legacy context.</li>
+<li class=""><strong>Pagination</strong> (<code>paging.html.twig</code>) uses <code>hypermdm_url()</code> which resolves relative to the
+current route — no changes needed.</li>
+<li class=""><strong>List search form</strong> has no explicit <code>action</code> attribute and submits to the current URL — works
+in both contexts without changes.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="javascript-form-interception-for-mutations">JavaScript Form Interception for Mutations<a href="#javascript-form-interception-for-mutations" class="hash-link" aria-label="Direct link to JavaScript Form Interception for Mutations" title="Direct link to JavaScript Form Interception for Mutations" translate="no">​</a></h4>
+<p>The Studio mutation endpoints (<code>cancel</code>, <code>edit</code>, <code>complaint</code>) expect JSON request bodies and use
+<code>#[MapRequestPayload]</code> for deserialization. Traditional HTML form <code>POST</code> submissions send
+<code>application/x-www-form-urlencoded</code> data, which is incompatible.</p>
+<p>In Studio context, the item form templates (cancel, edit, complaint) add <code>data-studio-context</code>,
+<code>data-studio-method</code>, and <code>data-studio-redirect</code> attributes to the <code>&lt;form&gt;</code> element. A <code>&lt;script&gt;</code>
+block intercepts the form <code>submit</code> event and:</p>
+<ol>
+<li class="">Prevents the default form submission.</li>
+<li class="">Collects form field values into a JSON object matching the mutation endpoint's schema.</li>
+<li class="">Sends the JSON payload via <code>fetch()</code> to the mutation endpoint URL using the correct HTTP
+method (<code>POST</code> for cancel/complaint, <code>PUT</code> for edit).</li>
+<li class="">On a successful response, redirects the browser to the order detail view page.</li>
+</ol>
+<p>This approach keeps the mutation controllers as clean JSON APIs with no HTML rendering concerns.
+When the templates are eventually replaced with a dedicated Studio UI, the mutation endpoints
+remain unchanged.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="csrf-token-handling">CSRF Token Handling<a href="#csrf-token-handling" class="hash-link" aria-label="Direct link to CSRF Token Handling" title="Direct link to CSRF Token Handling" translate="no">​</a></h4>
+<p>In legacy context, forms include a hidden <code>csrfToken</code> field validated by the legacy admin
+controller. In Studio context, authentication is handled by the Studio firewall session, so
+the CSRF token input is conditionally omitted:</p>
+<div class="language-twig codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-twig codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter punctuation" style="color:#393A34">{%</span><span class="token plain"> </span><span class="token tag-name keyword" style="color:#00009f">if</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">not</span><span class="token plain"> studioContext </span><span class="token operator" style="color:#393A34">%</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">input type</span><span class="token operator" style="color:#393A34">=</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">hidden</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token plain"> name</span><span class="token operator" style="color:#393A34">=</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">csrfToken</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token plain"> value</span><span class="token operator" style="color:#393A34">=</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">{{ hypermdm_csrf.getCsrfToken(app.request.session) }}</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token operator" style="color:#393A34">%</span><span class="token plain"> endif </span><span class="token delimiter punctuation" style="color:#393A34">%}</span><br></span></code></pre></div></div>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="vouchers">Vouchers<a href="#vouchers" class="hash-link" aria-label="Direct link to Vouchers" title="Direct link to Vouchers" translate="no">​</a></h2>
+<p>The voucher endpoints manage voucher series tokens — generating, exporting, and cleaning up
+tokens and reservations. Like the order endpoints, they are split into:</p>
+<ul>
+<li class=""><strong>View endpoint</strong> returning rendered HTML (Twig template) for iframe embedding.</li>
+<li class=""><strong>Mutation endpoints</strong> performing actions and returning an empty <code>200 OK</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="voucher-views">Voucher Views<a href="#voucher-views" class="hash-link" aria-label="Direct link to Voucher Views" title="Direct link to Voucher Views" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="view-voucher-code-tab">View Voucher Code Tab<a href="#view-voucher-code-tab" class="hash-link" aria-label="Direct link to View Voucher Code Tab" title="Direct link to View Voucher Code Tab" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>GET /vouchers/{id}/view/tab</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_vouchers_view_tab</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Returns a rendered HTML page showing the voucher code tab for a voucher series, including
+the token listing with pagination, filter controls, statistics, and action modals (generate,
+cleanup, cleanup reservations). Renders either the pattern or single token template depending
+on the token manager type.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the voucher series</li>
+</ul>
+<p><strong>Query Parameters:</strong></p>
+<ul>
+<li class=""><code>page</code> (integer, optional): Page number, 1-based (default: <code>1</code>)</li>
+<li class=""><code>tokensPerPage</code> (integer, optional): Number of tokens per page (default: <code>25</code>)</li>
+<li class=""><code>token</code> (string, optional): Filter by token code</li>
+<li class=""><code>creation_from</code> (string, optional): Filter from date in <code>Y-m-d</code> format</li>
+<li class=""><code>creation_to</code> (string, optional): Filter to date in <code>Y-m-d</code> format</li>
+<li class=""><code>usages</code> (integer, optional): Filter by usage count</li>
+<li class=""><code>length</code> (integer, optional): Filter by token length</li>
+<li class=""><code>sort_criteria</code> (string, optional): Sort field (e.g. <code>token</code>, <code>usages</code>, <code>length</code>, <code>timestamp</code>)</li>
+<li class=""><code>sort_order</code> (string, optional): Sort direction: <code>ASC</code> or <code>DESC</code></li>
+</ul>
+<p><strong>Response:</strong> <code>text/html</code> — rendered voucher code tab page</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No voucher series with the given ID exists</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /vouchers/42/view/tab?page=1&amp;tokensPerPage=25&amp;sort_criteria=timestamp&amp;sort_order=DESC</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="voucher-token-operations">Voucher Token Operations<a href="#voucher-token-operations" class="hash-link" aria-label="Direct link to Voucher Token Operations" title="Direct link to Voucher Token Operations" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="export-tokens">Export Tokens<a href="#export-tokens" class="hash-link" aria-label="Direct link to Export Tokens" title="Direct link to Export Tokens" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>GET /vouchers/{id}/tokens/export</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_vouchers_tokens_export</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Exports all voucher tokens for a series as a file download. The token manager must implement
+<code>ExportableTokenManagerInterface</code>.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the voucher series</li>
+</ul>
+<p><strong>Query Parameters:</strong></p>
+<ul>
+<li class=""><code>format</code> (string, optional): Export format — <code>csv</code> (default) or <code>plain</code></li>
+</ul>
+<p><strong>Response:</strong> File download (<code>text/csv</code> or <code>text/plain</code>)</p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No voucher series with the given ID exists</li>
+<li class="">500 Environment Error: Token manager does not support exporting</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /vouchers/42/tokens/export?format=csv</span><br></span></code></pre></div></div>
+<hr>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="generate-tokens">Generate Tokens<a href="#generate-tokens" class="hash-link" aria-label="Direct link to Generate Tokens" title="Direct link to Generate Tokens" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>POST /vouchers/{id}/tokens/generate</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_vouchers_tokens_generate</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Generates or updates voucher tokens for a series based on the configured token manager settings.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the voucher series</li>
+</ul>
+<p><strong>Response:</strong> Empty <code>200 OK</code></p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No voucher series with the given ID exists</li>
+<li class="">500 Environment Error: Token generation failed</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">POST /vouchers/42/tokens/generate</span><br></span></code></pre></div></div>
+<hr>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="cleanup-tokens">Cleanup Tokens<a href="#cleanup-tokens" class="hash-link" aria-label="Direct link to Cleanup Tokens" title="Direct link to Cleanup Tokens" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>POST /vouchers/{id}/tokens/cleanup</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_vouchers_tokens_cleanup</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Cleans up voucher tokens by usage status, with an optional date filter to only remove tokens
+older than a given date.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the voucher series</li>
+</ul>
+<p><strong>Request Body:</strong> JSON object (<code>CleanupTokensParameters</code>)</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>usage</code></td><td>string</td><td>yes</td><td>Which tokens to clean up: <code>used</code>, <code>unused</code>, or <code>both</code></td></tr><tr><td><code>olderThan</code></td><td>string</td><td>no</td><td>Only remove tokens older than this date (format: <code>Y-m-d</code>)</td></tr></tbody></table></div>
+<p><strong>Response:</strong> Empty <code>200 OK</code></p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No voucher series with the given ID exists</li>
+<li class="">500 Environment Error: Token cleanup failed</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">POST /vouchers/42/tokens/cleanup</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Content-Type: application/json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{ "usage": "used", "olderThan": "2024-01-01" }</span><br></span></code></pre></div></div>
+<hr>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="cleanup-reservations">Cleanup Reservations<a href="#cleanup-reservations" class="hash-link" aria-label="Direct link to Cleanup Reservations" title="Direct link to Cleanup Reservations" translate="no">​</a></h4>
+<p><strong>Endpoint:</strong> <code>POST /vouchers/{id}/reservations/cleanup</code>
+<strong>Operation ID:</strong> <code>bundle_ecommerce_vouchers_reservations_cleanup</code>
+<strong>Permission:</strong> <code>bundle_ecommerce_pricing_rules</code></p>
+<p>Cleans up voucher token reservations that are older than a specified duration in minutes.</p>
+<p><strong>Path Parameter:</strong></p>
+<ul>
+<li class=""><code>id</code> (integer): The ID of the voucher series</li>
+</ul>
+<p><strong>Request Body:</strong> JSON object (<code>CleanupReservationsParameters</code>)</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>duration</code></td><td>integer</td><td>yes</td><td>Remove reservations older than this many minutes</td></tr></tbody></table></div>
+<p><strong>Response:</strong> Empty <code>200 OK</code></p>
+<p><strong>Possible Errors:</strong></p>
+<ul>
+<li class="">404 Not Found: No voucher series with the given ID exists</li>
+<li class="">500 Environment Error: Reservation cleanup failed</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">POST /vouchers/42/reservations/cleanup</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Content-Type: application/json</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{ "duration": 5 }</span><br></span></code></pre></div></div>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="context-aware-routing-for-voucher-templates">Context-Aware Routing for Voucher Templates<a href="#context-aware-routing-for-voucher-templates" class="hash-link" aria-label="Direct link to Context-Aware Routing for Voucher Templates" title="Direct link to Context-Aware Routing for Voucher Templates" translate="no">​</a></h3>
+<p>The voucher Twig templates use the same context-aware routing pattern as the order templates.
+The <code>VoucherViewService</code> passes <code>studioContext: true</code> to every render call.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="route-mapping">Route Mapping<a href="#route-mapping" class="hash-link" aria-label="Direct link to Route Mapping" title="Direct link to Route Mapping" translate="no">​</a></h4>
+<div class="table-container"><table><thead><tr><th>Legacy Route</th><th>Studio Route</th></tr></thead><tbody><tr><td><code>hypermdm_ecommerce_backend_voucher_export-tokens</code></td><td><code>hypermdm_studio_api_ecommerce_vouchers_tokens_export</code></td></tr><tr><td><code>hypermdm_ecommerce_backend_voucher_generate</code></td><td><code>hypermdm_studio_api_ecommerce_vouchers_tokens_generate</code></td></tr><tr><td><code>hypermdm_ecommerce_backend_voucher_cleanup</code></td><td><code>hypermdm_studio_api_ecommerce_vouchers_tokens_cleanup</code></td></tr><tr><td><code>hypermdm_ecommerce_backend_voucher_cleanup-reservations</code></td><td><code>hypermdm_studio_api_ecommerce_vouchers_reservations_cleanup</code></td></tr></tbody></table></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="generate-and-assign-modals">Generate and Assign Modals<a href="#generate-and-assign-modals" class="hash-link" aria-label="Direct link to Generate and Assign Modals" title="Direct link to Generate and Assign Modals" translate="no">​</a></h4>
+<p>The generate modal (<code>pattern/generate_modal.html.twig</code>) and assign settings modal
+(<code>single/assign_settings_modal.html.twig</code>) use <code>&lt;a&gt;</code> links that in legacy context perform a
+GET redirect. In Studio context, the link targets the Studio POST endpoint and a JavaScript
+click interceptor sends the request via <code>fetch()</code> then redirects to the tab view.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="cleanup-form-modals">Cleanup Form Modals<a href="#cleanup-form-modals" class="hash-link" aria-label="Direct link to Cleanup Form Modals" title="Direct link to Cleanup Form Modals" translate="no">​</a></h4>
+<p>The cleanup tokens modal and cleanup reservations modal use the same form interception pattern
+as the order item mutations: in Studio context, <code>data-studio-context</code>, <code>data-studio-method</code>,
+and <code>data-studio-redirect</code> attributes are added to the form, and a script intercepts the
+submit event to send a JSON <code>fetch()</code> request instead of the traditional form POST. CSRF tokens
+are conditionally omitted in Studio context.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

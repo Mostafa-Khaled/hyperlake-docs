@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Information — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Information</h1></header>
+<p>The following steps are necessary when updating to newer versions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-extjs--admin-classic-ui-support">Removed ExtJS / Admin Classic UI Support<a href="#removed-extjs--admin-classic-ui-support" class="hash-link" aria-label="Direct link to Removed ExtJS / Admin Classic UI Support" title="Direct link to Removed ExtJS / Admin Classic UI Support" translate="no">​</a></h3>
+<p>The bundle no longer ships any ExtJS-based frontend code or integrates with the HyperMDM Admin Classic UI.
+The following public assets have been removed:</p>
+<ul>
+<li class=""><code>public/js/hypermdm/startup.js</code></li>
+<li class=""><code>public/js/hypermdm/helper.js</code></li>
+<li class=""><code>public/js/hypermdm/interactionAction/showcaseChatInteractionAdapter.js</code></li>
+<li class=""><code>public/js/hypermdm/regularAction/customReportsAdapter.js</code></li>
+<li class=""><code>public/css/style.css</code></li>
+</ul>
+<p><strong>Interface / class changes:</strong></p>
+<p><code>HyperMDMCopilotShowcaseBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code> and no longer
+uses <code>BundleAdminClassicTrait</code>. The following methods have been removed from the bundle class:</p>
+<ul>
+<li class=""><code>getJsPaths(): array</code></li>
+<li class=""><code>getCssPaths(): array</code></li>
+</ul>
+<p>If you have extended <code>HyperMDMCopilotShowcaseBundle</code> or type-hinted against <code>HyperMDMBundleAdminClassicInterface</code>,
+you must remove or update those usages. If you relied on those JavaScript adapters or the CSS, you need
+to re-implement the equivalent functionality using <strong>HyperMDM Studio</strong> (see below).</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="added-hypermdm-studio-backend--ui-bundle-support">Added HyperMDM Studio Backend &amp; UI Bundle Support<a href="#added-hypermdm-studio-backend--ui-bundle-support" class="hash-link" aria-label="Direct link to Added Pimcore Studio Backend &amp; UI Bundle Support" title="Direct link to Added Pimcore Studio Backend &amp; UI Bundle Support" translate="no">​</a></h3>
+<p>The bundle now requires and integrates with the new Studio-based administration UI.
+The following packages have been added as required dependencies:</p>
+<ul>
+<li class=""><code>hypermdm/studio-backend-bundle: ^1.0 || ^2026.1</code></li>
+<li class=""><code>hypermdm/studio-ui-bundle: ^1.0 || ^2026.1</code></li>
+</ul>
+<p>Make sure both bundles are registered in your <code>config/bundles.php</code>:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token string double-quoted-string" style="color:#e3116c">"HyperMDM\\Bundle\\StudioBackendBundle\\HyperMDMStudioBackendBundle"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token string double-quoted-string" style="color:#e3116c">"HyperMDM\\Bundle\\StudioUiBundle\\HyperMDMStudioUiBundle"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><br></span></code></pre></div></div>
+<p>The Symfony security configuration must be updated accordingly. Replace the legacy HyperMDM Admin ACL
+access-control rules with the Studio firewall and access-control rules. Example:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">security</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">firewalls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hypermdm_studio</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%hypermdm_studio_backend.firewall_settings%'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">access_control</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^/hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">studio/api/(docs</span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">docs/json</span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">translations</span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">user/reset</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">password)$</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> PUBLIC_ACCESS </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^/hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">studio/api</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ROLE_HYPERMDM_USER </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^/asset/webdav</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ROLE_HYPERMDM_USER </span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-doctrine-enum-mapping">Removed Doctrine Enum Mapping<a href="#removed-doctrine-enum-mapping" class="hash-link" aria-label="Direct link to Removed Doctrine Enum Mapping" title="Direct link to Removed Doctrine Enum Mapping" translate="no">​</a></h3>
+<p>The custom Doctrine mapping type <code>enum: string</code> has been removed from the test/application configuration.
+HyperMDM 2026.x handles enum types natively. Remove the following from your <code>config/packages/doctrine.yaml</code>
+(or equivalent) if present:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">doctrine</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">dbal</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">connections</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">default</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">mapping_types</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">enum</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> string  </span><span class="token comment" style="color:#999988;font-style:italic"># remove this line</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-po-editor-export-workflow">Removed PO Editor Export Workflow<a href="#removed-po-editor-export-workflow" class="hash-link" aria-label="Direct link to Removed PO Editor Export Workflow" title="Direct link to Removed PO Editor Export Workflow" translate="no">​</a></h3>
+<p>The GitHub Actions workflow <code>new-poeditor-export.yml</code> has been removed entirely.
+Additionally, the <code>REQUIRE_ADMIN_BUNDLE: "true"</code> environment variable has been removed from the
+static analysis workflow, as it was tied to the now-removed Admin Classic integration.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="updated-dependencies">Updated Dependencies<a href="#updated-dependencies" class="hash-link" aria-label="Direct link to Updated Dependencies" title="Direct link to Updated Dependencies" translate="no">​</a></h3>
+<ul>
+<li class="">Dropped support for <strong>PHP 8.3</strong> and <strong>Symfony v6</strong>. Minimum PHP version is now <code>~8.4.0 || ~8.5.0</code>.</li>
+<li class="">Added support for <strong>PHP 8.5</strong>.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

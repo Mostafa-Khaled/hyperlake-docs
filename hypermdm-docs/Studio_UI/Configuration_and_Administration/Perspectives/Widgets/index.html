@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tree Widgets — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Tree Widgets</h1></header>
+<p>A tree widget is a custom tree view representing a subset of elements from the main trees.
+Configure tree widgets for documents, assets, and data objects to provide focused views
+for specific workflows or user roles.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="tree-widget-configuration">Tree Widget Configuration<a href="#tree-widget-configuration" class="hash-link" aria-label="Direct link to Tree Widget Configuration" title="Direct link to Tree Widget Configuration" translate="no">​</a></h2>
+<p>Each element tree widget has these properties:</p>
+<div class="table-container"><table><thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>id</code></td><td>string</td><td>Unique widget identifier</td></tr><tr><td><code>name</code></td><td>string</td><td>Display name</td></tr><tr><td><code>icon</code></td><td>ElementIcon</td><td>Icon with <code>type</code> and <code>value</code></td></tr><tr><td><code>elementType</code></td><td>string</td><td>Tree type: <code>data-object</code>, <code>asset</code>, or <code>document</code></td></tr><tr><td><code>rootFolder</code></td><td>string</td><td>Root path for the tree (e.g., <code>/Product Data/Cars</code>)</td></tr><tr><td><code>showRoot</code></td><td>boolean</td><td>Whether to display the root folder node</td></tr><tr><td><code>classes</code></td><td>array</td><td>Restrict to specific data object classes (e.g., <code>['CAR']</code>)</td></tr><tr><td><code>pql</code></td><td>string</td><td>PQL filter expression to subset the tree</td></tr><tr><td><code>pageSize</code></td><td>integer</td><td>Number of items per page in the tree</td></tr><tr><td><code>contextPermissions</code></td><td>object</td><td>Tree context menu permissions (see below)</td></tr></tbody></table></div>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Studio_UI-Configuration_and_Administration-Perspectives-Widgets-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Studio_UI-Configuration_and_Administration-Perspectives-Widgets-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-Studio_UI-Configuration_and_Administration-Perspectives-Widgets-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>For tree pagination to work correctly, a parent node must be available.
+If the root level has more items than <code>pageSize</code>, set <code>showRoot</code> to <code>true</code>.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="tree-context-permissions">Tree Context Permissions<a href="#tree-context-permissions" class="hash-link" aria-label="Direct link to Tree Context Permissions" title="Direct link to Tree Context Permissions" translate="no">​</a></h2>
+<p>Control which context menu actions are available in the widget tree.
+Each permission is a boolean flag. The available permissions depend on the <code>elementType</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="filtering-with-pql">Filtering with PQL<a href="#filtering-with-pql" class="hash-link" aria-label="Direct link to Filtering with PQL" title="Direct link to Filtering with PQL" translate="no">​</a></h2>
+<p>Use the <code>pql</code> property to filter which elements appear in the widget tree.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="custom-widget-types">Custom Widget Types<a href="#custom-widget-types" class="hash-link" aria-label="Direct link to Custom Widget Types" title="Direct link to Custom Widget Types" translate="no">​</a></h2>
+<p>The built-in widget type is <code>element_tree</code>. To create new widget types
+(e.g., dashboards, custom panels), see the
+<a class="" href="../../../../HyperMDM/Extending_HyperMDM/Custom_Extension_Guides/Custom_Perspective_Widgets/index.html">Custom Perspective Widgets</a>
+extension guide.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

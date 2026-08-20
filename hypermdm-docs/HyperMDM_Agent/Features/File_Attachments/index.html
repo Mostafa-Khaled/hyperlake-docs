@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>File Attachments — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>File Attachments</h1></header>
+<p>Users can upload files into a chat session. The agent reads them with path-sandboxed SDK tools (<code>view</code>, <code>grep</code>), or -
+for HyperMDM assets - uses the <code>stage_asset</code> MCP tool to pull an asset copy into the session's scratch directory.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-the-user-does">What the user does<a href="#what-the-user-does" class="hash-link" aria-label="Direct link to What the user does" title="Direct link to What the user does" translate="no">​</a></h2>
+<p>Drag a file into the chat input area (or paste an image). The file uploads to the agent-server and is attached to the
+next message. The agent sees it as part of the conversation context and can reference it by name.</p>
+<p>Images are sent as <strong>native SDK attachments</strong> for multimodal processing (the model sees the image directly). Other
+file types - text, CSV, PDF, logs - are not sent inline; instead the agent gets a hint saying "use <code>read_file</code> to
+inspect <em>filename</em>" and fetches the content when needed.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="directory-layout">Directory layout<a href="#directory-layout" class="hash-link" aria-label="Direct link to Directory layout" title="Direct link to Directory layout" translate="no">​</a></h2>
+<p>Each session has two scratch subdirectories. Both are session-scoped, and both are wiped when the session is deleted.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">/app/uploads/{chatSessionId}/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── uploaded/          ← User-uploaded files</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   └── {uuid}.png</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">└── staged/            ← Copies of HyperMDM assets, pulled in by the agent</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    └── {assetId}-{filename}</span><br></span></code></pre></div></div>
+<ul>
+<li class=""><strong><code>uploaded/</code></strong> holds what the user dropped into chat.</li>
+<li class=""><strong><code>staged/</code></strong> holds copies of HyperMDM assets that the agent requested via <code>stage_asset</code> - typically because the
+agent needs to grep or view an asset that is too large for the context window.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="lifecycle">Lifecycle<a href="#lifecycle" class="hash-link" aria-label="Direct link to Lifecycle" title="Direct link to Lifecycle" translate="no">​</a></h2>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">1. User uploads file    → POST /agent-server/api/upload</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                           Stored in {tempSessionId}/uploaded/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">2. First message sent   → POST /agent-server/api/chat (with context.fileIds)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                           Files moved to {chatSessionId}/uploaded/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">3. During conversation  → SDK tools (view, grep) access files</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                           Path-sandboxed to /app/uploads/{chatSessionId}/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        → stage_asset stages HyperMDM assets</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                           Written to {chatSessionId}/staged/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">4. Session deleted      → DELETE /agent-server/api/sessions/:id</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                           Entire {chatSessionId}/ cleaned up</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">5. Periodic cleanup     → Every AGENT_SERVER_STAGED_FILE_CLEANUP_INTERVAL_MS (default 1 h)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                           Staged files older than</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                           AGENT_SERVER_STAGED_FILE_MAX_AGE_MS (default 24 h) removed</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                           User uploads are never auto-cleaned</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="session-scoping-is-load-bearing">Session scoping is load-bearing<a href="#session-scoping-is-load-bearing" class="hash-link" aria-label="Direct link to Session scoping is load-bearing" title="Direct link to Session scoping is load-bearing" translate="no">​</a></h2>
+<p>Path sandboxing is what keeps one user's files out of another user's chat. <code>FileManager.getFilePath(fileId, sessionId)</code>
+searches <code>uploaded/</code> then <code>staged/</code> within the supplied session - it never looks at other sessions' directories.
+The chat session id reaches <code>stage_asset</code> (and other chat-scoped tools) via the bound <code>_mcp_token_reference</code> request
+attribute, which <code>McpAccessTokenAuthenticator</code> derives from the validated bearer. Calls authenticated by any other
+mechanism (PAT, SessionBridge) carry no session context and are rejected by the tool.</p>
+<p>The SDK security hook (see <a class="" href="../../Architecture/Tool_Security/index.html">Architecture → Tool Security</a>) checks every file tool invocation against the session's
+allowed directories. An agent cannot escape the session scratch area even if it tries.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="docker-layout">Docker layout<a href="#docker-layout" class="hash-link" aria-label="Direct link to Docker layout" title="Direct link to Docker layout" translate="no">​</a></h2>
+<p>The upload directory is a bind mount shared between the <code>agent-server</code> and <code>php</code> containers:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">./var/tmp/agent-uploads:/app/uploads</span><br></span></code></pre></div></div>
+<p>Both containers must run as the same user (<code>user: '1000:1000'</code>) so they can read/write session directories. <code>FileManager</code>
+creates session subdirectories on demand.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cleanup-configuration">Cleanup configuration<a href="#cleanup-configuration" class="hash-link" aria-label="Direct link to Cleanup configuration" title="Direct link to Cleanup configuration" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Environment variable</th><th>Default</th><th>Purpose</th></tr></thead><tbody><tr><td><code>AGENT_SERVER_STAGED_FILE_MAX_AGE_MS</code></td><td>86 400 000 (24 h)</td><td>Maximum age before a staged asset file is removed.</td></tr><tr><td><code>AGENT_SERVER_STAGED_FILE_CLEANUP_INTERVAL_MS</code></td><td>3 600 000 (1 h)</td><td>How often the cleanup sweep runs.</td></tr></tbody></table></div>
+<p>See <a class="" href="../../Configuration/Environment_Variables/index.html">Configuration → Environment Variables</a> for every file-related setting.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-reading">Related reading<a href="#related-reading" class="hash-link" aria-label="Direct link to Related reading" title="Direct link to Related reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Architecture/Tool_Security/index.html">Architecture → Tool Security</a> - the pre-tool-use hook that enforces path sandboxing.</li>
+<li class=""><a class="" href="../../Architecture/MCP_Integration/index.html">Architecture → MCP Integration</a> - how the chat session id is bound to the bearer and surfaced to chat-scoped tools.</li>
+<li class=""><a class="" href="../../Architecture/File_Staging/index.html">Architecture → File Staging</a> - developer-curated file sets that share the same <code>staged/</code> directory.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

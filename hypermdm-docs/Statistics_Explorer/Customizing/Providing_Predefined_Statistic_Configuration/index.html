@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Provide Predefined Statistic Configuration — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Provide Predefined Statistic Configuration</h1></header>
+<p>There are two options to provide predefined statistic configurations that are globally visible
+to every user in a certain context.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="global-configurations-via-symfony-configuration-tree">Global Configurations via Symfony Configuration Tree<a href="#global-configurations-via-symfony-configuration-tree" class="hash-link" aria-label="Direct link to Global Configurations via Symfony Configuration Tree" title="Direct link to Global Configurations via Symfony Configuration Tree" translate="no">​</a></h3>
+<p>These predefined configurations can be defined on application level or by any bundle and
+are configured in symfony configuration tree with the <code>hypermdm_statistics_explorer.global_configurations</code>
+configuration.</p>
+<p>Following information is necessary:</p>
+<ul>
+<li class="">name: The unique name of the configuration, that is also shown in the loading list.</li>
+<li class="">context: Context in which configuration should be shown.</li>
+<li class="">configuration: JSON encoded string of configuration. The best way is to create a configuration in statistics
+explorer, save it and then copy configuration from database table (which is also JSON encoded).</li>
+</ul>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-configuration">Sample Configuration<a href="#sample-configuration" class="hash-link" aria-label="Direct link to Sample Configuration" title="Direct link to Sample Configuration" translate="no">​</a></h5>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_statistics_explorer</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">global_configurations</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">Global Sample 1</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">context</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'portal'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">configuration</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'{"showTable":true,"showChart":false,"chartType":null,"selectedDataSource":{"value":"tracking_test","label":"tracking_test","type":"ELASTIC_SEARCH"},"statisticMode":"statistic","rows":[{"value":"dimensions.download.package","label":"dimensions.download.package","typeGroup":"default"}],"columns":[{"value":"dimensions.download.context","label":"dimensions.download.context","typeGroup":"default"}],"filters":[],"fieldSettings":{"dimensions.download.package":{"typeGroup":"default","order":"_key||asc","max":"60"},"dimensions.download.context":{"typeGroup":"default","order":"_key||asc","max":200}}}'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">Global Sample 2</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">context</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'portal'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">configuration</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'{"showTable":false,"showChart":true,"chartType":"Pie","selectedDataSource":{"value":"tracking_test","label":"tracking_test","type":"ELASTIC_SEARCH"},"statisticMode":"statistic","rows":[{"value":"dimensions.download.package","label":"dimensions.download.package","typeGroup":"default"}],"columns":[{"value":"dimensions.download.context","label":"dimensions.download.context","typeGroup":"default"}],"filters":[],"fieldSettings":{"dimensions.download.package":{"typeGroup":"default","order":"_key||asc","max":"60"},"dimensions.download.context":{"typeGroup":"default","order":"_key||asc","max":200}}}'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="inject-dynamic-configurations-via-event">Inject dynamic Configurations via Event<a href="#inject-dynamic-configurations-via-event" class="hash-link" aria-label="Direct link to Inject dynamic Configurations via Event" title="Direct link to Inject dynamic Configurations via Event" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="event-loadconfigurationevent">Event <code>LoadConfigurationEvent</code><a href="#event-loadconfigurationevent" class="hash-link" aria-label="Direct link to event-loadconfigurationevent" title="Direct link to event-loadconfigurationevent" translate="no">​</a></h4>
+<ul>
+<li class="">Fires before a configuration with given <code>id</code> and <code>context</code> is loaded from default sources
+(global configurations, database). If configuration is set to event, this one is used and further configuration
+loading is skipped.</li>
+<li class="">Available information<!-- -->
+<ul>
+<li class="">Id</li>
+<li class="">Context</li>
+</ul>
+</li>
+<li class="">Changeable information<!-- -->
+<ul>
+<li class="">Configuration</li>
+</ul>
+</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

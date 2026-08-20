@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Major Version Upgrades — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Major Version Upgrades</h1></header>
+<p>Upgrading between major Platform Versions (e.g., 2025.x to 2026.x) requires more care than regular updates.
+Major versions may remove previously deprecated features and introduce breaking changes to public APIs.</p>
+<p>Follow these steps to minimize risk and downtime.
+Perform the upgrade on a staging or development environment first and verify before applying to production.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-update-to-the-latest-release-of-the-previous-major-version">1. Update to the Latest Release of the Previous Major Version<a href="#1-update-to-the-latest-release-of-the-previous-major-version" class="hash-link" aria-label="Direct link to 1. Update to the Latest Release of the Previous Major Version" title="Direct link to 1. Update to the Latest Release of the Previous Major Version" translate="no">​</a></h2>
+<p>Before upgrading to a new major version,
+make sure you are running the latest available release in the previous major version.
+Check the <a class="" href="../Release_Notes/index.html">Release Notes</a> or Composer to find the highest available minor version.</p>
+<p>For example, when upgrading from 2025.x to 2026.1:</p>
+<ul>
+<li class="">First update to the latest bugfix release of 2025.4 (the last minor in the 2025 cycle).</li>
+<li class="">This ensures you have all the latest deprecation notices and preparatory changes in place.</li>
+</ul>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/platform-version:2025.4 --no-update</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">COMPOSER_MEMORY_LIMIT=-1 composer update</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console doctrine:migrations:migrate</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-resolve-deprecations">2. Resolve Deprecations<a href="#2-resolve-deprecations" class="hash-link" aria-label="Direct link to 2. Resolve Deprecations" title="Direct link to 2. Resolve Deprecations" translate="no">​</a></h2>
+<p>Check for deprecation notices in all available channels:</p>
+<ul>
+<li class=""><strong>Logs</strong> - Review your Symfony deprecation log (<code>var/log/dev.deprecations.log</code> or the profiler toolbar in dev mode).</li>
+<li class=""><strong>Code</strong> - Search your codebase for usages of methods, classes, or configuration options marked as <code>@deprecated</code>.</li>
+<li class=""><strong>HyperMDM Studio</strong> - Some deprecations surface as warnings in the administration interface.</li>
+</ul>
+<p>Resolve all deprecations before upgrading.
+If a deprecation cannot be resolved immediately (e.g., because it depends on a third-party bundle),
+document it and keep it in mind for later.</p>
+<p>Also verify that all third-party bundles you depend on support the target major version.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-back-up-database-and-files">3. Back Up Database and Files<a href="#3-back-up-database-and-files" class="hash-link" aria-label="Direct link to 3. Back Up Database and Files" title="Direct link to 3. Back Up Database and Files" translate="no">​</a></h2>
+<p>Create a full backup of your database and project files before proceeding.
+If the upgrade fails, restore the backup, revert <code>composer.lock</code>, and run <code>composer install</code> to return to your previous state.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-read-the-upgrade-notes">4. Read the Upgrade Notes<a href="#4-read-the-upgrade-notes" class="hash-link" aria-label="Direct link to 4. Read the Upgrade Notes" title="Direct link to 4. Read the Upgrade Notes" translate="no">​</a></h2>
+<p>Review the <a class="" href="../Release_Notes/index.html">Release Notes</a> for the target major version.
+Upgrade notes may contain required manual steps. Some must be completed before updating, others after.
+Watch for:</p>
+<ul>
+<li class="">Configuration changes</li>
+<li class="">Required data migrations</li>
+<li class="">Removed or replaced features</li>
+<li class="">Changes to system requirements (PHP version, database version, etc.)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-update-to-the-new-major-version-via-composer">5. Update to the New Major Version via Composer<a href="#5-update-to-the-new-major-version-via-composer" class="hash-link" aria-label="Direct link to 5. Update to the New Major Version via Composer" title="Direct link to 5. Update to the New Major Version via Composer" translate="no">​</a></h2>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/platform-version:2026.1 --no-update</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">COMPOSER_MEMORY_LIMIT=-1 composer update</span><br></span></code></pre></div></div>
+<p>Do not run migrations yet - complete Steps 6 and 7 first.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-apply-required-changes-from-upgrade-notes">6. Apply Required Changes from Upgrade Notes<a href="#6-apply-required-changes-from-upgrade-notes" class="hash-link" aria-label="Direct link to 6. Apply Required Changes from Upgrade Notes" title="Direct link to 6. Apply Required Changes from Upgrade Notes" translate="no">​</a></h2>
+<p>Work through the post-upgrade steps described in the release notes:</p>
+<ul>
+<li class="">Fix backward compatibility breaks in your application code.</li>
+<li class="">Rebuild the Symfony container to pick up changed service definitions and configurations:<!-- -->
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console cache:clear</span><br></span></code></pre></div></div>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="7-clear-data-caches">7. Clear Data Caches<a href="#7-clear-data-caches" class="hash-link" aria-label="Direct link to 7. Clear Data Caches" title="Direct link to 7. Clear Data Caches" translate="no">​</a></h2>
+<p>Clear HyperMDM's application-level data caches (output cache, thumbnails, etc.).
+These are separate from the Symfony container cache cleared in the previous step.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:cache:clear</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="8-run-migrations">8. Run Migrations<a href="#8-run-migrations" class="hash-link" aria-label="Direct link to 8. Run Migrations" title="Direct link to 8. Run Migrations" translate="no">​</a></h2>
+<p>Execute all pending database migrations:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console doctrine:migrations:migrate</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="9-test-your-system">9. Test Your System<a href="#9-test-your-system" class="hash-link" aria-label="Direct link to 9. Test Your System" title="Direct link to 9. Test Your System" translate="no">​</a></h2>
+<p>Verify that your application works correctly after the upgrade:</p>
+<ul>
+<li class="">Log into HyperMDM Studio and confirm that data objects, assets, and documents load and save correctly.</li>
+<li class="">Run your automated test suite if available.</li>
+<li class="">Verify custom bundles and integrations.</li>
+<li class="">Test functionality that was related to resolved deprecations.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

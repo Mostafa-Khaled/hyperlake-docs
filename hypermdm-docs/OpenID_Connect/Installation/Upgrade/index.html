@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="202610">2026.1.0<a href="#202610" class="hash-link" aria-label="Direct link to 2026.1.0" title="Direct link to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-admin-classic--extjs-support">Removed Admin Classic / ExtJS Support<a href="#removed-admin-classic--extjs-support" class="hash-link" aria-label="Direct link to Removed Admin Classic / ExtJS Support" title="Direct link to Removed Admin Classic / ExtJS Support" translate="no">​</a></h3>
+<ul>
+<li class="">Removed all ExtJS/Admin Classic UI related implementations.</li>
+<li class=""><code>HyperMDMOpenIdConnectBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code> and no longer
+uses <code>BundleAdminClassicTrait</code>. The <code>getJsPaths()</code> and <code>getCssPaths()</code> methods have been removed.</li>
+<li class="">Removed the <code>ContentSecurityPolicyUrlsPass</code> compiler pass
+(<code>DependencyInjection\Compiler\ContentSecurityPolicyUrlsPass</code>) and the related <code>build()</code> method
+from <code>HyperMDMOpenIdConnectBundle</code>.</li>
+<li class="">Removed ExtJS controllers: <code>Controller\AuthController</code>, <code>Controller\ButtonInjectionController</code>,
+<code>Controller\ConfigController</code>.</li>
+<li class="">Removed ExtJS-based event listeners: <code>EventListener\LoginRedirectListener</code>,
+<code>EventListener\LostPasswordListener</code>.</li>
+<li class="">Removed <code>Session\Configurator</code> (legacy <code>AdminSessionBagListener</code> wrapper).</li>
+<li class="">Removed <code>Routing\StudioRouteLoader</code>, studio routes are now loaded unconditionally.</li>
+<li class="">Studio Backend and Studio UI YAML configurations are now always loaded unconditionally, instead of being gated by
+a bundle-presence check.</li>
+<li class="">Removed ExtJS JavaScript assets (<code>hypermdm/startup.js</code>, <code>hypermdm/configPanel.js</code>,
+<code>ext_extensions.js</code>) and CSS assets (<code>login.css</code>, <code>admin.css</code>).</li>
+<li class="">Removed legacy <code>services_legacy.yml</code> service definitions (HyperMDM ≤ 10 compatibility).</li>
+<li class="">Removed legacy HyperMDM version checks (<code>Version::getMajorVersion()</code>) throughout the bundle.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="new-provider-option">New Provider Option<a href="#new-provider-option" class="hash-link" aria-label="Direct link to New Provider Option" title="Direct link to New Provider Option" translate="no">​</a></h3>
+<ul>
+<li class="">Added the <code>dont_overwrite_roles</code> provider option, so roles for SSO users can be managed directly in HyperMDM
+instead of being re-assigned from the provider's <code>groups</code> claim on every login. See
+<a class="" href="../../Configuration/index.html#provider-configuration">Configuration</a>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="authenticator-changes">Authenticator Changes<a href="#authenticator-changes" class="hash-link" aria-label="Direct link to Authenticator Changes" title="Direct link to Authenticator Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>OpenIdConnectAuthenticator</code> now extends <code>AbstractAuthenticator</code> (Symfony) directly instead of
+<code>AdminAbstractAuthenticator</code> (HyperMDM Admin bundle). Custom code extending or decorating this class
+must be updated accordingly.</li>
+<li class="">Removed dependency on <code>HyperMDM\Bundle\AdminBundle\Security\Authenticator\AdminAbstractAuthenticator</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="rate-limiter-configuration">Rate Limiter Configuration<a href="#rate-limiter-configuration" class="hash-link" aria-label="Direct link to Rate Limiter Configuration" title="Direct link to Rate Limiter Configuration" translate="no">​</a></h3>
+<ul>
+<li class="">Moved the rate limiter configuration for the public OIDC endpoints out of the bundle extension into a dedicated
+<code>Resources/config/prepend/rate_limiter.yaml</code>. The limiters (<code>oidc_endpoint</code>, <code>oidc_script</code>) and their values are
+unchanged, they were introduced in 1.6.0 (see below).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php--platform-requirements">PHP / Platform Requirements<a href="#php--platform-requirements" class="hash-link" aria-label="Direct link to PHP / Platform Requirements" title="Direct link to PHP / Platform Requirements" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="160">1.6.0<a href="#160" class="hash-link" aria-label="Direct link to 1.6.0" title="Direct link to 1.6.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-backend-integration-new">Studio Backend Integration (New)<a href="#studio-backend-integration-new" class="hash-link" aria-label="Direct link to Studio Backend Integration (New)" title="Direct link to Studio Backend Integration (New)" translate="no">​</a></h3>
+<ul>
+<li class="">Migrated legacy admin controllers to the Studio backend architecture (PR #138).</li>
+<li class="">New Studio backend controllers added under <code>Controller\Studio\</code>:<!-- -->
+<ul>
+<li class=""><code>Auth\DebugController</code>, <code>Auth\EndpointController</code>, <code>Auth\LoginController</code>,
+<code>Auth\ScriptController</code></li>
+<li class=""><code>Config\GetController</code>, <code>Config\UpdateController</code></li>
+</ul>
+</li>
+<li class="">New interfaces introduced (all marked <code>@internal</code>):<!-- -->
+<ul>
+<li class=""><code>Hydrator\ConfigurationHydratorInterface</code></li>
+<li class=""><code>Service\Studio\Auth\EndpointServiceInterface</code></li>
+<li class=""><code>Service\Studio\Auth\LoginServiceInterface</code></li>
+<li class=""><code>Service\Studio\Auth\RenderServiceInterface</code></li>
+<li class=""><code>Service\Studio\Configuration\ServiceInterface</code></li>
+</ul>
+</li>
+<li class="">New schemas added: <code>Schema\Configuration</code>, <code>Schema\EndpointParameters</code>, <code>Schema\ScriptParameters</code>,
+<code>Schema\SuccessResponse</code>, <code>Schema\UpdateConfigurationParameters</code>.</li>
+<li class="">New Studio frontend module added for OpenID Connect configuration and login buttons
+(<code>assets/studio/</code>).</li>
+<li class="">Added <code>OidcPublicAuthorizationVoter</code> (<code>Security\Voter\OidcPublicAuthorizationVoter</code>) to authorize
+public OIDC routes within the Studio firewall.</li>
+<li class="">Added rate limiting for the public OIDC endpoints (moved into a dedicated
+<code>Resources/config/prepend/rate_limiter.yaml</code> in 2026.1.0):<!-- -->
+<ul>
+<li class=""><code>oidc_endpoint</code>: fixed-window, 30 requests per 5 minutes (allows ~10 OAuth2 login attempts).</li>
+<li class=""><code>oidc_script</code>: fixed-window, 50 requests per 5 minutes (for the login-page JavaScript asset).</li>
+</ul>
+</li>
+<li class="">Added <code>AppConfig\OidcAppConfigProvider</code> to supply provider names to the Studio UI app config.</li>
+<li class="">Added <code>Webpack\WebpackEntryPointProvider</code> to register the Studio frontend build entry point.</li>
+</ul>
+<p>This release still supported Admin Classic / ExtJS alongside the new Studio integration. 2026.1.0 (above) removed
+the Admin Classic support entirely.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="120">1.2.0<a href="#120" class="hash-link" aria-label="Direct link to 1.2.0" title="Direct link to 1.2.0" translate="no">​</a></h2>
+<ul>
+<li class="">[General] Dropped support of HyperMDM 10, bumped minimum requirement of <code>hypermdm/hypermdm</code> to <code>^11.2</code>. Replaced all
+<code>$request-&gt;get()</code> with their explicit input source.</li>
+<li class="">[Composer] Replaced the abandoned jwt related required packages with <code>jwt-library</code></li>
+<li class="">[Composer] Bumped minimum required PHP version to 8.1 and added support to 8.2 and 8.3</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="110">1.1.0<a href="#110" class="hash-link" aria-label="Direct link to 1.1.0" title="Direct link to 1.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">[Plugins] Replaced plugins backend UI with JS event listener.</li>
+<li class="">[Session] Replaced SessionConfigurator with OpenSessionBagListener and added related deprecation triggers.</li>
+<li class="">[Session] Deprecated <code>Configurator::SESSION_BAG_NAME</code>, use <code>OpenSessionBagListener::SESSION_BAG_NAME</code> instead.</li>
+<li class="">[Session] Replaced usage of deprecated <code>Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag</code>
+in favor of <code>AttributeBag</code></li>
+<li class="">If you are upgrading to HyperMDM 11, install the <code>hypermdm/admin-ui-classic-bundle</code> bundle.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

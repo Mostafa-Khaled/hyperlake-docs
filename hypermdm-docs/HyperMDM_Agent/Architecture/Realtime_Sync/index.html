@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Real-time Sync — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Real-time Sync</h1></header>
+<p>Chat is <strong>session-centric and multi-client</strong>: a turn is visible live on every tab, device, and detached widget of
+the same user - and on the eval CLI - not only on the tab that sent the message. This page describes the model the
+bundle actually implements: Mercure for liveness, PHP for correctness.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-model-php-is-the-record-mercure-is-the-live-layer">The model: PHP is the record, Mercure is the live layer<a href="#the-model-php-is-the-record-mercure-is-the-live-layer" class="hash-link" aria-label="Direct link to The model: PHP is the record, Mercure is the live layer" title="Direct link to The model: PHP is the record, Mercure is the live layer" translate="no">​</a></h2>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">   Browser A ─┐  (ONE existing Mercure EventSource per tab, via Studio's GlobalMessageBus,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   Browser B ─┤   already subscribed to studio-backend-default/user/{userId})</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   detached  ─┘            ▲ private updates: { type:'agent-chat', sessionId, event }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                           │</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        ┌──────────────────┴──────────────────────────────┐</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        │  Mercure hub (MERCURE_SERVER_URL)                │</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        └──────────────────▲──────────────────────────────┘</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                           │ POST (publisher JWT, shared MERCURE_JWT_KEY)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   Browser B ─POST msg───▶ agent-server.TaskRunner.pushEvent ─┬─ Mercure publish (live)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   eval CLI  ─POST msg───▶ (turn runs to completion)          ├─ PHP flush     (record)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                                                              └─ POST response (eval CLI)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   any client ─GET /sessions/:id ──────────────────────────────────────── catch-up</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                                              ▼</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                          bundle_agent_messages (parts JSON + status)  ← SOURCE OF TRUTH</span><br></span></code></pre></div></div>
+<ul>
+<li class=""><strong>Liveness</strong> comes from Mercure: the agent-server publishes each turn event to the user's topic; tabs render it
+instantly through <code>GlobalMessageBus</code>.</li>
+<li class=""><strong>Correctness</strong> comes from PHP: the in-progress message is persisted incrementally (see
+<a class="" href="../Session_Storage/index.html">Session Storage</a>). Because PHP is authoritative, Mercure being lossy is acceptable - a
+catch-up read reconciles any gap.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="live-delivery-per-user-topic-private-updates">Live delivery: per-user topic, private updates<a href="#live-delivery-per-user-topic-private-updates" class="hash-link" aria-label="Direct link to Live delivery: per-user topic, private updates" title="Direct link to Live delivery: per-user topic, private updates" translate="no">​</a></h2>
+<p>The agent-server does not open a bespoke channel; it reuses Studio's Mercure infrastructure.</p>
+<ul>
+<li class=""><strong>Topic.</strong> Events are published to Studio's existing per-user topic <code>studio-backend-default/user/{userId}</code>. The
+agent-server already knows the HyperMDM <code>userId</code> (it owns the chat session) and threads it into the task.</li>
+<li class=""><strong>Targeting via private updates.</strong> Each publish is a Mercure <strong>private</strong> update. The hub delivers a private update
+only to subscribers whose cookie JWT authorises that exact topic (minted by Studio's <code>ClientTokenService</code> when the
+app loads). A private update to one user's topic therefore reaches <strong>only that user's</strong> tabs/devices -
+cross-tenant isolation is enforced by the hub, not by agent-server code.</li>
+<li class=""><strong>Publisher JWT.</strong> The agent-server signs a publisher JWT (HS256) with the shared <code>MERCURE_JWT_KEY</code>, scoped to the
+URI Template <code>studio-backend-default/user/{id}</code> (least privilege; the hub rejects a trailing-<code>/*</code> glob), and POSTs
+the update to <code>MERCURE_SERVER_URL</code>. No new subscriber auth, cookie, or PHP round-trip. See
+<a class="" href="../Communication_Flows/index.html#credentials-at-a-glance">Communication Flows → Credentials at a glance</a> for how this
+credential relates to the others.</li>
+<li class=""><strong>Envelope.</strong> The payload is <code>{ type: 'agent-chat', sessionId, event }</code>. The bus routes by <code>type</code> to the agent
+handler (<code>AgentMessageHandler</code>, registered on the <code>GlobalMessageBus</code>), which routes by <code>sessionId</code> to the right
+pane and dispatches the matching Redux action. The same user topic also carries Studio's own job / notification
+traffic, distinguished by <code>type</code>.</li>
+<li class=""><strong>Coalescing.</strong> <code>text-delta</code> events are batched (~75 ms window) by a per-turn batcher before publishing, so a fast
+token stream does not fire one hub POST per token; non-delta events flush the buffer and publish immediately. At
+most one publish is in flight per session.</li>
+</ul>
+<p>Mercure carries the entire live channel, so it is required for a normal chat experience - see
+<a class="" href="../../Installation/index.html">Installation</a>.</p>
+<p>If <code>MERCURE_JWT_KEY</code> is unset/blank the publisher degrades to a no-op (with a startup warning) and
+<code>GET /agent-server/api/health</code> reports <code>liveSync: "disabled"</code>. Turns still run and are still persisted, but nothing
+streams: the browser opens the assistant bubble from the POST ack, then renders nothing further until the
+stall-recovery poll re-reads the PHP record. That lands on the poll's SECOND tick, roughly 40 s after the send (a 20 s
+interval and a 20 s silence threshold - see <code>useStallRecovery</code>), and every 20 s after that. Replies therefore arrive
+late instead of token-by-token, and a second tab sees nothing until it re-reads. PHP remains the record either way, so
+no content is lost.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="busy-state-across-tabs">Busy state across tabs<a href="#busy-state-across-tabs" class="hash-link" aria-label="Direct link to Busy state across tabs" title="Direct link to Busy state across tabs" translate="no">​</a></h2>
+<p>Concurrency stays single-writer (a second concurrent send gets HTTP 409). To make that visible everywhere, the
+TaskRunner emits <code>turn-started</code> (first event of a turn, carrying the assistant <code>messageId</code>) and <code>turn-ended</code> (before
+<code>complete</code>). The frontend slice derives a per-session <code>busy</code> flag from these - and from the <code>streaming</code> status of a
+caught-up message - so every tab disables its composer while a turn runs. A live delta keeps the flag fresh; a
+staleness guard prevents a stranded composer if <code>turn-ended</code> is lost.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="reliability-what-guarantees-what">Reliability: what guarantees what<a href="#reliability-what-guarantees-what" class="hash-link" aria-label="Direct link to Reliability: what guarantees what" title="Direct link to Reliability: what guarantees what" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Concern</th><th>Mechanism</th></tr></thead><tbody><tr><td>Live progress on all clients</td><td>Mercure private update → <code>GlobalMessageBus</code> → <code>AgentMessageHandler</code>.</td></tr><tr><td>Open a session (any tab)</td><td><code>GET /sessions/:id</code> catch-up → reconcile by message id → resume live from the bus.</td></tr><tr><td>Gap after a disconnect</td><td>Reconnect-refetch: re-run the catch-up <code>GET</code> on <code>online</code> and on <code>visibilitychange</code> → <code>visible</code>.</td></tr><tr><td>Manual recovery</td><td>A reload button in the chat toolbar re-runs the catch-up <code>GET</code>.</td></tr><tr><td>Overnight / completed-while-away</td><td>Same catch-up path - PHP holds the finished (or still-streaming) message.</td></tr><tr><td>Durability / no data loss</td><td>PHP incremental persistence - the record, independent of any connected client.</td></tr></tbody></table></div>
+<p>What this model does <strong>not</strong> provide (accepted): zero-message-loss live delivery, guaranteed ordering across a
+disconnect, real-time visibility during a multi-minute outage. PHP reconciliation makes all of these
+eventually-correct, which is the intended bar.</p>
+<p>A turn that was interrupted by an agent-server restart mid-turn is <strong>out of scope</strong> to recover; a <code>streaming</code> message
+with no live task is surfaced as interrupted rather than spinning forever.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<p>No new environment variables. The agent-server consumes the existing shared <code>MERCURE_JWT_KEY</code> and <code>MERCURE_SERVER_URL</code>
+(the same secret the hub validates against), forwarded into the <code>agent-server</code> service via docker-compose (see
+<a class="" href="../../Installation/index.html#6-add-the-agent-server-service-to-docker-composeyaml">Installation → Add the Agent-Server Service</a>).
+For the variable reference see <a class="" href="../../Configuration/Environment_Variables/index.html">Configuration → Environment Variables</a>.</p>
+<p>The eval CLI is unaffected by the live layer - it still consumes the POST <code>text/event-stream</code> response and uses the
+seq-based <code>GET /chat/:id/stream</code> reconnect path. It gains browser-observability for free: events it drives are
+published to the user topic like any other turn.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

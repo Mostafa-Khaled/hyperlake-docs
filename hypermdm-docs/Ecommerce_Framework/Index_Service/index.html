@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Index Service — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Index Service</h1></header>
+<p>The Index Service (in combination with the Filter Service) provides functionality for indexing, listing, filtering and
+searching products.</p>
+<p>In the heart of this component is the <em>Product Index</em> - an optimized storage of product data for all kinds of queries. Depending
+on the implementation, the <em>Product Index</em> is stored in a special mysql table, in elasticsearch or any other search
+provider (currently implemented are <a href="http://www.fact-finder.de/" target="_blank" rel="noopener noreferrer" class="">fact finder</a> and <a href="https://www.findologic.com/" target="_blank" rel="noopener noreferrer" class="">findologic</a>).
+These implementations can be configured in <a class="" href="Product_Index_Configuration/Assortment_Tenant_Configuration/index.html">Assortment Tenants</a>.
+The default tenant always uses <code>DefaultMysql</code> as implementation.</p>
+<p>The separate <em>Product Index</em> has several advantages:</p>
+<ul>
+<li class="">It is completely independent from the HyperMDM object structure, only contains needed information and can pre-calculate
+complex data.</li>
+<li class="">It can be optimized without any side effects on HyperMDM for requirements considering filtering, listing and
+searching products.</li>
+<li class="">It supports assortment tenants and therefore allows optimized indices for multiple assortments within one system.</li>
+</ul>
+<p>Based on the <em>Product Index</em> the <a class="" href="Product_List/index.html"><em>Product List</em></a> provides a one stop API for accessing data and
+listing products.</p>
+<p>See the following topics for details:</p>
+<ul>
+<li class=""><a class="" href="Product_Index_Configuration/index.html">Configuration of the <em>product index</em></a></li>
+<li class=""><a class="" href="Product_Index_Configuration/Assortment_Tenant_Configuration/index.html">Assortment Tenant configuration</a></li>
+<li class=""><a class="" href="Product_Index_Configuration/Data_Architecture_and_Indexing_Process/index.html">Data architecture and indexing process</a></li>
+<li class=""><a class="" href="Product_List/index.html">Working with Product Lists</a></li>
+<li class=""><a class="" href="Mockup_Objects/index.html">Mockup Objects in Product List Results</a></li>
+</ul></div></article></div></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Tasks — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Agent Tasks</h1></header>
+<p>A headless agent task delegates a unit of work to an agent from PHP and returns a durable,
+machine-readable result - no browser, no human driving the conversation. The consumer-facing contract
+(the facade, the result envelope, the Copilot step) lives in
+<a class="" href="../../Features/Agent_Tasks/index.html">Features → Agent Tasks</a>. This page explains how the mechanism is
+built, and why it is built that way.</p>
+<p>The whole design is shaped by one hard constraint: the work runs <strong>unattended</strong>, in a <strong>separate Node
+process</strong> (the agent-server) that PHP does not control, over an HTTP channel that can drop a response
+or die mid-turn. Despite that, every task must reach exactly one terminal result a caller can trust.
+Everything below follows from a single rule that makes this possible:</p>
+<blockquote>
+<p><strong>PHP is the system of record. Node is stateless execution. The <code>resultEnvelope</code> on the task row is
+the one fact a caller reads.</strong> Each mechanism on this page exists to defend that rule against a
+specific way execution can fail.</p>
+</blockquote>
+<blockquote>
+<p><strong>Terminology note.</strong> <a class="" href="../../Getting_Started/Concepts/index.html#task">Core Concepts</a> defines <strong>Task</strong> as
+one agent turn run by the in-process task runner - a single response to a single message. An <strong>agent
+task</strong> (capitalized <code>AgentTask</code> in code) is a higher-level concept: a durable, multi-turn unit of
+work with its own database row, status, and final result. A single agent task spans many turns of
+the former kind (its first turn, any nudge turn, any auto-continue turns). This page writes "task
+turn" for the lower-level concept and "agent task" / "task" for the higher-level one.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-moving-parts">The moving parts<a href="#the-moving-parts" class="hash-link" aria-label="Direct link to The moving parts" title="Direct link to The moving parts" translate="no">​</a></h2>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">Consumer (Copilot step | collab bridge | console command | any PHP module)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   |  start() / waitFor() / get() / cancel() / continueTask()</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   v</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">AgentTaskService (PHP facade) ---- AgentTask row: status + resultEnvelope   &lt;-- watchdog</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   |                                (the system of record)                     (hypermdm:maintenance)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   |  POST /agent-server/internal/tasks/:sessionId/turn   (admin token, container network only)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   v</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">agent-server (Node) -- owns the whole turn lifecycle: the pauseAfter auto-continue loop and the</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   finalize nudge. On turn end it POSTs a thin { turnId, turnStatus } report back to PHP.</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   v  (from inside the turn, over MCP)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">finalize_task  -- validates outputSchema, commits the terminal envelope directly</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">propose_* / direct-write tools -- the actual work (see Features → Autonomy and HITL)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   v  on any terminal transition</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">AgentTaskCompletedEvent (inline, synchronous, advisory) -&gt; consumers notify / reassign / offload</span><br></span></code></pre></div></div>
+<p>Two invariants fall straight out of the governing rule, and both recur throughout the walkthrough:</p>
+<ul>
+<li class=""><strong>A caller only ever reads the record.</strong> <code>waitFor()</code> polls the task's <code>status</code> column. It holds no
+connection to the agent-server and never depends on the completion event, a messenger worker, or the
+maintenance cron for the happy path. If the caller walks away, the run is unaffected.</li>
+<li class=""><strong>Terminal status is written exactly one way.</strong> Up to four writers try to finish a task - the agent,
+the turn report, a caller's <code>cancel()</code>, and the watchdog. They all go through the same
+compare-and-swap (CAS), so exactly one wins and the rest are no-ops. This is what makes an unattended,
+racy lifecycle safe, and it reappears at every stage below.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-life-of-a-task">The life of a task<a href="#the-life-of-a-task" class="hash-link" aria-label="Direct link to The life of a task" title="Direct link to The life of a task" translate="no">​</a></h2>
+<p>The mechanism reads best as the path one task travels: it is <strong>started</strong> and handed off, <strong>run</strong> on
+Node, then <strong>finished</strong> in one of two ways - with the <strong>watchdog</strong> as the backstop for when finishing
+never happens, and a final <strong>event</strong> to announce it. A field-by-field reference for the <code>AgentTask</code>
+row is at the <a href="#agenttask-field-reference" class="">end of this page</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="starting-a-task">Starting a task<a href="#starting-a-task" class="hash-link" aria-label="Direct link to Starting a task" title="Direct link to Starting a task" translate="no">​</a></h3>
+<p><code>AgentTaskService::start()</code> is the only synchronous step, and it does just enough to hand the work off
+before returning - in milliseconds, not the duration of the run:</p>
+<ol>
+<li class=""><strong>Create the session</strong> with <code>type = 'task'</code>, optionally carrying the caller-supplied <code>origin</code> label
+(see <a href="#origin-a-provenance-label-on-the-session" class="">Origin: a provenance label on the session</a>), and mint
+its MCP token. A task runs on an ordinary chat session; the <code>type</code> flag is what later earns it
+task-specific access rules and tool overrides.</li>
+<li class=""><strong>Persist the <code>AgentTask</code> row as <code>queued</code>.</strong> This is the pre-dispatch instant only - there is no
+queue in this feature. <code>queued</code> exists so a durable row precedes the first dispatch.</li>
+<li class=""><strong>Compose the first message</strong> from the caller's <code>instructions</code>, the <code>elements</code> in scope, and the
+fixed task contract.</li>
+<li class=""><strong>Dispatch the first turn</strong>, then CAS <code>queued -&gt; running</code> and record the dispatched turn's id as
+<code>lastTurnId</code> - the key every later report is matched against.</li>
+</ol>
+<p>Two things are fixed here for the life of the task and never change: <strong>who the agent acts as and who
+may review it</strong> (see <a href="#identity-and-delegated-access" class="">Identity and delegated access</a>), and the run's
+<strong>budget</strong> - its deadline and auto-continue allowance. After the CAS to <code>running</code>, PHP has handed off.
+It will not touch the task again until something reports back or the watchdog steps in.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="origin-a-provenance-label-on-the-session">Origin: a provenance label on the session<a href="#origin-a-provenance-label-on-the-session" class="hash-link" aria-label="Direct link to Origin: a provenance label on the session" title="Direct link to Origin: a provenance label on the session" translate="no">​</a></h3>
+<p><code>AgentTaskRequest::$origin</code> is an optional, free-form string a caller supplies when starting a task - a
+human-readable hint for where the task came from (for example <code>copilot-importProducts</code>). Before it reaches
+storage, <code>AgentTaskService::createAndDispatch()</code> normalizes it: the value is trimmed, an empty string
+becomes <code>null</code>, and anything longer than 190 characters is truncated. The normalized value is written onto
+the session's <code>origin</code> column, alongside <code>type = 'task'</code>, at creation; <code>AgentSessionService::create()</code>
+defaults <code>type</code> to <code>'chat'</code> when no caller supplies one.</p>
+<p>A task started with no <code>origin</code> gets <code>null</code>, and its conversation renders no origin badge in the HyperMDM
+Studio chat sidebar's Tasks view. When <code>origin</code> is set, it renders as a badge on the task's conversation,
+with a tooltip carrying the full value, since some provenance labels (automation-action names, in
+particular) run long. <code>origin</code> is a column on every session, chat or task, nullable and generic, but
+nothing in the bundle sets it on a chat session today. The <code>hypermdm-agent:task:run</code> console command exposes
+the same field as <code>--origin</code>. See
+<a class="" href="../../Features/Agent_Tasks/index.html#the-hypermdm-agent-taskrun-console-command">Features → Agent Tasks</a>.</p>
+<p><code>origin</code> is deliberately <strong>not</strong> derived from the task's <code>initiator</code> (see
+<a href="#who-may-open-a-task-session" class="">Who may open a task session</a> below), even though both often start with the
+same coarse value (<code>copilot</code>, <code>cli</code>, …):</p>
+<ul>
+<li class=""><strong><code>initiator</code> is a security-routing key</strong> with a closed value set. <code>TaskSessionAccessRegistry</code> routes the
+session's access check to the <code>TaskSessionAccessResolverInterface</code> tagged with that exact value. It is
+read by the access-control path only, and is never rendered to a user.</li>
+<li class=""><strong><code>origin</code> is a display-only provenance label</strong> with no bearing on access control, and it belongs to the
+session rather than to any single <code>AgentTask</code> row. <code>continueTask()</code> can add a second <code>AgentTask</code> row to
+the same session, so a task-row label would need a which-row-wins rule for a session with two task rows;
+a session-level label has exactly one value regardless of how many tasks ran on it.</li>
+</ul>
+<p>Keeping the two apart also keeps the session list cheap to query: it reads <code>bundle_agent_sessions</code> directly
+for every paginated page, so a task-derived badge would otherwise need a join into <code>bundle_agent_tasks</code> on
+every page instead of a plain column read.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="running-the-turn">Running the turn<a href="#running-the-turn" class="hash-link" aria-label="Direct link to Running the turn" title="Direct link to Running the turn" translate="no">​</a></h3>
+<p>Execution happens entirely on the agent-server. PHP reaches it through a single internal endpoint,
+<code>POST /agent-server/internal/tasks/{sessionId}/turn</code>, whose design reflects that this is a privileged,
+retryable hand-off:</p>
+<ul>
+<li class=""><strong>Guarded.</strong> It requires the shared admin bearer token and rejects any session whose <code>type</code> is not
+<code>'task'</code>, so even a leaked token cannot inject a turn into a regular chat session. The token is a
+secondary control; the primary one is network containment
+(<a href="#securing-the-internal-endpoint" class="">Securing the internal endpoint</a>).</li>
+<li class=""><strong>Idempotent.</strong> The agent-server tracks the last accepted <code>messageId</code> per session. A retried dispatch
+of the same message replays a <code>200</code> instead of starting a second turn; a dispatch with a <em>different</em>
+id while one is in flight is rejected with <code>409</code> rather than racing it. A dropped response on
+<code>start()</code> is therefore safe to retry.</li>
+</ul>
+<p>The dispatch carries a small <code>taskContext</code>, and this is where "unattended" becomes concrete:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{ "unattended": true, "deadlineAt": 1735900000000, "remainingAutoContinues": 5 }</span><br></span></code></pre></div></div>
+<p>Because no human is watching, the <code>ask_user</code> tool is removed and the automatic <code>pauseAfter</code>
+"continue or stop" checkpoint answers <strong>Continue</strong> on its own while the budget holds
+(<code>remainingAutoContinues &gt; 0</code> and the deadline not passed). When the budget runs out it answers
+<strong>Stop</strong>, ending the turn. (Every task turn also gets two fixed tool overrides - <code>finalize_task</code>
+injected, <code>ask_user</code> excluded - detailed in
+<a class="" href="../Tool_Security/index.html#task-session-tool-overrides">Tool Security</a>.)</p>
+<p>From dispatch onward, <strong>Node owns the entire turn lifecycle</strong> (<code>task-turn-lifecycle.ts</code>) - the
+auto-continue loop and the finalize nudge described next. PHP is out of the loop during execution and
+learns what happened only when Node reports back, or when the watchdog infers it.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="finishing-how-a-task-reaches-its-result">Finishing: how a task reaches its result<a href="#finishing-how-a-task-reaches-its-result" class="hash-link" aria-label="Direct link to Finishing: how a task reaches its result" title="Direct link to Finishing: how a task reaches its result" translate="no">​</a></h3>
+<p>A turn ends in one of two ways, and each settles through a different path.</p>
+<p><strong>The agent finalizes - the happy path.</strong> The agent calls the <code>finalize_task</code> MCP tool, which builds
+the result envelope and CASes the task from <code>running</code> straight to terminal - <strong>mid-turn, before the
+turn even ends</strong>. Committing the result the instant it is known is what makes it durable: if the turn's
+tail then crashes or its HTTP response is lost, the outcome is already recorded. A second
+<code>finalize_task</code> call finds no non-terminal task and is rejected - the first finalize wins.</p>
+<p><strong>The turn ends without finalizing.</strong> An agent can answer in prose and simply forget to finalize. Node
+handles that before involving PHP: it runs <strong>one</strong> leashed nudge turn on the same session, its
+auto-continue budget zeroed so it can only end in <strong>Stop</strong>, carrying a plain instruction to call
+<code>finalize_task</code> now. If the agent finalizes during the nudge, that is just the happy path a beat later.
+If it still does not, Node reports the <strong>original</strong> turn's id back to PHP with a <code>turnStatus</code>, and PHP
+settles the outcome the agent did not settle itself:</p>
+<div class="table-container"><table><thead><tr><th>Node reports <code>turnStatus</code></th><th>PHP settles the task as</th></tr></thead><tbody><tr><td><code>completed</code> - ran, but never called <code>finalize_task</code>, even after the nudge</td><td><code>failed(not_finalized)</code></td></tr><tr><td><code>failed</code> - an SDK/turn-level error</td><td><code>failed(agent_error)</code></td></tr><tr><td><code>cancelled</code></td><td><code>cancelled</code></td></tr></tbody></table></div>
+<p>A report whose <code>turnId</code> does not match the task's <code>lastTurnId</code>, or that targets an already-terminal
+task, is stale and does nothing. (If dispatching the nudge itself fails - a gone adapter session, say -
+Node reports the turn unfinalized directly, so PHP still settles rather than waiting on the watchdog.)</p>
+<p>Both paths - plus <code>cancel()</code> and the watchdog - converge on the <strong>same compare-and-swap</strong> on <code>status</code>:
+a single <code>UPDATE ... WHERE status IN (...)</code> on the raw DBAL connection that reports whether it matched
+a row. That is why four possible finishers can never double-settle: whoever wins the CAS writes the
+envelope, and the losers no-op. The primitive deliberately does <em>not</em> <code>clear()</code> the <code>EntityManager</code>,
+because it runs in contexts - notably the Copilot step - that hold unrelated entities (a Generic
+Execution Engine <code>JobRun</code>) in the same unit of work.</p>
+<p>Nothing on this happy path touches a messenger transport or the maintenance cron. <code>finalize_task</code> and
+the turn report both run inline in a php-fpm request, and <code>waitFor()</code> sees the result by polling the
+column.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-watchdog-guaranteeing-termination">The watchdog: guaranteeing termination<a href="#the-watchdog-guaranteeing-termination" class="hash-link" aria-label="Direct link to The watchdog: guaranteeing termination" title="Direct link to The watchdog: guaranteeing termination" translate="no">​</a></h3>
+<p>Inline settlement covers every case where Node lives long enough to report back. But Node can crash,
+its report can be dropped, or a turn can run past its deadline - and then no inline settlement ever
+arrives. <code>AgentTaskWatchdogTask</code>, run from <code>hypermdm:maintenance</code>, is the backstop that guarantees
+<em>every</em> task still reaches terminal. It makes three passes, each task settled in its own try/catch so
+one bad row never aborts the batch:</p>
+<div class="table-container"><table><thead><tr><th>Pass</th><th>Trigger</th><th>Action</th></tr></thead><tbody><tr><td><strong>Timeout</strong></td><td><code>deadlineAt</code> has passed on a <code>queued</code>/<code>running</code> task</td><td>best-effort cancel the live turn, then settle <code>failed(timeout)</code></td></tr><tr><td><strong>Orphan detection</strong></td><td>a <code>running</code> task has shown no sign of life for 10 minutes</td><td>derive the outcome from the session's last message (below)</td></tr><tr><td><strong>Retention</strong></td><td>a terminal task finished more than <code>retention_days</code> ago (default 30)</td><td>delete the session, then the task row (max 100 per run)</td></tr></tbody></table></div>
+<p><strong>How "no sign of life" is measured.</strong> A task is stale when <code>max(session.lastActivity, task.createdAt)</code>
+is older than the 10-minute cutoff. Every message write - including the agent-server's debounced
+streaming flushes - bumps <code>lastActivity</code>, so a genuinely long-running turn keeps refreshing it and is
+never mistaken for orphaned.</p>
+<p><strong>How an orphaned outcome is derived.</strong> A finalized turn always commits its own status, so a stale
+<code>running</code> task must have had a turn that ended without one. The watchdog reads the session's last
+assistant message to decide what happened:</p>
+<ul>
+<li class=""><code>complete</code> -&gt; <code>failed(not_finalized)</code> - the turn ended but nothing was recorded (for example a lost
+report).</li>
+<li class=""><code>error</code> -&gt; <code>failed(agent_error)</code>.</li>
+<li class=""><code>streaming</code> -&gt; <code>failed(orphaned)</code> - interrupted mid-flight, commonly an agent-server restart.</li>
+<li class="">none yet -&gt; left alone as ambiguous; <code>deadlineAt</code> stays the backstop.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="announcing-completion">Announcing completion<a href="#announcing-completion" class="hash-link" aria-label="Direct link to Announcing completion" title="Direct link to Announcing completion" translate="no">​</a></h3>
+<p>Whichever finisher wins the CAS - agent, turn report, <code>cancel()</code>, or watchdog - a single
+<code>AgentTaskCompletedEvent</code> fires <strong>inline and synchronously, in the same request</strong>, each dispatch site
+wrapped in its own try/catch so a throwing listener can never corrupt the already-durable settlement.
+The event is advisory fan-out only: consumers use it for follow-up (notify a user, reassign a collab
+thread, enqueue work). Per the governing rule, no caller may depend on a listener having run when it
+observes the task as terminal - anything a caller needs must already be in the envelope.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="identity-and-delegated-access">Identity and delegated access<a href="#identity-and-delegated-access" class="hash-link" aria-label="Direct link to Identity and delegated access" title="Direct link to Identity and delegated access" translate="no">​</a></h2>
+<p>A task carries two distinct identities, and keeping them apart is a design goal, not an accident:</p>
+<ul>
+<li class=""><strong>The acting user</strong> (<code>actingUserId</code>) is who the agent <em>operates as</em> - the agent configuration's
+<code>executionUser</code> if set, otherwise the caller-supplied <code>actingUserId</code>. A task with neither fails
+closed at <code>start()</code> (<code>InvalidTaskRequestException</code>), mirroring <code>EffectiveUserResolver</code>'s
+no-silent-fallback rule (<a class="" href="../Authentication/index.html#execution-user-resolution">Authentication</a>). Every
+tool call and permission check inside the turns runs as this identity, and the MCP token is minted
+for it - never for the reviewer.</li>
+<li class=""><strong>The designated user</strong> (<code>designatedUserId</code>) is optional and is who <em>reviews</em> the result. It feeds
+the default access resolver and sidebar discovery (below). When omitted, session ownership - and so
+who can review the proposals in HyperMDM Studio - falls back to the acting user.</li>
+</ul>
+<p>Separating them means an agent can run with elevated privileges while a proposal it raises is only ever
+<em>applied</em> within a human reviewer's own, narrower permissions.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="who-may-open-a-task-session">Who may open a task session<a href="#who-may-open-a-task-session" class="hash-link" aria-label="Direct link to Who may open a task session" title="Direct link to Who may open a task session" translate="no">​</a></h3>
+<p>The bundle does not model roles or multiple assignees. Instead, access to a task-type session is
+answered by a pluggable resolver, keyed by the task's <code>initiator</code>:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">interface</span><span class="token plain"> </span><span class="token class-name-definition class-name">TaskSessionAccessResolverInterface</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">canAccess</span><span class="token punctuation" style="color:#393A34">(</span><span class="token class-name type-declaration">TaskSessionRef</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$ref</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token keyword type-hint" style="color:#00009f">int</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$userId</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword return-type" style="color:#00009f">bool</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">// {sessionId, initiator, initiatorContext}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p><code>TaskSessionAccessRegistry</code> routes the check to the resolver tagged for that <code>initiator</code>, falling back
+to <code>DefaultTaskSessionAccessResolver</code> when none is registered:</p>
+<ul>
+<li class=""><strong>Default resolver:</strong> <code>canAccess = userId === designatedUserId || userId === actingUserId</code>.</li>
+<li class=""><strong>Integration-specific resolvers</strong> (a collab bridge tagged with its own initiator, say) answer from
+their own ownership data - a thread's participant list, a role model - without the bundle knowing
+anything about it. No mirroring, no sync.</li>
+<li class="">A resolver that throws <strong>denies</strong> access rather than propagating, so a bug in one initiator's resolver
+cannot become an information-disclosure or outage for every other task session.</li>
+</ul>
+<p><code>SessionAccessVoter</code> ties this to the rest of Studio: a <code>'chat'</code> session keeps its ordinary owner
+check; a <code>'task'</code> session delegates entirely to the registry, reading <code>initiator</code>/<code>initiatorContext</code>
+from the latest <code>AgentTask</code> row. This is the same check that gates minting a session's MCP token, so a
+human can never act beyond what the resolver grants - and every human action still runs under that
+human's own identity. Only the task's automated turns run as the acting user.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="discovery">Discovery<a href="#discovery" class="hash-link" aria-label="Direct link to Discovery" title="Direct link to Discovery" translate="no">​</a></h3>
+<p>A user's HyperMDM Studio chat sidebar lists task sessions where <code>designatedUserId</code> matches their id, under
+its <strong>Tasks</strong> view - a Chats / Tasks switch above the sidebar's search field selects which <code>type</code> the
+paginated session list is filtered to. See
+<a class="" href="../Session_Storage/index.html#session-type-and-origin">Session Storage → Session type and origin</a>. The backing
+query is <code>AgentSessionRepository::findVisibleToUserPaginated()</code>, filtered to <code>type = 'task'</code> for that view.
+A task session with no <code>designatedUserId</code> - routed through an integration-specific resolver, such as a collab
+thread - is not listed there; the owning integration's own UI is where a participant opens it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="continuation">Continuation<a href="#continuation" class="hash-link" aria-label="Direct link to Continuation" title="Direct link to Continuation" translate="no">​</a></h2>
+<p><code>continueTask(previousTaskId, instructions, ...)</code> starts a <strong>new</strong> <code>AgentTask</code> on the <strong>existing
+session</strong> of a prior, now-terminal task. It asserts the previous task is terminal and its session has
+no other non-terminal task in flight, re-mints the session's MCP token (the caller holds no live token
+for a session it did not just create), and reuses the previous task's <code>agentName</code>, <code>actingUserId</code>, and
+<code>designatedUserId</code>. The earlier session's context - transcript and any proposals already raised -
+carries forward; only <code>instructions</code> (and, optionally, <code>deadlineMinutes</code> / <code>maxAutoContinues</code> /
+<code>outputSchema</code>) come from the new call. <code>outputSchema</code> is supplied by this call or omitted; it is
+never inherited from the previous task, so each continuation keeps its own explicit finalize-output
+contract. <code>elements</code> and <code>initiatorContext</code> are neither re-specified nor inherited. The caller only
+ever holds task ids; the <code>sessionId</code> stays internal to the facade.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-session-behind-a-task-and-why-the-result-outlives-it">The session behind a task, and why the result outlives it<a href="#the-session-behind-a-task-and-why-the-result-outlives-it" class="hash-link" aria-label="Direct link to The session behind a task, and why the result outlives it" title="Direct link to The session behind a task, and why the result outlives it" translate="no">​</a></h2>
+<p><code>AgentSession.type</code> (<code>'chat'</code> by default, <code>'task'</code> for a session created by <code>start()</code>) and
+<code>AgentSession.origin</code> (the nullable provenance label described
+<a href="#origin-a-provenance-label-on-the-session" class="">above</a>) are the only two schema additions to the sessions
+table for this feature. In every other respect a task session is an ordinary session: deleting it uses the
+same <code>AgentSessionService::deleteSession()</code> path (which revokes the MCP token) when a user removes it, or
+<code>deleteSessionAsSystem()</code> when the retention watchdog reaps it.</p>
+<p><code>bundle_agent_tasks.session_id</code> deliberately carries <strong>no foreign key</strong> to <code>bundle_agent_sessions.id</code>;
+it is a plain indexed column. <code>get()</code> and <code>waitFor()</code> read the <code>AgentTask</code> row directly and never join
+to the session, so a finalized result stays retrievable by <code>taskId</code> even after the session is gone -
+whether the retention watchdog reaped it (session first, then task) or a reviewer deleted it. A caller
+holding a <code>taskId</code> can always fetch its result, without caring whether the transcript still exists.
+This is the record-vs-execution split at the storage layer: the durable outcome is decoupled from the
+disposable conversation that produced it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="securing-the-internal-endpoint">Securing the internal endpoint<a href="#securing-the-internal-endpoint" class="hash-link" aria-label="Direct link to Securing the internal endpoint" title="Direct link to Securing the internal endpoint" translate="no">​</a></h2>
+<p><code>POST /agent-server/internal/tasks/{sessionId}/turn</code> and <code>.../cancel</code> are guarded only by the shared
+admin bearer token - the same token that gates config reload, which can itself define arbitrary
+<code>executionUser</code> agents. A leaked admin token therefore means injecting instructions into sessions that
+run under agent privileges: effectively full control of the agent subsystem. Token secrecy is a
+secondary control. The primary control is <strong>network containment</strong>.</p>
+<blockquote>
+<p><strong>Hard deployment rule.</strong> <code>/agent-server/internal/*</code> must never be reverse-proxied to the public
+edge. The nginx configuration in
+<a class="" href="../../Installation/index.html#7-configure-the-nginx-proxy">Installation → Configure the nginx proxy</a> proxies
+only <code>^~ /agent-server/api/</code>; there is no location block for <code>/agent-server/internal/</code>, and none
+should ever be added. PHP reaches these endpoints directly on the container network
+(<code>http://agent-server:3032/agent-server/internal/...</code>); they are not meant to be reachable from
+outside it at all, with or without the token.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="agenttask-field-reference"><code>AgentTask</code> field reference<a href="#agenttask-field-reference" class="hash-link" aria-label="Direct link to agenttask-field-reference" title="Direct link to agenttask-field-reference" translate="no">​</a></h2>
+<p>The durable record is the <code>AgentTask</code> entity (Doctrine, table <code>bundle_agent_tasks</code>). Its status moves
+<code>queued -&gt; running -&gt; succeeded | failed | cancelled</code>: <code>queued</code> is the pre-dispatch instant, <code>running</code>
+is the only non-terminal state after dispatch, and the three terminal states are only ever entered
+through the CAS described in <a href="#finishing-how-a-task-reaches-its-result" class="">Finishing</a>.</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Purpose</th></tr></thead><tbody><tr><td><code>id</code>, <code>sessionId</code></td><td>Task handle, and the chat session (n:1) it runs on. <code>continueTask()</code> starts a new task on an existing session; at most one non-terminal task per session at a time.</td></tr><tr><td><code>status</code></td><td><code>queued -&gt; running -&gt; succeeded / failed / cancelled</code>.</td></tr><tr><td><code>initiator</code>, <code>initiatorContext</code></td><td>Consumer tag (<code>copilot</code>, <code>cli</code>, an integration's own name) plus correlation data (e.g. <code>{jobRunId}</code>); also routes the <a href="#who-may-open-a-task-session" class="">access resolver</a>. This is a security-routing key with a closed value set, not the free-form <code>origin</code> label described <a href="#origin-a-provenance-label-on-the-session" class="">above</a> - that field lives on the session, not on this row.</td></tr><tr><td><code>agentName</code>, <code>instructions</code>, <code>elements</code></td><td>The task's declared inputs, so <code>get()</code> is self-describing without loading the transcript.</td></tr><tr><td><code>outputSchema</code></td><td>Optional caller-supplied JSON Schema, validated inside <code>finalize_task</code>.</td></tr><tr><td><code>designatedUserId</code></td><td>Optional reviewer id; input to the default access resolver and to sidebar discovery.</td></tr><tr><td><code>actingUserId</code></td><td>The identity the agent operates as; required, resolved fail-closed at <code>start()</code>.</td></tr><tr><td><code>resultEnvelope</code></td><td>The frozen result, written once at settlement.</td></tr><tr><td><code>maxAutoContinues</code>, <code>deadlineAt</code></td><td>The run budget passed to the agent-server; <code>deadlineAt</code> also fires the watchdog's timeout pass.</td></tr><tr><td><code>validationFailures</code></td><td>In-turn <code>outputSchema</code> retry counter inside <code>finalize_task</code> (capped at 3).</td></tr><tr><td><code>lastTurnId</code></td><td>The dispatched turn's message id; the idempotency key a turn report is matched against.</td></tr><tr><td><code>createdAt</code>, <code>finishedAt</code></td><td>Lifecycle timestamps; <code>createdAt</code> also feeds the watchdog's staleness basis alongside the session's <code>lastActivity</code>.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-docs">Related docs<a href="#related-docs" class="hash-link" aria-label="Direct link to Related docs" title="Direct link to Related docs" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Features/Agent_Tasks/index.html">Features → Agent Tasks</a> - the consumer-facing facade, result
+envelope, and Copilot automation-action step.</li>
+<li class=""><a class="" href="../Tool_Security/index.html#task-session-tool-overrides">Tool Security → Task-session tool overrides</a> - the
+<code>hypermdm-task</code> MCP group and the <code>ask_user</code> exclusion.</li>
+<li class=""><a class="" href="../Session_Storage/index.html#session-type-and-origin">Session Storage → Session type and origin</a> - the
+<code>type</code>/<code>origin</code> columns from the session's own point of view, and the <code>GET /sessions</code> <code>type</code> filter.</li>
+<li class=""><a class="" href="../Authentication/index.html">Authentication</a> - the admin bearer token and execution-user resolution this
+page builds on.</li>
+<li class=""><a class="" href="../Realtime_Sync/index.html">Real-time Sync</a> - task-session turns publish the same Mercure live events as
+any other chat turn, so a session viewer watching in HyperMDM Studio sees them stream in.</li>
+<li class=""><a class="" href="../../Configuration/Agents/index.html#agent-tasks">Configuration → Agents → Agent tasks</a> - the
+<code>hypermdm_agent.tasks.*</code> limits.</li>
+<li class=""><a class="" href="../../Troubleshooting/index.html#agent-tasks">Troubleshooting</a> - <code>error.reason</code> values and their
+first-thing-to-check.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

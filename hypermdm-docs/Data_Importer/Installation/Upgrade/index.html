@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php--symfony-version-support">PHP &amp; Symfony Version Support<a href="#php--symfony-version-support" class="hash-link" aria-label="Direct link to PHP &amp; Symfony Version Support" title="Direct link to PHP &amp; Symfony Version Support" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-admin-classic--extjs-ui">Removed Admin Classic / ExtJS UI<a href="#removed-admin-classic--extjs-ui" class="hash-link" aria-label="Direct link to Removed Admin Classic / ExtJS UI" title="Direct link to Removed Admin Classic / ExtJS UI" translate="no">​</a></h3>
+<ul>
+<li class="">Removed the <code>hypermdm/admin-ui-classic-bundle</code> dependency. The bundle no longer implements
+<code>HyperMDMBundleAdminClassicInterface</code> and no longer uses <code>BundleAdminClassicTrait</code>.</li>
+<li class="">Removed all ExtJS-based JavaScript and CSS paths. <code>getCssPaths()</code> and <code>getJsPaths()</code> were removed from
+<code>HyperMDMDataImporterBundle</code>.</li>
+<li class=""><code>HyperMDMAdminBundle</code> is no longer registered as a dependent bundle.</li>
+<li class="">The configuration panel is now implemented in HyperMDM Studio.</li>
+<li class=""><code>HyperMDM\Bundle\AdminBundle\Helper\QueryParams</code> is no longer used. It was replaced by
+<code>DataTypeServiceInterface::extractSortingSettings()</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-studio">HyperMDM Studio<a href="#hypermdm-studio" class="hash-link" aria-label="Direct link to Pimcore Studio" title="Direct link to Pimcore Studio" translate="no">​</a></h3>
+<ul>
+<li class="">Added the HyperMDM Studio implementation of the Data Importer configuration panel, with the tabs Data Setup,
+Execution and Import Logs.</li>
+<li class="">Studio frontend assets are now shipped with the bundle.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="namespace-changes">Namespace Changes<a href="#namespace-changes" class="hash-link" aria-label="Direct link to Namespace Changes" title="Direct link to Namespace Changes" translate="no">​</a></h3>
+<ul>
+<li class="">Changed namespace from <code>HyperMDM\Log\ApplicationLogger</code> to <code>HyperMDM\Bundle\ApplicationLoggerBundle\ApplicationLogger</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="messenger-transport-configuration">Messenger Transport Configuration<a href="#messenger-transport-configuration" class="hash-link" aria-label="Direct link to Messenger Transport Configuration" title="Direct link to Messenger Transport Configuration" translate="no">​</a></h3>
+<ul>
+<li class="">The messenger transport DSN is configurable via the <code>%hypermdm.messenger.transport_dsn_prefix%</code> container parameter
+instead of being hardcoded to <code>doctrine://default</code>. The installer can now wire the transport DSN from environment
+variables such as <code>HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="interface--return-type-changes">Interface &amp; Return Type Changes<a href="#interface--return-type-changes" class="hash-link" aria-label="Direct link to Interface &amp; Return Type Changes" title="Direct link to Interface &amp; Return Type Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>DataTypeServiceInterface</code>: added the method <code>extractSortingSettings(?string $sort): array</code>. Custom implementations
+of the interface must implement it.</li>
+<li class=""><code>CronValidationResponse::isValid(): bool</code> renamed to <code>CronValidationResponse::getIsValid(): bool</code>.</li>
+<li class=""><code>ImportProgressResponse::isRunning(): bool</code> renamed to <code>ImportProgressResponse::getIsRunning(): bool</code>.</li>
+<li class=""><code>HyperMDMDataImporterBundle::getInstaller()</code> return type changed from <code>?InstallerInterface</code> to
+<code>InstallerInterface</code> (non-nullable).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="class-visibility--finalization">Class Visibility &amp; Finalization<a href="#class-visibility--finalization" class="hash-link" aria-label="Direct link to Class Visibility &amp; Finalization" title="Direct link to Class Visibility &amp; Finalization" translate="no">​</a></h3>
+<ul>
+<li class="">Many classes have been marked <code>final</code> and/or <code>@internal</code>. Custom subclasses of these classes are no longer supported:<!-- -->
+<ul>
+<li class=""><code>CronScheduler</code>, <code>JobScheduler</code>, <code>SchedulerFactory</code>: marked <code>final</code> and <code>@internal</code></li>
+<li class=""><code>PreviewData</code>: marked <code>final</code> and <code>@internal</code></li>
+<li class=""><code>HyperMDMDataImporterBundle</code>: marked <code>final</code></li>
+<li class="">Various exception classes (<code>InvalidScheduleException</code>, etc.): marked <code>final</code></li>
+</ul>
+</li>
+<li class="">Several <code>protected</code> methods on final classes were changed to <code>private</code>. Subclasses overriding them have to be
+refactored.</li>
+<li class=""><code>ConfigDataObjectController::saveAction()</code> return type changed from <code>?JsonResponse</code> to <code>JsonResponse</code> (non-nullable).</li>
+<li class=""><code>Installer::getLastMigrationVersionClassName()</code> return type changed from <code>?string</code> to <code>string</code> (non-nullable).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="doctrine">Doctrine<a href="#doctrine" class="hash-link" aria-label="Direct link to Doctrine" title="Direct link to Doctrine" translate="no">​</a></h3>
+<ul>
+<li class="">Removed Doctrine enum mapping from the bundle configuration.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="dependency-updates">Dependency Updates<a href="#dependency-updates" class="hash-link" aria-label="Direct link to Dependency Updates" title="Direct link to Dependency Updates" translate="no">​</a></h3>
+<ul>
+<li class=""><code>phpoffice/phpspreadsheet</code> version requirement bumped to <code>^4.3 || ^5.1</code> (dropped <code>^2.2 || ^3.3</code>).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="api-schema-changes">API Schema Changes<a href="#api-schema-changes" class="hash-link" aria-label="Direct link to API Schema Changes" title="Direct link to API Schema Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>UnitDataResponse</code>: the schema property was renamed from <code>UnitList</code> to <code>unitList</code>. Update clients consuming this
+response.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="update-to-version-111">Update to Version 1.11<a href="#update-to-version-111" class="hash-link" aria-label="Direct link to Update to Version 1.11" title="Direct link to Update to Version 1.11" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general">General<a href="#general" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<ul>
+<li class="">Added support of <code>doctrine/dbal</code> <code>v4</code>, dropped support of <code>doctrine/dbal</code> <code>v2</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="update-to-version-110">Update to Version 1.10<a href="#update-to-version-110" class="hash-link" aria-label="Direct link to Update to Version 1.10" title="Direct link to Update to Version 1.10" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-1">General<a href="#general-1" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<ul>
+<li class="">Dropped support of HyperMDM 10, bumped minimum requirement of <code>hypermdm/hypermdm</code> to <code>^11.2</code>.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HeadTitle — HyperMDM</title>
+<link rel="stylesheet" href="../../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>HeadTitle Templating Extension</h1></header>
+<blockquote>
+<p>The HeadTitle templating extension extends <a class="" href="../Placeholder/index.html">Placeholder Templating Extension</a></p>
+</blockquote>
+<p>The HTML <code>&lt;title&gt;</code> element is used to provide a title for an HTML document.
+The HeadTitle helper allows you to programmatically create and store the title for later retrieval and output.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="basic-usage">Basic Usage<a href="#basic-usage" class="hash-link" aria-label="Direct link to Basic Usage" title="Direct link to Basic Usage" translate="no">​</a></h3>
+<p>You may specify a title tag at any time.
+A typical usage would have you setting title segments for each level of depth in your application: site,
+controller, action, and potentially resource.</p>
+<div class="language-twig codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-twig codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter punctuation" style="color:#393A34">{%</span><span class="token plain"> </span><span class="token tag-name keyword" style="color:#00009f">do</span><span class="token plain"> hypermdm_head_title</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">My first part</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">%</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token operator" style="color:#393A34">%</span><span class="token plain"> do hypermdm_head_title</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">The 2nd part</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">%</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"># setting the site </span><span class="token operator" style="color:#393A34">in</span><span class="token plain"> the title; possibly </span><span class="token operator" style="color:#393A34">in</span><span class="token plain"> the layout script</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> #</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token operator" style="color:#393A34">%</span><span class="token plain"> do hypermdm_head_title</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">My HyperMDM Website</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">%</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"># setting a separator string for segments</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> #</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token operator" style="color:#393A34">%</span><span class="token plain"> do hypermdm_head_title</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">setSeparator</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c"> / </span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token delimiter punctuation" style="color:#393A34">%}</span><br></span></code></pre></div></div>
+<p>When you're finally ready to render the title in your layout script, simply echo the helper:</p>
+<div class="language-twig codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-twig codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter punctuation" style="color:#393A34">{{</span><span class="token plain"> hypermdm_head_title</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"># renders My first part </span><span class="token operator" style="color:#393A34">/</span><span class="token plain"> The </span><span class="token number" style="color:#36acaa">2</span><span class="token plain">nd part </span><span class="token operator" style="color:#393A34">/</span><span class="token plain"> My HyperMDM Website #</span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../../search.js"></script>
+</body>
+</html>

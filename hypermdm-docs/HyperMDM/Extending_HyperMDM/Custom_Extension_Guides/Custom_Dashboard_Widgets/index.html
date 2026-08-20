@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Custom Dashboard Widgets — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Custom Dashboard Widgets</h1></header>
+<blockquote>
+<p><strong>Working example:</strong> The
+<a href="https://github.com/pimcore/studio-example-bundle" target="_blank" rel="noopener noreferrer" class="">studio-example-bundle</a>
+contains a complete <code>top_assets</code> custom dashboard widget covering
+all steps below.</p>
+</blockquote>
+<p>Adding a custom widget type to HyperMDM Studio Dashboards (provided
+by the <a href="https://github.com/pimcore/studio-dashboards-bundle" target="_blank" rel="noopener noreferrer" class="">Studio Dashboards Bundle</a>)
+requires registration across two layers:</p>
+<ul>
+<li class=""><strong>Studio Dashboards Backend</strong> — widget type config, schema,
+config repository, config hydrator, data resolver</li>
+<li class=""><strong>Studio UI</strong> — a widget type definition registered in the
+dashboards widget-type registry, and a React component that
+renders the widget content</li>
+</ul>
+<p>The widget type string (e.g. <code>'top_assets'</code>) is the common
+identifier that ties both layers together — it must match between
+the <code>hypermdm_studio_dashboards.widget_types</code> entry, the
+<code>getSupportedWidgetType()</code> methods of the backend services, and
+the frontend definition's <code>id</code> property.</p>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-HyperMDM-Extending_HyperMDM-Custom_Extension_Guides-Custom_Dashboard_Widgets-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Extending_HyperMDM-Custom_Extension_Guides-Custom_Dashboard_Widgets-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-HyperMDM-Extending_HyperMDM-Custom_Extension_Guides-Custom_Dashboard_Widgets-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>Dashboard widgets are not the same as <em>perspective</em> widgets — see
+<a class="" href="../Custom_Perspective_Widgets/index.html">Custom Perspective Widgets</a>
+for extending perspectives.</p></div></div>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-dashboards-backend">Studio Dashboards Backend<a href="#studio-dashboards-backend" class="hash-link" aria-label="Direct link to Studio Dashboards Backend" title="Direct link to Studio Dashboards Backend" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-1--register-the-widget-type">Step 1 — Register the Widget Type<a href="#step-1--register-the-widget-type" class="hash-link" aria-label="Direct link to Step 1 — Register the Widget Type" title="Direct link to Step 1 — Register the Widget Type" translate="no">​</a></h3>
+<p>Add the type string to <code>hypermdm_studio_dashboards.widget_types</code>
+so the widget appears in the dashboard's add-widget dialog. Load
+this via your bundle extension's <code>prepend()</code> method.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/DependencyInjection/PimcoreStudioExampleExtension.php" target="_blank" rel="noopener noreferrer" class="">HyperMDMStudioExampleExtension.php</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-2--widget-config-schema">Step 2 — Widget Config Schema<a href="#step-2--widget-config-schema" class="hash-link" aria-label="Direct link to Step 2 — Widget Config Schema" title="Direct link to Step 2 — Widget Config Schema" translate="no">​</a></h3>
+<p>Create two classes: one extending
+<code>HyperMDM\Bundle\StudioDashboardsBundle\Schema\Widget\WidgetConfig</code>
+(the hydrated config returned to the frontend) and one extending
+<code>HyperMDM\Bundle\StudioDashboardsBundle\Schema\Widget\SaveWidgetConfig</code>
+(the validated payload persisted on save). Add the custom
+properties your widget needs (e.g. a row limit).</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Dashboards/Schema/TopAssetsWidgetConfig.php" target="_blank" rel="noopener noreferrer" class="">TopAssetsWidgetConfig.php</a>
+and
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Dashboards/Schema/SaveTopAssetsWidgetConfig.php" target="_blank" rel="noopener noreferrer" class="">SaveTopAssetsWidgetConfig.php</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-3--config-repository">Step 3 — Config Repository<a href="#step-3--config-repository" class="hash-link" aria-label="Direct link to Step 3 — Config Repository" title="Direct link to Step 3 — Config Repository" translate="no">​</a></h3>
+<p>Extend
+<code>HyperMDM\Bundle\StudioDashboardsBundle\Repository\Widget\AbstractConfigRepository</code>
+to store and load the widget configuration via HyperMDM's
+<code>LocationAwareConfigRepository</code>. Register with the
+<code>hypermdm.studio_dashboards.widget_repository</code> service tag (the
+<code>#[AutoconfigureTag]</code> attribute is sufficient). Because the
+widgets of an external bundle are persisted under that bundle's
+own configuration root node, define a config node and storage
+location in your bundle's <code>Configuration</code> class and wire the
+storage arguments in your services file.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Dashboards/Repository/TopAssetsConfigRepository.php" target="_blank" rel="noopener noreferrer" class="">TopAssetsConfigRepository.php</a>,
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/DependencyInjection/Configuration.php" target="_blank" rel="noopener noreferrer" class="">Configuration.php</a>
+and
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/studio_dashboards.yaml" target="_blank" rel="noopener noreferrer" class="">studio_dashboards.yaml</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-4--config-hydrator">Step 4 — Config Hydrator<a href="#step-4--config-hydrator" class="hash-link" aria-label="Direct link to Step 4 — Config Hydrator" title="Direct link to Step 4 — Config Hydrator" translate="no">​</a></h3>
+<p>Implement
+<code>HyperMDM\Bundle\StudioDashboardsBundle\Hydrator\Widget\ConfigHydratorInterface</code>
+to transform raw config arrays into your typed schema object.
+Register with the <code>hypermdm.studio_dashboards.widget_hydrator</code>
+service tag.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Dashboards/Hydrator/TopAssetsConfigHydrator.php" target="_blank" rel="noopener noreferrer" class="">TopAssetsConfigHydrator.php</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-5--data-resolver">Step 5 — Data Resolver<a href="#step-5--data-resolver" class="hash-link" aria-label="Direct link to Step 5 — Data Resolver" title="Direct link to Step 5 — Data Resolver" translate="no">​</a></h3>
+<p>Implement
+<code>HyperMDM\Bundle\StudioDashboardsBundle\Resolver\Widget\DataResolverInterface</code>
+to supply the data displayed inside the widget at runtime. The
+resolver receives the hydrated config object, so it has access to
+all stored configuration fields. Register with the
+<code>hypermdm.studio_dashboards.widget_data_resolver</code> service tag.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Dashboards/Resolver/TopAssetsResolver.php" target="_blank" rel="noopener noreferrer" class="">TopAssetsResolver.php</a>
+in the example bundle.</p>
+</blockquote>
+<p>For detailed backend documentation, see
+<a class="" href="../../../../Studio_Dashboards/Extending_Dashboards/index.html">Creating Custom Widgets</a>
+in the Studio Dashboards Bundle.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-ui-frontend">Studio UI (Frontend)<a href="#studio-ui-frontend" class="hash-link" aria-label="Direct link to Studio UI (Frontend)" title="Direct link to Studio UI (Frontend)" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-6--widget-type-definition">Step 6 — Widget Type Definition<a href="#step-6--widget-type-definition" class="hash-link" aria-label="Direct link to Step 6 — Widget Type Definition" title="Direct link to Step 6 — Widget Type Definition" translate="no">​</a></h3>
+<p>Create a class implementing the dashboards widget-definition
+contract with the <code>@injectable()</code> decorator. Key members:</p>
+<ul>
+<li class=""><code>id</code> — must match the backend widget type string</li>
+<li class=""><code>getWidgetComponent()</code> — returns the React component rendering
+the resolved widget data</li>
+<li class=""><code>getWidgetEditModeView()</code> — the config summary shown in edit mode</li>
+<li class=""><code>getWidgetAllowedVisualizations()</code> / <code>getWidgetIsAllowedBySlot()</code>
+— visualization and grid-slot constraints</li>
+<li class=""><code>getWidgetAdditionalFormElements()</code> — extra form fields for the
+add-widget dialog; the field <code>name</code>s must match the backend save
+schema properties</li>
+</ul>
+<p>The dashboards bundle exposes only its root plugin entry through
+module federation, so do not deep-import from it: resolve the
+widget-type registry from the shared DI container by its string
+service id <code>'StudioDashboards/DynamicTypes/WidgetType/Registry'</code>
+and mirror the small definition contract locally.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-dashboard-widgets/dynamic-types/definitions/dynamic-type-widget-type-top-assets.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-widget-type-top-assets.tsx</a>
+and
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-dashboard-widgets/types.ts" target="_blank" rel="noopener noreferrer" class="">types.ts</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-7--widget-component">Step 7 — Widget Component<a href="#step-7--widget-component" class="hash-link" aria-label="Direct link to Step 7 — Widget Component" title="Direct link to Step 7 — Widget Component" translate="no">​</a></h3>
+<p>Create the React component that renders the widget content. Data
+is fetched by the generic dashboards widget renderer (which calls
+your backend data resolver) and passed in via props — the
+component only renders it.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-dashboard-widgets/components/top-assets-widget.tsx" target="_blank" rel="noopener noreferrer" class="">top-assets-widget.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-8--plugin-registration">Step 8 — Plugin Registration<a href="#step-8--plugin-registration" class="hash-link" aria-label="Direct link to Step 8 — Plugin Registration" title="Direct link to Step 8 — Plugin Registration" translate="no">​</a></h3>
+<p>Create a plugin that binds the definition class in <code>onInit</code> and
+registers a module in <code>onStartup</code>; the module registers the
+definition in the dashboards widget-type registry (guarded by
+<code>container.isBound()</code> so the plugin also works when the dashboards
+bundle is not installed).</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-dashboard-widgets/index.ts" target="_blank" rel="noopener noreferrer" class="">index.ts</a>
+and
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-dashboard-widgets/modules/custom-dashboard-widgets-extension.tsx" target="_blank" rel="noopener noreferrer" class="">custom-dashboard-widgets-extension.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<p>For detailed frontend documentation, see
+<a class="" href="../../../../Studio_Dashboards/Extending_Dashboards/Frontend_Widget_Type/index.html">Frontend Widget Type</a>
+and
+<a class="" href="../../../../Studio_Dashboards/Extending_Dashboards/Registering_Widget_Type/index.html">Registering a Widget Type</a>
+in the Studio Dashboards Bundle.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

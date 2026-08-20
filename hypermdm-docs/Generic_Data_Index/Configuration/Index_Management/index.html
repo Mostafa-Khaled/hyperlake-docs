@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Index Management — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Index Management</h1></header>
+<p>The Generic Data Index must index all assets, data objects, and documents
+to power search and listing features in HyperMDM.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="console-commands-overview">Console Commands Overview<a href="#console-commands-overview" class="hash-link" aria-label="Direct link to Console Commands Overview" title="Direct link to Console Commands Overview" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>generic-data-index:update:index</code></td><td>Update index mappings and queue all elements for reindex from the database</td></tr><tr><td><code>generic-data-index:update:index -r</code></td><td>Delete and recreate indices, then queue all elements</td></tr><tr><td><code>generic-data-index:reindex</code></td><td>Native search engine reindex (reorganizes data within existing indices, no database read)</td></tr><tr><td><code>generic-data-index:deployment:reindex</code></td><td>Update indices only for class definitions changed since the last deployment</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="index-prefix">Index Prefix<a href="#index-prefix" class="hash-link" aria-label="Direct link to Index Prefix" title="Direct link to Index Prefix" translate="no">​</a></h2>
+<p>Define an index name prefix to avoid naming collisions in shared search engine clusters.
+The default prefix is <code>hypermdm_</code>.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_generic_data_index</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">index_service</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">client_params</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">index_prefix</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'my_prefix'</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="created-indices">Created Indices<a href="#created-indices" class="hash-link" aria-label="Direct link to Created Indices" title="Direct link to Created Indices" translate="no">​</a></h2>
+<p>The Generic Data Index creates the following indices:</p>
+<ul>
+<li class=""><strong>Assets</strong> - one alias and one index</li>
+<li class=""><strong>Data objects</strong> - one alias and one index per class definition</li>
+</ul>
+<p>Each index uses an alias (e.g. <code>&lt;prefix&gt;_asset</code>) pointing to the current index
+(e.g. <code>&lt;prefix&gt;_asset-odd</code>). The alias name stays constant; the backing index alternates
+between <code>-odd</code> and <code>-even</code> suffixes during reindexing (see
+<a href="#updating-index-structure" class="">Updating index structure</a> below).</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="why--odd-and--even-suffixes">Why <code>-odd</code> and <code>-even</code> Suffixes?<a href="#why--odd-and--even-suffixes" class="hash-link" aria-label="Direct link to why--odd-and--even-suffixes" title="Direct link to why--odd-and--even-suffixes" translate="no">​</a></h3>
+<p>The alternating suffixes enable zero-downtime reindexing (blue-green approach): when the
+index structure changes, the bundle builds a new index under the opposite suffix while
+the current index keeps serving reads and writes through the alias. Once the new index
+is fully populated, the alias is switched atomically and the old index is deleted.</p>
+<p>At rest there is only <strong>one</strong> concrete index — and therefore one set of shards — per
+asset index or class definition. Both suffixes exist side by side only transiently
+while a reindex is running. If <code>-odd</code> and <code>-even</code> indices for the same alias exist
+permanently, they are leftovers from a reindex that was interrupted (e.g. by a killed
+process) before its cleanup could run. Such orphaned indices are not used by the bundle
+and can safely be deleted, as long as they are not referenced by any alias.</p>
+<p>The default index settings use <code>number_of_shards: 1</code>, so the total shard count of the
+cluster scales with the number of class definitions — not with the suffix scheme.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="keeping-indices-up-to-date">Keeping Indices Up to Date<a href="#keeping-indices-up-to-date" class="hash-link" aria-label="Direct link to Keeping Indices Up to Date" title="Direct link to Keeping Indices Up to Date" translate="no">​</a></h2>
+<p>Create and update indices with:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:update:index</span><br></span></code></pre></div></div>
+<p>This command creates the indices and queues all assets and data objects for indexing.
+The Symfony Messenger <code>hypermdm_generic_data_index_queue</code> transport processes the queue.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="index-refresh">Index Refresh<a href="#index-refresh" class="hash-link" aria-label="Direct link to Index Refresh" title="Direct link to Index Refresh" translate="no">​</a></h3>
+<p>By default, the index refreshes after each bulk operation since items are processed
+asynchronously via Symfony Messenger.</p>
+<p>To force synchronous processing (immediate refresh), inject
+<code>SynchronousProcessingServiceInterface</code> and call <code>enable()</code>:</p>
+<div class="table-container"><table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody><tr><td><code>enable()</code></td><td>Enable synchronous processing</td></tr><tr><td><code>disable()</code></td><td>Disable synchronous processing</td></tr><tr><td><code>isEnabled()</code></td><td>Check current mode</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="queue-options">Queue Options<a href="#queue-options" class="hash-link" aria-label="Direct link to Queue Options" title="Direct link to Queue Options" translate="no">​</a></h3>
+<p>Configure the indexing queue batch behavior:</p>
+<div class="table-container"><table><thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>worker_count</code></td><td>1</td><td>Number of parallel <code>messenger:consume</code> workers. Improves batch size calculation.</td></tr><tr><td><code>min_batch_size</code></td><td>5</td><td>Minimum items per batch (relevant with multiple workers)</td></tr><tr><td><code>max_batch_size</code></td><td>400</td><td>Maximum items per batch</td></tr></tbody></table></div>
+<p>The queue calculates batch sizes dynamically between <code>min_batch_size</code> and <code>max_batch_size</code>
+based on the number of workers and queue depth.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_generic_data_index</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">index_service</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">queue_settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">worker_count</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">1</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">min_batch_size</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">5</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">max_batch_size</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">400</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-elements">Related Elements<a href="#related-elements" class="hash-link" aria-label="Direct link to Related Elements" title="Direct link to Related Elements" translate="no">​</a></h3>
+<p>Updating an element automatically enqueues its related elements for reindexing.
+By default, this runs asynchronously through Symfony Messenger.</p>
+<p>For immediate processing, use <code>SynchronousProcessingRelatedIdsServiceInterface</code>:</p>
+<div class="table-container"><table><thead><tr><th>Method</th><th>Description</th></tr></thead><tbody><tr><td><code>enable()</code></td><td>Activate synchronous processing</td></tr><tr><td><code>disable()</code></td><td>Revert to asynchronous processing</td></tr><tr><td><code>isEnabled()</code></td><td>Return current processing mode</td></tr></tbody></table></div>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Generic_Data_Index-Configuration-Index_Management-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Generic_Data_Index-Configuration-Index_Management-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Generic_Data_Index-Configuration-Index_Management-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p><code>SynchronousProcessingRelatedIdsServiceInterface</code> does not affect delete operations.
+Deletes always process synchronously.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="repairing-indices">Repairing Indices<a href="#repairing-indices" class="hash-link" aria-label="Direct link to Repairing Indices" title="Direct link to Repairing Indices" translate="no">​</a></h3>
+<p>To delete and recreate an index from the HyperMDM database (e.g. after an incompatible
+mapping change), pass the <code>-r</code> option:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:update:index -r</span><br></span></code></pre></div></div>
+<p>Without <code>-r</code>, the command only updates the index mapping and queues all items for reindex.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="updating-index-structure">Updating Index Structure<a href="#updating-index-structure" class="hash-link" aria-label="Direct link to Updating Index Structure" title="Direct link to Updating Index Structure" translate="no">​</a></h3>
+<p>Index mappings update automatically when system languages or class definition fields change.
+For manual updates, run the reindex command. This performs a native OpenSearch/Elasticsearch
+reindex within the search indices (no database read):</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:reindex</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="reindex-options">Reindex Options<a href="#reindex-options" class="hash-link" aria-label="Direct link to Reindex Options" title="Direct link to Reindex Options" translate="no">​</a></h4>
+<p>Native reindexing is submitted as an asynchronous task to OpenSearch/Elasticsearch and its progress is polled until
+the task has finished. Two options control how long the process waits:</p>
+<ul>
+<li class=""><strong>max_polls</strong> (default 720): maximum number of polling attempts before the reindex is aborted</li>
+<li class=""><strong>poll_interval</strong> (default 5): seconds to wait between two status polls</li>
+</ul>
+<p>With the defaults, a reindex may therefore run for up to one hour (720 × 5 seconds). If reindexing an index takes
+longer than this budget, the command aborts with an error and a non-zero exit code — increase <code>max_polls</code> for very
+large indices:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_generic_data_index</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">index_service</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">reindex_settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">max_polls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">720</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">poll_interval</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">5</span><br></span></code></pre></div></div>
+<p>Transient failures while polling (e.g. a temporarily unreachable or overloaded search cluster) are retried and do not
+abort a running reindex. If reindexing fails for a different reason — the cluster is unreachable, the task reports an
+error or times out server-side — the command fails instead of modifying the live index, and the reindex is retried on
+the next run. The index is only recreated (and repopulated via the index queue) when the already indexed documents are
+incompatible with the new mapping, for example after a field type change.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="handling-failed-messages">Handling Failed Messages<a href="#handling-failed-messages" class="hash-link" aria-label="Direct link to Handling Failed Messages" title="Direct link to Handling Failed Messages" translate="no">​</a></h3>
+<p>The messenger retries failed messages 3 times, then routes them to the
+<code>hypermdm_generic_data_index_failed</code> transport. Retry failed messages with:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console messenger:failed:retry -vv</span><br></span></code></pre></div></div>
+<p>See the <a href="https://symfony.com/doc/current/messenger.html#saving-retrying-failed-messages" target="_blank" rel="noopener noreferrer" class="">Symfony Messenger documentation</a>
+for additional commands.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="index-options">Index Options<a href="#index-options" class="hash-link" aria-label="Direct link to Index Options" title="Direct link to Index Options" translate="no">​</a></h2>
+<p>Configure search engine-specific index options. Check your engine's documentation
+for available settings.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="maximum-result-window">Maximum Result Window<a href="#maximum-result-window" class="hash-link" aria-label="Direct link to Maximum Result Window" title="Direct link to Maximum Result Window" translate="no">​</a></h3>
+<p>The default limit of retrievable items is 10,000. Increase it with:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_generic_data_index</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">index_service</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">index_settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">max_result_window</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">20000</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="total-fields-limit">Total Fields Limit<a href="#total-fields-limit" class="hash-link" aria-label="Direct link to Total Fields Limit" title="Direct link to Total Fields Limit" translate="no">​</a></h3>
+<p>The default field limit per index is 1,000. Increase it with:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_generic_data_index</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">index_service</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">index_settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">mapping.total_fields.limit</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">20000</span><br></span></code></pre></div></div>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Generic_Data_Index-Configuration-Index_Management-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Generic_Data_Index-Configuration-Index_Management-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Generic_Data_Index-Configuration-Index_Management-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>If the index already exists, recreate it after changing this setting:</p><div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:update:index -r</span><br></span></code></pre></div></div></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="deployment-and-index-management">Deployment and Index Management<a href="#deployment-and-index-management" class="hash-link" aria-label="Direct link to Deployment and Index Management" title="Direct link to Deployment and Index Management" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="class-definition-changes">Class Definition Changes<a href="#class-definition-changes" class="hash-link" aria-label="Direct link to Class Definition Changes" title="Direct link to Class Definition Changes" translate="no">​</a></h3>
+<p>After updating class definitions during deployment, run:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:deployment:reindex</span><br></span></code></pre></div></div>
+<p>This updates the index structure for all class definitions modified since the last
+deployment and reindexes data objects for affected classes.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="calculated-fields-index-mode">Calculated Fields Index Mode<a href="#calculated-fields-index-mode" class="hash-link" aria-label="Direct link to Calculated Fields Index Mode" title="Direct link to Calculated Fields Index Mode" translate="no">​</a></h2>
+<p>By default, values of calculated value fields are computed <strong>live</strong> while index data is
+extracted: the field's calculator class is executed for every calculated field of every element on
+every (re)indexing — for localized calculated fields once per language. For expensive calculators
+(relation loads, external services) this can dominate the indexing cost on large installations.</p>
+<p>With the <code>query_store</code> mode, the value stored in the object's <strong>query table</strong> (written on every
+save — the same value SQL-based grid listings use) is indexed instead, and the calculator is never
+executed during indexing:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_generic_data_index</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">index_service</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">calculated_fields_index_mode</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'query_store'</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic"># default: 'live'</span><br></span></code></pre></div></div>
+<p>Notes:</p>
+<ul>
+<li class="">The indexed value is the <strong>save-time snapshot</strong> as a string, truncated to the field
+definition's <code>columnLength</code> (default 190). The fields stay searchable, filterable and sortable.</li>
+<li class="">Changed calculator logic is only reflected after an element is saved again (see
+<a href="#refreshing-calculated-values-after-a-calculator-change" class="">Refreshing calculated values after a calculator change</a> below).</li>
+<li class="">Calculated fields inside field collections and object bricks are not read from the query store
+and keep live behavior.</li>
+<li class="">Switching the mode does not change the index mapping, so it does not trigger an automatic
+reindex: values converge as elements are saved or reprocessed by the index queue.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="refreshing-calculated-values-after-a-calculator-change">Refreshing calculated values after a calculator change<a href="#refreshing-calculated-values-after-a-calculator-change" class="hash-link" aria-label="Direct link to Refreshing calculated values after a calculator change" title="Direct link to Refreshing calculated values after a calculator change" translate="no">​</a></h3>
+<p>In <code>query_store</code> mode the indexed value is the <strong>save-time snapshot</strong> stored in the object's query
+table (<code>object_query_*</code>), which is (re)written only when an object is <strong>saved</strong>. Changing a
+calculator's code therefore does not update already-stored values on its own — exactly as with
+HyperMDM's classic SQL grids and listings, which read the same query-table snapshot.</p>
+<p>To refresh calculated values after a calculator change, <strong>re-save the affected objects</strong> (e.g. a
+short console command that loads the class's objects in chunks and calls <code>-&gt;save()</code> on each). A save
+recomputes the calculated fields, rewrites <code>object_query_*</code>, and enqueues the element for reindexing,
+so both the query table and the index pick up the new logic. For large object counts, batch the
+re-save and disable versioning for the run to reduce cost.</p>
+<blockquote>
+<p>A dedicated command to recompute the query-table snapshots without a full object save is planned
+as a follow-up.</p>
+</blockquote></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

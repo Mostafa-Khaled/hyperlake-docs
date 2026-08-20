@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade notes</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-extjs--admin-classic-ui-support">Removed ExtJS / Admin Classic UI Support<a href="#removed-extjs--admin-classic-ui-support" class="hash-link" aria-label="Direct link to Removed ExtJS / Admin Classic UI Support" title="Direct link to Removed ExtJS / Admin Classic UI Support" translate="no">​</a></h3>
+<p>The bundle no longer ships any ExtJS-based frontend code or integrates with the
+HyperMDM Admin Classic UI.</p>
+<p><code>HyperMDMCopilotBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code>
+and no longer uses <code>BundleAdminClassicTrait</code>. The following methods have been
+removed from the bundle class:</p>
+<ul>
+<li class=""><code>getJsPaths()</code> (registered 38 JS files under <code>public/js/hypermdm/</code>)</li>
+<li class=""><code>getCssPaths()</code> (registered <code>public/css/icons.css</code> and <code>public/css/styles.css</code>)</li>
+</ul>
+<p>All ExtJS JavaScript files under <code>public/js/hypermdm/</code>, all CSS files under
+<code>public/css/</code>, and all SVG images under <code>public/img/</code> have been deleted.</p>
+<p>The following PHP classes have been deleted:</p>
+<ul>
+<li class="">All controllers under <code>src/Controller/Admin/</code> (configuration, interaction
+action, automation action, job run, role, user controllers)</li>
+<li class=""><code>src/Controller/CopilotController.php</code></li>
+<li class=""><code>src/Controller/AutomationActionExecutionController.php</code></li>
+<li class=""><code>src/EventSubscriber/AdminSubscriber.php</code></li>
+<li class=""><code>src/Routing/StudioRouteLoader.php</code></li>
+<li class=""><code>src/Utils/Traits/AuditTrait.php</code></li>
+<li class=""><code>src/Utils/Traits/LogAndReturnTrait.php</code></li>
+<li class=""><code>src/Utils/Traits/ThrowableChainTrait.php</code></li>
+<li class=""><code>src/Utils/Traits/UpdateControllerTrait.php</code></li>
+<li class=""><code>src/Controller/Studio/Configuration/AutomationAction/ValidateStepConfigurationTrait.php</code></li>
+<li class=""><code>config/admin-classic.yaml</code></li>
+</ul>
+<p>If you relied on these Admin controllers or traits, you need to migrate to the
+equivalent Studio API endpoints.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="added-hypermdm-studio-backend--ui-bundle-support">Added HyperMDM Studio Backend &amp; UI Bundle Support<a href="#added-hypermdm-studio-backend--ui-bundle-support" class="hash-link" aria-label="Direct link to Added Pimcore Studio Backend &amp; UI Bundle Support" title="Direct link to Added Pimcore Studio Backend &amp; UI Bundle Support" translate="no">​</a></h3>
+<p><code>hypermdm/studio-ui-bundle</code> has been added as a required dependency. The Studio
+UI bundle must be registered in <code>config/bundles.php</code>:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token string double-quoted-string" style="color:#e3116c">"HyperMDM\\Bundle\\StudioUiBundle\\HyperMDMStudioUiBundle"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'all'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><br></span></code></pre></div></div>
+<p>The Symfony security configuration must be updated to include the Studio firewall
+and access-control rules. Example:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">security</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">firewalls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hypermdm_studio</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%hypermdm_studio_backend.firewall_settings%'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">access_control</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^/hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">studio/api/(docs</span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">docs/json</span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">translations</span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">user/reset</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">password)$</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> PUBLIC_ACCESS </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^/hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">studio/api</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ROLE_HYPERMDM_USER </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^/asset/webdav</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ROLE_HYPERMDM_USER </span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="interface-changes">Interface Changes<a href="#interface-changes" class="hash-link" aria-label="Direct link to Interface Changes" title="Direct link to Interface Changes" translate="no">​</a></h3>
+<p>The following service interfaces have changed. If you implement or extend them,
+you must update your code accordingly.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="configurationcrudserviceinterface"><code>ConfigurationCrudServiceInterface</code><a href="#configurationcrudserviceinterface" class="hash-link" aria-label="Direct link to configurationcrudserviceinterface" title="Direct link to configurationcrudserviceinterface" translate="no">​</a></h4>
+<p>Namespace: <code>HyperMDM\Bundle\CopilotBundle\Service\Studio\Configuration\AutomationAction</code></p>
+<ul>
+<li class=""><code>createConfiguration()</code>: added <code>@throws ConflictException</code></li>
+<li class=""><code>updateConfiguration()</code>: added <code>@throws InvalidArgumentException</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="configurationinteractionactionserviceinterface"><code>Configuration\InteractionAction\ServiceInterface</code><a href="#configurationinteractionactionserviceinterface" class="hash-link" aria-label="Direct link to configurationinteractionactionserviceinterface" title="Direct link to configurationinteractionactionserviceinterface" translate="no">​</a></h4>
+<p>Namespace: <code>HyperMDM\Bundle\CopilotBundle\Service\Studio\Configuration\InteractionAction</code></p>
+<ul>
+<li class=""><code>createConfiguration()</code>: added <code>@throws ConflictException</code></li>
+<li class=""><code>updateConfiguration()</code>: added <code>@throws InvalidArgumentException</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="environmentserviceinterface"><code>EnvironmentServiceInterface</code><a href="#environmentserviceinterface" class="hash-link" aria-label="Direct link to environmentserviceinterface" title="Direct link to environmentserviceinterface" translate="no">​</a></h4>
+<p>Namespace: <code>HyperMDM\Bundle\CopilotBundle\Service\Studio\Configuration\AutomationAction</code></p>
+<ul>
+<li class=""><code>getEnvironmentTypes()</code>: <code>@throws Exception</code> removed (method no longer declares a
+checked exception)</li>
+<li class=""><code>getEnvironmentInlineHelp()</code>: <code>@throws Exception</code> removed</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="stepserviceinterface"><code>StepServiceInterface</code><a href="#stepserviceinterface" class="hash-link" aria-label="Direct link to stepserviceinterface" title="Direct link to stepserviceinterface" translate="no">​</a></h4>
+<p>Namespace: <code>HyperMDM\Bundle\CopilotBundle\Service\Studio\Configuration\AutomationAction</code></p>
+<ul>
+<li class=""><code>getPreconditionFilters()</code>: now throws <code>InvalidArgumentException</code> (was <code>Exception</code>)</li>
+<li class="">All other methods: <code>@throws Exception</code> removed</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="chatserviceinterface"><code>ChatServiceInterface</code><a href="#chatserviceinterface" class="hash-link" aria-label="Direct link to chatserviceinterface" title="Direct link to chatserviceinterface" translate="no">​</a></h4>
+<p>Namespace: <code>HyperMDM\Bundle\CopilotBundle\Service\Studio\InteractionAction</code></p>
+<ul>
+<li class=""><code>initial()</code>, <code>prompt()</code>, <code>apply()</code>: added <code>@throws EnvironmentException|InvalidArgumentException</code>
+(were previously undeclared)</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="onestepserviceinterface"><code>OneStepServiceInterface</code><a href="#onestepserviceinterface" class="hash-link" aria-label="Direct link to onestepserviceinterface" title="Direct link to onestepserviceinterface" translate="no">​</a></h4>
+<p>Namespace: <code>HyperMDM\Bundle\CopilotBundle\Service\Studio\InteractionAction</code></p>
+<ul>
+<li class=""><code>oneStep()</code>: added <code>@throws EnvironmentException|InvalidArgumentException</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="automationactionserviceinterface-new"><code>AutomationAction\ServiceInterface</code> (new)<a href="#automationactionserviceinterface-new" class="hash-link" aria-label="Direct link to automationactionserviceinterface-new" title="Direct link to automationactionserviceinterface-new" translate="no">​</a></h4>
+<p>Namespace: <code>HyperMDM\Bundle\CopilotBundle\Service\Studio\AutomationAction</code></p>
+<p>A new interface <code>ServiceInterface</code> has been introduced:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">runAction</span><span class="token punctuation" style="color:#393A34">(</span><span class="token keyword type-hint" style="color:#00009f">string</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$configurationName</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token class-name type-declaration">AutomationActionRunParameters</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$parameters</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token class-name return-type">CopilotJobRunId</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// @throws InvalidArgumentException|NotFoundException|ValidationFailedException</span><br></span></code></pre></div></div>
+<p>If you previously called <code>Service::runAction()</code> directly without the interface,
+type-hint against <code>ServiceInterface</code> instead.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="schema-classes-now-implement-additionalattributesinterface">Schema Classes Now Implement <code>AdditionalAttributesInterface</code><a href="#schema-classes-now-implement-additionalattributesinterface" class="hash-link" aria-label="Direct link to schema-classes-now-implement-additionalattributesinterface" title="Direct link to schema-classes-now-implement-additionalattributesinterface" translate="no">​</a></h3>
+<p>The following schema classes now implement
+<code>HyperMDM\Bundle\StudioBackendBundle\Util\Schema\AdditionalAttributesInterface</code>
+(via <code>AdditionalAttributesTrait</code>) and are no longer declared <code>readonly</code>:</p>
+<ul>
+<li class=""><code>CopilotJobRunId</code></li>
+<li class=""><code>InteractionActionChatHistory</code></li>
+<li class=""><code>InteractionActionOneStep</code></li>
+</ul>
+<p>If you relied on these being <code>readonly</code> classes or serialized them directly,
+review your code for compatibility.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="new-pre-response-events">New Pre-Response Events<a href="#new-pre-response-events" class="hash-link" aria-label="Direct link to New Pre-Response Events" title="Direct link to New Pre-Response Events" translate="no">​</a></h3>
+<p>Three new event classes have been added under
+<code>HyperMDM\Bundle\CopilotBundle\Event\PreResponse</code>, each extending
+<code>AbstractPreResponseEvent</code>:</p>
+<div class="table-container"><table><thead><tr><th>Class</th><th><code>EVENT_NAME</code> constant</th></tr></thead><tbody><tr><td><code>CopilotJobRunIdEvent</code></td><td><code>pre_response.copilot.job_run_id</code></td></tr><tr><td><code>InteractionActionChatHistoryEvent</code></td><td><code>pre_response.copilot.interaction_action_chat_history</code></td></tr><tr><td><code>InteractionActionOneStepEvent</code></td><td><code>pre_response.copilot.interaction_action_one_step</code></td></tr></tbody></table></div>
+<p>These events are dispatched before the corresponding Studio API responses are
+returned and allow you to enrich the response with additional attributes.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-doctrine-enum-mapping">Removed Doctrine Enum Mapping<a href="#removed-doctrine-enum-mapping" class="hash-link" aria-label="Direct link to Removed Doctrine Enum Mapping" title="Direct link to Removed Doctrine Enum Mapping" translate="no">​</a></h3>
+<p>The custom Doctrine mapping type <code>enum: string</code> has been removed from the
+test/application configuration. HyperMDM 2026.x handles enum types natively.
+Remove the following from your <code>config/packages/doctrine.yaml</code> (or equivalent)
+if present:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">doctrine</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">dbal</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">connections</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">default</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">mapping_types</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">enum</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> string  </span><span class="token comment" style="color:#999988;font-style:italic"># remove this line</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="updated-dependencies">Updated Dependencies<a href="#updated-dependencies" class="hash-link" aria-label="Direct link to Updated Dependencies" title="Direct link to Updated Dependencies" translate="no">​</a></h3>
+<ul>
+<li class="">PHPStan updated from <code>1.x</code> to <code>2.x</code>. Review your <code>phpstan-baseline.neon</code> and
+custom PHPStan rules, since PHPStan 2.x may report new errors.</li>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="110-to-200">1.1.0 to 2.0.0<a href="#110-to-200" class="hash-link" aria-label="Direct link to 1.1.0 to 2.0.0" title="Direct link to 1.1.0 to 2.0.0" translate="no">​</a></h2>
+<ul>
+<li class="">The job execution engine was removed. You need to implement/adapt your actions to run with <code>Generic Execution Engine</code>.<!-- -->
+<ul>
+<li class="">To do so, please follow the migration guide <a class="" href="../Migrate_From_JEE_To_GEE/index.html">here</a>.</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="100-to-110">1.0.0 to 1.1.0<a href="#100-to-110" class="hash-link" aria-label="Direct link to 1.0.0 to 1.1.0" title="Direct link to 1.0.0 to 1.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">The job execution engine has been extracted to the core framework as <code>Generic Execution Engine</code> and it is highly recommended to switch to it.
+Following things need to be considered:<!-- -->
+<ul>
+<li class="">The old way of implementing custom job steps is deprecated. If you already have custom job steps implemented, you can
+still use them for now, but it is recommended to migrate them to the new way. Please see the migration guide
+<a class="" href="../Migrate_From_JEE_To_GEE/index.html">here</a>.</li>
+<li class="">Use the <code>Generic Execution Engine</code> as soon as possible. To do so, also follow the migration guide <a class="" href="../Migrate_From_JEE_To_GEE/index.html">here</a>.</li>
+</ul>
+</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

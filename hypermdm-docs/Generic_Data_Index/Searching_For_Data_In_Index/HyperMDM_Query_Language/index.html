@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperMDM Query Language (PQL) — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>HyperMDM Query Language (PQL)</h1></header>
+<p>HyperMDM Query Language (PQL) defines a query syntax for searching data objects, assets,
+and documents in the Generic Data Index.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="syntax">Syntax<a href="#syntax" class="hash-link" aria-label="Direct link to Syntax" title="Direct link to Syntax" translate="no">​</a></h2>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">CONDITION = EXPRESSION | CONDITION ("AND" | "OR") CONDITION</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">EXPRESSION = "(" CONDITION ")" | COMPARISON | QUERY_STRING_QUERY</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">COMPARISON = FIELDNAME OPERATOR VALUE | RELATION_COMPARISON</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">RELATION_COMPARISON = RELATION_FIELD_NAME OPERATOR VALUE</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">FIELDNAME = IDENTIFIER{.IDENTIFIER}</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">RELATION_FIELD_NAME = FIELDNAME:ENTITYNAME.FIELDNAME</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">IDENTIFIER = [a-zA-Z_]\w*</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">ENTITYNAME = [a-zA-Z_]\w*</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">OPERATOR = "="|"!="|"&lt;"|"&gt;"|"&gt;="|"&lt;="|"LIKE"|"NOT LIKE"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">NULL = "NULL"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">EMPTY = "EMPTY"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">VALUE = INTEGER | FLOAT | "'" STRING "'" | '"' STRING '"' | NULL | EMPTY</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">QUERY_STRING_QUERY = "QUERY('" STRING "')"</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="operators">Operators<a href="#operators" class="hash-link" aria-label="Direct link to Operators" title="Direct link to Operators" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Operator</th><th>Description</th><th>Examples</th></tr></thead><tbody><tr><td><code>=</code></td><td>Equal (case-sensitive)</td><td><code>field = "value"</code></td></tr><tr><td><code>!=</code></td><td>Not equal (case-sensitive)</td><td><code>field != "value"</code></td></tr><tr><td><code>&lt;</code></td><td>Less than</td><td><code>field &lt; 100</code></td></tr><tr><td><code>&lt;=</code></td><td>Less than or equal to</td><td><code>field &lt;= 100</code></td></tr><tr><td><code>&gt;=</code></td><td>Greater than or equal to</td><td><code>field &gt;= 100</code></td></tr><tr><td><code>&gt;</code></td><td>Greater than</td><td><code>field &gt; 100</code></td></tr><tr><td><code>LIKE</code></td><td>Equal with wildcard support (case-insensitive). <code>*</code> matches zero or more characters, <code>?</code> matches one.</td><td><code>field like "val*"</code></td></tr><tr><td><code>NOT LIKE</code></td><td>Not equal with wildcard support (case-insensitive). <code>*</code> matches zero or more characters, <code>?</code> matches one.</td><td><code>field not like "val*"</code></td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="nullempty-values">Null/Empty Values<a href="#nullempty-values" class="hash-link" aria-label="Direct link to Null/Empty Values" title="Direct link to Null/Empty Values" translate="no">​</a></h3>
+<p>Use the <code>NULL</code> and <code>EMPTY</code> keywords with <code>=</code> and <code>!=</code> operators to search for
+fields without values. <code>NULL</code> matches null values; <code>EMPTY</code> matches both null
+and empty strings.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">field = NULL</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">field != NULL</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">field = EMPTY       # equivalent to: field = NULL OR field = ''</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">field != EMPTY      # equivalent to: field != NULL AND field != ''</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="and--or--brackets">AND / OR / Brackets<a href="#and--or--brackets" class="hash-link" aria-label="Direct link to AND / OR / Brackets" title="Direct link to AND / OR / Brackets" translate="no">​</a></h3>
+<p>Combine conditions with <code>AND</code> and <code>OR</code> operators. Use brackets to group conditions:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">field1 = "value1" AND field2 = "value2"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">field1 = "value1" AND (field2 = "value2" OR field3 = "value3")</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">(field1 = "value1" AND (field2 = "value2" OR field3 = "value3")) OR field4 = "value4"</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="relation-filters">Relation Filters<a href="#relation-filters" class="hash-link" aria-label="Direct link to Relation Filters" title="Direct link to Relation Filters" translate="no">​</a></h3>
+<p>Filter along relations using the notation
+<code>&lt;RELATION_FIELD_NAME&gt;:&lt;ENTITY_NAME&gt;.&lt;FIELD_NAME&gt;</code>:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">main_image:Asset.type</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">category:Category.name</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">manufacturer:Company.country</span><br></span></code></pre></div></div>
+<p>The entity name must be <code>Asset</code>, <code>Document</code>, or a data object class name.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="field-names">Field Names<a href="#field-names" class="hash-link" aria-label="Direct link to Field Names" title="Direct link to Field Names" translate="no">​</a></h3>
+<p>Field names match the search index structure. Nested fields use dot (<code>.</code>) notation.
+Fields are organized into three sections (<code>system_fields</code>, <code>standard_fields</code>,
+<code>custom_fields</code>) as described in <a class="" href="../../Extending_Data_Index/Extend_Search_Index/index.html">Extending Search Index</a>.
+Depending on the data type, attribute values may contain nested sub-attributes.</p>
+<p><strong>Full path examples:</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">system_fields.id</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">standard_fields.name</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">standard_fields.my_relation_field.asset</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">standard_fields.description.de</span><br></span></code></pre></div></div>
+<p>PQL automatically resolves short field names to their full indexed path.
+This works for all unambiguous field names. If a field name exists in multiple sections
+(e.g. both <code>system_fields</code> and <code>standard_fields</code>), use the full path.
+Query string queries (<code>QUERY()</code>) also require full paths.</p>
+<p>Use the technical field name as defined in the data object class or asset metadata:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">id</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">name</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">my_relation_field</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">description.de</span><br></span></code></pre></div></div>
+<p>Access localized fields with <code>field_name.locale</code> (e.g. <code>description.de</code>).</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="query-string-queries">Query String Queries<a href="#query-string-queries" class="hash-link" aria-label="Direct link to Query String Queries" title="Direct link to Query String Queries" translate="no">​</a></h3>
+<p>Pass
+<a href="https://opensearch.org/docs/latest/query-dsl/full-text/query-string" target="_blank" rel="noopener noreferrer" class="">OpenSearch</a>
+or
+<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html" target="_blank" rel="noopener noreferrer" class="">Elasticsearch</a>
+query string queries directly to the index using <code>QUERY()</code>:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">QUERY("standard_fields.color:(red OR blue)")</span><br></span></code></pre></div></div>
+<p>See the
+<a href="https://opensearch.org/docs/latest/query-dsl/full-text/query-string/#query-string-syntax" target="_blank" rel="noopener noreferrer" class="">OpenSearch query string syntax</a>
+or
+<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax" target="_blank" rel="noopener noreferrer" class="">Elasticsearch query string syntax</a>
+for details.</p>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Generic_Data_Index-Searching_For_Data_In_Index-HyperMDM_Query_Language-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Generic_Data_Index-Searching_For_Data_In_Index-HyperMDM_Query_Language-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Generic_Data_Index-Searching_For_Data_In_Index-HyperMDM_Query_Language-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>caution</div><div class="admonitionContent_BuS1"><p>Automatic field name detection is not supported for query string queries.
+Use full field paths.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="example-pql-queries">Example PQL Queries<a href="#example-pql-queries" class="hash-link" aria-label="Direct link to Example PQL Queries" title="Direct link to Example PQL Queries" translate="no">​</a></h3>
+<p>All examples reference the <code>Car</code> data object class from the
+<a href="https://pimcore.com/en/try" target="_blank" rel="noopener noreferrer" class="">HyperMDM Demo</a>.</p>
+<div class="table-container"><table><thead><tr><th>Query</th><th>Description</th></tr></thead><tbody><tr><td><code>series = "E-Type" AND (color = "green" OR productionYear &lt; 1965)</code></td><td>All E-Type models that are green or produced before 1965</td></tr><tr><td><code>manufacturer:Manufacturer.name = "Alfa" AND productionYear &gt; 1965</code></td><td>All Alfa cars produced after 1965</td></tr><tr><td><code>genericImages:Asset.fullPath LIKE "/Car Images/vw/*"</code></td><td>All cars with images in the <code>/Car Images/vw</code> asset folder</td></tr><tr><td><code>color = "red" OR color = "blue"</code></td><td>All red or blue cars</td></tr><tr><td><code>series = empty AND color="red"</code></td><td>All models with empty series and red color</td></tr><tr><td><code>License.expiryDate &lt;= 'now+2d/d'</code></td><td>All elements whose license expires within two days (uses <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#date-math" target="_blank" rel="noopener noreferrer" class="">date math</a> syntax)</td></tr><tr><td><code>Query("standard_fields.color:(red OR blue)")</code></td><td>All red or blue cars using query string syntax</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="limitations">Limitations<a href="#limitations" class="hash-link" aria-label="Direct link to Limitations" title="Direct link to Limitations" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Relation sub-query limit:</strong> Maximum 65,000 results for related element sub-queries.
+See <code>terms query</code> docs for
+<a href="https://opensearch.org/docs/latest/query-dsl/term/terms/" target="_blank" rel="noopener noreferrer" class="">OpenSearch</a> /
+<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-terms-query.html" target="_blank" rel="noopener noreferrer" class="">Elasticsearch</a>.</li>
+<li class=""><strong>Asset metadata filtering:</strong> Only predefined asset metadata and metadata from the
+asset metadata class definitions bundle are supported. Custom metadata defined
+directly on individual assets is not filterable.</li>
+<li class=""><strong>Reserved keywords:</strong> <code>AND</code>, <code>OR</code>, <code>LIKE</code>, <code>NOT LIKE</code>, <code>NULL</code>, <code>EMPTY</code> cannot
+be used as field names.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further Reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further Reading" title="Direct link to Further Reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="Use_PQL_as_Developer/index.html">Use PQL as a Developer</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

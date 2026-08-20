@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Classification Store Batch Details — HyperMDM</title>
+<link rel="stylesheet" href="../../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Classification Store Batch Details</h1></header>
+<p>The <code>Classification Store Batch</code> data target assigns many classification store keys with a single mapping entry. Two
+constraints shape how the <a class="" href="../../Transformation_Pipeline/index.html">transformation pipeline</a> has to be built.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="required-result-format">Required Result Format<a href="#required-result-format" class="hash-link" aria-label="Direct link to Required Result Format" title="Direct link to Required Result Format" translate="no">​</a></h2>
+<p>The target expects an array keyed by <code>&lt;GROUP_ID&gt;-&lt;KEY_ID&gt;</code>, with the values to assign:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">['1-1' =&gt; 'some value', '1-2' =&gt; 'some other value']</span><br></span></code></pre></div></div>
+<p>The pipeline has to produce that shape.</p>
+<p>The simplest way is a JSON data source that already contains it:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">[</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "remote-id": 1,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "datastore_input": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-1": "some value object 1",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-2": "some other value object 1"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "remote-id": 2,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "datastore_input": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-1": "some value"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">]</span><br></span></code></pre></div></div>
+<p>A single <code>As Array</code> operator is then enough.</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, simple mapping</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_simple-584e2cac967ed4d8c04c323199154f2d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/data_target_classification_store_batch_simple-584e2cac967ed4d8c04c323199154f2d.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, simple mapping</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_simple-584e2cac967ed4d8c04c323199154f2d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/data_target_classification_store_batch_simple-584e2cac967ed4d8c04c323199154f2d.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, simple mapping</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_simple-584e2cac967ed4d8c04c323199154f2d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>When the format cannot carry nested data, for example CSV, encode the pairs into one field and decode them in the
+pipeline. Source data of <code>1-6#value 1||2-4#value 2</code> decodes with a chain of <code>Explode</code> and
+<code>Reduce Array Key-Value Pairs</code> operators:</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, decoding a single field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_decoding-2103bd6389d0bb43e09a5daa32692a2e.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/data_target_classification_store_batch_decoding-2103bd6389d0bb43e09a5daa32692a2e.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, decoding a single field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_decoding-2103bd6389d0bb43e09a5daa32692a2e.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/data_target_classification_store_batch_decoding-2103bd6389d0bb43e09a5daa32692a2e.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, decoding a single field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_decoding-2103bd6389d0bb43e09a5daa32692a2e.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="assigning-complex-values">Assigning Complex Values<a href="#assigning-complex-values" class="hash-link" aria-label="Direct link to Assigning Complex Values" title="Direct link to Assigning Complex Values" translate="no">​</a></h2>
+<p>Keys holding a <code>date</code> or a <code>quantityValue</code> need the matching operator at the end of the pipeline. One pipeline produces
+one result type, so a single mapping entry cannot mix value types.</p>
+<p>Split the source data by type, one field per type:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">[</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "remote-id": 1,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "datastore_input": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-1": "some value object 1",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-2": "some other value object 1"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "datastore_date": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-4": "2021-07-22"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "datastore_unit": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-3": "234 km"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "remote-id": 2,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "datastore_input": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-1": "some value"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "datastore_date": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-4": "2021-07-21"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "datastore_unit": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-3": "54 km"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">]</span><br></span></code></pre></div></div>
+<p>Then create one mapping entry per <code>datastore_*</code> field, all pointing at the same classification store field. The date
+entry ends in a <code>Date</code> operator, the unit entry in <code>Quantity Value Array</code>:</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, date mapping</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_date-18c7a337244b636b0854b9d657771c20.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/data_target_classification_store_batch_date-18c7a337244b636b0854b9d657771c20.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, date mapping</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_date-18c7a337244b636b0854b9d657771c20.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/data_target_classification_store_batch_date-18c7a337244b636b0854b9d657771c20.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, date mapping</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_date-18c7a337244b636b0854b9d657771c20.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-10">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-10</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, quantity value mapping</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_quantityValue-aa83829b44c9489570fa0261e16c32d0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-10">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/data_target_classification_store_batch_quantityValue-aa83829b44c9489570fa0261e16c32d0.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-11">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-11</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, quantity value mapping</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_quantityValue-aa83829b44c9489570fa0261e16c32d0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-11">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/data_target_classification_store_batch_quantityValue-aa83829b44c9489570fa0261e16c32d0.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-12">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-12</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Classification Store Batch, quantity value mapping</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/data_target_classification_store_batch_quantityValue-aa83829b44c9489570fa0261e16c32d0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-12">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-13">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-13</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-Data_Target-Classification_Store_Batch_Details-index-13">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>The accepted result types are <code>array</code>, <code>quantityValueArray</code>, <code>inputQuantityValueArray</code> and <code>dateArray</code>. Any other result
+type is rejected when the data target is selected.</p></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../../search.js"></script>
+</body>
+</html>

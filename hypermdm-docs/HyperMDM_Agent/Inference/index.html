@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inference — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Inference</h1></header>
+<p>"Inference" is the large-language-model call behind every agent turn. The bundle is
+<strong>provider-agnostic</strong>: agents are defined once, and which model actually runs them - and
+who pays for it - is a configuration choice. This section explains the available options,
+how to match a model to a task, and what our own evaluation runs found.</p>
+<p>Terminology is defined in <a class="" href="../Getting_Started/Concepts/index.html">Core Concepts</a>. The
+field-by-field configuration schema lives in
+<a class="" href="../Configuration/Inference_Providers/index.html">Configuration → Inference Providers</a>; this
+section is the conceptual companion to it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="out-of-the-box">Out of the box<a href="#out-of-the-box" class="hash-link" aria-label="Direct link to Out of the box" title="Direct link to Out of the box" translate="no">​</a></h2>
+<p>A fresh installation ships with a working default: every agent runs through <strong>GitHub
+Copilot</strong> on <strong>Claude Haiku 4.5</strong>. The only value a developer has to supply is the
+<code>AGENT_SERVER_GH_TOKEN</code> environment variable (a GitHub PAT with the <em>Copilot Requests</em>
+permission). The bundle provides an <code>AgentServerEnvVarDefinition</code>; once it is registered in a
+HyperMDM install profile, the HyperMDM installer prompts for this token (as an optional secret)
+during installation.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># Shipped default (config/hypermdm/config.yaml) - override from your application config.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm_agent</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">inference</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">default_provider</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> copilot</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">providers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">copilot</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">driver</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> copilot</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">auth_mode</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> github</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">token</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'${AGENT_SERVER_GH_TOKEN}'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">default_model</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> claude</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">haiku</span><span class="token punctuation" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">4.5</span><br></span></code></pre></div></div>
+<p>Everything below is about going beyond that default - using other models, other providers,
+or your own keys.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-to-go">Where to go<a href="#where-to-go" class="hash-link" aria-label="Direct link to Where to go" title="Direct link to Where to go" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>I want to…</th><th>Read</th></tr></thead><tbody><tr><td>Understand which model fits which task, and how to size for cost</td><td><a class="" href="Model_Requirements/index.html">Model Requirements</a></td></tr><tr><td>See how we evaluated models and the measured results</td><td><a class="" href="Model_Evaluation/index.html">Model Evaluation</a></td></tr><tr><td>Configure a named provider (fields, per-model limits, examples)</td><td><a class="" href="../Configuration/Inference_Providers/index.html">Configuration → Inference Providers</a></td></tr><tr><td>Use a strict OpenAI-compatible endpoint (Cerebras, Ollama, vLLM, …)</td><td><a class="" href="../Configuration/Provider_Compatibility/index.html">Configuration → Provider Compatibility</a></td></tr><tr><td>Assign a provider/model to a specific agent</td><td><a class="" href="../Configuration/Agents/index.html">Configuration → Agents</a></td></tr><tr><td>Set the token secrets</td><td><a class="" href="../Configuration/Environment_Variables/index.html">Configuration → Environment Variables</a></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="three-ways-to-run-inference">Three ways to run inference<a href="#three-ways-to-run-inference" class="hash-link" aria-label="Direct link to Three ways to run inference" title="Direct link to Three ways to run inference" translate="no">​</a></h2>
+<p>All providers share one <code>driver</code> (<code>copilot</code>, the SDK that powers the adapter). What differs
+is <strong>how you authenticate</strong> (<code>auth_mode</code>) and <strong>where the request goes</strong>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-github-copilot---billed-through-github">1. GitHub Copilot - billed through GitHub<a href="#1-github-copilot---billed-through-github" class="hash-link" aria-label="Direct link to 1. GitHub Copilot - billed through GitHub" title="Direct link to 1. GitHub Copilot - billed through GitHub" translate="no">​</a></h3>
+<p><code>auth_mode: github</code>. Inference is routed through the GitHub Copilot catalog and billed
+against the GitHub Copilot subscription tied to the token. The model list is fetched live
+from Copilot, so you can pick any model the catalog exposes (Anthropic, OpenAI, and Google
+families, among others) without listing models yourself. This is the simplest option and the
+shipped default - no per-model limits to maintain, one secret to set.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-bring-your-own-key-byok---billed-by-the-provider">2. Bring Your Own Key (BYOK) - billed by the provider<a href="#2-bring-your-own-key-byok---billed-by-the-provider" class="hash-link" aria-label="Direct link to 2. Bring Your Own Key (BYOK) - billed by the provider" title="Direct link to 2. Bring Your Own Key (BYOK) - billed by the provider" translate="no">​</a></h3>
+<p><code>auth_mode: byok</code>. You supply an API key for a specific provider and are billed by that
+provider directly. Three provider shapes are supported via the <code>provider</code> field:</p>
+<ul>
+<li class=""><strong><code>anthropic</code></strong> - Claude models against <code>https://api.anthropic.com</code>.</li>
+<li class=""><strong><code>openai</code></strong> - OpenAI against <code>https://api.openai.com/v1</code>.</li>
+<li class=""><strong><code>openai</code> (compatible)</strong> - any endpoint that speaks the OpenAI wire format: Hugging Face
+Inference, Cerebras, Groq-style routers, self-hosted servers, and so on. Some strict
+endpoints need the <a class="" href="../Configuration/Provider_Compatibility/index.html">compatibility shim</a>
+(<code>compat: openai-strict</code> / <code>cerebras</code>).</li>
+</ul>
+<p>In BYOK mode <code>base_url</code> is <strong>required</strong> and the model list comes entirely from your
+<code>available_models</code> block, where you also declare per-model context-window and token limits.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-cloud-service-vs-self-hosted">3. Cloud service vs. self-hosted<a href="#3-cloud-service-vs-self-hosted" class="hash-link" aria-label="Direct link to 3. Cloud service vs. self-hosted" title="Direct link to 3. Cloud service vs. self-hosted" translate="no">​</a></h3>
+<p>BYOK is orthogonal to <em>where the model runs</em>. The same configuration can point at:</p>
+<ul>
+<li class="">a <strong>managed cloud service</strong> - Anthropic, OpenAI, Hugging Face Inference Providers, Cerebras,
+etc. (set <code>base_url</code> to the vendor endpoint); or</li>
+<li class="">a <strong>model you host yourself</strong> - Ollama, vLLM, or Text Generation Inference behind your own
+network (set <code>base_url</code> to your server, usually with <code>compat: openai-strict</code>).</li>
+</ul>
+<p>Self-hosting removes per-token vendor cost and keeps data in your infrastructure, at the price
+of running and scaling the inference server. Managed services trade cost-per-token for zero
+operational overhead and instant access to frontier models.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="per-agent-provider-and-model">Per-agent provider and model<a href="#per-agent-provider-and-model" class="hash-link" aria-label="Direct link to Per-agent provider and model" title="Direct link to Per-agent provider and model" translate="no">​</a></h2>
+<p>Inference is not all-or-nothing. Each agent may name its own <code>provider</code> and <code>model</code>
+(see <a class="" href="../Configuration/Agents/index.html">Configuration → Agents</a>); agents that name neither
+fall back to <code>default_provider</code> and that provider's <code>default_model</code>. This lets you match the
+model to the job - a small, cheap model for a data-lookup agent and a stronger model for a
+document-authoring or research agent - which is the single biggest lever on both quality and
+cost. <a class="" href="Model_Requirements/index.html">Model Requirements</a> covers how to make that call, and
+<a class="" href="Model_Evaluation/index.html">Model Evaluation</a> backs it with measured data.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

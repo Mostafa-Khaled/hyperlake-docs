@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Information — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Information</h1></header>
+<p>Following steps are necessary during updating to newer versions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php--symfony-requirements">PHP / Symfony Requirements<a href="#php--symfony-requirements" class="hash-link" aria-label="Direct link to PHP / Symfony Requirements" title="Direct link to PHP / Symfony Requirements" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for PHP 8.5</li>
+<li class="">Dropped PHP 8.3 and Symfony 6 support. Upgrade to PHP 8.4+ and Symfony 7 before updating to this version</li>
+<li class="">Dropped Symfony <code>^6.4</code> support for <code>symfony/asset</code>, <code>symfony/form</code>, <code>symfony/intl</code>, <code>symfony/validator</code>, <code>symfony/security-bundle</code>; <code>^7.2</code> is now required for all of these</li>
+<li class="">Dropped <code>symfony/translation-contracts</code> <code>^2.5</code> support; <code>^3.0</code> is now required</li>
+<li class="">Dropped <code>symfony/webpack-encore-bundle</code> <code>^1.x</code> support; <code>^2.0</code> is now required</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-admin-classic-ui-extjs-support">Removed Admin Classic UI (ExtJS) Support<a href="#removed-admin-classic-ui-extjs-support" class="hash-link" aria-label="Direct link to Removed Admin Classic UI (ExtJS) Support" title="Direct link to Removed Admin Classic UI (ExtJS) Support" translate="no">​</a></h3>
+<p>The bundle no longer supports the HyperMDM Admin Classic UI (ExtJS). All ExtJS-related code and assets have been removed:</p>
+<ul>
+<li class=""><code>HyperMDMPortalEngineBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code> and no longer uses <code>BundleAdminClassicTrait</code></li>
+<li class="">Removed methods: <code>getJsPaths()</code>, <code>getCssPaths()</code>, <code>getEditmodeCssPaths()</code>, <code>getEditmodeJsPaths()</code></li>
+<li class=""><code>HyperMDMAdminBundle</code> is no longer registered as a dependent bundle</li>
+<li class=""><code>hypermdm/admin-ui-classic-bundle</code> has been removed from the <code>suggest</code> section of <code>composer.json</code></li>
+<li class="">Deleted Admin controllers (previously served the classic admin UI):<!-- -->
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Controller\Admin\CollectionsController</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Controller\Admin\FrontendBuildController</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Controller\Admin\IndexManagementController</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Controller\Admin\WizardController</code></li>
+</ul>
+</li>
+<li class="">Deleted <code>HyperMDM\Bundle\PortalEngineBundle\EventSubscriber\AdminSettingsSubscriber</code></li>
+<li class="">The route group <code>hypermdm_portal_engine_admin</code> (<code>/admin/portal-engine</code>) has been removed</li>
+<li class=""><code>hypermdm/studio-ui-bundle</code> and <code>hypermdm/studio-backend-bundle</code> are now required</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-extension-changes">Bundle Extension Changes<a href="#bundle-extension-changes" class="hash-link" aria-label="Direct link to Bundle Extension Changes" title="Direct link to Bundle Extension Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMPortalEngineExtension</code> now unconditionally loads <code>studio_backend.yaml</code>, <code>hypermdm/studio_backend.yaml</code>, and <code>studio_ui.yaml</code>; previously these were only loaded when the respective bundles were detected in the container</li>
+<li class="">Removed <code>registerPossiblePortalDomains()</code> method from <code>HyperMDMPortalEngineExtension</code></li>
+<li class="">The <code>wizard.possible_portal_domains</code> configuration option has been removed</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="routing-changes">Routing Changes<a href="#routing-changes" class="hash-link" aria-label="Direct link to Routing Changes" title="Direct link to Routing Changes" translate="no">​</a></h3>
+<ul>
+<li class="">The <code>hypermdm_portal_engine_studio</code> route is now defined directly via Symfony attribute routing on <code>@HyperMDMPortalEngineBundle/Controller/Studio</code> with prefix <code>%hypermdm_studio_backend.url_prefix%/bundle/portal-engine</code>; the previously used custom route loader type <code>hypermdm_portal_engine_studio</code> is no longer available</li>
+<li class="">Service configuration for controllers updated: the <code>HyperMDM\Bundle\PortalEngineBundle\Controller\</code> namespace now covers all controllers (previously only <code>Controller/Studio</code> was registered as public controller service)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="messenger-transport-dsn">Messenger Transport DSN<a href="#messenger-transport-dsn" class="hash-link" aria-label="Direct link to Messenger Transport DSN" title="Direct link to Messenger Transport DSN" translate="no">​</a></h3>
+<ul>
+<li class="">The messenger transport DSN is now configurable via the <code>%hypermdm.messenger.transport_dsn_prefix%</code> container parameter instead of being hardcoded to <code>doctrine://default</code>. This allows configuring the transport via the <code>HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX</code> environment variable and supports AMQP and Redis transports in addition to Doctrine.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="return-type--interface-changes">Return Type / Interface Changes<a href="#return-type--interface-changes" class="hash-link" aria-label="Direct link to Return Type / Interface Changes" title="Direct link to Return Type / Interface Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\MappedParameter\Collection\TreeItemsParameter::getFilter()</code> return type changed
+from <code>?string</code> to <code>string</code>. The method now always returns a string (empty string instead of <code>null</code> when no filter is
+set)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="other-changes">Other Changes<a href="#other-changes" class="hash-link" aria-label="Direct link to Other Changes" title="Direct link to Other Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Model\Rest\BasicListJsonModel::setEntries()</code> no longer applies <code>array_filter()</code> to the given entries array; falsy entries (e.g. <code>null</code>, <code>0</code>, <code>''</code>) are now preserved</li>
+<li class="">Studio main navigation item order changed from <code>0</code> to <code>100</code>; <code>dividerBottom</code> has been removed from the navigation item registration</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-500">Upgrade to 5.0.0<a href="#upgrade-to-500" class="hash-link" aria-label="Direct link to Upgrade to 5.0.0" title="Direct link to Upgrade to 5.0.0" translate="no">​</a></h2>
+<ul>
+<li class="">[Code BC breaks] deprecated tag <code>hypermdm.portal_engine.search_client_definition</code> was removed. Use the new tag <code>hypermdm.portal_engine.search_client_aware</code> instead.</li>
+<li class="">[Code BC breaks] Removed deprecated service ids for statistic trackers. Use the new service ids based on the configured search technology (Elasticsearch or OpenSearch) instead.<!-- -->
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\OpenSearch\AssetUpdateTracker</code> -&gt; <code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\AssetUpdateTrackerInterface</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\OpenSearch\DownloadTracker</code> -&gt; <code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\DownloadTrackerInterface</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\OpenSearch\PortalUserLoginTracker</code> -&gt; <code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\PortalUserLoginTrackerInterface</code></li>
+</ul>
+</li>
+<li class="">[Code BC breaks] Adapted <code>SearchServiceInterface</code> method <code>getSearchByParams</code> to return new <code>HyperMDM\Bundle\GenericDataIndexBundle\Model\DefaultSearch\Search</code> class.</li>
+<li class="">[Code BC breaks] Removed deprecated method <code>getUsername</code> from <code>HyperMDM\Bundle\PortalEngineBundle\Service\Security\Authentication\UserProvider</code> class.</li>
+<li class="">[Code BC breaks] Replaced all deprecated <code>HyperMDM\Bundle\GenericDataIndexBundle\Model\OpenSearch</code> namespace classes with <code>HyperMDM\Bundle\GenericDataIndexBundle\Model\DefaultSearch</code>.</li>
+<li class="">[Code BC breaks] Replaced all deprecated <code>HyperMDM\Bundle\GenericDataIndexBundle\Enum\\SearchIndex\OpenSearch</code> namespace classes with <code>HyperMDM\Bundle\GenericDataIndexBundle\Enum\SearchIndex\DefaultSearch</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-420">Upgrade to 4.2.0<a href="#upgrade-to-420" class="hash-link" aria-label="Direct link to Upgrade to 4.2.0" title="Direct link to Upgrade to 4.2.0" translate="no">​</a></h2>
+<ul>
+<li class="">[Indexing] Added support for Elasticsearch in parallel to Opensearch via <code>hypermdm/general-data-index-bundle</code> bundle</li>
+<li class="">[Indexing] Introduced new service tag <code>hypermdm.portal_engine.search_client_aware</code>. Services implementing this tag will be injected with the search client. This tag will replace deprecated tag <code>hypermdm.portal_engine.search_client_definition</code></li>
+<li class="">[Trackers] Added factories to create statistics trackers based on the configured search technology (Elasticsearch or OpenSearch). Symfony container service ids for trackers changed to the corresponding interface:<!-- -->
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\OpenSearch\AssetUpdateTracker</code> -&gt; <code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\AssetUpdateTrackerInterface</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\OpenSearch\DownloadTracker</code> -&gt; <code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\DownloadTrackerInterface</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\OpenSearch\PortalUserLoginTracker</code> -&gt; <code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\PortalUserLoginTrackerInterface</code></li>
+<li class="">For legacy reasons, the old service ids are still available, but they are deprecated and will be removed in the next major version. Please note that these services work only with OpenSearch technology.</li>
+</ul>
+</li>
+<li class="">[Permissions] Added the possibility to disable Public Share functionality of each Data Pool and on user/group level permission. Added <code>PublicShareEvent</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-400">Upgrade to 4.0.0<a href="#upgrade-to-400" class="hash-link" aria-label="Direct link to Upgrade to 4.0.0" title="Direct link to Upgrade to 4.0.0" translate="no">​</a></h2>
+<ul>
+<li class="">[Indexing] Removed Elasticsearch support and indexing mechanisms, Portal Engine is using OpenSearch now via <code>hypermdm/general-data-index-bundle</code> bundle</li>
+<li class="">Removed usage of ongr-io/ElasticsearchDSL library and replaced it with custom solution<!-- -->
+<ul>
+<li class="">This is especially important for custom implementations of <code>HyperMDM\Bundle\PortalEngineBundle\Service\SearchIndex\Search\PreConditionServiceHandler\PreConditionServiceHandlerInterface</code> and events manipulating the search queries.</li>
+</ul>
+</li>
+<li class="">[Core] Removed HyperMDM 10 support</li>
+<li class="">[Frontend] Updated frontend dependencies</li>
+<li class="">[Events] Moved events to <code>hypermdm/general-data-index-bundle</code> bundle<!-- -->
+<ul>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Asset\ExtractMappingEvent</code> -&gt; <code>HyperMDM\Bundle\GenericDataIndexBundle\Event\Asset\ExtractMappingEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\Asset\UpdateIndexDataEvent</code> -&gt; <code>HyperMDM\Bundle\GenericDataIndexBundle\Event\Asset\UpdateIndexDataEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\DataObject\UpdateIndexDataEvent</code> -&gt; <code>HyperMDM\Bundle\GenericDataIndexBundle\DataObject\Asset\UpdateIndexDataEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Event\DataObject\UpdateIndexDataEvent</code> -&gt; <code>HyperMDM\Bundle\GenericDataIndexBundle\Event\DataObject\UpdateIndexDataEvent</code></li>
+</ul>
+</li>
+<li class="">[Configuration] Moved configuration options <code>hypermdm_portal_engine.index_service.es_client_params</code> and <code>hypermdm_portal_engine.index_service.es_client_params.es_client_name</code> to <code>hypermdm_portal_engine.index_service.opensearch_client_params</code> and <code>hypermdm_portal_engine.index_service.opensearch_client_params.client_name</code></li>
+<li class="">[Configuration] Removed configuration option <code>hypermdm_portal_engine.hypermdm_portal_engine.core_fields_configuration</code> (is now handled by <code>hypermdm_generic_data_index.core_fields_configuration</code> of <code>hypermdm/general-data-index-bundle</code> bundle)</li>
+<li class="">[Configuration] Removed configuration options <code>hypermdm_portal_engine.messenger_queue_processing.*</code>. The queue processing is now handled by <code>hypermdm/general-data-index-bundle</code> bundle and handling it by message workers is now the only/default option.</li>
+<li class="">[Configuration] Removed <code>hypermdm_portal_engine.index_service.index_settings configuration</code> option. The index settings are now handled by <code>hypermdm/general-data-index-bundle</code> bundle.</li>
+<li class="">[Configuration] Container parameter <code>portal-engine.elasticsearch.index-prefix</code> was removed and replaced with <code>generic-data-index.index-prefix</code> of <code>hypermdm/general-data-index-bundle</code> bundle.</li>
+<li class="">[Configuration] Container parameter <code>portal-engine.elasticsearch.es-client-name</code> was removed. Use the <code>generic-data-index.opensearch-client</code> service to get the right client if needed.</li>
+<li class="">[Code BC breaks] Migrated asset and data object field definition adapters to new requirements<!-- -->
+<ul>
+<li class="">Renamed getESMapping() method to getIndexMapping()</li>
+<li class="">Renamed method getLocalizedESMapping() to getLocalizedIndexMapping()</li>
+<li class="">Add return types to most of the methods</li>
+</ul>
+</li>
+<li class="">[Code BC breaks] Removed <code>HyperMDM\Bundle\PortalEngineBundle\Enum\ElasticSearchFields</code> enum and replaced it with <code>HyperMDM\Bundle\GenericDataIndexBundle\Enum\SearchIndex\FieldCategory</code> and <code>HyperMDM\Bundle\GenericDataIndexBundle\Enum\SearchIndex\FieldCategory\SystemField</code> enums of <code>hypermdm/general-data-index-bundle</code> bundle.</li>
+<li class="">[Code BC breaks] Moved statistic trackers from <code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\Elasticsearch</code> to <code>HyperMDM\Bundle\PortalEngineBundle\Service\StatisticsTracker\OpenSearch</code> and migrated them to OpenSearch instead of Elasticsearch.</li>
+<li class="">[Code BC breaks] Make use of PHP 8 constructor property promotion feature for most of the classes.<!-- -->
+<ul>
+<li class="">Private and protected properties used in the constructor are now typed.</li>
+</ul>
+</li>
+<li class="">[Code BC breaks] Renamed property <code>userLoginFields</code> of class <code>HyperMDM\Bundle\PortalEngineBundle\Service\Security\Authentication\UserProvider</code> to <code>fields</code></li>
+<li class="">[Search index structure] Moved field paths of <code>standard_fields</code> within the search index to new convention/location:<!-- -->
+<ul>
+<li class="">Asset metadata are now stored in <code>custom_fields</code></li>
+<li class="">Data object relation fields are now stored in custom_fields</li>
+<li class="">Localized fields are now stored with <code>{LOCALE}</code> placeholder instead of hardcoded language locale.</li>
+<li class=""><code>.raw</code> subfields are renamed to '.keyword'</li>
+<li class=""><code>HyperMDM\Bundle\PortalEngineBundle\Migrations\HyperMDM11\Version20240208161554</code> migration should take care of updating the index fields automatically, but the data pool configuration pool documents should be double checked to ensure that filter fields, list view fields, sortable fields and the list view name attributes are still correct.</li>
+<li class="">Custom conditions via <code>HyperMDM\Bundle\PortalEngineBundle\Service\SearchIndex\Search\PreConditionServiceHandler\PreConditionServiceHandlerInterface</code> should be checked and updated if necessary.</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-310">Upgrade to 3.1.0<a href="#upgrade-to-310" class="hash-link" aria-label="Direct link to Upgrade to 3.1.0" title="Direct link to Upgrade to 3.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">(only relevant if not already upgraded to version 2.6.0) [Indexing] - Filters based on the asset metadata with relations
+to objects which have localized fields are now indexed with all the localized values. The index structure is therefore
+changed (from single string to array) and it is necessary to run the migration that recreates all the indexes after
+updating to 3.1.0.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-300">Upgrade to 3.0.0<a href="#upgrade-to-300" class="hash-link" aria-label="Direct link to Upgrade to 3.0.0" title="Direct link to Upgrade to 3.0.0" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>BEFORE UPGRADE:</strong> First upgrade to last 2.5 version and make sure all migrations are executed properly.</li>
+<li class=""><strong>BEFORE UPGRADE:</strong> Upgrade directly to 3.1.0 if you already upgraded to 2.6 versions.</li>
+<li class=""><strong>BEFORE UPGRADE:</strong> Activate <code>Generate Type Declarations</code> for <code>PortalUser</code> and <code>PortalUserGroup</code> classes and save them to
+regenerate the php class files. This will break portals until portal engine is upgraded to v3.0.0 via composer.</li>
+<li class="">Removed HyperMDM 6.9 support.</li>
+<li class="">If you are upgrading to hypermdm 11, then please install the <code>hypermdm/admin-ui-classic-bundle</code> bundle.</li>
+<li class="">[Security] Removed support of old authentication system (not setting <code>security.enable_authenticator_manager: true</code> in <code>security.yaml</code>)
+and related Guard authenticators.</li>
+<li class="">[OpenId Connect] Bumped required version of <code>openid-connect</code> bundle to ^1.1.</li>
+<li class="">[Elasticsearch] Removed ES 6 and ES 7 support, added ES 8 support.</li>
+<li class="">[Elasticsearch] Changed elasticsearch client configuration.</li>
+<li class="">Adapted installation process, see docs for details.</li>
+<li class="">Added additional parameter for the <code>DataPoolConfigInterface</code> in methods of <code>WorkspaceServiceInterface</code>, <code>SearchServiceInterface</code>, <code>FolderService</code> and <code>PreConditionService</code>.</li>
+<li class="">[Indexing] Added option to re-create index or update index via settings page</li>
+<li class="">[DataObject][Layout] - fixed layout of Field Container (vbox is now vertical and hbox horizontal layout)</li>
+<li class="">[Security] Changed the return type of <code>HyperMDM\Bundle\PortalEngineBundle\Service\Security\DirectEditPermissionService::getUserId</code> to <code>null|int</code>.</li>
+<li class="">[Translations] Introduced separate translation domain for frontend translations - <code>portal-engine-frontend</code>.</li>
+<li class="">[Translations] Implemented PO Editor workflow for shared and admin translations (they are now under <code>src\Resources\translations</code> in <code>.yaml</code> format).</li>
+<li class="">[Migrate Statistics Explorer Data] If the statistics data (for logins, downloads and asset updates) stored in Elasticsearch are still relevant and should be kept, the data needs be migrated to OpenSearch. This can be done for example via native reindexing directly in OpenSearch:</li>
+</ul>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">POST _reindex</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   "source":{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      "index": "enterprise_portal_statistics_download__2024_04",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      "remote":{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">         "host":"http://elastic:9200",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">         "username":"elastic",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">         "password":"somethingsecret"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   "dest":{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      "index":"hypermdm_statistics_download__2024_04"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<p>To make this possible it is needed to set the <code>reindex.remote.whitelist</code> setting in the <code>opensearch.yml</code> configuration file of the OpenSearch instance to allow the remote reindexing from the old Elasticsearch instance. Additionally, the correct index names/prefixes need to be checked to find the right source and target index names.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-260">Upgrade to 2.6.0<a href="#upgrade-to-260" class="hash-link" aria-label="Direct link to Upgrade to 2.6.0" title="Direct link to Upgrade to 2.6.0" translate="no">​</a></h2>
+<ul>
+<li class="">[Indexing] - Filters based on the asset metadata with relations to objects which have localized fields are now indexed with all the localized values.
+The index structure is therefore changed (from single string to array) and it is necessary to run the migration that recreates all the indexes after updating to 2.6.0.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-23">Upgrade to 2.3<a href="#upgrade-to-23" class="hash-link" aria-label="Direct link to Upgrade to 2.3" title="Direct link to Upgrade to 2.3" translate="no">​</a></h2>
+<ul>
+<li class="">From now on, out of the box Statistics Explorer data sources and trackers use same ES configuration as portal engine itself.
+If you want to change that, you need to overwrite service definition of <code>hypermdm.portal_engine.statistics_explorer.client_factory</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-210">Upgrade to 2.1.0<a href="#upgrade-to-210" class="hash-link" aria-label="Direct link to Upgrade to 2.1.0" title="Direct link to Upgrade to 2.1.0" translate="no">​</a></h2>
+<ul>
+<li class="">Execute all migrations of the bundle.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-200">Upgrade to 2.0.0<a href="#upgrade-to-200" class="hash-link" aria-label="Direct link to Upgrade to 2.0.0" title="Direct link to Upgrade to 2.0.0" translate="no">​</a></h2>
+<ul>
+<li class="">First upgrade to last 1.x version and make sure all migrations are executed properly.</li>
+<li class="">Migrate HyperMDM to HyperMDM 6.9</li>
+<li class="">Migrate controller references to new naming scheme (e.g. ), for example by using migration command
+<code>bin/console migration:controller-reference</code></li>
+<li class="">Add following line to your firewalls configuration in the <code>security.yml</code> of your app after the <code>hypermdm_admin</code> firewall.</li>
+</ul>
+<div class="language-yml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">security</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">firewalls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hypermdm_admin</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token comment" style="color:#999988;font-style:italic"># ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">portal_engine</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%hypermdm_portal_engine.firewall_settings%'</span><br></span></code></pre></div></div>
+<ul>
+<li class="">Clear HyperMDM Caches (<code>bin/console hypermdm:cache:clear</code>)</li>
+<li class="">Elasticsearch mapping has changed to fix deprecations. Rebuild your index by running following commands:</li>
+</ul>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console portal-engine:update:index-recreate</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console portal-engine:update:process-index-queue</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

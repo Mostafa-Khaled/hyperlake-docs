@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>User Management — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>User Management</h1></header>
+<p>Users and their permissions are managed via HyperMDM data objects of type <code>PortalUser</code>. Each user has a couple
+of base data attributes, assigned user groups and permission, workspace and language settings.</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Portal_Engine-Administration_of_Portals-Configuration-User_Management-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Portal_Engine-Administration_of_Portals-Configuration-User_Management-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">PortalUser Object</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/config-user-d73d5c4d468019c43ab1c748a6744c6e.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Portal_Engine-Administration_of_Portals-Configuration-User_Management-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/config-user-d73d5c4d468019c43ab1c748a6744c6e.png"><figure class="visual-placeholder" id="fig-Portal_Engine-Administration_of_Portals-Configuration-User_Management-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Portal_Engine-Administration_of_Portals-Configuration-User_Management-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">PortalUser Object</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/config-user-d73d5c4d468019c43ab1c748a6744c6e.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Portal_Engine-Administration_of_Portals-Configuration-User_Management-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/config-user-d73d5c4d468019c43ab1c748a6744c6e.png"><figure class="visual-placeholder" id="fig-Portal_Engine-Administration_of_Portals-Configuration-User_Management-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Portal_Engine-Administration_of_Portals-Configuration-User_Management-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">PortalUser Object</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/config-user-d73d5c4d468019c43ab1c748a6744c6e.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Portal_Engine-Administration_of_Portals-Configuration-User_Management-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Also, additional login methods like <a class="" href="Guest_User/index.html">Guest User</a> and <a class="" href="OpenID_Connect_Integration/index.html">OpenId Connect integration</a>
+are based on <code>PortalUser</code> objects.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="base-data">Base Data<a href="#base-data" class="hash-link" aria-label="Direct link to Base Data" title="Direct link to Base Data" translate="no">​</a></h4>
+<p>Base data attributes are e-mail, firstname, lastname and preferred language for the portal frontends. The e-mail
+address is also the username, all the other attributes can be updated in the profile page of the portals.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="assigned-hypermdm-user-and-authentication">Assigned HyperMDM User and Authentication<a href="#assigned-hypermdm-user-and-authentication" class="hash-link" aria-label="Direct link to Assigned Pimcore User and Authentication" title="Direct link to Assigned Pimcore User and Authentication" translate="no">​</a></h4>
+<p>Each portal user has a HyperMDM user assigned - either the <code>portal-engine-default-user</code> or a dedicated user. When creating
+a new <code>PortalUser</code>, the <code>portal-engine-default-user</code> is assigned automatically. To assign a dedicated HyperMDM backend user,
+the user has to be selected manually.</p>
+<p>The link between portal users and HyperMDM backend user is necessary for a couple of things:</p>
+<ul>
+<li class=""><strong>User for assets and versions</strong>: When user creates or updates assets in frontend.</li>
+<li class=""><strong>User for workflow actions</strong>: When user starts workflow transitions in frontend.</li>
+<li class=""><strong>Collections in HyperMDM Backend</strong>: To show all collections of corresponding user in backend.</li>
+</ul>
+<p>Authentication can be against a password stored in the <code>PortalUser</code> object (default behavior, mandatory when
+<code>portal-engine-default-user</code> is used) or against the password of the HyperMDM backend user (only possible when dedicated
+user is assigned). In this case the authentication is delegated to the HyperMDM backend user.</p>
+<p>Besides the password (if activated), no other settings and permissions are used from the HyperMDM backend user.</p>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="fields-for-identifying-user">Fields for identifying user<a href="#fields-for-identifying-user" class="hash-link" aria-label="Direct link to Fields for identifying user" title="Direct link to Fields for identifying user" translate="no">​</a></h5>
+<p>By default the field <code>email</code> gets used during login for identifying a user. This can be changed by overriding the following configuration:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_portal_engine</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">login</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">fields</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> email</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> externalUserId</span><br></span></code></pre></div></div>
+<p>With this configuration a user could be identified by <code>email</code> or <code>externalUserId</code>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="groups">Groups<a href="#groups" class="hash-link" aria-label="Direct link to Groups" title="Direct link to Groups" translate="no">​</a></h4>
+<p>One user can belong to multiple groups. Groups are other HyperMDM data objects of type <code>PortalUserGroup</code> and have settings
+for permissions, workspaces and languages.</p>
+<p>All settings of all assigned groups are merged with the user settings to a collected permission set for the current user.<br>
+<!-- -->Details on the merging strategy see below.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="permissions">Permissions<a href="#permissions" class="hash-link" aria-label="Direct link to Permissions" title="Direct link to Permissions" translate="no">​</a></h4>
+<p>The permissions allow specifying access to portals, data pools and features for the current user. The permission list
+is updated based on available portals, data pools and settings. Possible values for each permission are:</p>
+<ul>
+<li class="">Allow: User is allowed to access.</li>
+<li class="">Deny: User is not allowed to access.</li>
+<li class="">Inherit: Inherits permission settings from assigned user groups; merging is done optimistic, means once allowed, it is allowed.</li>
+</ul>
+<p>If the user is an admin, it has all permission and access to all folders (all workspace settings for admin users are ignored).</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="workspaces">Workspaces<a href="#workspaces" class="hash-link" aria-label="Direct link to Workspaces" title="Direct link to Workspaces" translate="no">​</a></h4>
+<p>Workspaces define what elements the user has permissions for (to view, download, edit, etc.). The user workspaces are global,
+portal independent and are merged with data pool workspaces. On user level, portal workspace permissions can be further restricted,
+not extended.</p>
+<p>By default, users don't have access to anything. At least one workspace entry (or admin permission) is necessary to see
+content in the portals.</p>
+<p>See 'Permission Validation Priority' below for detailed information about the permission validation.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="language-settings">Language Settings<a href="#language-settings" class="hash-link" aria-label="Direct link to Language Settings" title="Direct link to Language Settings" translate="no">​</a></h4>
+<ul>
+<li class="">Visible Languages: Available languages of content (respects content in localized fields and asset metadata)<!-- -->
+<ul>
+<li class="">is merged with settings on data pool level ... once forbidden, user doesn't see language</li>
+<li class="">empty means, that all languages are visible</li>
+</ul>
+</li>
+<li class="">Editable Languages: Editable languages of content (respects content in asset metadata)<!-- -->
+<ul>
+<li class="">
+<p>is merged with settings on data pool level ... once forbidden, user doesn't can edit language</p>
+</li>
+<li class="">
+<p>empty means, that all languages are allowed</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="permission-validation-priority">Permission Validation Priority<a href="#permission-validation-priority" class="hash-link" aria-label="Direct link to Permission Validation Priority" title="Direct link to Permission Validation Priority" translate="no">​</a></h4>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="validation-of-workspaces-and-permissions">Validation of workspaces and permissions<a href="#validation-of-workspaces-and-permissions" class="hash-link" aria-label="Direct link to Validation of workspaces and permissions" title="Direct link to Validation of workspaces and permissions" translate="no">​</a></h5>
+<ol>
+<li class="">User needs access to portal.</li>
+<li class="">User needs access to data pool.</li>
+<li class="">Folder/element needs to be included in user workspace definition.</li>
+<li class="">Folder/element needs to be included in data pool workspace definition.</li>
+<li class="">Data pool permissions (e.g. download allowed, available thumbnails).</li>
+<li class="">User level permissions (e.g. download allowed, available thumbnails) → further restrict data pool permissions, but not extend them.</li>
+</ol>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="merging-rules-for-group-and-user-objects">Merging rules for group and user objects<a href="#merging-rules-for-group-and-user-objects" class="hash-link" aria-label="Direct link to Merging rules for group and user objects" title="Direct link to Merging rules for group and user objects" translate="no">​</a></h5>
+<ul>
+<li class="">Workspaces<!-- -->
+<ul>
+<li class="">Same as for HyperMDM permissions</li>
+<li class="">Group workspace definitions are merged, once something is allowed, it is allowed</li>
+<li class="">Sub folder can overwrite (and restrict) permissions of parent folders</li>
+</ul>
+</li>
+<li class="">Other Permissions<!-- -->
+<ul>
+<li class="">Merge all group-level permissions → once allowed, it is allowed</li>
+<li class="">user-level permissions<!-- -->
+<ul>
+<li class="">allow/deny → use user-level permissions, ignore group permissions</li>
+<li class="">inherit → use group-level permissions</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

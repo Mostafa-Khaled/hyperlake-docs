@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Integration with the HyperMDM Targeting Engine — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Integration with the HyperMDM Targeting Engine</h1></header>
+<p>CMF integrates tightly with HyperMDM's personalization feature, connecting personalization for anonymous visitors with
+the known users managed in CMF. This integration provides:</p>
+<ul>
+<li class="">A connection between Customer Segments and HyperMDM Target Groups.</li>
+<li class="">Additional conditions and actions for HyperMDM Global Targeting Rules.</li>
+<li class="">Special triggers, conditions, and actions for targeting in the CMF Action Trigger Service.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-target-groups-and-customer-segments">HyperMDM Target Groups and Customer Segments<a href="#hypermdm-target-groups-and-customer-segments" class="hash-link" aria-label="Direct link to Pimcore Target Groups and Customer Segments" title="Direct link to Pimcore Target Groups and Customer Segments" translate="no">​</a></h2>
+<p>First, a conceptual distinction. HyperMDM has the concept of target groups: groups assigned to users based purely on
+their behavior, not stored anywhere. Target groups summarize users with similar behavior and are the entity you
+personalize HyperMDM document content for. Projects typically define only a handful of target groups, since each one
+needs its own content. See the
+<a class="" href="../../Targeting/Usage/Concepts/index.html">HyperMDM Personalization concepts</a>
+documentation for details.</p>
+<p>CMF introduces segments: a segment describes a specific characteristic of a user, such as age group, premium
+customer, located in France, or interested in skiing. Segments are more specific and fine-grained than target groups.
+Assign them to users for many different reasons, such as behavior, customer data, manual assignment, or external data
+sources; they are stored in the user profile and used to filter and segment users.</p>
+<p>A target group can correspond to one segment or summarize several. Some segments have no connection to a target group
+at all.</p>
+<p>Some use cases call for directly connecting a segment and a target group. To do so, activate the <code>Use As Target Group</code> checkbox on the segment object. This automatically creates a target group with the same name and links it to
+the segment.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Personalization-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Personalization-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Use As Target Group</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/use-as-target-group-b862bb81811d5b65e0abbbe80f2fff83.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-Personalization-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/use-as-target-group-b862bb81811d5b65e0abbbe80f2fff83.jpg"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Personalization-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Personalization-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Use As Target Group</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/use-as-target-group-b862bb81811d5b65e0abbbe80f2fff83.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-Personalization-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/use-as-target-group-b862bb81811d5b65e0abbbe80f2fff83.jpg"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Personalization-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Personalization-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Use As Target Group</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/use-as-target-group-b862bb81811d5b65e0abbbe80f2fff83.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-Personalization-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>The following sections show how to configure target group assignment based on segments, and vice versa.</p>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Personalization-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Personalization-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-Personalization-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>Target groups summarize similar users at a generic level; use them to personalize HyperMDM document content. Segments
+store specific characteristics of a user in their user profile, and can, but do not need to, connect to a target
+group.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="example-use-cases">Example Use Cases<a href="#example-use-cases" class="hash-link" aria-label="Direct link to Example Use Cases" title="Direct link to Example Use Cases" translate="no">​</a></h2>
+<p>See the <a class="" href="Example_Usecases/index.html">Example Usecases page</a> for typical use cases combining CMF with the HyperMDM
+targeting engine.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="additional-functionality-in-detail">Additional Functionality in Detail<a href="#additional-functionality-in-detail" class="hash-link" aria-label="Direct link to Additional Functionality in Detail" title="Direct link to Additional Functionality in Detail" translate="no">​</a></h2>
+<p>The following subchapters describe the additional targeting engine and CMF Action Trigger Service functionality in
+detail:</p>
+<ul>
+<li class=""><a class="" href="Additional_Targeting_Role_Components/index.html">Additional Targeting Rule Components</a></li>
+<li class=""><a class="" href="Additional_Action_Trigger_Service_Components/index.html">Additional Action Trigger Service Components</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

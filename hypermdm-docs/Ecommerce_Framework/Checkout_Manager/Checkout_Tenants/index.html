@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout Tenants for Checkout — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Checkout Tenants for Checkout</h1></header>
+<p>The E-Commerce Framework has the concept of Checkout Tenants which allow different cart manager and checkout manager
+configurations based on a currently active checkout tenant.</p>
+<p>The current checkout tenant is set in the framework environment as follows. Once set, the checkout manager uses all
+specific settings of the currently active checkout tenant.</p>
+<p>So different checkout steps, different payment providers etc. can be implemented within one shop.</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter important">&lt;?php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$environment</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token class-name static-context">Factory</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">getInstance</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getEnvironment</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$environment</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setCurrentCheckoutTenant</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'default'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$environment</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">save</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$environment</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setCurrentCheckoutTenant</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'noShipping'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$environment</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">save</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<blockquote>
+<p>When using server-by-server payment confirmation communication, make sure that the correct tenant is set during the
+response handling!</p>
+</blockquote></div></article></div></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Workflow Management — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Workflow Management</h1></header>
+<p>HyperMDM Workflow Management configures multiple workflows on elements (assets, documents, data objects)
+to support data maintenance processes and element life cycles.
+It extends the <a href="https://symfony.com/doc/current/workflow.html" target="_blank" rel="noopener noreferrer" class="">Symfony workflow component</a>
+with HyperMDM-specific features. Familiarize yourself with the Symfony workflow basics before proceeding.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="concepts">Concepts<a href="#concepts" class="hash-link" aria-label="Direct link to Concepts" title="Direct link to Concepts" translate="no">​</a></h2>
+<p><strong>Workflow</strong>
+A workflow models the process an element goes through in HyperMDM. It consists of <em>places</em>, <em>transitions</em>,
+a <em>marking store</em>, <em>global actions</em>, and additional configuration options.
+Each element can participate in multiple workflows simultaneously.</p>
+<p><strong>Workflow Type 'Workflow'</strong>
+The default type. It models a <em>workflow net</em> (a subclass of a <em>petri net</em>)
+and allows an element to occupy multiple places simultaneously.</p>
+<p><strong>Workflow Type 'State Machine'</strong>
+A subset of a workflow that holds a single state. A state machine cannot occupy
+more than one place at the same time.
+See also <a href="https://symfony.com/doc/current/workflow/state-machines.html" target="_blank" rel="noopener noreferrer" class="">Symfony docs</a>.</p>
+<p><strong>Place</strong>
+A place is a step in the workflow describing a status or characteristic of an element,
+for example <em>in progress</em>, <em>product attributes defined</em>, <em>copyright available</em>, or <em>ready for publish</em>.
+Depending on the place, an element may use a specific view (e.g. custom layout for data objects)
+and have certain permissions (e.g. finished elements cannot be modified).</p>
+<p><strong>Marking Store</strong>
+The marking store persists the current place(s) for each element.
+HyperMDM ships with several stores configurable in the
+<a class="" href="Configuration/index.html">workflow configuration</a>.</p>
+<p><strong>Transition</strong>
+A transition describes the action of moving from one place to another.
+Transitions are allowed or blocked depending on additional criteria (transition guards)
+and may require notes or information entered by the user.</p>
+<p><strong>Transition Guard</strong>
+Criteria that determine whether a transition is currently allowed.</p>
+<p><strong>Global Action</strong>
+Global actions are available at every place, unlike transitions which are only available
+at certain places. Otherwise, they behave like transitions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="workflow-in-hypermdm-studio">Workflow in HyperMDM Studio<a href="#workflow-in-hypermdm-studio" class="hash-link" aria-label="Direct link to Workflow in Pimcore Studio" title="Direct link to Workflow in Pimcore Studio" translate="no">​</a></h2>
+<p>When workflows are configured for an element, an additional tab displays workflow details
+including all configured workflows, their current places, and a workflow graph.</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Workflow Overview</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow-overview-2ae82f214e64beb11bded5e0289a20c6.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow-overview-2ae82f214e64beb11bded5e0289a20c6.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Workflow Overview</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow-overview-2ae82f214e64beb11bded5e0289a20c6.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow-overview-2ae82f214e64beb11bded5e0289a20c6.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Workflow Overview</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow-overview-2ae82f214e64beb11bded5e0289a20c6.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>Rendering the workflow graph requires <code>graphviz</code> as an additional system requirement.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="workflow-history">Workflow History<a href="#workflow-history" class="hash-link" aria-label="Direct link to Workflow History" title="Direct link to Workflow History" translate="no">​</a></h3>
+<p>The <em>"Notes &amp; Events"</em> tab lists every action applied to the element through the workflow module.</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Notes &amp;amp; Events - notes from the workflow</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/notesandevents_object_grid-253285fc0466fe78848856a79a9eca4d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/notesandevents_object_grid-253285fc0466fe78848856a79a9eca4d.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Notes &amp;amp; Events - notes from the workflow</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/notesandevents_object_grid-253285fc0466fe78848856a79a9eca4d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/notesandevents_object_grid-253285fc0466fe78848856a79a9eca4d.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Notes &amp;amp; Events - notes from the workflow</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/notesandevents_object_grid-253285fc0466fe78848856a79a9eca4d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<p>Workflow configuration uses the Symfony configuration tree under the <code>hypermdm.workflows</code> namespace.
+Define workflows in your project's configuration files (e.g. <code>config/config.yaml</code>).
+The <a class="" href="Configuration/index.html">Configuration</a> section covers all aspects in detail:
+marking stores, support strategies, permissions, notifications,
+and a complete YAML reference with all available options.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="workflow-designer-enterprise">Workflow Designer (Enterprise)<a href="#workflow-designer-enterprise" class="hash-link" aria-label="Direct link to Workflow Designer (Enterprise)" title="Direct link to Workflow Designer (Enterprise)" translate="no">​</a></h2>
+<p>The Workflow Designer provides a visual editor for creating and managing workflows in HyperMDM Studio.
+See <a class="" href="../../Worfklow_Designer/Installation_and_Configuration/index.html">Workflow Designer documentation</a>
+for installation and configuration details.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="working-with-the-php-api">Working with the PHP API<a href="#working-with-the-php-api" class="hash-link" aria-label="Direct link to Working with the PHP API" title="Direct link to Working with the PHP API" translate="no">​</a></h2>
+<p>The workflow management fires Symfony events during transitions and global actions.
+Use these events to extend workflow behavior, validate data, or trigger side effects.
+See <a class="" href="Working_with_PHP_API/index.html">Working with PHP API</a> for programmatic access to workflows
+and event handling.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-resources">Further Resources<a href="#further-resources" class="hash-link" aria-label="Direct link to Further Resources" title="Direct link to Further Resources" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="Workflow_Tutorial/index.html">Workflow Tutorial</a> - step-by-step guide to building a product workflow
+with places, transitions, custom layouts, and guards</li>
+<li class=""><a class="" href="Workflow_Report/index.html">Workflow Reporting</a> - monitor workflow progress with custom reports
+and object grid filtering</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

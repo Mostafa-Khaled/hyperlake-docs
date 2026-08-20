@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<p>These steps are necessary when updating to newer versions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general">General<a href="#general" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-admin-classic--extjs-support">Removed Admin Classic / ExtJS Support<a href="#removed-admin-classic--extjs-support" class="hash-link" aria-label="Direct link to Removed Admin Classic / ExtJS Support" title="Direct link to Removed Admin Classic / ExtJS Support" translate="no">​</a></h3>
+<ul>
+<li class="">Removed <code>hypermdm/admin-ui-classic-bundle</code> dependency. The bundle no longer supports the ExtJS-based admin UI.</li>
+<li class=""><code>HyperMDMWorkflowAutomationIntegrationBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code>. The
+<code>getJsPaths()</code> and <code>getCssPaths()</code> methods returning ExtJS assets have been removed.</li>
+<li class="">The following legacy ExtJS assets have been removed:<!-- -->
+<ul>
+<li class=""><code>public/js/hypermdm/configTab.js</code></li>
+<li class=""><code>public/js/hypermdm/startup.js</code></li>
+<li class=""><code>public/css/admin.css</code></li>
+<li class=""><code>public/css/icons.css</code></li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-legacy-controllers-and-routing">Removed Legacy Controllers and Routing<a href="#removed-legacy-controllers-and-routing" class="hash-link" aria-label="Direct link to Removed Legacy Controllers and Routing" title="Direct link to Removed Legacy Controllers and Routing" translate="no">​</a></h3>
+<ul>
+<li class="">Removed <code>Controller\DataHub\ConfigController</code> - replaced by <code>Controller\Studio\Config\*</code> controllers.</li>
+<li class="">Removed <code>Controller\N8N\Download\GraphQlController</code> - replaced by <code>Controller\Studio\N8N\GraphQlController</code>.</li>
+<li class="">Removed <code>Controller\N8N\Download\WebhooksController</code> - replaced by <code>Controller\Studio\N8N\WebhooksController</code>.</li>
+<li class="">Removed <code>Routing\StudioRouteLoader</code> - Studio routes are now registered via standard Symfony configuration.</li>
+<li class="">Removed <code>config/hypermdm/studio_routing.yaml</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-internal-trait">Removed Internal Trait<a href="#removed-internal-trait" class="hash-link" aria-label="Direct link to Removed Internal Trait" title="Direct link to Removed Internal Trait" translate="no">​</a></h3>
+<ul>
+<li class="">Removed <code>Utils\Traits\LogAndReturnTrait</code> (<code>@internal</code>). This trait was used exclusively by the deleted legacy
+controllers and is no longer available.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="interface-changes">Interface Changes<a href="#interface-changes" class="hash-link" aria-label="Direct link to Interface Changes" title="Direct link to Interface Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>ConfigurationServiceInterface</code> (<code>Service\DataHub\ConfigurationServiceInterface</code>):<!-- -->
+<ul>
+<li class=""><code>getConfigurations(array $configurationTypes = [])</code>: Parameter PHPDoc updated from <code>@param string[]</code> to
+<code>@param array&lt;int, string&gt;</code>. Added <code>@return array&lt;int, Configuration&gt;</code> return type annotation. Added <code>use</code> for
+<code>HyperMDM\Bundle\DataHubBundle\Configuration</code>.</li>
+<li class=""><code>getListOptionsForConfiguration(string $configurationId)</code>: Added <code>@return array&lt;int, array&lt;string, string&gt;&gt;</code>
+return type annotation.</li>
+</ul>
+</li>
+<li class=""><code>ListOptionsProviderInterface</code> (<code>Provider\ListOptionsProviderInterface</code>):<!-- -->
+<ul>
+<li class=""><code>getOptions()</code>: Added <code>@return array&lt;int, array&lt;string, string&gt;&gt;</code> return type annotation.</li>
+</ul>
+</li>
+<li class=""><code>ConfigurationResolverInterface</code> (<code>Resolver\DataHub\ConfigurationResolverInterface</code>):<!-- -->
+<ul>
+<li class=""><code>getList()</code>: Added <code>@return array&lt;int, Configuration&gt;</code> return type annotation.</li>
+</ul>
+</li>
+<li class=""><code>WebhookServiceInterface</code> (<code>Service\DataHub\WebhookServiceInterface</code>):<!-- -->
+<ul>
+<li class=""><code>getSubscriberId(array $subscribers, ...)</code>: Added <code>@param array&lt;int, string&gt; $subscribers</code> PHPDoc annotation.</li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="bug-fix">Bug Fix<a href="#bug-fix" class="hash-link" aria-label="Direct link to Bug Fix" title="Direct link to Bug Fix" translate="no">​</a></h3>
+<ul>
+<li class="">Fixed a logic error in <code>OptionService::getListOptions()</code> where the <code>array_is_list()</code> condition was inverted, causing
+incorrect list option resolution.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

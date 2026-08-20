@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hugging Face Image Up Scaling — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Hugging Face Image Up Scaling</h1></header>
+<p>This action allows you to select a single or multiple images from the assets and upscale by a factor of 2. The generated images will update the selected assets or create new assets with a separate suffix.</p>
+<p>To get started, you need to create a <a href="https://ui.endpoints.huggingface.co/" target="_blank" rel="noopener noreferrer" class="">Hugging face endpoint</a> which is using one of these models:</p>
+<ul>
+<li class=""><a href="https://huggingface.co/pimcore/IEP__image-upscaling-2x" target="_blank" rel="noopener noreferrer" class="">Upscaling x2 based on Swin2SR</a>: uses <a href="https://huggingface.co/caidas/swin2SR-classical-sr-x2-64" target="_blank" rel="noopener noreferrer" class="">Swin2SR</a> in the background.</li>
+<li class=""><a href="https://huggingface.co/pimcore/IEP__image-upscaling-2x-dat" target="_blank" rel="noopener noreferrer" class="">Upscaling x2 based on DAT</a>: uses <a href="https://huggingface.co/caidas/DAT-x2" target="_blank" rel="noopener noreferrer" class="">DAT-x2</a> in the background.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="available-context">Available Context<a href="#available-context" class="hash-link" aria-label="Direct link to Available Context" title="Direct link to Available Context" translate="no">​</a></h3>
+<p>For more information on context limitations refer to the <a class="" href="../../index.html">Available Context section</a>.</p>
+<p><strong>Multiselect</strong>: Yes
+<strong>Elements</strong>: Images</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-options">Configuration Options<a href="#configuration-options" class="hash-link" aria-label="Direct link to Configuration Options" title="Direct link to Configuration Options" translate="no">​</a></h3>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">model_endpoint</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://your-hugging-face.huggingface.cloud'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">persistence_mode</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> new</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">filename_suffix_template</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> _</span><span class="token punctuation" style="color:#393A34">{</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> subject.getId() </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain">_upscaled</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="detailed-configuration-options">Detailed Configuration Options<a href="#detailed-configuration-options" class="hash-link" aria-label="Direct link to Detailed Configuration Options" title="Direct link to Detailed Configuration Options" translate="no">​</a></h3>
+<p><strong>model_endpoint</strong>: (Required) Specifies the endpoint for the model you want to use for image up scaling.
+<strong>persistence_mode:</strong> (Optional) Specifies the mode of persistence for the generated images. The default value is <code>new</code>. The other option is <code>overwrite</code>.
+<strong>filename_suffix_template:</strong> (Optional) Specifies the suffix as a twig template to be added to the filename of the generated images. The default value is <code>_upscaled</code>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

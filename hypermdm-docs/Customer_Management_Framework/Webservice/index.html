@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Webservice — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Webservice</h1></header>
+<p>CMF has a built-in REST webservice. It authenticates requests with API keys, which you configure for HyperMDM users in
+HyperMDM Studio.</p>
+<p>Add the API key as an <code>X-API-Key</code> HTTP header (recommended) or an <code>apikey</code> URL parameter on your request.</p>
+<p>The webservice also supports session authentication: if the request carries a valid HyperMDM Studio user session (for
+example when testing in the browser), you do not need to add the <code>X-API-Key</code> header or the <code>apikey</code> parameter.</p>
+<p>Configure the Symfony firewall in your <code>security.yml</code>; see the
+<a class="" href="../Installation/index.html#configure-the-webservice-firewall">Installation chapter</a> for details.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Webservice-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Webservice-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Webservice Configuration</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/webserviceConfiguration-9db2cd86658a00642daf95e077e7a8eb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-Webservice-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/webserviceConfiguration-9db2cd86658a00642daf95e077e7a8eb.png"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Webservice-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Webservice-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Webservice Configuration</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/webserviceConfiguration-9db2cd86658a00642daf95e077e7a8eb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-Webservice-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/webserviceConfiguration-9db2cd86658a00642daf95e077e7a8eb.png"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Webservice-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Webservice-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Webservice Configuration</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/webserviceConfiguration-9db2cd86658a00642daf95e077e7a8eb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-Webservice-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="api-reference">API Reference<a href="#api-reference" class="hash-link" aria-label="Direct link to API Reference" title="Direct link to API Reference" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="customers-api">Customers API<a href="#customers-api" class="hash-link" aria-label="Direct link to Customers API" title="Direct link to Customers API" translate="no">​</a></h3>
+<p>Standard REST calls for customer CRUD actions:</p>
+<div class="table-container"><table><thead><tr><th>Path</th><th>Method</th><th>Description</th></tr></thead><tbody><tr><td>/__customermanagementframework/webservice/customers</td><td>GET</td><td>Fetch all customers</td></tr><tr><td>/__customermanagementframework/webservice/customers/{id}</td><td>GET</td><td>Fetch a single customer</td></tr><tr><td>/__customermanagementframework/webservice/customers</td><td>PUT, POST</td><td>Create a new customer</td></tr><tr><td>/__customermanagementframework/webservice/customers/{id}</td><td>PUT, POST</td><td>Update a customer</td></tr><tr><td>/__customermanagementframework/webservice/customers/{id}</td><td>DELETE</td><td>Delete a customer</td></tr></tbody></table></div>
+<p>Filter <code>GET</code> requests with these query parameters:</p>
+<div class="table-container"><table><thead><tr><th>Parameter</th><th>Possible Values</th><th>Description</th></tr></thead><tbody><tr><td>includeActivities</td><td>true/false</td><td>include the customer's activities in the result set</td></tr><tr><td>segments</td><td>repeated <code>segments[]</code> params</td><td>filter by segments, one parameter per segment ID</td></tr><tr><td>page</td><td>int</td><td>page number for paging</td></tr><tr><td>pageSize</td><td>int</td><td>page size for paging</td></tr><tr><td>modificationTimestamp</td><td>int</td><td>filter for customers with a newer modification timestamp</td></tr></tbody></table></div>
+<p>Pass one <code>segments[]</code> parameter per segment ID. The endpoint does not split comma-separated values, and a scalar
+<code>segments=1</code> is rejected with HTTP 400:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">GET /__customermanagementframework/webservice/customers?segments[]=1&amp;segments[]=2&amp;includeActivities=true</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="activities-api">Activities API<a href="#activities-api" class="hash-link" aria-label="Direct link to Activities API" title="Direct link to Activities API" translate="no">​</a></h3>
+<p>Standard REST calls for activity CRUD actions:</p>
+<div class="table-container"><table><thead><tr><th>Path</th><th>Method</th><th>Description</th></tr></thead><tbody><tr><td>/__customermanagementframework/webservice/activities</td><td>GET</td><td>Fetch all activities</td></tr><tr><td>/__customermanagementframework/webservice/activities/{id}</td><td>GET</td><td>Fetch a single activity</td></tr><tr><td>/__customermanagementframework/webservice/activities</td><td>PUT, POST</td><td>Create a new activity</td></tr><tr><td>/__customermanagementframework/webservice/activities/{id}</td><td>PUT, POST</td><td>Update an activity</td></tr><tr><td>/__customermanagementframework/webservice/activities/{id}</td><td>DELETE</td><td>Delete an activity</td></tr></tbody></table></div>
+<p>Filter <code>GET</code> requests with these query parameters:</p>
+<div class="table-container"><table><thead><tr><th>Parameter</th><th>Possible Values</th><th>Description</th></tr></thead><tbody><tr><td>type</td><td>string</td><td>filter by activity type</td></tr><tr><td>modifiedSinceTimestamp</td><td>timestamp/int</td><td>get activities modified since the given timestamp</td></tr><tr><td>page</td><td>int</td><td>page number for paging</td></tr><tr><td>pageSize</td><td>int</td><td>page size for paging</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="deletions-api">Deletions API<a href="#deletions-api" class="hash-link" aria-label="Direct link to Deletions API" title="Direct link to Deletions API" translate="no">​</a></h3>
+<p>Delivers information about deletions of customers and activities:</p>
+<div class="table-container"><table><thead><tr><th>Path</th><th>Method</th><th>Description</th></tr></thead><tbody><tr><td>/__customermanagementframework/webservice/deletions</td><td>GET</td><td>Fetch recorded deletions</td></tr></tbody></table></div>
+<p>Query parameters:</p>
+<div class="table-container"><table><thead><tr><th>Parameter</th><th>Possible Values</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td>entityType</td><td>customers/activities</td><td>yes</td><td>get deletions of customers or activities</td></tr><tr><td>deletionsSinceTimestamp</td><td>timestamp/int</td><td>no</td><td>get deletions recorded since the given timestamp</td></tr></tbody></table></div>
+<p>The request fails with an error if <code>entityType</code> is missing.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="segments-api">Segments API<a href="#segments-api" class="hash-link" aria-label="Direct link to Segments API" title="Direct link to Segments API" translate="no">​</a></h3>
+<p>Standard REST calls for customer segment CRUD actions:</p>
+<div class="table-container"><table><thead><tr><th>Path</th><th>Method</th><th>Description</th></tr></thead><tbody><tr><td>/__customermanagementframework/webservice/segments</td><td>GET</td><td>Fetch all segments</td></tr><tr><td>/__customermanagementframework/webservice/segments/{id}</td><td>GET</td><td>Fetch a single segment</td></tr><tr><td>/__customermanagementframework/webservice/segments</td><td>PUT, POST</td><td>Create a new segment</td></tr><tr><td>/__customermanagementframework/webservice/segments/{id}</td><td>PUT, POST</td><td>Update a segment</td></tr><tr><td>/__customermanagementframework/webservice/segments/{id}</td><td>DELETE</td><td>Delete a segment</td></tr></tbody></table></div>
+<p>Filter <code>GET</code> requests with these query parameters:</p>
+<div class="table-container"><table><thead><tr><th>Parameter</th><th>Possible Values</th><th>Description</th></tr></thead><tbody><tr><td>page</td><td>int</td><td>page number for paging</td></tr><tr><td>pageSize</td><td>int</td><td>page size for paging</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="segment-groups-api">Segment Groups API<a href="#segment-groups-api" class="hash-link" aria-label="Direct link to Segment Groups API" title="Direct link to Segment Groups API" translate="no">​</a></h3>
+<p>Standard REST calls for customer segment group CRUD actions:</p>
+<div class="table-container"><table><thead><tr><th>Path</th><th>Method</th><th>Description</th></tr></thead><tbody><tr><td>/__customermanagementframework/webservice/segment-groups</td><td>GET</td><td>Fetch all segment groups</td></tr><tr><td>/__customermanagementframework/webservice/segment-groups/{id}</td><td>GET</td><td>Fetch a single segment group</td></tr><tr><td>/__customermanagementframework/webservice/segment-groups</td><td>PUT, POST</td><td>Create a new segment group</td></tr><tr><td>/__customermanagementframework/webservice/segment-groups/{id}</td><td>PUT, POST</td><td>Update a segment group</td></tr><tr><td>/__customermanagementframework/webservice/segment-groups/{id}</td><td>DELETE</td><td>Delete a segment group</td></tr></tbody></table></div>
+<p>Filter <code>GET</code> requests with these query parameters:</p>
+<div class="table-container"><table><thead><tr><th>Parameter</th><th>Possible Values</th><th>Description</th></tr></thead><tbody><tr><td>page</td><td>int</td><td>page number for paging</td></tr><tr><td>pageSize</td><td>int</td><td>page size for paging</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="segments-of-customers-api">Segments of Customers API<a href="#segments-of-customers-api" class="hash-link" aria-label="Direct link to Segments of Customers API" title="Direct link to Segments of Customers API" translate="no">​</a></h3>
+<p>Adds and removes segments from a customer:</p>
+<div class="table-container"><table><thead><tr><th>Path</th><th>Method</th><th>Description</th></tr></thead><tbody><tr><td>/__customermanagementframework/webservice/segments-of-customers</td><td>PUT, POST</td><td>Add and/or remove segments</td></tr></tbody></table></div>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">Example request body JSON:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "customerId": 12345,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "addSegments": [123,456],</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "removeSegments": [567,789]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

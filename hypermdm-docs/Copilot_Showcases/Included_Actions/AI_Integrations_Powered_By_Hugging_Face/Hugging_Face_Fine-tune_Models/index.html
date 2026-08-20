@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hugging Face Fine-tune Models — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Hugging Face Fine-tune Models</h1></header>
+<p>The following action steps use the
+<a href="https://huggingface.co/spaces/pimcore/fine-tuning-service/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="">HyperMDM Fine-Tuning Service</a> to
+fine-tune AI models on data managed within HyperMDM.</p>
+<p>Supported tasks are image and text classification. Both rely on data filtered by the
+<a class="" href="../../../../Copilot/Included_Actions/Filter_Data_Objects/index.html">Filter Data Objects</a>
+or <a class="" href="../../../../Copilot/Included_Actions/Filter_Assets/index.html">Filter Assets</a>
+action steps, and each consist of two steps: preparing data and starting training. Add the <code>Cleanup Tmp Files</code> action
+step at the end of the automation action to remove the temporary export file afterwards.</p>
+<p>Training runs on a
+<a href="https://huggingface.co/spaces/pimcore/fine-tuning-service/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="">HyperMDM Fine-Tuning Service</a> instance
+and is monitored by the start training action step. The Fine-Tuning Service can be hosted on-premises or in a Hugging
+Face space; see its
+<a href="https://huggingface.co/spaces/pimcore/fine-tuning-service/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="">README</a> for hosting details. Use GPU
+instances for training; the required GPU size depends on your training data size and the model being fine-tuned.</p>
+<p>Once a training job finishes, the fine-tuned model is uploaded to the
+<a href="https://huggingface.co/models" target="_blank" rel="noopener noreferrer" class="">Hugging Face Hub</a>, and other Copilot action steps can then classify newly added data
+with it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="image-classification">Image Classification<a href="#image-classification" class="hash-link" aria-label="Direct link to Image Classification" title="Direct link to Image Classification" translate="no">​</a></h2>
+<p>Image classification is based on tags assigned to the image assets.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="preparing-data">Preparing Data<a href="#preparing-data" class="hash-link" aria-label="Direct link to Preparing Data" title="Direct link to Preparing Data" translate="no">​</a></h4>
+<p>The <code>Hugging Face Prepare Training Asset Classification</code> step:</p>
+<ul>
+<li class="">Reads the filtered assets from the job run context. Only image assets are processed; everything else is logged and
+skipped.</li>
+<li class="">Extracts the classification from each asset's tags, based on the <code>parent_tag_path</code> setting. It uses the first leaf
+tag it finds (a tag with no children); assets with no matching classification tag are skipped.</li>
+<li class="">Calculates thumbnails of the assets based on the <code>thumbnail</code> setting. Use the same thumbnail configuration later when
+applying the fine-tuned model, so training and inference see identically scaled images.</li>
+<li class="">Packs all thumbnails, in a folder structure that reflects the classification, into a zip file named
+<code>huggingface-training-export/JOBRUN_ID.zip</code> in the temp folder.</li>
+<li class="">Adds the zip file to the clean-up list for later removal by the <code>Cleanup Tmp Files</code> action step.</li>
+</ul>
+<p>Configuration options:</p>
+<ul>
+<li class=""><code>thumbnail</code> (string, optional): Name of an existing HyperMDM thumbnail configuration to use for the exported images.
+Defaults to an inline 300px-wide JPEG thumbnail if not set.</li>
+<li class=""><code>parent_tag_path</code> (string, required): Root path of the tag tree used for classification. The path is matched as a
+plain string prefix with no path-boundary check, so <code>/Colors</code> also matches tags under <code>/Colors Archive</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="starting-training">Starting Training<a href="#starting-training" class="hash-link" aria-label="Direct link to Starting Training" title="Direct link to Starting Training" translate="no">​</a></h4>
+<p>The <code>Hugging Face Start Training Asset Classification</code> step:</p>
+<ul>
+<li class="">Gets the training file from the job run context.</li>
+<li class="">Uploads the training file and starts training on the configured HyperMDM Fine-Tuning Service instance.</li>
+<li class="">Waits for training to finish.</li>
+</ul>
+<p>Only one training can run on a Fine-Tuning Service instance at a time. If another training is already in progress, the
+step waits about two minutes and then fails.</p>
+<p>Configuration options:</p>
+<ul>
+<li class=""><code>project_name</code> (string, required): Project name, also used as the name of the resulting model.</li>
+<li class=""><code>base_url</code> (string, required): URL of the HyperMDM Fine-Tuning Service instance.</li>
+<li class=""><code>access_token</code> (string, required): Access token for the HyperMDM Fine-Tuning Service instance. Must match the
+<code>AUTHENTICATION_TOKEN</code> configured on that instance.</li>
+<li class=""><code>source_model</code> (string, required): Model to use as the base for fine-tuning.</li>
+<li class=""><code>epocs</code> (int, optional): Number of epochs for training. Default: <code>10</code>.</li>
+<li class=""><code>learning_rate</code> (float, optional): Learning rate for training. Default: <code>5e-5</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="text-classification">Text Classification<a href="#text-classification" class="hash-link" aria-label="Direct link to Text Classification" title="Direct link to Text Classification" translate="no">​</a></h2>
+<p>Text classification is based on data fields assigned to the data objects. The value to classify on is generated from
+a Twig template.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="preparing-data-1">Preparing Data<a href="#preparing-data-1" class="hash-link" aria-label="Direct link to Preparing Data" title="Direct link to Preparing Data" translate="no">​</a></h4>
+<p>The <code>Hugging Face Prepare Training Text Classification</code> step:</p>
+<ul>
+<li class="">Reads the filtered data objects from the job run context.</li>
+<li class="">Extracts the classification from each data object using the <code>target_field</code> setting.</li>
+<li class="">Generates the value to classify on using the <code>value_template</code> setting.</li>
+<li class="">Packs all rows into a CSV file named <code>huggingface-training-export/JOBRUN_ID.csv</code> in the temp folder.</li>
+<li class="">Adds the CSV file to the clean-up list for later removal by the <code>Cleanup Tmp Files</code> action step.</li>
+</ul>
+<p>Configuration options:</p>
+<ul>
+<li class=""><code>value_template</code> (string, required): Twig template that generates the value to classify on.</li>
+<li class=""><code>target_field</code> (string, required): Name of the data object field that holds the classification.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="starting-training-1">Starting Training<a href="#starting-training-1" class="hash-link" aria-label="Direct link to Starting Training" title="Direct link to Starting Training" translate="no">​</a></h4>
+<p>The <code>Hugging Face Start Training Text Classification</code> step:</p>
+<ul>
+<li class="">Gets the training file from the job run context.</li>
+<li class="">Starts training on the configured HyperMDM Fine-Tuning Service instance.</li>
+<li class="">Waits for training to finish.</li>
+</ul>
+<p>Configuration options:</p>
+<ul>
+<li class=""><code>project_name</code> (string, required): Project name, also used as the name of the resulting model.</li>
+<li class=""><code>base_url</code> (string, required): URL of the HyperMDM Fine-Tuning Service instance.</li>
+<li class=""><code>access_token</code> (string, required): Access token for the HyperMDM Fine-Tuning Service instance. Must match the
+<code>AUTHENTICATION_TOKEN</code> configured on that instance.</li>
+<li class=""><code>source_model</code> (string, required): Model to use as the base for fine-tuning.</li>
+<li class=""><code>epocs</code> (int, optional): Number of epochs for training. Default: <code>10</code>.</li>
+<li class=""><code>learning_rate</code> (float, optional): Learning rate for training. Default: <code>5e-5</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="starting-and-stopping-hugging-face-spaces">Starting and Stopping Hugging Face Spaces<a href="#starting-and-stopping-hugging-face-spaces" class="hash-link" aria-label="Direct link to Starting and Stopping Hugging Face Spaces" title="Direct link to Starting and Stopping Hugging Face Spaces" translate="no">​</a></h2>
+<p>If your Fine-Tuning Service instance runs in a <a href="https://huggingface.co/docs/hub/en/spaces" target="_blank" rel="noopener noreferrer" class="">Hugging Face space</a>, use
+the <code>Hugging Face Space Start</code> and <code>Hugging Face Space Stop</code> action steps to start it before training and pause it
+afterwards, so it only runs (and incurs cost) while training is active. <code>Hugging Face Space Start</code> restarts the space
+if it reports <code>PAUSED</code> or <code>SLEEPING</code>, then polls every 20 seconds until it reports <code>RUNNING</code>. There is no timeout, so a
+space stuck in a build or error state blocks the step indefinitely.</p>
+<p>Both steps share the same configuration options:</p>
+<ul>
+<li class=""><code>organization</code> (string, required): Organization the space belongs to.</li>
+<li class=""><code>space</code> (string, required): Name of the space.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-training-action-configuration">Sample Training Action Configuration<a href="#sample-training-action-configuration" class="hash-link" aria-label="Direct link to Sample Training Action Configuration" title="Direct link to Sample Training Action Configuration" translate="no">​</a></h2>
+<p>A typical automation action for asset classification fine-tuning consists of the following steps:</p>
+<ol>
+<li class="">Filter Assets</li>
+<li class="">Hugging Face Prepare Training Asset Classification</li>
+<li class="">(Optional) Hugging Face Space Start</li>
+<li class="">Hugging Face Start Training Asset Classification</li>
+<li class="">(Optional) Hugging Face Space Stop</li>
+<li class="">Cleanup Tmp Files</li>
+</ol></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

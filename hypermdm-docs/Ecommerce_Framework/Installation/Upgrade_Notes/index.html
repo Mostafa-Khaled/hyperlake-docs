@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="v202610">v2026.1.0<a href="#v202610" class="hash-link" aria-label="Direct link to v2026.1.0" title="Direct link to v2026.1.0" translate="no">​</a></h4>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="platform-requirements">Platform Requirements<a href="#platform-requirements" class="hash-link" aria-label="Direct link to Platform Requirements" title="Direct link to Platform Requirements" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+<li class=""><strong>Removed legacy analytics.js trackers</strong> — the following classes have been permanently removed as Google sunset Universal Analytics in July 2023:<!-- -->
+<ul>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Tracking\Tracker\Analytics\AbstractAnalyticsTracker</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Tracking\Tracker\Analytics\Ecommerce</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Tracking\Tracker\Analytics\UniversalEcommerce</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Tracking\Tracker\Analytics\EnhancedEcommerce</code></li>
+</ul>
+</li>
+<li class=""><strong>BREAKING: GoogleTagManager tracker updated from UA Enhanced Ecommerce to GA4 ecommerce schema.</strong> Event names, data structure, and item field names have changed:<!-- -->
+<ul>
+<li class="">Event names: <code>detail</code>→<code>view_item</code>, <code>addToCart</code>→<code>add_to_cart</code>, <code>removeFromCart</code>→<code>remove_from_cart</code>, <code>checkout</code>→<code>begin_checkout</code>, <code>purchase</code> (unchanged)</li>
+<li class="">Data structure: flattened (no more nested <code>ecommerce.detail.products</code> — now <code>ecommerce.items</code>)</li>
+<li class="">Item fields: <code>id</code>→<code>item_id</code>, <code>name</code>→<code>item_name</code>, <code>brand</code>→<code>item_brand</code>, <code>category</code>→<code>item_category</code>, <code>variant</code>→<code>item_variant</code>, <code>list</code>→<code>item_list_name</code>, <code>position</code>→<code>index</code></li>
+<li class="">Transaction fields: <code>revenue</code>→<code>value</code>, <code>id</code>→<code>transaction_id</code></li>
+<li class="">Each <code>dataLayer.push()</code> now prepends <code>{ecommerce: null}</code> to clear previous ecommerce data</li>
+<li class="">If you parse <code>dataLayer</code> pushes in custom GTM variables/triggers, update your references to match the new GA4 schema.</li>
+</ul>
+</li>
+<li class=""><strong>New <code>Gtag</code> tracker</strong> (<code>\HyperMDM\Bundle\EcommerceFrameworkBundle\Tracking\Tracker\Gtag</code>) — generates direct <code>gtag('event', ...)</code> JavaScript calls for sites using gtag.js without GTM. Disabled by default.</li>
+<li class=""><strong>4 new GA4 tracking interfaces</strong> added:<!-- -->
+<ul>
+<li class=""><code>ProductSelectInterface</code> — <code>trackProductSelect($product, $list)</code> (GA4: <code>select_item</code>)</li>
+<li class=""><code>CartViewInterface</code> — <code>trackCartView($cart)</code> (GA4: <code>view_cart</code>)</li>
+<li class=""><code>CheckoutShippingInfoInterface</code> — <code>trackCheckoutShippingInfo($cart, $shippingTier)</code> (GA4: <code>add_shipping_info</code>)</li>
+<li class=""><code>CheckoutPaymentInfoInterface</code> — <code>trackCheckoutPaymentInfo($cart, $paymentType)</code> (GA4: <code>add_payment_info</code>)</li>
+</ul>
+</li>
+<li class=""><strong><code>TrackingManagerInterface</code> now extends</strong> the 4 new interfaces. Custom implementations of <code>TrackingManagerInterface</code> must add the new methods. You can use the <code>Ga4TrackingManagerTrait</code> to get no-op default implementations.</li>
+<li class="">All trackers use <code>TrackingCodeAwareInterface</code> — tracked codes must be rendered manually in Twig templates. See <a class="" href="../../Tracking_Manager/index.html">Tracking Manager documentation</a> for details.</li>
+<li class=""><strong>BREAKING: Tracker <code>formatPrice()</code> now returns <code>?float</code> instead of <code>string</code>.</strong> Price fields (<code>price</code>, <code>value</code>, <code>tax</code>, <code>shipping</code>) are output as JSON numbers instead of strings. <code>null</code> prices are omitted from the output via <code>filterNullValues()</code> instead of being rendered as empty strings. Custom trackers extending <code>GoogleTagManager</code> or <code>Gtag</code> that override <code>transformProductAction()</code>, <code>transformTransaction()</code>, or similar methods should expect numeric/null values from <code>formatPrice()</code>.</li>
+<li class=""><strong>BREAKING: Tracker <code>getCartValue()</code> now returns <code>?float</code> instead of <code>string</code>.</strong> Returns the cart grand total as a float directly, with <code>0.0</code> fallback on error.</li>
+<li class=""><strong>Fix: <code>add_to_cart</code> / <code>remove_from_cart</code> <code>value</code> now reflects total (price x quantity)</strong> instead of unit price, matching the GA4 specification.</li>
+<li class=""><strong>Fix: <code>trackCheckoutStep()</code> fires <code>begin_checkout</code> and ignores <code>$stepNumber</code> / <code>$checkoutOption</code></strong> — GA4 has no concept of checkout steps. Use <code>trackCheckoutShippingInfo()</code> and <code>trackCheckoutPaymentInfo()</code> for GA4 checkout progression.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-extjs--admin-classic-ui">Removed ExtJS / Admin Classic UI<a href="#removed-extjs--admin-classic-ui" class="hash-link" aria-label="Direct link to Removed ExtJS / Admin Classic UI" title="Direct link to Removed ExtJS / Admin Classic UI" translate="no">​</a></h3>
+<p>All legacy ExtJS-based admin controllers and their associated frontend assets have been removed. The Admin Classic UI is no longer supported:</p>
+<ul>
+<li class="">Removed <code>src/Controller/AdminOrderController.php</code></li>
+<li class="">Removed <code>src/Controller/ConfigController.php</code></li>
+<li class="">Removed <code>src/Controller/IndexController.php</code></li>
+<li class="">Removed <code>src/Controller/PricingController.php</code></li>
+<li class="">Removed <code>src/Controller/VoucherController.php</code></li>
+<li class="">Removed <code>src/Event/AdminEvents.php</code> — the event constants <code>GET_VALUES_FOR_FILTER_FIELD_PRE_SEND_DATA</code> and <code>GET_INDEX_FIELD_NAMES_PRE_SEND_DATA</code> no longer exist. Remove any listeners registered against these events.</li>
+<li class="">Removed all ExtJS JavaScript files under <code>src/Resources/public/js/</code> (startup, indexfieldselectionfield data/tags, pricing config/item/objects/panel, order/OrderTab, voucherservice/VoucherSeriesTab)</li>
+<li class="">Removed legacy CSS files: <code>src/Resources/public/css/back-office.css</code>, <code>backend.css</code>, <code>pricing.css</code>, <code>voucherservice/style.css</code></li>
+<li class="">Removed all Webpack build artifacts under <code>src/Resources/public/build/ecommerceFramework/</code></li>
+<li class="">Removed frontend asset entry points: <code>src/Resources/public/assets/bootstrap.js</code>, <code>flatpickr.js</code>, <code>leaflet.js</code>, <code>voucher.js</code></li>
+<li class="">Removed vendor libraries: <code>bootstrap4</code>, <code>chart.min.js</code>, <code>chart.doughnut.js</code>, <code>flatpickr</code>, <code>fontawesome</code>, <code>leaflet</code>, <code>findologic/export.xsd</code></li>
+<li class="">Removed <code>src/Routing/StudioRouteLoader.php</code> — Studio routing is now handled via service configuration.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-analytics-tracking-trackers">Removed Analytics Tracking Trackers<a href="#removed-analytics-tracking-trackers" class="hash-link" aria-label="Direct link to Removed Analytics Tracking Trackers" title="Direct link to Removed Analytics Tracking Trackers" translate="no">​</a></h3>
+<p>The following deprecated Google Analytics tracking trackers have been removed:</p>
+<ul>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Tracking\Tracker\Analytics\AbstractAnalyticsTracker</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Tracking\Tracker\Analytics\Ecommerce</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Tracking\Tracker\Analytics\UniversalEcommerce</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Tracking\Tracker\Analytics\EnhancedEcommerce</code></li>
+</ul>
+<p>Use <a href="https://developers.google.com/tag-manager" target="_blank" rel="noopener noreferrer" class="">Google Tag Manager</a> instead.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-backend-api-new">Studio Backend API (New)<a href="#studio-backend-api-new" class="hash-link" aria-label="Direct link to Studio Backend API (New)" title="Direct link to Studio Backend API (New)" translate="no">​</a></h3>
+<p>All legacy admin controller endpoints have been migrated to modern Studio Backend API controllers. New Studio API controllers are available under <code>src/Controller/Studio/</code>:</p>
+<ul>
+<li class="">Pricing: Collection, Config, Copy, Create, Delete, Item, Rename, Save, SaveOrder</li>
+<li class="">Order: Collection, Item (Cancel, Complaint, Edit)</li>
+<li class="">Voucher: Reservation/Cleanup, Token (Cleanup, Export, Generate), View/Tab</li>
+<li class="">Back-office order views</li>
+</ul>
+<p>New services and interfaces:</p>
+<ul>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Service\Studio\OrderServiceInterface</code> — new interface for order Studio API</li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Service\Studio\OrderViewService</code> — new service for rendering order views</li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Service\Studio\PricingServiceInterface</code> — new interface for pricing rule Studio API</li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Service\Studio\VoucherServiceInterface</code> — new interface for voucher token management</li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Service\Studio\VoucherViewServiceInterface</code> — new interface for voucher view rendering</li>
+</ul>
+<p>New hydrators with interfaces:</p>
+<ul>
+<li class=""><code>src/Hydrator/OrderHydratorInterface</code></li>
+<li class=""><code>src/Hydrator/OrderItemHydratorInterface</code></li>
+<li class=""><code>src/Hydrator/PricingHydratorInterface</code></li>
+</ul>
+<p>New Studio pre-response events:</p>
+<ul>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Event\Studio\PreResponse\OrderDetailEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Event\Studio\PreResponse\OrderListItemEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Event\Studio\PreResponse\PricingConfigEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Event\Studio\PreResponse\PricingRuleDetailEvent</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\Event\Studio\PreResponse\PricingRuleListItemEvent</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-ui-integration">Studio UI Integration<a href="#studio-ui-integration" class="hash-link" aria-label="Direct link to Studio UI Integration" title="Direct link to Studio UI Integration" translate="no">​</a></h3>
+<ul>
+<li class="">Pricing Rules editor is now fully implemented in the Studio UI (React/TypeScript modules under <code>assets/studio/js/src/modules/pricing-rules/</code>)</li>
+<li class="">Voucher Series tab is now available in the Studio UI</li>
+<li class="">Index Field Selection field definitions (<code>IndexFieldSelection</code>, <code>IndexFieldSelectionCombo</code>, <code>IndexFieldSelectionField</code>) are now implemented as Studio class editor dynamic types (TypeScript)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="interface-and-return-type-changes">Interface and Return Type Changes<a href="#interface-and-return-type-changes" class="hash-link" aria-label="Direct link to Interface and Return Type Changes" title="Direct link to Interface and Return Type Changes" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="cartmanager">CartManager<a href="#cartmanager" class="hash-link" aria-label="Direct link to CartManager" title="Direct link to CartManager" translate="no">​</a></h4>
+<ul>
+<li class=""><code>AbstractCart::isValidCartItem()</code> — removed the <code>instanceof CheckoutableInterface</code> guard; the method now only checks for <code>MockProduct</code> exclusion. Any product type is now accepted as a valid cart item.</li>
+<li class=""><code>CartPriceCalculator::buildModificator()</code> — removed the unnecessary null check before instantiating the modificator.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="ordermanager">OrderManager<a href="#ordermanager" class="hash-link" aria-label="Direct link to OrderManager" title="Direct link to OrderManager" translate="no">​</a></h4>
+<ul>
+<li class=""><code>OrderManager::fillOrderItem()</code> — removed <code>instanceof CheckoutableInterface</code> guard when calling <code>getOSName()</code>/<code>getOSProductNumber()</code>; these calls are now made unconditionally. Ensure your product classes implement <code>ProductInterface</code> properly.</li>
+<li class=""><code>OrderManager::applyVoucherTokens()</code> — removed the <code>is_array($voucherTokens)</code> guard; <code>getVoucherTokenCodes()</code> is now expected to always return an array.</li>
+<li class=""><code>OrderManager::fillOrderItem()</code> — removed <code>is_object($item-&gt;getTotalPrice())</code> guard; <code>getTotalPrice()</code> must return an object.</li>
+<li class=""><code>OrderManager::fillOrderItem()</code> — removed <code>method_exists($orderItem, 'setPricingRules')</code> check; <code>setPricingRules</code> is now expected to exist on the order item.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="offertool">OfferTool<a href="#offertool" class="hash-link" aria-label="Direct link to OfferTool" title="Direct link to OfferTool" translate="no">​</a></h4>
+<ul>
+<li class=""><code>DefaultService::createOfferItem()</code> — removed <code>instanceof CheckoutableInterface</code> guard when calling <code>getOSName()</code>/<code>getOSProductNumber()</code>; products are now assumed to implement <code>ProductInterface</code> directly.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="filterservice">FilterService<a href="#filterservice" class="hash-link" aria-label="Direct link to FilterService" title="Direct link to FilterService" translate="no">​</a></h4>
+<ul>
+<li class=""><code>NumberRangeSelection::prepareData()</code> (both <code>FilterType\NumberRangeSelection</code> and <code>FilterType\Findologic\NumberRangeSelection</code>) — removed <code>method_exists</code> checks for <code>getPreSelectFrom()</code>/<code>getPreSelectTo()</code>; these methods are now expected to always exist on filter definitions.</li>
+<li class=""><code>SelectCategory::prepareData()</code> — removed <code>method_exists($filterDefinition, 'getPreSelect')</code> check; <code>getPreSelect()</code> is now assumed to always exist.</li>
+<li class=""><code>MultiSelectRelation::prepareData()</code> (and Findologic variant) — removed <code>is_array($objects)</code> guard; <code>$objects</code> is assumed to always be an array at this point.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="pricingmanager">PricingManager<a href="#pricingmanager" class="hash-link" aria-label="Direct link to PricingManager" title="Direct link to PricingManager" translate="no">​</a></h4>
+<ul>
+<li class=""><code>PricingManager\Condition\CatalogCategory::fromJson()</code> — now strictly checks <code>instanceof AbstractCategory</code> before adding loaded objects to the category list (previously only truthiness was checked).</li>
+<li class=""><code>PricingManager\Condition\CatalogProduct::fromJson()</code> — now strictly checks <code>instanceof AbstractProduct</code> before adding loaded objects (previously only truthiness was checked).</li>
+<li class=""><code>PricingManager\Condition\CatalogProduct::__wakeup()</code> — now resets <code>$this-&gt;products = []</code> instead of <code>unset($this-&gt;products)</code>.</li>
+<li class=""><code>PricingManager\Condition\VoucherToken::check()</code> — removed <code>is_array($voucherTokenCodes)</code> guard; <code>getVoucherTokenCodes()</code> is expected to always return an array.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="voucherservice">VoucherService<a href="#voucherservice" class="hash-link" aria-label="Direct link to VoucherService" title="Direct link to VoucherService" translate="no">​</a></h4>
+<ul>
+<li class=""><code>AbstractTokenManager::checkOncePerCart()</code> — removed <code>is_array($cartCodes)</code> guard; <code>getVoucherTokenCodes()</code> must return an array.</li>
+<li class=""><code>AbstractTokenManager::checkOnlyToken()</code> — removed <code>method_exists($this-&gt;configuration, 'getOnlyTokenPerCart')</code> check; this method is expected to always exist.</li>
+<li class=""><code>AbstractTokenManager::export()</code> / <code>exportData()</code> — removed <code>is_array($data)</code> guards; <code>$data</code> is expected to be an array when not null.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="indexservice">IndexService<a href="#indexservice" class="hash-link" aria-label="Direct link to IndexService" title="Direct link to IndexService" translate="no">​</a></h4>
+<ul>
+<li class=""><code>AbstractOpenSearch::load()</code> — removed the <code>instanceof OpenSearch\Client</code> type check; <code>getOpenSearchClient()</code> is now expected to always return a proper client.</li>
+<li class=""><code>AbstractElasticSearch::loadIndexVersion()</code> — removed the <code>is_array($result)</code> guard; also changed <code>getAlias()</code> to accept <code>['name' =&gt; [$this-&gt;indexName]]</code> (array) instead of a string.</li>
+<li class=""><code>DefaultMysql</code> and <code>ProductCentricBatchProcessingWorker</code> — removed <code>instanceof AbstractCategory</code> checks when building category ID maps; categories from <code>getCategories()</code> are assumed to always be <code>AbstractCategory</code> instances.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="tracking">Tracking<a href="#tracking" class="hash-link" aria-label="Direct link to Tracking" title="Direct link to Tracking" translate="no">​</a></h4>
+<ul>
+<li class=""><code>AbstractProductData::getCategory()</code> — removed <code>is_array($this-&gt;categories)</code> guard; <code>$this-&gt;categories</code> is now always expected to be an array.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="other-changes">Other Changes<a href="#other-changes" class="hash-link" aria-label="Direct link to Other Changes" title="Direct link to Other Changes" translate="no">​</a></h3>
+<ul>
+<li class="">Removed Doctrine DBAL enum type mapping configuration (deprecated)</li>
+<li class="">Removed <code>src/Resources/config/studio_backend.yaml</code> top-level file (routing consolidated)</li>
+<li class="">Removed <code>src/Resources/config/studio_ui.yaml</code> top-level file</li>
+<li class="">Removed view templates: <code>src/Resources/views/includes/paging.html.twig</code>, <code>voucher/parts/statistics.html.twig</code>, <code>voucher/voucher_code_tab_error.html.twig</code>, <code>voucher/voucher_layout.html.twig</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="v210">v2.1.0<a href="#v210" class="hash-link" aria-label="Direct link to v2.1.0" title="Direct link to v2.1.0" translate="no">​</a></h4>
+<p>Added the possibility to distinguish relations conditions applied as preconditions.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="v200">v2.0.0<a href="#v200" class="hash-link" aria-label="Direct link to v2.0.0" title="Direct link to v2.0.0" translate="no">​</a></h4>
+<p>Added <code>bool</code> as possible type to <code>$condition</code> parameter of <code>addCondition</code> function in <code>ProductListInterface</code> (and all implementing classes).</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="v121">v1.2.1<a href="#v121" class="hash-link" aria-label="Direct link to v1.2.1" title="Direct link to v1.2.1" translate="no">​</a></h4>
+<ul>
+<li class="">Removed the package "rybakit/twig-deferred-extension". If you extend the twig layout from the E-Commerce Framework,
+please check if custom CSS/JS code added by <code>hypermdm_head_script</code> and <code>hypermdm_head_link</code> is still working.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="v200-1">v2.0.0<a href="#v200-1" class="hash-link" aria-label="Direct link to v2.0.0" title="Direct link to v2.0.0" translate="no">​</a></h4>
+<ul>
+<li class=""><code>AbstractOfferToolProduct</code> now only accepts int as the <code>$id</code> parameter.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

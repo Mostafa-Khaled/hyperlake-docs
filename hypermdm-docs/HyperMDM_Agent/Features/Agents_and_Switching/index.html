@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agents and Switching — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Agents and Switching</h1></header>
+<p>An <strong>agent</strong> is a named configuration: system message, model, skill set, MCP tool groups, widget allow-list, and an
+optional <code>pauseAfter</code> threshold. Switching between agents is a first-class user action - one dropdown click and the
+conversation carries on with a different specialist. For the YAML schema, see <a class="" href="../../Configuration/Agents/index.html">Configuration → Agents</a>; for the
+SDK-level mechanics, see <a class="" href="../../Architecture/Agent_Framework/index.html">Architecture → Agent Framework</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="agents-that-ship-out-of-the-box">Agents that ship out of the box<a href="#agents-that-ship-out-of-the-box" class="hash-link" aria-label="Direct link to Agents that ship out of the box" title="Direct link to Agents that ship out of the box" translate="no">​</a></h2>
+<p>The HyperMDMAgentBundle comes with two presets:</p>
+<div class="table-container"><table><thead><tr><th>Agent</th><th>Role</th></tr></thead><tbody><tr><td><strong>General Assistant</strong></td><td>Reads data and assets, shows previews, searches the web, asks the user questions.</td></tr><tr><td><strong>Data Management</strong></td><td>Everything General does, plus proposal workflows for writes.</td></tr></tbody></table></div>
+<p>When additional bundles are installed alongside the agent bundle, additional presets might appear.</p>
+<p>All three presets can be cloned, overridden, or disabled in HyperMDM Studio. Any HyperMDM bundle can ship additional
+presets - see <a class="" href="../../Configuration/Shipping_Presets/index.html">Configuration → Shipping Presets</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="which-agents-you-see">Which agents you see<a href="#which-agents-you-see" class="hash-link" aria-label="Direct link to Which agents you see" title="Direct link to Which agents you see" translate="no">​</a></h2>
+<p>The dropdown and the HyperMDM Studio agent tree only list agents you are allowed to run. If an agent defines a
+<code>permissions</code> block, it stays hidden from the tree and out of the dropdown for any user or role not granted <code>run</code>
+on that agent, and the switch-proposal widget follows the same rule, so the bundle never proposes an agent you
+cannot open. Agents with no <code>permissions</code> block stay visible to everyone who holds the global <code>hypermdm_agent_use</code>
+permission. See <a class="" href="../../Configuration/Agents/index.html#permissions">Configuration → Agents → Permissions</a> for the full
+evaluation rules.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="switching---the-user-experience">Switching - the user experience<a href="#switching---the-user-experience" class="hash-link" aria-label="Direct link to Switching - the user experience" title="Direct link to Switching - the user experience" translate="no">​</a></h2>
+<p>There are two ways for a user to switch agents:</p>
+<ol>
+<li class=""><strong>Manually</strong> - open the agent dropdown in the chat header and pick a different one.</li>
+<li class=""><strong>Proactively from the agent</strong> - if the current agent notices your request would be better handled by another,
+it proposes the switch via a <code>hypermdm_switch_agent</code> widget. One click and you're there; ignore it and nothing happens.</li>
+</ol>
+<p>From the user's perspective, <strong>conversation history is preserved across the switch</strong>. The new agent sees what the
+previous agent and the user said - you don't need to re-explain.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-preserved-history-actually-means">What "preserved history" actually means<a href="#what-preserved-history-actually-means" class="hash-link" aria-label="Direct link to What &quot;preserved history&quot; actually means" title="Direct link to What &quot;preserved history&quot; actually means" translate="no">​</a></h2>
+<p>History survives a switch, but only within a bounded window. The bundle injects the <strong>last 30 messages</strong> from your
+transcript into the new agent's system message as a one-shot context block. Each message part is capped at 5,000
+characters. Widget payloads (search results, proposals) are carried across as labelled JSON, not just their narrative
+summary - so the "search with agent A, switch to agent B to edit the results" flow actually works end-to-end.</p>
+<p>Older messages are dropped. If a conversation is 500 messages long and you want agent B to know about something
+from message #3, restate it. The cost is paid once at the moment of the switch; subsequent messages on the same agent
+hit a warm-cache hot path and rebuild nothing.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="trade-offs-worth-knowing">Trade-offs worth knowing<a href="#trade-offs-worth-knowing" class="hash-link" aria-label="Direct link to Trade-offs worth knowing" title="Direct link to Trade-offs worth knowing" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Repeated switching is not free.</strong> A → B → C → A is three switches and three context-block rebuilds. Sticking with
+one agent for a coherent sub-task is cheaper.</li>
+<li class=""><strong>Only the final assistant message per turn carries across.</strong> Intermediate tool-call reasoning, unless the previous
+agent summarised it in text, does not reach the new agent.</li>
+<li class=""><strong>Widget data is preserved, errors are not.</strong> A failed turn in the previous agent won't poison the new agent's system prompt.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-the-bundle-can-proactively-suggest-switches">Why the bundle can proactively suggest switches<a href="#why-the-bundle-can-proactively-suggest-switches" class="hash-link" aria-label="Direct link to Why the bundle can proactively suggest switches" title="Direct link to Why the bundle can proactively suggest switches" translate="no">​</a></h2>
+<p>Every agent's system prompt is extended at resolve time with an awareness block listing the other available agents:
+their names, descriptions, when each is a good choice. This gives the LLM enough context to offer a switch proactively.
+The agent <strong>cannot switch on its own</strong> - the user has to click the widget button. The tool call itself <em>is</em> the
+confirmation gate, which keeps one-click switches at the top of the conversation instead of requiring a
+yes/no exchange first.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="turning-switching-off-for-an-agent">Turning switching off for an agent<a href="#turning-switching-off-for-an-agent" class="hash-link" aria-label="Direct link to Turning switching off for an agent" title="Direct link to Turning switching off for an agent" translate="no">​</a></h2>
+<p>Switching is opt-out, not opt-in: an agent configuration's <code>allowAgentSwitch</code> field defaults to <code>true</code>, so every
+agent gets the proactive-suggestion behavior described above unless it explicitly turns the field off. Set
+<code>allowAgentSwitch: false</code> on a focused, single-purpose agent that should never suggest a hand-off, and the bundle
+drops both halves of the mechanism for it: the cross-agent awareness block is left out of its system message, so
+the LLM has nothing to base a suggestion on, and the <code>hypermdm_switch_agent</code> widget is never added to its tool set.
+The manual dropdown switch described above is unaffected either way - <code>allowAgentSwitch</code> only controls the
+agent's own proactive suggestion, not whether a user can pick it from the dropdown or switch away from it by
+hand. The field is editable in HyperMDM Studio, on the agent's Behavior tab; see
+<a class="" href="../../Configuration/Agents/index.html#field-reference">Configuration → Agents</a> for the full field reference.</p>
+<p>Switching itself is a chat-only capability. An <a class="" href="../Agent_Tasks/index.html">unattended agent task</a> never
+offers the <code>hypermdm_switch_agent</code> widget, no matter how the running agent's <code>allowAgentSwitch</code> is set - a task has
+no human present to confirm a switch, and switching can need to mint a fresh access token for a different
+execution identity, something only HyperMDM PHP can do. See
+<a class="" href="../../Architecture/Tool_Security/index.html#task-session-tool-overrides">Architecture → Tool Security → Task-session tool overrides</a>
+for the mechanism.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further reading" title="Direct link to Further reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Architecture/Agent_Framework/index.html">Architecture → Agent Framework</a> - how the SDK handles switching under the hood (destroy + recreate,
+context carry-over budget, same-agent warm resume).</li>
+<li class=""><a class="" href="../../Configuration/Agents/index.html">Configuration → Agents</a> - YAML schema and editable fields.</li>
+<li class=""><a class="" href="../../Architecture/Configuration_System/index.html">Architecture → Configuration System</a> - where agent configuration comes from and how updates propagate.</li>
+<li class=""><a class="" href="../Agent_Tasks/index.html">Features → Agent Tasks</a> - unattended tasks, where agent switching is not available.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Good to know — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Good to know</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sync-existing-data">Sync existing data<a href="#sync-existing-data" class="hash-link" aria-label="Direct link to Sync existing data" title="Direct link to Sync existing data" translate="no">​</a></h2>
+<p>If you are starting your project from a public/enterprise demo or an existing project not running on PaaS, you need to <a href="https://fixed.docs.upsun.com/development/transfer-dedicated.html#synchronize-files-from-development-to-stagingproduction" target="_blank" rel="noopener noreferrer" class="">sync data</a>
+from the local directories <code>/var/</code> and <code>/public/var</code>.
+Afterwards, ensure you are rebuilding your classes:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">./bin/console hypermdm:deployment:classes-rebuild --create-classes</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="logs">Logs<a href="#logs" class="hash-link" aria-label="Direct link to Logs" title="Direct link to Logs" translate="no">​</a></h2>
+<p>By default, logs are streamed to <code>stderr</code>.
+Upsun stores those logs within the <code>/var/log/</code> directory.
+You can find more details about how to access them <a href="https://fixed.docs.upsun.com/increase-observability/logs/access-logs.html#container-logs" target="_blank" rel="noopener noreferrer" class="">here</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="running-commands">Running commands<a href="#running-commands" class="hash-link" aria-label="Direct link to Running commands" title="Direct link to Running commands" translate="no">​</a></h2>
+<p>You should run your commands using prod env variable <code>--env=prod</code>, especially when you are using interactive shell.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:bundle:list --json --no-debug --env=prod</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="symfony-cache-dir">Symfony cache dir<a href="#symfony-cache-dir" class="hash-link" aria-label="Direct link to Symfony cache dir" title="Direct link to Symfony cache dir" translate="no">​</a></h2>
+<p>By default configuration, Symfony cache dir is set to <code>/app/localCache</code>.
+If you would like to change that consider changing the corresponding mount in the <code>applications.yaml</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="working-with-definition-files">Working with definition files<a href="#working-with-definition-files" class="hash-link" aria-label="Direct link to Working with definition files" title="Direct link to Working with definition files" translate="no">​</a></h2>
+<p>The way of working with class definitions is not specific to PaaS, it's a general thing to consider depending on the way how you want to work with class definitions no matter where you run your HyperMDM instance.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="class-and-classdefinition-storage-guidelines">Class and ClassDefinition Storage Guidelines<a href="#class-and-classdefinition-storage-guidelines" class="hash-link" aria-label="Direct link to Class and ClassDefinition Storage Guidelines" title="Direct link to Class and ClassDefinition Storage Guidelines" translate="no">​</a></h3>
+<p>As with HyperMDM configurations, HyperMDM class definitions are also stored as PHP configuration files.<br>
+<!-- -->These files can be added to version control systems and deployed across different environments.</p>
+<p>By default, both the PHP configuration files and PHP classes are written to the <code>/var/classes</code> directory.</p>
+<p>To make a class definition or class <strong>read-only</strong>, you can create a copy in <code>/config/hypermdm/classes</code>.</p>
+<p>If you need these classes in <code>/config/hypermdm/classes</code> to remain writable for UI editing, set the <code>HYPERMDM_CLASS_DEFINITION_WRITABLE</code> environment variable.</p>
+<p>In PaaS, to ensure <strong>immutable deployments</strong>, minimize confusion for developers, and keep volumes clean, the following separation rules need to be kept in mind:</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="quick-reference">Quick reference<a href="#quick-reference" class="hash-link" aria-label="Direct link to Quick reference" title="Direct link to Quick reference" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Directory</th><th>Contains</th><th>Filesystem</th><th>Writable at runtime?</th><th>In Git?</th></tr></thead><tbody><tr><td><code>/config/hypermdm/classes</code></td><td>Class definition files (<code>.php</code> config)</td><td>Immutable (read-only)</td><td>No (unless <code>HYPERMDM_CLASS_DEFINITION_WRITABLE</code> is set)</td><td>Yes</td></tr><tr><td><code>/var/classes</code></td><td>Generated PHP classes &amp; DataObject directory</td><td>Mounted volume</td><td>Yes</td><td>Not recommended</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="details">Details<a href="#details" class="hash-link" aria-label="Direct link to Details" title="Direct link to Details" translate="no">​</a></h3>
+<ul>
+<li class="">
+<p>Files within <code>/config/hypermdm/classes</code> are treated as <strong>code</strong> on an <strong>immutable filesystem</strong>.<br>
+<!-- -->Therefore, this directory should normally <strong>only contain class definition files</strong>, not actual class files or the <code>DataObject</code> directory.
+There are a few exceptions/cases where classes would be required under this folder, for example, if you create custom classes that extend HyperMDM’s DataObject classes.
+In these cases, please also make sure to add <code>"HyperMDM\\Model\\DataObject\\": "config/hypermdm/classes/DataObject"</code> to the <code>psr-4</code> section in the project's <code>composer.json</code>.</p>
+</li>
+<li class="">
+<p>Once class definitions are created or modified, they should be moved to <code>/config/hypermdm/classes</code> as part of the deployment pipeline.</p>
+</li>
+<li class="">
+<p>If UI-based class editing is required in PaaS, consider keeping the class definitions in the <code>/var</code> directory instead, as it remains writable.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> While it is possible to store class definitions in Git under <code>/var</code>, this approach is generally <strong>not recommended</strong>.</p>
+</blockquote>
+<p>Following docs are explaining in details <a href="https://pimcore.com/docs/platform/Pimcore/Deployment/Deployment_Tools#pimcore-class-definitions" target="_blank" rel="noopener noreferrer" class="">HyperMDM class definitions</a>
+and <a href="https://pimcore.com/docs/platform/Pimcore/Deployment/Configuration_Environments/#environment-specific-configurations" target="_blank" rel="noopener noreferrer" class="">environment specific configurations</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="keeping-your-paas-bundle-up-to-date">Keeping your PaaS bundle up-to-date<a href="#keeping-your-paas-bundle-up-to-date" class="hash-link" aria-label="Direct link to Keeping your PaaS bundle up-to-date" title="Direct link to Keeping your PaaS bundle up-to-date" translate="no">​</a></h2>
+<p>After updating your PaaS bundle to a newer version you also need to update the files that PaaS bundle provides.
+Command <code>./vendor/bin/hypermdm-paas-install-config</code> accepts flag <code>--force-overwrite</code> or <code>-f</code>.
+Use this flag with caution, as it will replace your existing files with the new versions from the PaaS bundle.
+Merging your existing changes with the latest changes from the PaaS bundle is a manual process.
+<strong>Note:</strong> Please exercise caution when updating service versions (e.g., MariaDB 10.6 to 11.4).
+We strongly recommend testing the update in a non-production environment first and creating a database backup immediately before deployment.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="session-storage">Session storage<a href="#session-storage" class="hash-link" aria-label="Direct link to Session storage" title="Direct link to Session storage" translate="no">​</a></h2>
+<p>By default, a dedicated Redis instance is used to store session data.
+However, you could also use MySQL as session storage for low traffic projects and to save some computing resources.
+The config for that is provided in <code>config/platform.yaml</code>. If you would like to use it, you need to uncomment it, and also set the session handler accordingly in your configuration:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">    session:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="mysql-configuration-limitations">MySQL configuration limitations<a href="#mysql-configuration-limitations" class="hash-link" aria-label="Direct link to MySQL configuration limitations" title="Direct link to MySQL configuration limitations" translate="no">​</a></h2>
+<p>Some MySQL configuration options are not available to configure on PaaS due to technical restraints of the managed database service.</p>
+<p>The following MySQL configuration options are <strong>not available</strong> on HyperMDM PaaS:</p>
+<ul>
+<li class=""><code>lower_case_table_names</code> - This option controls how table names are stored and compared. It is not configurable in the managed MariaDB service on PaaS, but is also not required for HyperMDM to function properly.</li>
+<li class=""><code>ha_archive</code> - This archive storage engine option is not configurable in the managed database environment.</li>
+</ul>
+<p>These limitations are inherent to the managed database service architecture and ensure system stability and security. Most HyperMDM applications will work correctly without these specific configurations, but you should be aware of these differences.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-studio-config">HyperMDM Studio config<a href="#hypermdm-studio-config" class="hash-link" aria-label="Direct link to Pimcore Studio config" title="Direct link to Pimcore Studio config" translate="no">​</a></h2>
+<p>HyperMDM Studio configuration has been included in HyperMDM PaaS.
+When you kickstart a project which includes HyperMDM Studio, to avoid collisions, HyperMDM Studio specific config in the <code>config/config.yaml</code> should be removed.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="rabbitmq-management-ui">RabbitMQ Management UI<a href="#rabbitmq-management-ui" class="hash-link" aria-label="Direct link to RabbitMQ Management UI" title="Direct link to RabbitMQ Management UI" translate="no">​</a></h2>
+<p>RabbitMQ offers a management plugin with a browser-based UI. You can access this UI with an SSH tunnel.</p>
+<p>To open a tunnel, follow these steps.</p>
+<p>SSH into your app container with a flag for local port forwarding:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">ssh $(hypermdm-cloud ssh --pipe) -L 15672:queue.internal:15672</span><br></span></code></pre></div></div>
+<p>Open <a href="http://localhost:15672" target="_blank" rel="noopener noreferrer" class="">http://localhost:15672</a> in your browser. Log in using the username and password from the relationship (usually <code>guest</code>/<code>guest</code>).</p>
+<p>For more information, see the <a href="https://www.rabbitmq.com/docs/management" target="_blank" rel="noopener noreferrer" class="">RabbitMQ Management Plugin documentation</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="imagemagick-policy-configuration">ImageMagick Policy Configuration<a href="#imagemagick-policy-configuration" class="hash-link" aria-label="Direct link to ImageMagick Policy Configuration" title="Direct link to ImageMagick Policy Configuration" translate="no">​</a></h2>
+<p>For improved performance, security and resource management, HyperMDM PaaS includes a default custom ImageMagick policy file at <code>.magick/policy.xml</code>. This file restricts the formats and resources available to ImageMagick, which is used for image transformation tasks.</p>
+<p>Default policy includes the following settings:</p>
+<ul>
+<li class=""><strong>Format Restrictions:</strong> Only specific image formats such as <code>PS</code> and <code>EPS</code> are added to the <a href="https://imagemagick.org/script/formats.php" target="_blank" rel="noopener noreferrer" class="">default list</a> for read and write operations.</li>
+<li class=""><strong>Resource Limits:</strong> Memory, disk, file, and thread usage are capped to prevent excessive resource consumption:<!-- -->
+<ul>
+<li class="">Memory: 256MiB</li>
+<li class="">Disk: 1GiB</li>
+<li class="">Map: 512MiB</li>
+<li class="">Open files: 256</li>
+<li class="">Threads: 2</li>
+<li class="">Operation time: 120 seconds</li>
+</ul>
+</li>
+</ul>
+<p>You can review or adjust these settings in <code>.magick/policy.xml</code> if your project has special requirements.
+For more details on ImageMagick policy configuration, see the <a href="https://imagemagick.org/script/security-policy.php" target="_blank" rel="noopener noreferrer" class="">official documentation</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="network-storage-service-version-migration">Network storage service version migration<a href="#network-storage-service-version-migration" class="hash-link" aria-label="Direct link to Network storage service version migration" title="Direct link to Network storage service version migration" translate="no">​</a></h2>
+<p>It is not possible to upgrade or downgrade the network storage service version while keeping existing data in place. Changing the service version requires reinitializing the service, and existing data will become inaccessible.
+If you plan to use network storage, start with storage version 1.0. Version 2.0 is deprecated and will be removed in the future.
+See the <a href="https://developer.upsun.com/docs/add-services/network-storage" target="_blank" rel="noopener noreferrer" class="">network storage documentation</a> for more details.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

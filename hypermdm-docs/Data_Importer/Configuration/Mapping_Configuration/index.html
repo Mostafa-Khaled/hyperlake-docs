@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mapping Configuration — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Mapping Configuration</h1></header>
+<p>A mapping configuration is a list of mapping entries. Each entry takes one or more fields of the import record, optionally
+transforms them, and writes the result into one data object field.</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Mapping Configuration</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mapping-987db35f45d6ad6694d1f68d5773d5e5.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/mapping-987db35f45d6ad6694d1f68d5773d5e5.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Mapping Configuration</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mapping-987db35f45d6ad6694d1f68d5773d5e5.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/mapping-987db35f45d6ad6694d1f68d5773d5e5.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Mapping_Configuration-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Mapping_Configuration-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Mapping Configuration</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mapping-987db35f45d6ad6694d1f68d5773d5e5.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Mapping_Configuration-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="anatomy-of-a-mapping-entry">Anatomy of a Mapping Entry<a href="#anatomy-of-a-mapping-entry" class="hash-link" aria-label="Direct link to Anatomy of a Mapping Entry" title="Direct link to Anatomy of a Mapping Entry" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Setting</th><th>Purpose</th></tr></thead><tbody><tr><td><strong>Label</strong></td><td>Title of the mapping entry in the UI. It has no effect on the import.</td></tr><tr><td><strong>Source</strong></td><td>One or more fields of the import record. Several fields are passed on as an array.</td></tr><tr><td><strong>Transformation Pipeline</strong></td><td>Operators that convert the source value into the format the target field expects.</td></tr><tr><td><strong>Data Target</strong></td><td>The data object field the result is written to.</td></tr></tbody></table></div>
+<p>The selectable source fields come from the <a class="" href="../Import_Preview/index.html">import preview</a>. A field that the preview does not
+show can still be used by typing its data source index or field name.</p>
+<p>A simple one-to-one assignment needs no transformation: pick a source, pick a target field, done. Open <strong>Advanced</strong> to
+edit the transformation pipeline and the full data target settings.</p>
+<p>Details:</p>
+<ul>
+<li class=""><a class="" href="Transformation_Pipeline/index.html">Transformation Pipeline</a></li>
+<li class=""><a class="" href="Data_Target/index.html">Data Target</a></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="autofill">Autofill<a href="#autofill" class="hash-link" aria-label="Direct link to Autofill" title="Direct link to Autofill" translate="no">​</a></h2>
+<p><strong>Autofill</strong> proposes mapping entries for source columns that are not mapped yet. It compares each source column name
+against the attribute names of the selected data object class and scores the similarity. Only matches above a minimum
+score are proposed, so unmatched columns are left out.</p>
+<p>Autofill recognizes locale suffixes: a column named <code>title_de</code> is proposed for the localized field <code>title</code> with the
+language <code>de</code>.</p>
+<p>Review the proposals, select the ones you want, and apply them. Autofill needs preview data, since it works on the source
+columns the preview produced.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="writing-rules">Writing Rules<a href="#writing-rules" class="hash-link" aria-label="Direct link to Writing Rules" title="Direct link to Writing Rules" translate="no">​</a></h2>
+<p>Two options on the data target control whether a value is written at all:</p>
+<ul>
+<li class=""><strong>Write If Target Is Not Empty</strong>: when disabled, the field is skipped if the data object already holds a value. Use it
+to fill gaps without overwriting curated content.</li>
+<li class=""><strong>Write If Source Is Empty</strong>: when disabled, an empty source value does not overwrite the existing value.</li>
+</ul>
+<p>Both are enabled by default, so by default every import overwrites the target field.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

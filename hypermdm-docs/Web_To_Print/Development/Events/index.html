@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Events — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Events</h1></header>
+<p>The bundle dispatches two kinds of events: PDF generation events, which let you hook into the rendering process
+itself, and Studio pre-response events, which let you extend the payloads Studio receives.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="pdf-generation-events">PDF Generation Events<a href="#pdf-generation-events" class="hash-link" aria-label="Direct link to PDF Generation Events" title="Direct link to PDF Generation Events" translate="no">​</a></h2>
+<p>These are the extension points for the PDF pipeline. All constants are defined in
+<code>HyperMDM\Bundle\WebToPrintBundle\Event\DocumentEvents</code>.</p>
+<div class="table-container"><table><thead><tr><th>Constant</th><th>Event name</th><th>Dispatched when</th><th>Event object and arguments</th></tr></thead><tbody><tr><td><code>PRINT_PRE_PDF_GENERATION</code></td><td><code>hypermdm.document.print.prePdfGeneration</code></td><td>Before the PDF is generated</td><td><code>HyperMDM\Event\Model\DocumentEvent</code> with <code>processor</code> and <code>jobConfig</code></td></tr><tr><td><code>PRINT_POST_PDF_GENERATION</code></td><td><code>hypermdm.document.print.postPdfGeneration</code></td><td>After the PDF has been generated</td><td><code>DocumentEvent</code> with <code>filename</code> and <code>pdf</code></td></tr><tr><td><code>PRINT_MODIFY_PROCESSING_OPTIONS</code></td><td><code>hypermdm.document.print.processor.modifyProcessingOptions</code></td><td>While the processor builds the list of options shown in the print settings form</td><td><code>Event\Model\PrintConfigEvent</code> with <code>options</code></td></tr><tr><td><code>PRINT_MODIFY_PROCESSING_CONFIG</code></td><td><code>hypermdm.document.print.processor.modifyConfig</code></td><td>Immediately before the processor renders the PDF</td><td><code>PrintConfigEvent</code>, arguments differ per processor, see below</td></tr></tbody></table></div>
+<p>Both <code>MODIFY_*</code> events are dispatched by <strong>both</strong> processors, but they do not carry the same arguments:</p>
+<div class="table-container"><table><thead><tr><th>Processor</th><th><code>PRINT_MODIFY_PROCESSING_CONFIG</code> arguments</th></tr></thead><tbody><tr><td>PDFReactor</td><td><code>config</code>, <code>reactorConfig</code>, <code>document</code></td></tr><tr><td>Gotenberg</td><td><code>params</code>, <code>html</code></td></tr></tbody></table></div>
+<p>Check the processor before reading arguments, as in the worked example in
+<a class="" href="../../Web2Print_Extending_Config_for_PDFX_conformance/index.html">Extending PDF Creation Config for PDF/X Conformance</a>.
+A listener written only against PDFReactor's arguments will break when the same event fires from Gotenberg.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-pre-response-events">Studio Pre-Response Events<a href="#studio-pre-response-events" class="hash-link" aria-label="Direct link to Studio Pre-Response Events" title="Direct link to Studio Pre-Response Events" translate="no">​</a></h2>
+<p>The bundle builds its Studio responses through the HyperMDM Studio Backend Bundle. Before a response is returned, it
+dispatches a pre-response event carrying the response object, so you can attach your own data without replacing the
+controller behind it. See
+<a class="" href="../../../Studio_Backend/Extending/Additional_and_Custom_Attributes/index.html">Additional and Custom Attributes</a>
+for how additional attributes reach the Studio frontend.</p>
+<p>Event classes live in <code>HyperMDM\Bundle\WebToPrintBundle\Event\PreResponse\</code>.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Web_To_Print-Development-Events-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Web_To_Print-Development-Events-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Web_To_Print-Development-Events-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The Studio controllers that dispatch these events are marked <code>@internal</code> and change without deprecation. Listen to the
+events to enrich the responses, but do not call the endpoints themselves. Studio Backend serves generated OpenAPI
+documentation at <code>/hypermdm-studio/api/docs</code>.</p></div></div>
+<div class="table-container"><table><thead><tr><th>Event name</th><th>Payload</th><th>Dispatched when</th><th>Use it to</th></tr></thead><tbody><tr><td><code>pre_response.web_to_print.generate_process_data</code></td><td><code>Schema\GenerateProcessData</code></td><td>When Studio polls the status of a running PDF generation</td><td>Add your own fields to the generation status payload</td></tr><tr><td><code>pre_response.web_to_print.processing_option</code></td><td><code>Schema\ProcessingOption</code></td><td>Once per option, while the processor options are assembled</td><td>Annotate individual processor options shown in the print settings form</td></tr><tr><td><code>pre_response.web_to_print.settings</code></td><td><code>Schema\WebToPrintSettings</code></td><td>When the global web-to-print settings are requested</td><td>Add your own fields to the settings response</td></tr></tbody></table></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

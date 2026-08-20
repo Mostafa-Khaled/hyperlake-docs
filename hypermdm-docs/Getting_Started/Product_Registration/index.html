@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Product Registration — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Product Registration</h1></header>
+<p>HyperMDM requires product registration before it can be installed or used.
+This mechanism validates each HyperMDM instance and ensures compliance with HyperMDM licensing.</p>
+<p>Product registration is mandatory. Without a valid product key, installation cannot proceed
+and the Symfony container cannot be built (relevant for upgrades of existing installations).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="instance-identification">Instance Identification<a href="#instance-identification" class="hash-link" aria-label="Direct link to Instance Identification" title="Direct link to Instance Identification" translate="no">​</a></h2>
+<p>Every HyperMDM project instance must be registered individually.
+Registration is based on an instance ID and the <code>hypermdm.encryption.secret</code>, both generated during installation.
+A <code>hash_hmac('sha256', $instanceIdentifier, $secret)</code> is used as the identifier for the registration process.
+This ensures a unique identifier without leaking secret data.</p>
+<p>The instance identifier must be unique across all HyperMDM installations.
+During installation, HyperMDM generates a unique identifier automatically.
+If you set the identifier manually (e.g. for automated deployments),
+you must ensure it is unique and not reused across different HyperMDM installations.</p>
+<p>Different environments of an instance (development, staging, testing, production) can share the same product key,
+as long as they share the same instance ID and encryption secret.</p>
+<p>One product key must not be used for multiple HyperMDM instances.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="registration-process">Registration Process<a href="#registration-process" class="hash-link" aria-label="Direct link to Registration Process" title="Direct link to Registration Process" translate="no">​</a></h2>
+<p>Registration is a one-time process done via the <a href="https://license.pimcore.com/register" target="_blank" rel="noopener noreferrer" class="">HyperMDM Product Registration Form</a>.
+Your HyperMDM instance provides a deep link including the instance ID when asking for the product key.</p>
+<p>Open the link, follow the instructions, generate a product key, and apply it to your instance.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="adding-the-product-key">Adding the Product Key<a href="#adding-the-product-key" class="hash-link" aria-label="Direct link to Adding the Product Key" title="Direct link to Adding the Product Key" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="during-installation">During Installation<a href="#during-installation" class="hash-link" aria-label="Direct link to During Installation" title="Direct link to During Installation" translate="no">​</a></h3>
+<p>During a fresh installation, the product key is required.
+It can be entered manually via a prompt or passed via parameters or environment variables (for automated installations).</p>
+<p>When installing manually, the prompt provides a deep link to the registration form including the instance ID.</p>
+<p>When using parameters or environment variables,
+make sure the encryption secret, instance ID, and product key match each other.</p>
+<p>After installation, the encryption secret, instance ID, and product key are written to <code>.env.local</code>
+as environment variables:</p>
+<ul>
+<li class=""><code>HYPERMDM_PRODUCT_KEY</code> - the product key</li>
+<li class=""><code>HYPERMDM_INSTANCE_IDENTIFIER</code> - the instance identifier</li>
+<li class=""><code>HYPERMDM_ENCRYPTION_SECRET</code> - the encryption secret</li>
+</ul>
+<p>At runtime these are read into <code>hypermdm.encryption.secret</code>, <code>hypermdm.product_registration.instance_identifier</code>,
+and <code>hypermdm.product_registration.product_key</code>. For multi-stage deployments, you can provide them through your
+environment or <code>docker-compose.yaml</code> instead of committing <code>.env.local</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="during-upgrade-or-manual-registration">During Upgrade or Manual Registration<a href="#during-upgrade-or-manual-registration" class="hash-link" aria-label="Direct link to During Upgrade or Manual Registration" title="Direct link to During Upgrade or Manual Registration" translate="no">​</a></h3>
+<p>If you are upgrading from an older HyperMDM version (or if you have changed the encryption secret),
+a product registration error will be thrown during container build.</p>
+<p>Follow the registration link in the error message to generate a valid product key
+and add it to the Symfony configuration as described above.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="verification-logic">Verification Logic<a href="#verification-logic" class="hash-link" aria-label="Direct link to Verification Logic" title="Direct link to Verification Logic" translate="no">​</a></h2>
+<p>The product key is validated locally via private-public key validation.
+It performs a signature verification and a check for matching instance ID.</p>
+<p>The checks are performed:</p>
+<ul>
+<li class="">During installation of HyperMDM.</li>
+<li class="">During the build of the Symfony container.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="faq">FAQ<a href="#faq" class="hash-link" aria-label="Direct link to FAQ" title="Direct link to FAQ" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="can-i-use-one-product-key-for-multiple-environments">Can I use one product key for multiple environments?<a href="#can-i-use-one-product-key-for-multiple-environments" class="hash-link" aria-label="Direct link to Can I use one product key for multiple environments?" title="Direct link to Can I use one product key for multiple environments?" translate="no">​</a></h3>
+<p>Yes, if they share the same instance ID and encryption secret.
+For example, development, staging, and production environments of the same project can use one product key.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="can-i-use-one-product-key-for-multiple-instances">Can I use one product key for multiple instances?<a href="#can-i-use-one-product-key-for-multiple-instances" class="hash-link" aria-label="Direct link to Can I use one product key for multiple instances?" title="Direct link to Can I use one product key for multiple instances?" translate="no">​</a></h3>
+<p>No. Each HyperMDM instance requires its own product key.
+An "instance" is identified by its unique combination of instance ID and encryption secret.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-do-i-register-in-ciautomated-pipelines">How do I register in CI/automated pipelines?<a href="#how-do-i-register-in-ciautomated-pipelines" class="hash-link" aria-label="Direct link to How do I register in CI/automated pipelines?" title="Direct link to How do I register in CI/automated pipelines?" translate="no">​</a></h3>
+<p>Pass the encryption secret, instance ID, and product key to the installer using parameters or environment variables.
+This enables reproducible, automated installations with static instance secrets and product keys.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-do-i-re-register-after-changing-the-encryption-secret">How do I re-register after changing the encryption secret?<a href="#how-do-i-re-register-after-changing-the-encryption-secret" class="hash-link" aria-label="Direct link to How do I re-register after changing the encryption secret?" title="Direct link to How do I re-register after changing the encryption secret?" translate="no">​</a></h3>
+<p>Change the instance identifier in the Symfony configuration (<code>hypermdm.product_registration.instance_identifier</code>),
+rebuild the container, follow the link in the error message, generate a new product key,
+and apply it to the configuration.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-is-the-product-key-stored">Where is the product key stored?<a href="#where-is-the-product-key-stored" class="hash-link" aria-label="Direct link to Where is the product key stored?" title="Direct link to Where is the product key stored?" translate="no">​</a></h3>
+<p>In <code>.env.local</code>, as the <code>HYPERMDM_PRODUCT_KEY</code> environment variable (alongside <code>HYPERMDM_INSTANCE_IDENTIFIER</code>
+and <code>HYPERMDM_ENCRYPTION_SECRET</code>), which the runtime reads into <code>hypermdm.product_registration.product_key</code>.
+For multi-stage deployments, you can provide these values through your environment or <code>docker-compose.yaml</code> instead.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-do-i-generate-an-encryption-secret-manually">How do I generate an encryption secret manually?<a href="#how-do-i-generate-an-encryption-secret-manually" class="hash-link" aria-label="Direct link to How do I generate an encryption secret manually?" title="Direct link to How do I generate an encryption secret manually?" translate="no">​</a></h3>
+<p>Use the Defuse key generator included with HyperMDM:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">vendor/bin/generate-defuse-key</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

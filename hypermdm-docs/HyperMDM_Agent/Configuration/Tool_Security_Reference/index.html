@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tool Security Reference — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Tool Security Reference</h1></header>
+<p>This page is the authoritative reference for which SDK built-in tools an agent can use, how path sandboxing works,
+and how permissions are auto-derived from an agent's configuration. For the mechanism that enforces all of this,
+see <a class="" href="../../Architecture/Tool_Security/index.html">Architecture → Tool Security</a>.</p>
+<p>This page covers <strong>SDK built-in tools only</strong> - the filesystem / web / interactive tools the Copilot SDK ships with.
+MCP tools (HyperMDM PHP tools, third-party MCP servers) are governed by HyperMDM user permissions via cookie forwarding.
+Which MCP groups an agent can see is controlled by <code>hypermdmMcpServers</code> / <code>hypermdmMetaGroups</code> - see <a class="" href="../MCP_Servers/index.html">MCP Servers</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-tools-does-an-agent-get">What tools does an agent get?<a href="#what-tools-does-an-agent-get" class="hash-link" aria-label="Direct link to What tools does an agent get?" title="Direct link to What tools does an agent get?" translate="no">​</a></h2>
+<p>Four categories - <strong>enabled by default</strong>, <strong>opt-in</strong>, <strong>always blocked</strong>, <strong>SDK-managed</strong>. The agent's YAML only
+touches opt-in tools; everything else is policy.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="enabled-by-default">Enabled by default<a href="#enabled-by-default" class="hash-link" aria-label="Direct link to Enabled by default" title="Direct link to Enabled by default" translate="no">​</a></h3>
+<p>Every agent automatically has these tools. No configuration needed.</p>
+<div class="table-container"><table><thead><tr><th>Tool</th><th>What it does</th></tr></thead><tbody><tr><td><code>view</code></td><td>Read file contents (path-sandboxed)</td></tr><tr><td><code>grep</code></td><td>Search file contents (path-sandboxed)</td></tr><tr><td><code>glob</code></td><td>Match files by pattern (path-sandboxed)</td></tr><tr><td><code>skill</code></td><td>Loads skill content into the agent's system context</td></tr><tr><td><code>report_intent</code></td><td>SDK-internal - declares the agent's intended action</td></tr><tr><td><code>fetch_copilot_cli_documentation</code></td><td>SDK-internal - documentation lookup</td></tr></tbody></table></div>
+<blockquote>
+<p><strong><code>skill</code> must remain enabled.</strong> The SDK uses this tool to inject
+skill content into the system message. Excluding it silently
+disables <code>skillDirectories</code> - no skill content reaches the agent and
+no error is raised. The agent-server keeps <code>skill</code> in
+<code>ALWAYS_ACTIVE_TOOLS</code>; removing it will break skill loading.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="opt-in-via-includesdktools">Opt-in via <code>includeSdkTools</code><a href="#opt-in-via-includesdktools" class="hash-link" aria-label="Direct link to opt-in-via-includesdktools" title="Direct link to opt-in-via-includesdktools" translate="no">​</a></h3>
+<p>These are disabled by default. Enable them per agent in the YAML
+config.</p>
+<div class="table-container"><table><thead><tr><th>Tool</th><th>What it does</th><th>Notes</th></tr></thead><tbody><tr><td><code>create</code></td><td>Create new files on disk</td><td>Path-sandboxed. Enabling auto-approves the <code>write</code> permission.</td></tr><tr><td><code>edit</code></td><td>Edit existing files with diffs</td><td>Path-sandboxed. Enabling auto-approves the <code>write</code> permission.</td></tr><tr><td><code>web_fetch</code></td><td>Fetch a URL and return content as markdown</td><td>Enabling auto-approves the <code>url</code> permission.</td></tr><tr><td><code>ask_user</code></td><td>Interactively ask the user a question mid-turn</td><td>See <a class="" href="../../Features/Interactive_Input/index.html">Features → Interactive Input</a>.</td></tr></tbody></table></div>
+<p>Example:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">includeSdkTools</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> web_fetch</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> ask_user</span><br></span></code></pre></div></div>
+<p>Listing a default tool (<code>view</code>, <code>grep</code>, <code>glob</code>) is harmless but
+unnecessary - they are already enabled.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="task-session-ask_user-exclusion">Task-session <code>ask_user</code> exclusion<a href="#task-session-ask_user-exclusion" class="hash-link" aria-label="Direct link to task-session-ask_user-exclusion" title="Direct link to task-session-ask_user-exclusion" translate="no">​</a></h4>
+<p><code>ask_user</code> is force-excluded from every turn of a <a class="" href="../../Architecture/Agent_Tasks/index.html">headless agent task</a>,
+even for an agent that lists it under <code>includeSdkTools</code>. This is applied server-side from the session's <code>type</code>
+column, not something an agent configuration can opt back into for its own task runs - an unattended task has no
+human to answer a mid-turn question. See
+<a class="" href="../../Architecture/Tool_Security/index.html#task-session-tool-overrides">Architecture → Tool Security → Task-session tool overrides</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="always-blocked">Always blocked<a href="#always-blocked" class="hash-link" aria-label="Direct link to Always blocked" title="Direct link to Always blocked" translate="no">​</a></h3>
+<p>These tools are denied unconditionally at the runtime hook level.
+Even if the LLM hallucinates a call to them, the call is rejected
+before it reaches the SDK with <em>"This tool is not available in the
+agent environment"</em>.</p>
+<div class="table-container"><table><thead><tr><th>Tool</th><th>Why blocked</th></tr></thead><tbody><tr><td><code>bash</code></td><td>Shell command execution</td></tr><tr><td><code>list_bash</code></td><td>List interactive bash sessions</td></tr><tr><td><code>read_bash</code></td><td>Read from an interactive bash session</td></tr><tr><td><code>write_bash</code></td><td>Write to an interactive bash session</td></tr><tr><td><code>stop_bash</code></td><td>Stop an interactive bash session</td></tr><tr><td><code>task</code></td><td>Spawns sub-agents that would bypass tool restrictions</td></tr></tbody></table></div>
+<p>All denials are audit-logged via <code>logger.audit()</code> with the tool name,
+session id, and request kind - searchable from the structured log
+stream.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sdk-managed-cannot-be-controlled">SDK-managed (cannot be controlled)<a href="#sdk-managed-cannot-be-controlled" class="hash-link" aria-label="Direct link to SDK-managed (cannot be controlled)" title="Direct link to SDK-managed (cannot be controlled)" translate="no">​</a></h3>
+<p>Some tools are injected internally by the SDK and are always
+available. They are not returned by the tool list API and cannot be
+disabled through agent configuration.</p>
+<div class="table-container"><table><thead><tr><th>Tool</th><th>What it does</th></tr></thead><tbody><tr><td><code>sql</code></td><td>Per-session SQLite scratch database (with <code>todos</code> / <code>todo_deps</code> tables)</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="auto-derived-permissions">Auto-derived permissions<a href="#auto-derived-permissions" class="hash-link" aria-label="Direct link to Auto-derived permissions" title="Direct link to Auto-derived permissions" translate="no">​</a></h2>
+<p>Agent configurations do not have a <code>permissions</code> field. The
+agent-server <strong>auto-derives</strong> the SDK permission set from the resolved
+config - no manual listing needed.</p>
+<div class="table-container"><table><thead><tr><th>Kind</th><th>Approved when</th></tr></thead><tbody><tr><td><code>read</code></td><td>Always approved (default read tools are always on)</td></tr><tr><td><code>mcp</code></td><td>The agent has any MCP server (<code>mcpServers</code>, <code>hypermdmMcpServers</code>, or <code>hypermdmMetaGroups</code>)</td></tr><tr><td><code>url</code></td><td><code>web_fetch</code> is listed in <code>includeSdkTools</code></td></tr><tr><td><code>write</code></td><td><code>create</code> or <code>edit</code> is listed in <code>includeSdkTools</code></td></tr><tr><td><code>shell</code></td><td>Never approved. The <code>PreToolUseHook</code> blocks every shell tool unconditionally</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-user-and-information-disclosure">Execution user and information disclosure<a href="#execution-user-and-information-disclosure" class="hash-link" aria-label="Direct link to Execution user and information disclosure" title="Direct link to Execution user and information disclosure" translate="no">​</a></h2>
+<p>Agent configurations can optionally set <code>executionUser</code>, a HyperMDM username the whole session runs as instead of the
+chat initiator. Full field reference: <a class="" href="../Agents/index.html#execution-user">Configuration → Agents → Execution user</a>.
+Resolution mechanism: <a class="" href="../../Architecture/Authentication/index.html#execution-user-resolution">Architecture → Authentication → Execution user resolution</a>.</p>
+<div class="table-container"><table><thead><tr><th>Aspect</th><th>Behavior</th></tr></thead><tbody><tr><td>Who can set it</td><td>Administrators only. The server rejects a changed value coming from a non-admin request.</td></tr><tr><td>Studio visibility</td><td>Non-admins see the field read only on the agent's General tab; HyperMDM Studio shows a warning next to it once it carries a value.</td></tr><tr><td>Unresolvable value</td><td>Session creation fails with an error, no silent fallback to the initiator (fail closed).</td></tr><tr><td>Session ownership</td><td>Stays with the initiator; only the acting identity changes.</td></tr></tbody></table></div>
+<p><strong>Security implication:</strong> the execution user can hold more permissions than the users who chat with the agent.
+Because the agent acts as the execution user, its responses (and any HITL proposal it creates) can surface
+information - object content, listings, search results, proposed values - that the chatting users cannot access
+directly. Recommended mitigation: combine an execution user with the agent's own
+<a class="" href="../Agents/index.html#permissions"><code>run</code> permission</a> so only an intended audience can start sessions with that agent.</p>
+<p>See <a class="" href="../../Architecture/Tool_Security/index.html#execution-user-and-information-disclosure">Architecture → Tool Security → Execution user and information disclosure</a>
+for the mechanism behind this table.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="path-sandboxing">Path sandboxing<a href="#path-sandboxing" class="hash-link" aria-label="Direct link to Path sandboxing" title="Direct link to Path sandboxing" translate="no">​</a></h2>
+<p>File-system tools (<code>view</code>, <code>grep</code>, <code>glob</code>, <code>create</code>, <code>edit</code>) are restricted to two per-session directories:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">/app/uploads/{chatSessionId}/uploaded/    ← user-uploaded files</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">/app/uploads/{chatSessionId}/staged/      ← staged HyperMDM asset copies</span><br></span></code></pre></div></div>
+<p>A tool call with a path outside these directories is denied with <em>"Access denied: path is outside the allowed scope"</em>.
+For the pre-tool-use hook that enforces this, see <a class="" href="../../Architecture/Tool_Security/index.html">Architecture → Tool Security</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="read-only-path-tmp">Read-only path: <code>/tmp/</code><a href="#read-only-path-tmp" class="hash-link" aria-label="Direct link to read-only-path-tmp" title="Direct link to read-only-path-tmp" translate="no">​</a></h3>
+<p>When an MCP tool returns a response larger than ~30 KB, the Copilot SDK writes the full output to a temp file in
+<code>/tmp/</code> and tells the LLM to use <code>view</code> or <code>grep</code> to read it. <code>/tmp/</code> is a <strong>read-only path</strong> with tighter restrictions
+than the session sandbox:</p>
+<div class="table-container"><table><thead><tr><th>Tool</th><th>Specific file (e.g. <code>/tmp/123-copilot-tool-output-abc.txt</code>)</th><th>Directory (<code>/tmp/</code>)</th></tr></thead><tbody><tr><td><code>view</code></td><td>allowed</td><td><strong>denied</strong></td></tr><tr><td><code>grep</code></td><td>allowed</td><td><strong>denied</strong></td></tr><tr><td><code>glob</code></td><td>denied</td><td>denied</td></tr><tr><td><code>create</code>/<code>edit</code></td><td>denied</td><td>denied</td></tr></tbody></table></div>
+<p><code>view</code> and <code>grep</code> can read a specific file by exact path but cannot target the directory itself - a directory listing
+could expose temp files from other sessions and a recursive grep could leak their contents. <code>glob</code> is always denied on
+read-only paths.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="startup-validation">Startup validation<a href="#startup-validation" class="hash-link" aria-label="Direct link to Startup validation" title="Direct link to Startup validation" translate="no">​</a></h2>
+<p>On startup (deferred 5 seconds to let the SDK initialize) and on every
+admin reload, the agent-server validates every agent's
+<code>includeSdkTools</code> entries. Warnings are logged when:</p>
+<ul>
+<li class="">A tool name is not in the valid configurable set (<code>view</code>, <code>grep</code>,
+<code>glob</code>, <code>create</code>, <code>edit</code>, <code>web_fetch</code>, <code>ask_user</code>).</li>
+<li class="">A tool name is not found in the current SDK's tool list.</li>
+</ul>
+<p>Inspect validation results manually:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">curl -X POST \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  -H "Authorization: Bearer $AGENT_SERVER_ADMIN_TOKEN" \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  http://localhost/agent-server/api/admin/reload-agents</span><br></span></code></pre></div></div>
+<p>The response includes a <code>toolWarnings</code> array alongside any
+<code>modelWarnings</code>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

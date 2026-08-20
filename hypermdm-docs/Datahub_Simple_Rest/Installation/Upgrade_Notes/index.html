@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<p>Things to consider before or when upgrading to new versions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php--dependency-updates">PHP / Dependency Updates<a href="#php--dependency-updates" class="hash-link" aria-label="Direct link to PHP / Dependency Updates" title="Direct link to PHP / Dependency Updates" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-extjs--admin-classic-ui">Removed ExtJS / Admin Classic UI<a href="#removed-extjs--admin-classic-ui" class="hash-link" aria-label="Direct link to Removed ExtJS / Admin Classic UI" title="Direct link to Removed ExtJS / Admin Classic UI" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMDataHubSimpleRestBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code> and no longer uses
+<code>BundleAdminClassicTrait</code>.</li>
+<li class="">The Admin Classic UI JavaScript and CSS assets have been removed:<!-- -->
+<ul>
+<li class=""><code>js/hypermdm/adapter/simpleRest.js</code></li>
+<li class=""><code>js/hypermdm/configuration/configItem.js</code></li>
+<li class=""><code>js/hypermdm/configuration/gridConfigDialog.js</code></li>
+<li class=""><code>css/icons.css</code></li>
+</ul>
+</li>
+<li class=""><code>ConfigController</code> has been removed (it served the ExtJS-based configuration UI).</li>
+<li class=""><code>StudioRouteLoader</code> has been removed; Studio routes are now registered via the standard bundle configuration.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="installer-profile-support">Installer Profile Support<a href="#installer-profile-support" class="hash-link" aria-label="Direct link to Installer Profile Support" title="Direct link to Installer Profile Support" translate="no">​</a></h3>
+<ul>
+<li class="">The bundle installer now implements <code>PostInstallCommandsProviderInterface</code> from HyperMDM's InstallBundle. The
+following post-install commands run automatically during <code>hypermdm:install</code> when using Install Profiles:<!-- -->
+<ul>
+<li class=""><code>datahub:simple-rest:create-or-update-mapping</code> (priority 10)</li>
+<li class=""><code>datahub:simple-rest:init-index</code> (priority 5)</li>
+<li class="">Manual execution of these commands after <code>hypermdm:bundle:install</code> is still required as before.</li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="messenger-transport-dsn-rename">Messenger Transport DSN Rename<a href="#messenger-transport-dsn-rename" class="hash-link" aria-label="Direct link to Messenger Transport DSN Rename" title="Direct link to Messenger Transport DSN Rename" translate="no">​</a></h3>
+<ul>
+<li class="">The messenger transport DSN is now configured via the <code>%hypermdm.messenger.transport_dsn_prefix%</code> container parameter
+(previously <code>%hypermdm.messenger.transport_dsn%</code>). If you override the transport DSN configuration, update your
+environment variable from <code>HYPERMDM_MESSENGER_TRANSPORT_DSN</code> to <code>HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-legacyindexhandlerfactory">Removed <code>LegacyIndexHandlerFactory</code><a href="#removed-legacyindexhandlerfactory" class="hash-link" aria-label="Direct link to removed-legacyindexhandlerfactory" title="Direct link to removed-legacyindexhandlerfactory" translate="no">​</a></h3>
+<ul>
+<li class=""><code>Factory\OpenSearch\LegacyIndexHandlerFactory</code> has been removed.</li>
+<li class=""><code>IndexHandler</code> now receives <code>SearchClientInterface</code> directly via constructor injection instead of relying on the
+legacy factory and the <code>setSearchClientInterface()</code> setter method. If you referenced <code>LegacyIndexHandlerFactory</code> in
+your service configuration, update it accordingly.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-deprecated-methods">Removed Deprecated Methods<a href="#removed-deprecated-methods" class="hash-link" aria-label="Direct link to Removed Deprecated Methods" title="Direct link to Removed Deprecated Methods" translate="no">​</a></h3>
+<p>The following methods deprecated in v3.4.0 have been removed:</p>
+<ul>
+<li class=""><code>IndexHandler::queryIndexTreeNavigation()</code>: use <code>executeTreeNavigation()</code> instead.</li>
+<li class=""><code>QueryService::queryIndexSearch()</code>: use <code>executeSearch()</code> instead.</li>
+<li class=""><code>QueryService::queryIndexTreeNavigation()</code>: use <code>executeTreeNavigation()</code> instead.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="classes-marked-as-internal-andor-final">Classes Marked as <code>@internal</code> and/or <code>final</code><a href="#classes-marked-as-internal-andor-final" class="hash-link" aria-label="Direct link to classes-marked-as-internal-andor-final" title="Direct link to classes-marked-as-internal-andor-final" translate="no">​</a></h3>
+<p>All classes in this bundle are now marked as <code>@internal</code>. The following classes are also <code>final</code>. If you were extending
+or instantiating any of these directly, refactor to use composition, decoration, or event subscribers instead:</p>
+<p><strong>Bundle</strong></p>
+<ul>
+<li class=""><code>HyperMDMDataHubSimpleRestBundle</code></li>
+</ul>
+<p><strong>Commands</strong></p>
+<ul>
+<li class=""><code>CreateOrUpdateMappingCommand</code></li>
+<li class=""><code>ParallelizationAbstractCommand</code> (<code>@internal</code>, not <code>final</code>)</li>
+<li class=""><code>ProcessQueueCommand</code></li>
+<li class=""><code>ResetQueueCommand</code></li>
+</ul>
+<p><strong>Controllers</strong></p>
+<ul>
+<li class=""><code>AbstractController</code> (<code>@internal</code>, not <code>final</code>)</li>
+<li class=""><code>EndpointController</code></li>
+<li class=""><code>SwaggerController</code></li>
+<li class=""><code>Studio\Config\GetController</code></li>
+<li class=""><code>Studio\Config\GetLabelListController</code></li>
+<li class=""><code>Studio\Config\UpdateController</code></li>
+<li class=""><code>Studio\Queue\GetItemCountController</code></li>
+<li class=""><code>Studio\Thumbnails\CollectionController</code></li>
+</ul>
+<p><strong>DependencyInjection</strong></p>
+<ul>
+<li class=""><code>Configuration</code></li>
+<li class=""><code>HyperMDMDataHubSimpleRestExtension</code></li>
+<li class=""><code>CompilerPass\OutputFormatterPass</code></li>
+</ul>
+<p><strong>Events</strong></p>
+<ul>
+<li class=""><code>Event\Studio\PreResponse\ConfigurationDetailEvent</code></li>
+<li class=""><code>Event\Studio\PreResponse\ConfigurationUpdateEvent</code></li>
+<li class=""><code>Event\Studio\PreResponse\LabelListEvent</code></li>
+<li class=""><code>Event\Studio\PreResponse\QueueItemCountEvent</code></li>
+<li class=""><code>Event\Studio\PreResponse\ThumbnailEvent</code></li>
+</ul>
+<p><strong>EventSubscribers</strong></p>
+<ul>
+<li class=""><code>ChangedEventSubscriber</code></li>
+<li class=""><code>ConfigurationEventSubscriber</code></li>
+</ul>
+<p><strong>Exceptions</strong></p>
+<ul>
+<li class=""><code>AccessDeniedException</code></li>
+<li class=""><code>InvalidArgumentException</code></li>
+<li class=""><code>InvalidRequestException</code></li>
+<li class=""><code>NotFoundException</code></li>
+</ul>
+<p><strong>Installer</strong></p>
+<ul>
+<li class=""><code>Installer</code></li>
+</ul>
+<p><strong>MappingAndDataExtractor</strong></p>
+<ul>
+<li class=""><code>AbstractMappingAndDataExtractor</code> (<code>@internal</code>, not <code>final</code>)</li>
+<li class=""><code>AssetMappingAndDataExtractor</code></li>
+<li class=""><code>DataExtractorFactory</code></li>
+<li class=""><code>DataObjectMappingAndDataExtractor</code></li>
+<li class=""><code>FolderMappingAndDataExtractor</code></li>
+<li class=""><code>WorkspaceResolver</code></li>
+<li class=""><code>OutputFormatter\Formatter\HotspotImageFormatter</code></li>
+<li class=""><code>OutputFormatter\Formatter\ImageFormatter</code></li>
+<li class=""><code>OutputFormatter\Formatter\ImageGalleryFormatter</code></li>
+<li class=""><code>OutputFormatter\Formatter\VideoFormatter</code></li>
+<li class=""><code>OutputFormatter\Loader\TaggedIteratorOutputFormatterLoader</code></li>
+</ul>
+<p><strong>Messenger</strong></p>
+<ul>
+<li class=""><code>QueueDuplicateCleanupHandler</code></li>
+<li class=""><code>QueueDuplicateCleanupMessage</code></li>
+<li class=""><code>QueueHandler</code></li>
+<li class=""><code>QueueMessage</code></li>
+</ul>
+<p><strong>Queue</strong></p>
+<ul>
+<li class=""><code>QueueService</code></li>
+</ul>
+<p><strong>Services</strong></p>
+<ul>
+<li class=""><code>AbstractService</code> (<code>@internal</code>, not <code>final</code>)</li>
+<li class=""><code>IndexHandler</code></li>
+<li class=""><code>IndexService</code></li>
+<li class=""><code>QueryService</code></li>
+<li class=""><code>Service\Dto\IndexSearchParameter</code></li>
+<li class=""><code>Service\Dto\IndexTreeNavigationParameter</code></li>
+<li class=""><code>Service\Dto\QueryServiceSearchParameter</code></li>
+<li class=""><code>Service\Dto\QueryServiceTreeNavigationParameter</code></li>
+<li class=""><code>Service\Studio\ConfigurationService</code></li>
+<li class=""><code>Service\Studio\QueueStudioService</code></li>
+<li class=""><code>Service\Studio\ThumbnailService</code></li>
+</ul>
+<p><strong>Tools</strong></p>
+<ul>
+<li class=""><code>Tool\AssetRelationFixer</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="return-type-changes">Return Type Changes<a href="#return-type-changes" class="hash-link" aria-label="Direct link to Return Type Changes" title="Direct link to Return Type Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>Installer::getLastMigrationVersionClassName()</code> return type changed from <code>?string</code> to <code>string</code> (non-nullable).</li>
+<li class=""><code>QueryService::queryIndexById()</code> parameter <code>$id</code> type changed from untyped to <code>int</code>.</li>
+<li class="">All class constants now have explicit visibility modifiers (<code>public const</code> instead of bare <code>const</code>).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="strict-types-and-native-type-declarations">Strict Types and Native Type Declarations<a href="#strict-types-and-native-type-declarations" class="hash-link" aria-label="Direct link to Strict Types and Native Type Declarations" title="Direct link to Strict Types and Native Type Declarations" translate="no">​</a></h3>
+<ul>
+<li class=""><code>declare(strict_types=1)</code> has been added to all PHP files. If you interact with any method from this bundle, ensure
+your code handles strict type coercion.</li>
+<li class="">Native PHP type declarations (parameter types, return types, property types) have been added throughout the
+codebase. If you decorate or extend any service, your method signatures must match the updated types.</li>
+<li class="">Redundant PHPDoc annotations have been removed where native types now express the same information.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="v352">v3.5.2<a href="#v352" class="hash-link" aria-label="Direct link to v3.5.2" title="Direct link to v3.5.2" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="new---force-recreate-option-for-create-or-update-mapping">New: <code>--force-recreate</code> option for <code>create-or-update-mapping</code><a href="#new---force-recreate-option-for-create-or-update-mapping" class="hash-link" aria-label="Direct link to new---force-recreate-option-for-create-or-update-mapping" title="Direct link to new---force-recreate-option-for-create-or-update-mapping" translate="no">​</a></h4>
+<p>The <code>datahub:simple-rest:create-or-update-mapping</code> command now supports a
+<code>--force-recreate</code> option that drops the alias and both <code>-even</code> / <code>-odd</code>
+physical indexes, recreates a fresh index with the current mapping, and
+re-enqueues all elements.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console datahub:simple-rest:create-or-update-mapping &lt;configName&gt; --force-recreate</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console datahub:simple-rest:process-queue</span><br></span></code></pre></div></div>
+<p>The command asks for interactive confirmation before deleting; pass
+<code>--no-interaction</code> to skip the prompt in scripts.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="bug-fix-mapping-for-advanced-columns-in-studio-configurations">Bug fix: mapping for <code>advanced</code> columns in Studio configurations<a href="#bug-fix-mapping-for-advanced-columns-in-studio-configurations" class="hash-link" aria-label="Direct link to bug-fix-mapping-for-advanced-columns-in-studio-configurations" title="Direct link to bug-fix-mapping-for-advanced-columns-in-studio-configurations" translate="no">​</a></h4>
+<p>The mapping for <code>advanced</code> columns in Studio configurations changed from
+<code>flat_object</code> / <code>flattened</code> to <code>keyword</code>. This only affects Studio
+configurations that use <code>advanced</code> columns.</p>
+<p>OpenSearch / Elasticsearch cannot migrate documents from <code>flat_object</code> /
+<code>flattened</code> to <code>keyword</code> automatically, so existing Studio indexes with
+<code>advanced</code> columns must be rebuilt using the <code>--force-recreate</code> option above.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="v350">v3.5.0<a href="#v350" class="hash-link" aria-label="Direct link to v3.5.0" title="Direct link to v3.5.0" translate="no">​</a></h3>
+<p>With this version and the HyperMDM Studio integration, we introduced a new architecture for schema definitions.
+We are moving from the tree-based schema definition (also used in the grid configuration of the Admin Classic UI)
+to a pipeline-based approach (also used in HyperMDM Studio grids).
+This change is driven by technical and maintenance considerations, as the tree-based implementation has limitations in
+terms of consistency, flexibility, and extensibility.
+The new architecture aligns with how HyperMDM Studio grids work internally, streamlining the implementation across
+adapters and improving consistency, stability, and extensibility.</p>
+<p>Existing configurations created in the Classic UI remain functional and continue to execute without changes.
+However, a configuration must be fully migrated to the new pipeline-based format before it can be edited in
+HyperMDM Studio.
+Migration must be done manually by following the steps provided in HyperMDM Studio.</p>
+<p>Read-only support for the legacy tree-based schema definitions will be removed in version 2027.1.0.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="v340">v3.4.0<a href="#v340" class="hash-link" aria-label="Direct link to v3.4.0" title="Direct link to v3.4.0" translate="no">​</a></h3>
+<p>The following methods have been deprecated and will be removed in v4.0.0. Use the new DTO-based methods instead:</p>
+<ul>
+<li class=""><strong>IndexHandler:</strong>
+<ul>
+<li class=""><code>queryIndexSearch()</code> → Use <code>executeSearch()</code> with <code>QueryParametersDto</code></li>
+<li class=""><code>queryIndexTreeNavigation()</code> → Use <code>executeTreeNavigation()</code> with <code>TreeNavigationQueryDto</code></li>
+</ul>
+</li>
+<li class=""><strong>QueryService:</strong>
+<ul>
+<li class=""><code>queryIndexSearch()</code> → Use <code>executeSearch()</code> with <code>QueryServiceSearchDto</code></li>
+<li class=""><code>queryIndexTreeNavigation()</code> → Use <code>executeTreeNavigation()</code> with <code>QueryServiceTreeNavigationDto</code></li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="v330">v3.3.0<a href="#v330" class="hash-link" aria-label="Direct link to v3.3.0" title="Direct link to v3.3.0" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>zircote/swagger-php</code> <code>v5</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="v310">v3.1.0<a href="#v310" class="hash-link" aria-label="Direct link to v3.1.0" title="Direct link to v3.1.0" translate="no">​</a></h3>
+<ul>
+<li class="">Added requirement to <code>symfony/http-foundation</code> ^6.3 to support the Request explicit input sources and types.</li>
+<li class="">Added support for Elasticsearch in parallel to Opensearch. Opensearch remains the default search technology. If you
+are using Elasticsearch, you need to update your symfony configuration as follows:</li>
+</ul>
+<div class="language-yml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_data_hub_simple_rest</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">client_name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> default</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">client_type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'elasticsearch'</span><br></span></code></pre></div></div>
+<ul>
+<li class="">Introduced new service alias <code>hypermdm.datahub.simplerest.search-client</code>. This will replace the deprecated alias
+<code>hypermdm.datahub.simplerest.opensearch-client</code>, which will be removed in the next major version.
+Use the new service alias to inject the search client into your services. This search client is an instance of
+<code>HyperMDM\SearchClient\SearchClientInterface</code>, a common interface for OpenSearch and Elasticsearch clients.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="v300">v3.0.0<a href="#v300" class="hash-link" aria-label="Direct link to v3.0.0" title="Direct link to v3.0.0" translate="no">​</a></h3>
+<ul>
+<li class="">Removed HyperMDM 10 support</li>
+<li class="">Removed Elasticsearch support</li>
+<li class="">Added OpenSearch client and OpenSearch support</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="v200">v2.0.0<a href="#v200" class="hash-link" aria-label="Direct link to v2.0.0" title="Direct link to v2.0.0" translate="no">​</a></h3>
+<ul>
+<li class="">It is possible to add more than one API-key per configuration now. Therefore, the API-key gets stored as an array
+in the configuration. Configurations from previous versions are still supported, but they get converted to the new
+format as soon as they get saved.</li>
+<li class="">Removed Elasticsearch 6 and Elasticsearch 7 support, added support for Elasticsearch 8</li>
+<li class="">Changed elasticsearch client configuration</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="v172">v1.7.2<a href="#v172" class="hash-link" aria-label="Direct link to v1.7.2" title="Direct link to v1.7.2" translate="no">​</a></h3>
+<ul>
+<li class="">Data type for asset <code>fileSize</code> was changed to <code>long</code> (was <code>int</code>). If you run into issues regarding the <code>fileSize</code>,
+re-index your data.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="v15x-to-v160">v1.5.x to v1.6.0<a href="#v15x-to-v160" class="hash-link" aria-label="Direct link to v1.5.x to v1.6.0" title="Direct link to v1.5.x to v1.6.0" translate="no">​</a></h3>
+<ul>
+<li class="">Default number of shards is now set to <code>1</code> (was <code>5</code>). To change the value back to <code>5</code>, see Indexing Options section
+in <a class="" href="../../Indexing_Details/index.html">Indexing Details</a>.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

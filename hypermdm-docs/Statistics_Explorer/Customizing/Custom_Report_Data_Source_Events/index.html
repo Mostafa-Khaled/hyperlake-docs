@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Custom Report Data Source Events — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Custom Report Data Source Events</h1></header>
+<p>When HyperMDM Studio builds the report configuration form, Statistics Explorer assembles the available data sources,
+their fields and the per-field settings. Three pre-response events fire during that assembly and let a listener enrich
+or adjust each item before it is sent to HyperMDM Studio.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Statistics_Explorer-Customizing-Custom_Report_Data_Source_Events-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Statistics_Explorer-Customizing-Custom_Report_Data_Source_Events-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Statistics_Explorer-Customizing-Custom_Report_Data_Source_Events-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The endpoints that trigger these events are marked <code>@internal</code> and change without deprecation. Do not call them from
+your own code. The events themselves are stable extension points. The generated API reference is served at
+<code>/hypermdm-studio/api/docs</code>.</p></div></div>
+<p>All three events extend <code>HyperMDM\Bundle\StudioBackendBundle\Event\AbstractPreResponseEvent</code> and are dispatched under
+the event name in their <code>EVENT_NAME</code> constant. Besides the getters listed below, every event exposes
+<code>addAdditionalAttribute()</code>, <code>getAdditionalAttribute()</code>, <code>hasAdditionalAttribute()</code> and <code>removeAdditionalAttribute()</code>,
+which write to the <code>additionalAttributes</code> of the response object.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="datasourceevent"><code>DataSourceEvent</code><a href="#datasourceevent" class="hash-link" aria-label="Direct link to datasourceevent" title="Direct link to datasourceevent" translate="no">​</a></h2>
+<ul>
+<li class="">Class: <code>HyperMDM\Bundle\StatisticsExplorerBundle\Events\CustomReports\PreResponse\DataSource\DataSourceEvent</code></li>
+<li class="">Event name: <code>pre_response.data_source</code></li>
+<li class="">Fires once per data source when the list of selectable data sources is built.</li>
+<li class=""><code>getDataSource(): DataSource</code> returns the hydrated data source with <code>getValue()</code>, <code>getLabel()</code> and <code>getType()</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="fieldsevent"><code>FieldsEvent</code><a href="#fieldsevent" class="hash-link" aria-label="Direct link to fieldsevent" title="Direct link to fieldsevent" translate="no">​</a></h2>
+<ul>
+<li class="">Class: <code>HyperMDM\Bundle\StatisticsExplorerBundle\Events\CustomReports\PreResponse\DataSource\Fields\FieldsEvent</code></li>
+<li class="">Event name: <code>pre_response.data_source.fields</code></li>
+<li class="">Fires once per request when the fields of a single data source are resolved, after the blocklists have been applied.</li>
+<li class=""><code>getDataSourceFields(): Fields</code> returns the field collection with <code>getData()</code> and <code>getOperators()</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="fielddefinitionevent"><code>FieldDefinitionEvent</code><a href="#fielddefinitionevent" class="hash-link" aria-label="Direct link to fielddefinitionevent" title="Direct link to fielddefinitionevent" translate="no">​</a></h2>
+<ul>
+<li class="">Class:
+<code>HyperMDM\Bundle\StatisticsExplorerBundle\Events\CustomReports\PreResponse\DataSource\Fields\FieldDefinitionEvent</code></li>
+<li class="">Event name: <code>pre_response.data_source.fields.field_definition</code></li>
+<li class="">Fires once per field definition when the field settings for the selected aggregations and columns are resolved.</li>
+<li class=""><code>getFieldDefinition(): FieldDefinition</code> returns the definition with <code>getLabel()</code>, <code>getName()</code>, <code>getTypeGroup()</code> and
+<code>getFields()</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="example-listener">Example Listener<a href="#example-listener" class="hash-link" aria-label="Direct link to Example Listener" title="Direct link to Example Listener" translate="no">​</a></h2>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">namespace</span><span class="token plain"> </span><span class="token package">App</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">EventListener</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Bundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">StatisticsExplorerBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Events</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">CustomReports</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">PreResponse</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataSource</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataSourceEvent</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">Symfony</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Component</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">EventDispatcher</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Attribute</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">AsEventListener</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token attribute delimiter punctuation" style="color:#393A34">#[</span><span class="token attribute attribute-content attribute-class-name class-name">AsEventListener</span><span class="token attribute attribute-content punctuation" style="color:#393A34">(</span><span class="token attribute attribute-content attribute-class-name class-name">event</span><span class="token attribute attribute-content punctuation" style="color:#393A34">:</span><span class="token attribute attribute-content"> </span><span class="token attribute attribute-content attribute-class-name class-name">DataSourceEvent</span><span class="token attribute attribute-content operator" style="color:#393A34">::</span><span class="token attribute attribute-content constant" style="color:#36acaa">EVENT_NAME</span><span class="token attribute attribute-content punctuation" style="color:#393A34">)</span><span class="token attribute delimiter punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">final</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name-definition class-name">DataSourceListener</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">__invoke</span><span class="token punctuation" style="color:#393A34">(</span><span class="token class-name type-declaration">DataSourceEvent</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$event</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword return-type" style="color:#00009f">void</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token variable" style="color:#36acaa">$event</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">addAdditionalAttribute</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'group'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$event</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getDataSource</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getType</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

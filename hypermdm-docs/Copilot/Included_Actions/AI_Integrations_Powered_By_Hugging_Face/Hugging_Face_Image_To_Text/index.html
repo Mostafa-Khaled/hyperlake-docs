@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hugging Face Image To Text — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Hugging Face Image To Text</h1></header>
+<p>This action can be executed on an asset level and lets you automatically send selected assets to a configurable Hugging Face endpoint to extract text from the images.
+The extracted text will be stored in the asset's metadata.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="available-context">Available Context<a href="#available-context" class="hash-link" aria-label="Direct link to Available Context" title="Direct link to Available Context" translate="no">​</a></h3>
+<p>For more information on context limitations refer to the <a class="" href="../../index.html">Available Context section</a>.</p>
+<p><strong>Multiselect</strong>: Yes
+<strong>Elements</strong>: Images</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-options">Configuration Options<a href="#configuration-options" class="hash-link" aria-label="Direct link to Configuration Options" title="Direct link to Configuration Options" translate="no">​</a></h3>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># Name of the metadata field in which the extracted text will be stored.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">meta_data_field_name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'extracted_text'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Language of the metadata field</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">meta_data_field_language</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'en'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Name of a thumbnail configuration to be used.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">asset_thumbnail_configuration_name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'content'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Endpoint url of the Hugging Face model to use.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">model_endpoint</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'&lt;YOUR_ENDPOINT_URL&gt;'</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="detailed-configuration-options">Detailed Configuration Options<a href="#detailed-configuration-options" class="hash-link" aria-label="Direct link to Detailed Configuration Options" title="Direct link to Detailed Configuration Options" translate="no">​</a></h4>
+<ul>
+<li class=""><code>meta_data_field_name</code>: Required string. Name of the metadata field in which the extracted text will be stored. If the field does not exist, it will be created.</li>
+<li class=""><code>meta_data_field_language</code>: Optional string. Language of the metadata field in which the extracted text will be stored.</li>
+<li class=""><code>asset_thumbnail_configuration_name</code>: Optional string. Name of a thumbnail configuration to be used. Instead of the original image, the thumbnail will be sent to the endpoint.</li>
+<li class=""><code>model_endpoint</code>: Required string. Endpoint url of the Hugging Face model to use.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="available-models-to-use">Available Models to Use<a href="#available-models-to-use" class="hash-link" aria-label="Direct link to Available Models to Use" title="Direct link to Available Models to Use" translate="no">​</a></h3>
+<ul>
+<li class=""><a href="https://huggingface.co/Salesforce/blip-image-captioning-base" target="_blank" rel="noopener noreferrer" class="">Salesforce/blip-image-captioning-base</a></li>
+<li class=""><a href="https://huggingface.co/Salesforce/blip-image-captioning-large" target="_blank" rel="noopener noreferrer" class="">Salesforce/blip-image-captioning-large</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

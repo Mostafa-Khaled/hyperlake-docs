@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skills — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Skills</h1></header>
+<p>Skills are markdown instruction files that teach an agent
+domain-specific behavior. At runtime the GitHub Copilot SDK loads the
+<code>SKILL.md</code> files from the materialized skill directory into the
+agent's system context - conceptually, skills are modular system-prompt
+extensions.</p>
+<p>An agent references skills by name:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># in an agent YAML</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">skills</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> pql</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">search</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> data</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">object</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">proposals</span><br></span></code></pre></div></div>
+<p>The names must match existing skills (unknown names are silently
+dropped). See the <a class="" href="../Agents/index.html#field-reference"><code>skills</code> field on agents</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-skills-come-from">Where skills come from<a href="#where-skills-come-from" class="hash-link" aria-label="Direct link to Where skills come from" title="Direct link to Where skills come from" translate="no">​</a></h2>
+<p>Like agents, skills follow the three-layer merge model - see <a class="" href="../index.html#the-merge-model-at-a-glance">README → The merge model</a>. Bundle-provided skills
+are the bottom layer; user skills created through HyperMDM Studio override bundle skills of the same name.</p>
+<div class="table-container"><table><thead><tr><th>Layer</th><th>Source</th><th>Editable in UI</th></tr></thead><tbody><tr><td>User skills</td><td>HyperMDM Studio → <strong>System → HyperMDM Agent → Skill Configuration</strong></td><td>Yes</td></tr><tr><td>Bundle skills</td><td>Directories listed under <code>hypermdm_agent.skills.paths</code></td><td>No, but customizable</td></tr></tbody></table></div>
+<p>Every skill HyperMDM Studio shows carries a <code>bundle</code> or <code>user</code> source badge so you can see at a glance
+whether you are looking at a bundle default or at your own override. A <strong>Custom / Preset</strong> switch at the
+top of the tree separates the two views - see
+<a href="#customizing-a-bundle-skill-in-hypermdm-studio" class="">Customizing a bundle skill in HyperMDM Studio</a> below.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="customizing-a-bundle-skill-in-hypermdm-studio">Customizing a bundle skill in HyperMDM Studio<a href="#customizing-a-bundle-skill-in-hypermdm-studio" class="hash-link" aria-label="Direct link to Customizing a bundle skill in Pimcore Studio" title="Direct link to Customizing a bundle skill in Pimcore Studio" translate="no">​</a></h2>
+<p>The Custom view lists only user skills with no matching bundle preset. The Preset view lists every
+bundle-provided skill, each tagged <strong>Bundle</strong> or <strong>Customized</strong>.</p>
+<ul>
+<li class=""><strong>Customize</strong> materializes a bundle skill's full content (front-matter and body) as an editable copy in
+one click. The copy is written to the configured write target (<code>settings-store</code> by default, or a YAML
+file under <code>var/config/agent/skills</code> when set to <code>symfony-config</code>) and the skill then shows as
+<strong>Customized</strong> in the Preset view.</li>
+<li class=""><strong>Reset to default</strong> removes the customization, so the shipped skill applies again on the next reload.</li>
+<li class=""><strong>Activate / Deactivate</strong> toggles the skill's <code>enabled</code> flag (default <code>true</code>). A deactivated skill is
+excluded from the export the agent-server consumes, so no agent can load it - a non-destructive
+alternative to deleting it. Deactivating a skill that has not been customized yet stores a lightweight
+disable record instead of a full customization; customizing it later upgrades that record in place.</li>
+</ul>
+<p>Bundle skill content is always read-only. Customize, Reset to default, and Activate/Deactivate are
+available only when the configured write target is writeable; the actions are disabled with an
+explanatory tooltip otherwise.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="user-skills-hypermdm-studio">User skills (HyperMDM Studio)<a href="#user-skills-hypermdm-studio" class="hash-link" aria-label="Direct link to User skills (Pimcore Studio)" title="Direct link to User skills (Pimcore Studio)" translate="no">​</a></h2>
+<p>Administrators can create simple skills directly in the HyperMDM Studio skill
+editor. Each user skill has four fields:</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Meaning</th></tr></thead><tbody><tr><td><code>name</code></td><td>Unique identifier (e.g. <code>my-custom-skill</code>)</td></tr><tr><td><code>description</code></td><td>Shown in the agent editor's skill dropdown</td></tr><tr><td><code>instructions</code></td><td>Markdown body - the skill content</td></tr><tr><td><code>group</code></td><td>Optional folder grouping in the skill config tree</td></tr></tbody></table></div>
+<p>At export time user skills are serialized into a single <code>SKILL.md</code> file
+with auto-generated YAML front-matter (<code>name</code>, <code>description</code>) followed
+by the <code>instructions</code> body.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-skills">Bundle skills<a href="#bundle-skills" class="hash-link" aria-label="Direct link to Bundle skills" title="Direct link to Bundle skills" translate="no">​</a></h2>
+<p>Bundle skills are file-based. Each skill is a directory that contains a
+<code>SKILL.md</code> file:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">config/skills/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── pql-search/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   └── SKILL.md</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── data-object-proposals/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   ├── SKILL.md</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   └── resources/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│       └── field-types.md</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">└── tag-proposals/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    └── SKILL.md</span><br></span></code></pre></div></div>
+<p>Nested files alongside <code>SKILL.md</code> (examples, schemas, templates)
+travel through the export pipeline with the skill - the whole
+directory's files end up in the agent-server's materialized skill dir
+so <code>SKILL.md</code> can reference relative paths.</p>
+<p>Bundles register skill <strong>parent directories</strong> via <code>hypermdm_agent.skills.paths</code>. See <a class="" href="../Shipping_Presets/index.html">Shipping Presets</a> for the
+registration walkthrough (hard vs optional bundle dependency).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="skillmd-file-format">SKILL.md file format<a href="#skillmd-file-format" class="hash-link" aria-label="Direct link to SKILL.md file format" title="Direct link to SKILL.md file format" translate="no">​</a></h2>
+<p>Each skill directory must contain a <code>SKILL.md</code> with YAML front-matter:</p>
+<div class="language-markdown codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-markdown codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token front-matter-block punctuation" style="color:#393A34">---</span><span class="token front-matter-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token front-matter-block"></span><span class="token front-matter-block front-matter yaml language-yaml key atrule" style="color:#00a4db">name</span><span class="token front-matter-block front-matter yaml language-yaml punctuation" style="color:#393A34">:</span><span class="token front-matter-block front-matter yaml language-yaml"> pql</span><span class="token front-matter-block front-matter yaml language-yaml punctuation" style="color:#393A34">-</span><span class="token front-matter-block front-matter yaml language-yaml">search</span><br></span><span class="token-line" style="color:#393A34"><span class="token front-matter-block front-matter yaml language-yaml"></span><span class="token front-matter-block front-matter yaml language-yaml key atrule" style="color:#00a4db">description</span><span class="token front-matter-block front-matter yaml language-yaml punctuation" style="color:#393A34">:</span><span class="token front-matter-block front-matter yaml language-yaml"> </span><span class="token front-matter-block front-matter yaml language-yaml punctuation" style="color:#393A34">&gt;</span><span class="token front-matter-block front-matter yaml language-yaml punctuation" style="color:#393A34">-</span><span class="token front-matter-block front-matter yaml language-yaml"></span><br></span><span class="token-line" style="color:#393A34"><span class="token front-matter-block front-matter yaml language-yaml">  Search for data objects using HyperMDM Query Language (PQL)</span><br></span><span class="token-line" style="color:#393A34"><span class="token front-matter-block front-matter yaml language-yaml">  with field discovery and structured filters.</span><span class="token front-matter-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token front-matter-block"></span><span class="token front-matter-block punctuation" style="color:#393A34">---</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token title important punctuation" style="color:#393A34">#</span><span class="token title important"> PQL Search</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Step-by-step workflow, syntax reference, examples…</span><br></span></code></pre></div></div>
+<ul>
+<li class=""><code>name</code> must match the directory name and is what the agent's
+<code>skills: [...]</code> list references.</li>
+<li class=""><code>description</code> is shown in the agent editor's skill dropdown.</li>
+<li class="">Everything below the closing <code>---</code> is the skill body and becomes
+part of the agent's system message when the skill is active for a
+session.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="skill-resolution-at-runtime">Skill resolution at runtime<a href="#skill-resolution-at-runtime" class="hash-link" aria-label="Direct link to Skill resolution at runtime" title="Direct link to Skill resolution at runtime" translate="no">​</a></h2>
+<p>An agent sees only the skills it lists. At runtime the agent-server materializes every skill in the registry to
+<code>{skillsMaterializeDir}/{skillName}/</code> (default <code>/app/var/skills/</code>) and uses <code>disabledSkills</code> to opt the agent out of
+everything it did not ask for.</p>
+<p>Wipe-and-rewrite semantics, the <code>skill</code> tool requirement, and the <code>disabledSkills</code> computation are documented
+in <a class="" href="../../Architecture/Configuration_System/index.html#skill-materialization">Architecture → Configuration System → Skill materialization</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-docs">Related docs<a href="#related-docs" class="hash-link" aria-label="Direct link to Related docs" title="Direct link to Related docs" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../Agents/index.html#field-reference">Agents → <code>skills</code> field</a></li>
+<li class=""><a class="" href="../Tool_Security_Reference/index.html#enabled-by-default">Tool Security Reference → the <code>skill</code> tool</a></li>
+<li class=""><a class="" href="../Shipping_Presets/index.html">Shipping Presets</a> - ship bundle skills from your own bundle</li>
+<li class=""><a class="" href="../Tool_Bundles/index.html">Tool Bundles</a> - group a skill with SDK tools and MCP groups under one reusable name</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

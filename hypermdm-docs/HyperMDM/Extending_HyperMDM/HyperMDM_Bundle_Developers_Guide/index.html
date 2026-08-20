@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bundle Developer's Guide — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Bundle Developer's Guide</h1></header>
+<p>HyperMDM uses the Symfony bundle system. A bundle can define services, routes,
+controllers, views, and hook into the event system. Core HyperMDM functionalities
+are themselves implemented as bundles.</p>
+<p>For Symfony bundle fundamentals, see the
+<a href="https://symfony.com/doc/current/bundles.html" target="_blank" rel="noopener noreferrer" class="">Symfony Bundle Documentation</a>,
+including the recommended
+<a href="https://symfony.com/doc/current/bundles.html#bundle-directory-structure" target="_blank" rel="noopener noreferrer" class="">bundle directory structure</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-bundles">HyperMDM Bundles<a href="#hypermdm-bundles" class="hash-link" aria-label="Direct link to Pimcore Bundles" title="Direct link to Pimcore Bundles" translate="no">​</a></h2>
+<p>HyperMDM adds the <code>HyperMDMBundleInterface</code> on top of standard Symfony bundles,
+providing installation support and admin UI integration:</p>
+<ul>
+<li class="">The bundle shows up in <code>hypermdm:bundle:list</code> with its install/uninstall status</li>
+<li class="">Install with <code>hypermdm:bundle:install</code>, uninstall with <code>hypermdm:bundle:uninstall</code>
+to trigger database setup, migrations, and other installation routines</li>
+<li class="">Register JS and CSS files for HyperMDM Studio and editmode</li>
+</ul>
+<p>See <a class="" href="HyperMDM_Bundles/index.html">HyperMDM Bundles</a> for the interface details
+and composer configuration.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="recommended-reading-order">Recommended Reading Order<a href="#recommended-reading-order" class="hash-link" aria-label="Direct link to Recommended Reading Order" title="Direct link to Recommended Reading Order" translate="no">​</a></h2>
+<ol>
+<li class=""><strong><a class="" href="HyperMDM_Bundles/index.html">HyperMDM Bundles</a></strong> -
+<code>HyperMDMBundleInterface</code>, composer setup, and version management</li>
+<li class=""><strong><a class="" href="Bundle_Collection/index.html">Bundle Collection</a></strong> -
+register bundles with priorities, environments, and dependencies</li>
+<li class=""><strong><a class="" href="Loading_Service_Definitions/index.html">Loading Service Definitions</a></strong> -
+create DI extensions to load service configs from your bundle</li>
+<li class=""><strong><a class="" href="Auto_Loading_Config_and_Routing/index.html">Auto Loading Config and Routing</a></strong> -
+automatic config and routing loading from bundle directories</li>
+<li class=""><strong><a class="" href="HyperMDM_Bundles/Installers/index.html">Installers</a></strong> -
+installation, uninstallation, and database migrations</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="common-tasks">Common Tasks<a href="#common-tasks" class="hash-link" aria-label="Direct link to Common Tasks" title="Direct link to Common Tasks" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="service-configuration">Service Configuration<a href="#service-configuration" class="hash-link" aria-label="Direct link to Service Configuration" title="Direct link to Service Configuration" translate="no">​</a></h3>
+<p>Load custom services from your bundle by creating a DI extension.
+See the <a href="https://symfony.com/doc/current/bundles/extension.html" target="_blank" rel="noopener noreferrer" class="">Symfony Extensions Documentation</a>
+and the HyperMDM-specific guide at <a class="" href="Loading_Service_Definitions/index.html">Loading Service Definitions</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="auto-loading-config-and-routing-definitions">Auto-Loading Config and Routing Definitions<a href="#auto-loading-config-and-routing-definitions" class="hash-link" aria-label="Direct link to Auto-Loading Config and Routing Definitions" title="Direct link to Auto-Loading Config and Routing Definitions" translate="no">​</a></h3>
+<p>Bundles provide config and routing definitions in <code>config/hypermdm</code> (or <code>Resources/config/hypermdm</code>)
+for automatic loading. See
+<a class="" href="Auto_Loading_Config_and_Routing/index.html">Auto Loading Config and Routing</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="i18n--translations">i18n / Translations<a href="#i18n--translations" class="hash-link" aria-label="Direct link to i18n / Translations" title="Direct link to i18n / Translations" translate="no">​</a></h3>
+<p>Store translation files in your bundle's <code>Resources/translations/</code> directory
+in the format <code>locale.loader</code> (or <code>domain.locale.loader</code> for a specific translation domain).</p>
+<p>Examples: <code>admin.en.yml</code>, <code>messages.en.yml</code></p>
+<p>See the Symfony
+<a href="https://symfony.com/doc/current/translation.html#translation-resource-file-names-and-locations" target="_blank" rel="noopener noreferrer" class="">Translation Component Documentation</a>
+for all supported locations and formats.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="translation-domains">Translation Domains<a href="#translation-domains" class="hash-link" aria-label="Direct link to Translation Domains" title="Direct link to Translation Domains" translate="no">​</a></h4>
+<p>Register custom translation domains in your configuration:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">translations</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">domains</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> site_1</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> site_2</span><br></span></code></pre></div></div>
+<p>Translations stored in a dedicated domain table (e.g. <code>translations_DOMAIN</code>)
+are then used by the HyperMDM translation service.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="security--authentication">Security / Authentication<a href="#security--authentication" class="hash-link" aria-label="Direct link to Security / Authentication" title="Direct link to Security / Authentication" translate="no">​</a></h3>
+<p>Use the <a href="https://symfony.com/doc/current/security.html" target="_blank" rel="noopener noreferrer" class="">Symfony Security Component</a>
+by auto-loading security configuration via the
+<a class="" href="Auto_Loading_Config_and_Routing/index.html">config auto-loading mechanism</a>.
+Define security rules in a dedicated <code>security.yaml</code> imported from your bundle's
+<code>config.yaml</code>.</p>
+<p>For further details, see
+<a class="" href="../../Development_Tools/Security_and_Authentication/index.html">Security</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="events">Events<a href="#events" class="hash-link" aria-label="Direct link to Events" title="Direct link to Events" translate="no">​</a></h3>
+<p>Hook into core functions by attaching to HyperMDM events. Define event listener services
+in your bundle and register them with the Symfony EventDispatcher.</p>
+<ul>
+<li class=""><a href="https://symfony.com/doc/current/event_dispatcher.html" target="_blank" rel="noopener noreferrer" class="">Symfony Event Dispatcher</a> -
+creating and registering event listeners</li>
+<li class=""><a class="" href="../Events/index.html">HyperMDM Events</a> - available HyperMDM events</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="local-storage-for-your-bundle">Local Storage for Your Bundle<a href="#local-storage-for-your-bundle" class="hash-link" aria-label="Direct link to Local Storage for Your Bundle" title="Direct link to Local Storage for Your Bundle" translate="no">​</a></h3>
+<p>For temporary data removed on Symfony cache clear, use the cache directory:</p>
+<ul>
+<li class=""><code>$kernel-&gt;getCacheDir()</code></li>
+<li class=""><code>%kernel.cache_dir%</code> parameter</li>
+</ul>
+<p>For persistent storage, create a unique directory in <code>HYPERMDM_PRIVATE_VAR</code>,
+e.g. <code>var/bundles/YourBundleName</code>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

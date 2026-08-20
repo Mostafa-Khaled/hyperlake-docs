@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Customize Frontend Build — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Customize Frontend Build</h1></header>
+<p>Most of the frontend parts of the portal engine are built with client side technologies. The JavaScript components are
+built with the help of <a href="https://reactjs.org/" target="_blank" rel="noopener noreferrer" class="">React</a> whereas all CSS files are powered by <a href="https://sass-lang.com/" target="_blank" rel="noopener noreferrer" class="">SASS</a>.</p>
+<p>As all of these libraries consist of a lot of files and SASS needs to be compiled to CSS, the portal engine uses
+<a href="https://webpack.js.org/" target="_blank" rel="noopener noreferrer" class="">webpack</a> to pack all the frontend stuff to single minimized files. The integration into the
+portal engine and the HyperMDM/Symfony stack is done via <a href="https://symfony.com/doc/current/frontend.html" target="_blank" rel="noopener noreferrer" class="">webpack encore</a>,
+which is the Symfony standard way to integrate webpack into Symfony applications.</p>
+<p>Within the portal engine there are two ways to change the appearance of the frontend build:</p>
+<ol>
+<li class="">
+<p>Customize the colors and look and feel of the frontend via the admin interface.
+See <a class="" href="../../../Administration_of_Portals/Configuration/Styling_Settings_and_Frontend_Build/index.html">Styling Settings and Frontend Build</a>
+for more details.</p>
+</li>
+<li class="">
+<p>Customize parts of the SASS and JavaScript files with a customized frontend build via code changes. The next sections
+will inform you how to do this.</p>
+</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="create-your-own-customized-frontend-build">Create your own customized frontend build<a href="#create-your-own-customized-frontend-build" class="hash-link" aria-label="Direct link to Create your own customized frontend build" title="Direct link to Create your own customized frontend build" translate="no">​</a></h2>
+<p>The following steps are needed to create a customized frontend build.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-1-configure-a-customized-frontend-build-in-the-configuration-tree">Step 1: Configure a customized frontend build in the configuration tree<a href="#step-1-configure-a-customized-frontend-build-in-the-configuration-tree" class="hash-link" aria-label="Direct link to Step 1: Configure a customized frontend build in the configuration tree" title="Direct link to Step 1: Configure a customized frontend build in the configuration tree" translate="no">​</a></h3>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># put this into your yml config (i.e. config.yml)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm_portal_engine</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">customized_frontend_builds</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> my_portal </span><br></span></code></pre></div></div>
+<p>The build name (<code>my_portal</code>) will be the final build folder in the filesystem, therefore do not use spaces or special
+characters here.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-2-install-nodejs">Step 2: Install Node.js<a href="#step-2-install-nodejs" class="hash-link" aria-label="Direct link to Step 2: Install Node.js" title="Direct link to Step 2: Install Node.js" translate="no">​</a></h3>
+<p>To be able to create webpack builds it's needed to install <a href="https://www.npmjs.com/" target="_blank" rel="noopener noreferrer" class="">Node.js</a> as you will need the tools
+<a href="https://www.npmjs.com/" target="_blank" rel="noopener noreferrer" class="">npm</a> and <a href="https://www.npmjs.com/package/npx" target="_blank" rel="noopener noreferrer" class="">npx</a>. You will need at least npm version 6 to make
+it up and running.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-3-setup-your-development-environment">Step 3: Setup your development environment<a href="#step-3-setup-your-development-environment" class="hash-link" aria-label="Direct link to Step 3: Setup your development environment" title="Direct link to Step 3: Setup your development environment" translate="no">​</a></h3>
+<p>Npm is a package manager (similar to composer) and uses a file called <code>package.json</code> to handle all the dependencies.
+Therefore, it's needed setting up a suitable package.json into the root directory of your project.</p>
+<p>The portal engine provides a console command to support your with this action. Just call the following command as a starting point:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console portal-engine:update:frontend-build</span><br></span></code></pre></div></div>
+<p>The final result of this command will be a <code>package.json</code> in your root folder with all needed dependencies of the portal
+engine. If your project already has a <code>package.json</code> in the root directory, the command will update not overwrite the
+existing <code>package.json</code>.</p>
+<p>At the end, the command will instruct you to call <code>npm install</code> in the root folder of your project to install all dependencies.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm install</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-4-create-some-customized-files">Step 4: Create some customized files<a href="#step-4-create-some-customized-files" class="hash-link" aria-label="Direct link to Step 4: Create some customized files" title="Direct link to Step 4: Create some customized files" translate="no">​</a></h3>
+<p>If your build name is <code>my_portal</code>, the correct place to put all the files which you would like to replace or add into your
+final build would be the directory <code>{PROJECT_ROOT}/public/portal-engine/my_portal</code> (for HyperMDM 6: <code>{PROJECT_ROOT}/web/portal-engine/my_portal</code>).
+If needed, it's possible to add additional
+files, but for the beginning it would be a good idea to overwrite some existing source files which are shipped with the
+portal engine. All these files are placed in the <code>assets</code> folder (top level folder within the bundle source code).</p>
+<p>A very powerful file to change the appearance of the frontend without changing any real CSS codes is the <code>variables.less</code>
+located in <code>assets/styles/settings/variables.scss</code>. This file contains a lot of SASS variables to modify the look and feel.
+The portal engine is built on top of the <a href="https://getbootstrap.com/" target="_blank" rel="noopener noreferrer" class="">Bootstrap CSS framework</a> therefore all bootstrap SASS
+variables can be manipulated too.</p>
+<p>The convention for overwriting source files is to put them into the same sub paths and give them the same file names like
+in the portal engine <code>assets</code> source folder.</p>
+<p>Your customized <code>variables.scss</code> might look like this:</p>
+<div class="language-css codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-css codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">/* put this file into {PROJECT_ROOT}/public/portal-engine/my_portal/styles/settings/variables.scss */</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token atrule rule" style="color:#00a4db">@import</span><span class="token atrule" style="color:#00a4db"> </span><span class="token atrule string" style="color:#e3116c">"portal-engine-bundle/styles/settings/variables"</span><span class="token atrule punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">$</span><span class="token property" style="color:#36acaa">primary</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token hexcode color">#FF0000</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p>This example would change the primary color to red. If you do not want to completely replace but extend the original
+file do not forget to import it. This can be done with regular webpack <code>@import</code> statements. Take a look at the webpack
+docs for more details.</p>
+<p>The portal engine bundle can be referenced with the <code>portal-engine-bundle</code> module name. This module name will always
+reference the original bundle source folder.</p>
+<p>It's also possible to use <code>~portal-engine</code> as bundle name for imports. If you do it this way the logic is some kind of
+fallback logic:</p>
+<ol>
+<li class="">First take a look at your customized frontend build asset folder. If the file/module exists there, use it.</li>
+<li class="">If not take the file/module from the original bundle source folder.</li>
+</ol>
+<p>Within the portal engine bundle all files/modules are referenced with <code>~portal-engine</code>. This makes it possible to extend
+all of them. If you would like to reference always the original source file always use <code>portal-engine-bundle</code>.</p>
+<p>Following this convention it's possible to overwrite and extend all portal engine SASS and JavaScript files. To do this
+effectively and if you want to do heavy customizations, it would be needed to have or get deeper knowledge of webpack,
+React, SASS and bootstrap. See <a class="" href="../JSX_Components/index.html">Customize JSX Components</a> for more details on how to
+customize JSX components.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-5-setup-the-customized-frontend-build-in-your-portal">Step 5: Setup the customized frontend build in your portal<a href="#step-5-setup-the-customized-frontend-build-in-your-portal" class="hash-link" aria-label="Direct link to Step 5: Setup the customized frontend build in your portal" title="Direct link to Step 5: Setup the customized frontend build in your portal" translate="no">​</a></h3>
+<p>Take a look at the portal/root document of your portal engine site. There is a setting called "Customized Frontend Build".
+If you added your build into the configuration tree it should appear in the select box. Select it and save the document.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-6-execute-the-development-build">Step 6: Execute the development build<a href="#step-6-execute-the-development-build" class="hash-link" aria-label="Direct link to Step 6: Execute the development build" title="Direct link to Step 6: Execute the development build" translate="no">​</a></h3>
+<p>The <code>portal-engine:update:frontend-build</code> will add some npm scripts to execute the build in the root folder of your project.
+While developing execute the following if your build is called <code>my_portal</code>:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm run dev_my_portal</span><br></span></code></pre></div></div>
+<p>This will create a development build and start a file watch. The development build contains some additional debugging
+possibilities (for example source maps). The file watch will listen to changes of the asset source files. Therefore, it's
+not needed to start this command again and again on each file change. Just let it up and running in the background.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-7-take-a-look-at-the-portal-frontend">Step 7: Take a look at the portal frontend<a href="#step-7-take-a-look-at-the-portal-frontend" class="hash-link" aria-label="Direct link to Step 7: Take a look at the portal frontend" title="Direct link to Step 7: Take a look at the portal frontend" translate="no">​</a></h3>
+<p>Your changes should be visible there! Yeah!</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-8-execute-the-production-build">Step 8: Execute the production build<a href="#step-8-execute-the-production-build" class="hash-link" aria-label="Direct link to Step 8: Execute the production build" title="Direct link to Step 8: Execute the production build" translate="no">​</a></h3>
+<p>The development build is very helpful for development purposes, but you should never deploy the development build to a
+production environment. An additional production build script exists to create a minified build without the debugging
+stuff enabled.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm run build_my_portal</span><br></span></code></pre></div></div>
+<p>All final build files will be located in the folder <code>{PROJECT_ROOT}/public/portal-engine/build</code>
+(for HyperMDM 6: <code>{PROJECT_ROOT}/web/portal-engine/build</code>).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="develop-for-the-core">Develop for the core<a href="#develop-for-the-core" class="hash-link" aria-label="Direct link to Develop for the core" title="Direct link to Develop for the core" translate="no">​</a></h2>
+<p>This would work quite the same way as mentioned above. For this purpose an additional option of the
+<code>portal-engine:update:frontend-build</code> exists (<code>--core-bundle-development</code>).</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console portal-engine:update:frontend-build --core-bundle-development</span><br></span></code></pre></div></div>
+<p>This will install additional npm scripts to update the frontend builds which are shipped within the bundle in your
+development environment.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm run dev # development build</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm run build # production build</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

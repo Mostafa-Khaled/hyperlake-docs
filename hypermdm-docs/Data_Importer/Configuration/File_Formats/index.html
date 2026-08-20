@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>File Formats — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>File Formats</h1></header>
+<p>The file format determines how the raw source data is split into records and fields. Set it in the <strong>Data Source</strong> step,
+next to the <a class="" href="../Data_Sources/index.html">data source</a>.</p>
+<p>Each record becomes one queue item, and each field of that record can be addressed by a mapping entry through its
+<strong>data source index</strong>. Depending on the format, that index is either a numeric position or a field name.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="csv">CSV<a href="#csv" class="hash-link" aria-label="Direct link to CSV" title="Direct link to CSV" translate="no">​</a></h2>
+<p><strong>Configuration options</strong></p>
+<ul>
+<li class=""><strong>Skip First Row</strong>: skips the first row so it is not imported as data. In the <a class="" href="../Import_Preview/index.html">import preview</a>
+the values of that row label the columns.</li>
+<li class=""><strong>Save Header Name</strong>: makes fields addressable by their header name instead of their numeric position. Requires
+<strong>Skip First Row</strong>.</li>
+<li class=""><strong>Delimiter</strong>: defaults to <code>,</code>.</li>
+<li class=""><strong>Enclosure</strong>: defaults to <code>"</code>.</li>
+<li class=""><strong>Escape Character</strong>: defaults to <code>\</code>.</li>
+</ul>
+<p>The interpreter uses PHP's <a href="https://www.php.net/manual/en/function.fgetcsv.php" target="_blank" rel="noopener noreferrer" class=""><code>fgetcsv</code></a>.</p>
+<div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-File_Formats-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-File_Formats-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-File_Formats-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>tip</div><div class="admonitionContent_BuS1"><p>Enable <strong>Skip First Row</strong> and <strong>Save Header Name</strong> together. Mappings then reference <code>sku</code> rather than <code>0</code>, which
+survives a reordering of the columns in the source file.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="json">JSON<a href="#json" class="hash-link" aria-label="Direct link to JSON" title="Direct link to JSON" translate="no">​</a></h2>
+<p>The interpreter expects an array of JSON objects and reads every first-level attribute as a separate field. A field
+holding a sub-object, such as <code>technical_attributes</code> below, arrives as an array in one field and has to be handled in the
+<a class="" href="../Mapping_Configuration/Transformation_Pipeline/index.html">transformation pipeline</a>.</p>
+<p><strong>Sample file</strong></p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">[</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "title_de": "Voluptas et est voluptas.",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "title_en": "Animi ipsam rem et sed vel voluptas.",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "technical_attributes": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "1-6": "value 1",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "2-4": "value 2"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "title_de": "Et alias nesciunt ea mollitia nihil mollitia corporis."</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">]</span><br></span></code></pre></div></div>
+<p>The interpreter uses <a href="https://www.php.net/manual/en/function.json-decode.php" target="_blank" rel="noopener noreferrer" class=""><code>json_decode($content, true)</code></a>.</p>
+<p><strong>Configuration options</strong></p>
+<ul>
+<li class=""><strong>JMESPath</strong>: optional <a href="https://jmespath.org" target="_blank" rel="noopener noreferrer" class="">JMESPath</a> expression that selects the record array from the document
+before processing. Leave it empty when the document root is already an array of objects. The expression is not
+validated when the configuration is saved. A syntax error surfaces the first time the interpreter runs, in the import
+preview or during the import itself. Load the preview after changing the expression to check it.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="selecting-records-with-jmespath">Selecting Records with JMESPath<a href="#selecting-records-with-jmespath" class="hash-link" aria-label="Direct link to Selecting Records with JMESPath" title="Direct link to Selecting Records with JMESPath" translate="no">​</a></h3>
+<p>Use a JMESPath expression when the record list is nested inside a wrapper object.</p>
+<p><strong>Records nested under a key</strong></p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "meta": { "total": 2, "page": 1 },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "items": [</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        { "sku": "A-001", "title_de": "Produkt Eins", "price": 9.99 },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        { "sku": "A-002", "title_de": "Produkt Zwei", "price": 19.99 }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    ]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<p>Set <strong>JMESPath</strong> to <code>items</code> to pass the <code>items</code> array to the import pipeline.</p>
+<p><strong>Records in a deeply nested structure</strong></p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "catalog": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        "products": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            "product": [</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                { "sku": "A-001", "title_de": "Produkt Eins", "price": 9.99 },</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                { "sku": "A-002", "title_de": "Produkt Zwei", "price": 19.99 }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            ]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<p>The expression <code>catalog.products.product</code> selects the nested array.</p>
+<p><strong>Filtering records</strong></p>
+<p>JMESPath also filters. To import only products priced above 10:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">items[?price &gt; `10`]</span><br></span></code></pre></div></div>
+<p>For the full expression reference see <a href="https://jmespath.org" target="_blank" rel="noopener noreferrer" class="">jmespath.org</a> and the
+<a href="https://github.com/jmespath/jmespath.php" target="_blank" rel="noopener noreferrer" class=""><code>mtdowling/jmespath.php</code></a> library.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="xlsx-excel">XLSX (Excel)<a href="#xlsx-excel" class="hash-link" aria-label="Direct link to XLSX (Excel)" title="Direct link to XLSX (Excel)" translate="no">​</a></h2>
+<p><strong>Configuration options</strong></p>
+<ul>
+<li class=""><strong>Skip First Row</strong>: skips the first row so it is not imported as data. In the import preview the values of that row
+label the columns. Fields stay addressable by their numeric position.</li>
+<li class=""><strong>Sheet Name</strong>: name of the sheet to import. Defaults to <code>Sheet1</code>.</li>
+</ul>
+<p>The interpreter uses <a href="https://phpspreadsheet.readthedocs.io/en/latest" target="_blank" rel="noopener noreferrer" class="">phpspreadsheet</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="xml">XML<a href="#xml" class="hash-link" aria-label="Direct link to XML" title="Direct link to XML" translate="no">​</a></h2>
+<p>The interpreter expects a list of data elements at the configured XPath and reads every first-level child of a data
+element as a separate field. A child holding sub-elements, such as <code>technical_attributes</code> below, arrives as an array in
+one field and has to be handled in the
+<a class="" href="../Mapping_Configuration/Transformation_Pipeline/index.html">transformation pipeline</a>.</p>
+<p><strong>Configuration options</strong></p>
+<ul>
+<li class=""><strong>XPath</strong>: XPath to the elements to import. For the sample below it is <code>/root/item</code>.</li>
+<li class=""><strong>Schema</strong>: XSD schema to validate the import data against. Without it, no validation takes place.</li>
+</ul>
+<p><strong>Sample file</strong></p>
+<div class="language-xml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-xml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token prolog" style="color:#999988;font-style:italic">&lt;?xml version="1.0"?&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">root</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">item</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">title_de</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain">Et voluptas culpa et incidunt laborum repellat.</span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">title_de</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">title_en</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain">Aliquam et voluptas nemo at excepturi.</span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">title_en</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">technical_attributes</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">attribute</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">key</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain">1-6</span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">key</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">value</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain">Myrtle Kovacek</span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">value</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">attribute</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">attribute</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">key</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain">2-4</span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">key</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">value</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain">Ut.</span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">value</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">attribute</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">technical_attributes</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">item</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag" style="color:#00009f">root</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><br></span></code></pre></div></div>
+<p>The interpreter uses <a href="https://github.com/symfony/config/blob/master/Util/XmlUtils.php" target="_blank" rel="noopener noreferrer" class="">Symfony <code>XmlUtils</code></a> to read and
+validate the data.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sql">SQL<a href="#sql" class="hash-link" aria-label="Direct link to SQL" title="Direct link to SQL" translate="no">​</a></h2>
+<p>Reads the result of the query configured in the <a class="" href="../Data_Sources/index.html#sql">SQL data source</a>. Each result row becomes a
+record, and each selected column becomes a field addressable by its column name. There is nothing else to configure.</p>
+<p>Select this format whenever the data source is <strong>SQL</strong>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="custom-file-formats">Custom File Formats<a href="#custom-file-formats" class="hash-link" aria-label="Direct link to Custom File Formats" title="Direct link to Custom File Formats" translate="no">​</a></h2>
+<p>Add a file format of your own with a custom interpreter. See
+<a class="" href="../../Extending/Custom_Strategies/index.html">Custom Strategies</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

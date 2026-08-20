@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Core Tests — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Core Testing</h1></header>
+<p>HyperMDM uses <a href="https://codeception.com/" target="_blank" rel="noopener noreferrer" class="">Codeception</a> for testing its core features.</p>
+<p>To execute core tests, HyperMDM provides a <code>docker-compose.yaml</code> file to create a setup for running the tests.</p>
+<blockquote>
+<p>The docker images are based on the debug images, thus it is also possible to debug the tests using xdebug.
+Make sure, that path mappings are applied correctly though</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="requirements">Requirements<a href="#requirements" class="hash-link" aria-label="Direct link to Requirements" title="Direct link to Requirements" translate="no">​</a></h2>
+<ul>
+<li class=""><code>docker</code> and <code>docker compose</code> installed on your system.</li>
+<li class="">HyperMDM git repository cloned locally</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="preparations">Preparations<a href="#preparations" class="hash-link" aria-label="Direct link to Preparations" title="Direct link to Preparations" translate="no">​</a></h2>
+<ul>
+<li class="">Change to <code>tests\bin</code> directory of the HyperMDM repository</li>
+<li class="">Execute <code>./init-tests.sh</code>, this does:<!-- -->
+<ul>
+<li class="">Running <code>docker compose up -d</code> and setting up all necessary services (like db and redis). HyperMDM source code files
+are mounted into docker container, so you can change files and test the changes right away.</li>
+<li class="">Copying some files from <code>.github\ci\file</code> to prepare system for executing the tests (actually same as for github actions)</li>
+<li class="">Executing <code>composer install</code> to install all dependencies</li>
+<li class="">Print out further instructions</li>
+</ul>
+</li>
+</ul>
+<p>Now the system is ready and tests can be executed inside the docker containers (see also commands below).</p>
+<p>After finishing, shutdown docker containers and cleanup volumes with <code>docker compose down -v --remove-orphans</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="executing-tests">Executing tests<a href="#executing-tests" class="hash-link" aria-label="Direct link to Executing tests" title="Direct link to Executing tests" translate="no">​</a></h2>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="run-all-tests">Run all tests<a href="#run-all-tests" class="hash-link" aria-label="Direct link to Run all tests" title="Direct link to Run all tests" translate="no">​</a></h4>
+<p>This will run all tests.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec php vendor/bin/codecept run -c . -vvv</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="only-run-a-specific-suite">Only run a specific suite<a href="#only-run-a-specific-suite" class="hash-link" aria-label="Direct link to Only run a specific suite" title="Direct link to Only run a specific suite" translate="no">​</a></h4>
+<p>Only runs the <code>Model</code> tests. For a list of suites see the list below.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec php vendor/bin/codecept run -c . Model -vvv</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="only-run-a-specific-test-group">Only run a specific test group<a href="#only-run-a-specific-test-group" class="hash-link" aria-label="Direct link to Only run a specific test group" title="Direct link to Only run a specific test group" translate="no">​</a></h4>
+<p>This can be a subset of a suite. You also have the option to provide a comma-seperated list of groups.
+For an overview of available groups see the table below.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec php vendor/bin/codecept run -c . Model -vvv -g dataTypeLocal</span><br></span></code></pre></div></div>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="redis-cache-tests">Redis Cache tests<a href="#redis-cache-tests" class="hash-link" aria-label="Direct link to Redis Cache tests" title="Direct link to Redis Cache tests" translate="no">​</a></h5>
+<p>For Redis, the <code>HYPERMDM_TEST_REDIS_DSN</code> option is mandatory. If not using the Redis provided by the <code>docker-compose.yaml</code>, set it
+to a value that does not conflict to any other Redis DBs on your system.</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec php vendor/bin/codecept run -c . Cache</span><br></span></code></pre></div></div>
+<h5 class="anchor anchorTargetStickyNavbar_Vzrq" id="check-logfiles">Check Logfiles<a href="#check-logfiles" class="hash-link" aria-label="Direct link to Check Logfiles" title="Direct link to Check Logfiles" translate="no">​</a></h5>
+<p>Don't forget to check logfiles (especially <code>test.log</code> and <code>php.log</code>) inside the docker container when problems occur.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="important-environment-variables">Important Environment Variables<a href="#important-environment-variables" class="hash-link" aria-label="Direct link to Important Environment Variables" title="Direct link to Important Environment Variables" translate="no">​</a></h4>
+<p>Meaningful default values are set in the shipped <code>docker-compose.yaml</code>. Can be modified as needed.</p>
+<div class="table-container"><table><thead><tr><th>Env Variable</th><th>Example</th><th>Comment</th></tr></thead><tbody><tr><td>APP_ENV</td><td>test</td><td>Test environment</td></tr><tr><td>HYPERMDM_TEST</td><td>1</td><td><strong>important</strong> this will switch several directories (like /var/classes)</td></tr><tr><td>HYPERMDM_TEST_SKIP_DB</td><td>1</td><td>Skips DB setup. This does not skip the db-related tests but it<br>reduces the setup time for tests that don't need a database.</td></tr><tr><td>HYPERMDM_TEST_REDIS_DSN</td><td>redis://localhost</td><td><strong>required for REDIS tests</strong></td></tr></tbody></table></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="suites">Suites<a href="#suites" class="hash-link" aria-label="Direct link to Suites" title="Direct link to Suites" translate="no">​</a></h4>
+<p>The tests are organized into suites, each one covering specific areas of the core.</p>
+<div class="table-container"><table><thead><tr><th>Suite name</th><th>Description</th></tr></thead><tbody><tr><td>Cache</td><td>Cache tests</td></tr><tr><td>Model</td><td>Dataobject tests</td></tr><tr><td>Service</td><td>Test covering common or shared element tasks (versioning, ...)</td></tr><tr><td>Unit</td><td>Other tests (may need restructuring)</td></tr><tr><td>...</td><td></td></tr></tbody></table></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="groups">Groups<a href="#groups" class="hash-link" aria-label="Direct link to Groups" title="Direct link to Groups" translate="no">​</a></h4>
+<p>The following table lists all groups currently used by HyperMDM's core tests. If you extend the tests or write new
+ones please tag them accordingly.</p>
+<div class="table-container"><table><thead><tr><th>Group</th><th></th></tr></thead><tbody><tr><td>cache-cli</td><td>Cache cli tests</td></tr><tr><td>cache.core.array</td><td>Cache Array handler tests</td></tr><tr><td>cache.core.db</td><td>Cache DB handler tests</td></tr><tr><td>cache.core.file</td><td>Cache File handler tests</td></tr><tr><td>cache.core.redis</td><td>Cache Redis handler tests</td></tr><tr><td>cache.core.redis_lua</td><td>Cache Redis handler tests with LUA enabled</td></tr><tr><td>dataTypeLocal</td><td>Dataobject - datatype tests</td></tr><tr><td>model.relations.multipleassignment</td><td>Dataobject - "allow multiple assignments" tests</td></tr><tr><td>...</td><td></td></tr></tbody></table></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="useful-command-line-options">Useful command line options<a href="#useful-command-line-options" class="hash-link" aria-label="Direct link to Useful command line options" title="Direct link to Useful command line options" translate="no">​</a></h4>
+<p>Useful examples:</p>
+<div class="table-container"><table><thead><tr><th>Option</th><th>Example</th><th>Description</th></tr></thead><tbody><tr><td>--group (-g</td><td>--group dataTypeLocal</td><td>Only execute specified list of groups</td></tr><tr><td>--skip (-s)</td><td>--skip cache,rest</td><td>Skip Cache and Rest Tests</td></tr><tr><td>--skip-group (-x)</td><td>--skip-group cache.core.file</td><td>Skip file cache tests</td></tr><tr><td>--fail-fast</td><td>--fail-fast</td><td>Stop on first error</td></tr><tr><td>...</td><td></td><td></td></tr></tbody></table></div>
+<p>See <a href="https://codeception.com/docs/reference/Commands" target="_blank" rel="noopener noreferrer" class="">Codeception Commands</a> for more options.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="providing-new-tests--extending-existing-ones">Providing new tests &amp; extending existing ones<a href="#providing-new-tests--extending-existing-ones" class="hash-link" aria-label="Direct link to Providing new tests &amp; extending existing ones" title="Direct link to Providing new tests &amp; extending existing ones" translate="no">​</a></h2>
+<p>In general, contributions in form extending and improving tests is highly appreciated.
+Please follow the structure and principles described above.</p>
+<p>If you have the extend the data model then please have a look at <a href="https://github.com/pimcore/pimcore/blob/2026.x/tests/Support/Helper/Model.php" target="_blank" rel="noopener noreferrer" class="">Model.php</a>.
+There you will find all class definitions used for testing.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="perform-phpstan-analysis">Perform PHPStan Analysis<a href="#perform-phpstan-analysis" class="hash-link" aria-label="Direct link to Perform PHPStan Analysis" title="Direct link to Perform PHPStan Analysis" translate="no">​</a></h3>
+<p>First, get a copy of this <a href="/platform/assets/files/phpstan-207e487c579e141d97bcf89eebf3db03.neon" target="_blank" class="">sample configuration file</a> and place it in your root directory.</p>
+<p>Add dependencies:</p>
+<div class="language-sh codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-sh codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># minimum</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">composer require "phpstan/phpstan:^0.12" "phpstan/phpstan-symfony:^0.12"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># required if you want to do a full analysis</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">composer require "elasticsearch/elasticsearch:^7.11" "composer/composer:*" </span><br></span></code></pre></div></div>
+<p>Run</p>
+<div class="language-sh codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-sh codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">TMPDIR=/tmp/[dedicateddir] ./vendor/bin/phpstan analyse --memory-limit=-1</span><br></span></code></pre></div></div>
+<p>where <code>/tmp/[dedicateddir]</code> must be a writable temporary directory.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Testing-Core_Tests-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">PHPStan Job</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/phpstan1-c3cb0530f335a1b0ba8bc4381aaf12fa.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/phpstan1-c3cb0530f335a1b0ba8bc4381aaf12fa.png"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Testing-Core_Tests-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">PHPStan Job</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/phpstan1-c3cb0530f335a1b0ba8bc4381aaf12fa.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/phpstan1-c3cb0530f335a1b0ba8bc4381aaf12fa.png"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Testing-Core_Tests-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">PHPStan Job</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/phpstan1-c3cb0530f335a1b0ba8bc4381aaf12fa.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Open the build log and check for problems.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Testing-Core_Tests-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">PHPStan Log</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/phpstan2-96658c275d45bfc6351266dbd7b1d035.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/phpstan2-96658c275d45bfc6351266dbd7b1d035.png"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Testing-Core_Tests-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">PHPStan Log</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/phpstan2-96658c275d45bfc6351266dbd7b1d035.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/phpstan2-96658c275d45bfc6351266dbd7b1d035.png"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Details-Testing-Core_Tests-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">PHPStan Log</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/phpstan2-96658c275d45bfc6351266dbd7b1d035.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-HyperMDM-Development_Details-Testing-Core_Tests-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="phpstan-baseline-feature">PHPStan Baseline Feature<a href="#phpstan-baseline-feature" class="hash-link" aria-label="Direct link to PHPStan Baseline Feature" title="Direct link to PHPStan Baseline Feature" translate="no">​</a></h2>
+<p>PHPStan can create a baseline file, which contain all current errors. See this <a href="https://medium.com/@ondrejmirtes/phpstans-baseline-feature-lets-you-hold-new-code-to-a-higher-standard-e77d815a5dff" target="_blank" rel="noopener noreferrer" class="">blog</a> entry.</p>
+<p>To generate a new baseline file you have to execute following command:</p>
+<div class="language-sh codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-sh codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">vendor/bin/phpstan analyse --memory-limit=-1 --generate-baseline</span><br></span></code></pre></div></div>
+<p>With this baseline file include, we can detect new errors without having to fix all errors first.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="phpstan-level-overview">PHPStan Level Overview<a href="#phpstan-level-overview" class="hash-link" aria-label="Direct link to PHPStan Level Overview" title="Direct link to PHPStan Level Overview" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Level</th><th>Checks</th></tr></thead><tbody><tr><td>0</td><td>basic checks, unknown classes, unknown functions, unknown methods called on $this, wrong number of arguments passed to those methods and functions, always undefined variables</td></tr><tr><td>1</td><td>possibly undefined variables, unknown magic methods and properties on classes with __call and __get</td></tr><tr><td>2</td><td>unknown methods checked on all expressions (not just $this), validating PHPDocs</td></tr><tr><td>3</td><td>return types, types assigned to properties</td></tr><tr><td>4</td><td>basic dead code checking - always false instanceof and other type checks, dead else branches, unreachable code after return; etc.</td></tr><tr><td>5</td><td>checking types of arguments passed to methods and functions</td></tr><tr><td>6</td><td>check for missing typehints</td></tr><tr><td>7</td><td>report partially wrong union types</td></tr><tr><td>8</td><td>report calling methods and accessing properties on nullable types</td></tr></tbody></table></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

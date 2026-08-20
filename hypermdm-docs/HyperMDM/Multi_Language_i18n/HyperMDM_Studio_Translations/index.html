@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperMDM Studio Translations — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>HyperMDM Studio Translations</h1></header>
+<p>The entire HyperMDM Studio interface is fully translatable. All UI-related translations are managed through
+<strong>Translations &gt; Translations</strong> in HyperMDM Studio, filtered to the <code>studio</code> domain. HyperMDM Studio translations use the
+same Symfony Translator component as <a class="" href="../Shared_Translations/index.html">Shared Translations</a>, but operate on the <code>studio</code>
+domain instead of the default <code>messages</code> domain. This separation keeps website-facing translations cleanly isolated
+from the Studio interface.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-can-be-translated">What Can Be Translated<a href="#what-can-be-translated" class="hash-link" aria-label="Direct link to What Can Be Translated" title="Direct link to What Can Be Translated" translate="no">​</a></h2>
+<p>Several components in HyperMDM Studio are configured differently for each project and can be translated through the
+translations UI. These include:</p>
+<ul>
+<li class="">Object class names</li>
+<li class="">Object field labels</li>
+<li class="">Object layout components</li>
+<li class="">Document types</li>
+<li class="">Predefined properties</li>
+<li class="">Custom views</li>
+<li class="">Document editables (translated directly in the editable itself, not through the translations UI)</li>
+</ul>
+<p>All these elements (except document editables) are translated via <strong>Translations &gt; Translations</strong> using the <code>studio</code>
+domain. All installed system languages are available for translation. You can also override the system translations
+shipped with HyperMDM, so you can customize any text within HyperMDM Studio.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="system-translations">System Translations<a href="#system-translations" class="hash-link" aria-label="Direct link to System Translations" title="Direct link to System Translations" translate="no">​</a></h2>
+<p>HyperMDM ships a set of built-in translations for the Studio interface. The core team maintains the English base
+translations. In addition to that, everybody can join the community translation projects on POEditor to contribute
+translations in additional languages:</p>
+<ul>
+<li class=""><a href="https://poeditor.com/join/project/VWmZyvFVMH" target="_blank" rel="noopener noreferrer" class="">Essential translations</a> - core UI labels and messages</li>
+<li class=""><a href="https://poeditor.com/join/project/XliCYYgILb" target="_blank" rel="noopener noreferrer" class="">Extended translations</a> - additional UI strings</li>
+</ul>
+<p>With every HyperMDM release, newly added community translations are included in the installation package. Only languages
+that have reached a certain translation progress are included in the main distribution.</p>
+<p>System translations can be overridden by project-specific translations in the <code>studio</code> domain (see below).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="project-specific-translations">Project-Specific Translations<a href="#project-specific-translations" class="hash-link" aria-label="Direct link to Project-Specific Translations" title="Direct link to Project-Specific Translations" translate="no">​</a></h2>
+<p>You can override any system translation or add entirely new translation keys through <strong>Translations &gt; Translations</strong>
+in HyperMDM Studio. Select the <code>studio</code> domain, then add or modify entries as needed. Project-specific translations
+take precedence over the built-in system translations.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="using-studio-translations-in-templates">Using Studio Translations in Templates<a href="#using-studio-translations-in-templates" class="hash-link" aria-label="Direct link to Using Studio Translations in Templates" title="Direct link to Using Studio Translations in Templates" translate="no">​</a></h2>
+<p>Studio translations use the same <code>trans</code> filter as shared translations, but you need to specify the <code>studio</code> domain
+explicitly. This is useful when you want to display Studio-translated labels in your project templates.</p>
+<div class="language-twig codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-twig codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter punctuation" style="color:#393A34">{{</span><span class="token plain"> hypermdm_select</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">select</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">store</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">option1</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">Option One</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token operator" style="color:#393A34">|</span><span class="token plain">trans</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">{</span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">studio</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">option2</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">Option Two</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token operator" style="color:#393A34">|</span><span class="token plain">trans</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">{</span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">studio</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">option3</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">Option Three</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token operator" style="color:#393A34">|</span><span class="token plain">trans</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">{</span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">studio</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token delimiter punctuation" style="color:#393A34">}}</span><br></span></code></pre></div></div>
+<p>The first argument to <code>trans</code> passes parameters (empty here), and the second argument specifies the translation domain.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="case-sensitivity">Case Sensitivity<a href="#case-sensitivity" class="hash-link" aria-label="Direct link to Case Sensitivity" title="Direct link to Case Sensitivity" translate="no">​</a></h2>
+<p>Studio translations follow the same case sensitivity logic as shared translations. See
+<a class="" href="../Shared_Translations/index.html#translations-case-sensitivity">Translations Case Sensitivity</a> for details.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="adding-custom-languages">Adding Custom Languages<a href="#adding-custom-languages" class="hash-link" aria-label="Direct link to Adding Custom Languages" title="Direct link to Adding Custom Languages" translate="no">​</a></h2>
+<p>Only languages with sufficient translation progress on POEditor are included in the default HyperMDM distribution.
+If you want to make additional languages available for the HyperMDM Studio interface, place a Symfony translation file
+for the desired language into the default Symfony translator path. For example, to make Afrikaans available:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Create the file at translations/studio.af.yaml</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># A comment is sufficient - the file's presence registers the language</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">echo '# Afrikaans' &gt; translations/studio.af.yaml</span><br></span></code></pre></div></div>
+<p>Unless you have configured a different path, translation files are located at <code>%kernel.project_dir%/translations</code>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Events — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Events</h1></header>
+<p>The bundle dispatches two kinds of events: job events, which let you react to the lifecycle of a translation job,
+and Studio pre-response events, which let you extend the payloads Studio receives.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="job-events">Job Events<a href="#job-events" class="hash-link" aria-label="Direct link to Job Events" title="Direct link to Job Events" translate="no">​</a></h2>
+<p>Use these to hook into translation processing, for example to notify an external system when a job comes back or to
+post-process a translated element. All constants are defined in
+<code>HyperMDM\TranslationsProviderInterfaceBundle\Event\JobEvents</code> and each one dispatches a Symfony <code>GenericEvent</code>.</p>
+<div class="table-container"><table><thead><tr><th>Constant</th><th>Event name</th><th>Dispatched when</th><th>Subject and arguments</th></tr></thead><tbody><tr><td><code>TRANSLATION_ITEM_PROCESSED</code></td><td><code>translations-provider-interface-bundle.job.translationItemProcessed</code></td><td>After a single translated item has been written back to its element</td><td>Subject: the translated element. Argument: <code>attributeSet</code></td></tr><tr><td><code>JOB_SUBMITTED</code></td><td><code>translations-provider-interface-bundle.job.submitted</code></td><td>After a job has been submitted</td><td>Subject: the job. Argument: <code>restarted</code></td></tr><tr><td><code>JOB_RECEIVED</code></td><td><code>translations-provider-interface-bundle.job.received</code></td><td>After the provider's result data has been stored on the job</td><td>Subject: the job</td></tr><tr><td><code>NO_EXPORT_DATA</code></td><td><code>translations-provider-interface-bundle.job.no-export-data</code></td><td>When a job produced nothing to export</td><td>Subject: the job. Argument: <code>result</code></td></tr><tr><td><code>CLI_START_PROCESSING_OPEN_JOB</code></td><td><code>translations-interface-provider-bundle.cli.job.open.start-processing</code></td><td>Before the CLI command starts processing open jobs</td><td>Subject: the command instance</td></tr><tr><td><code>CLI_STOP_PROCESSING_OPEN_JOB</code></td><td><code>translations-interface-provider-bundle.cli.job.open.stop-processing</code></td><td>After the CLI command has finished processing open jobs</td><td>Subject: the command instance</td></tr></tbody></table></div>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Translation_Provider_Interfaces-Development_Details-Events-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Translation_Provider_Interfaces-Development_Details-Events-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Translation_Provider_Interfaces-Development_Details-Events-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The two CLI event names use the prefix <code>translations-interface-provider-bundle</code>, with "interface" and "provider"
+transposed relative to every other event, which uses <code>translations-provider-interface-bundle</code>. Subscribe using the
+constant, or copy the exact string above, rather than assuming a consistent prefix.</p></div></div>
+<p><code>TRANSLATION_ITEM_PROCESSED</code> is dispatched by both shipped providers, DeepL and Translations.com. The other job
+events are dispatched by the DeepL provider and the CLI command only.</p>
+<p><code>JobEvents</code> also declares <code>TRANSLATION_ITEM_ALREADY_PROCESSED</code>, <code>JOB_NOT_SUBMITTED</code>, <code>JOB_IN_PROGRESS</code> and
+<code>FINISHED_JOB</code>. These constants exist but are never dispatched, so a listener registered on them never runs. They
+are deliberately left out of the table above.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="example">Example<a href="#example" class="hash-link" aria-label="Direct link to Example" title="Direct link to Example" translate="no">​</a></h3>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter important">&lt;?php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">namespace</span><span class="token plain"> </span><span class="token package">App</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">EventListener</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">TranslationsProviderInterfaceBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Event</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">JobEvents</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">Symfony</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Component</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">EventDispatcher</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Attribute</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">AsEventListener</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">Symfony</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Component</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">EventDispatcher</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">GenericEvent</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token attribute delimiter punctuation" style="color:#393A34">#[</span><span class="token attribute attribute-content attribute-class-name class-name">AsEventListener</span><span class="token attribute attribute-content punctuation" style="color:#393A34">(</span><span class="token attribute attribute-content attribute-class-name class-name">event</span><span class="token attribute attribute-content punctuation" style="color:#393A34">:</span><span class="token attribute attribute-content"> </span><span class="token attribute attribute-content attribute-class-name class-name">JobEvents</span><span class="token attribute attribute-content operator" style="color:#393A34">::</span><span class="token attribute attribute-content constant" style="color:#36acaa">JOB_RECEIVED</span><span class="token attribute attribute-content punctuation" style="color:#393A34">)</span><span class="token attribute delimiter punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">final</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name-definition class-name">JobReceivedListener</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">__invoke</span><span class="token punctuation" style="color:#393A34">(</span><span class="token class-name type-declaration">GenericEvent</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$event</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword return-type" style="color:#00009f">void</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token variable" style="color:#36acaa">$job</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$event</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">getSubject</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic">// notify an external system that translations came back for $job</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-pre-response-events">Studio Pre-Response Events<a href="#studio-pre-response-events" class="hash-link" aria-label="Direct link to Studio Pre-Response Events" title="Direct link to Studio Pre-Response Events" translate="no">​</a></h2>
+<p>The bundle builds its Studio responses through the HyperMDM Studio Backend Bundle. Before a response is returned, it
+dispatches a pre-response event carrying the response object, so you can attach your own data without replacing the
+controller behind it. See
+<a class="" href="../../../Studio_Backend/Extending/Additional_and_Custom_Attributes/index.html">Additional and Custom Attributes</a>
+for how additional attributes reach the Studio frontend.</p>
+<p>Event classes live in <code>HyperMDM\TranslationsProviderInterfaceBundle\Event\Studio\PreResponse\</code>.</p>
+<div class="table-container"><table><thead><tr><th>Event name</th><th>Payload</th><th>Dispatched when</th><th>Use it to</th></tr></thead><tbody><tr><td><code>pre_response.translations_provider_interface.configuration_detail</code></td><td><code>Schema\ConfigurationDetail</code></td><td>When Studio requests the bundle configuration, carrying the provider types and available providers</td><td>Add your own fields to the configuration payload</td></tr><tr><td><code>pre_response.translations_provider_interface.configuration_ui_settings_detail</code></td><td><code>Schema\ConfigurationUiSettingsDetail</code></td><td>When Studio requests the UI capability flags</td><td>Extend the UI settings response</td></tr><tr><td><code>pre_response.translations_provider_interface.translation_item_count</code></td><td><code>Schema\TranslationItemCountResponse</code></td><td>When the number of items a translation request would affect is previewed</td><td>Add data to the item count response</td></tr><tr><td><code>pre_response.translations_provider_interface.translation_request</code></td><td><code>Schema\TranslationRequestResponse</code></td><td>When a translation request has been handled</td><td>Add data to the acknowledgement response</td></tr></tbody></table></div>
+<p>Each event exposes its payload through a dedicated getter: <code>getConfigurationDetail()</code>,
+<code>getConfigurationUiSettingsDetail()</code>, <code>getTranslationItemCountResponse()</code> and <code>getTranslationRequestResponse()</code>.</p>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Translation_Provider_Interfaces-Development_Details-Events-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Translation_Provider_Interfaces-Development_Details-Events-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Translation_Provider_Interfaces-Development_Details-Events-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p><code>configuration_ui_settings_detail</code>, <code>translation_item_count</code> and <code>translation_request</code> are dispatched on the failure
+path as well, with a payload built in a degraded state: <code>ConfigurationUiSettingsDetail</code> is constructed with its
+enabled flag set to <code>false</code> when no provider resolves, and <code>TranslationItemCountResponse</code> /
+<code>TranslationRequestResponse</code> carry <code>success = false</code> plus an error message. A listener must not assume the operation
+succeeded.</p></div></div>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Translation_Provider_Interfaces-Development_Details-Events-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Translation_Provider_Interfaces-Development_Details-Events-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Translation_Provider_Interfaces-Development_Details-Events-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The Studio endpoints these events belong to are internal. They are marked <code>@internal</code>, change without deprecation,
+and must not be called directly. The events are the supported extension point. The generated reference for the
+endpoints is served by Studio Backend at <code>/hypermdm-studio/api/docs</code>.</p></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,1130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-2026210">HyperMDM 2026.2.10<a href="#hypermdm-2026210" class="hash-link" aria-label="Direct link to Pimcore 2026.2.10" title="Direct link to Pimcore 2026.2.10" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="notifications">[Notifications]<a href="#notifications" class="hash-link" aria-label="Direct link to [Notifications]" title="Direct link to [Notifications]" translate="no">​</a></h3>
+<p>Notification <code>creationDate</code> / <code>modificationDate</code> are now written in UTC, which is the convention
+these columns have used since the <code>Version20230321133700</code> migration converted the existing rows,
+and which every reader already assumes. Previously they were written in the local timezone, so with
+a non-UTC <code>general.timezone</code> the notification date shown in Studio and in the Classic UI was shifted
+by the zone offset (for example two hours ahead for <code>Europe/Berlin</code> during DST).</p>
+<p>Rows written before this fix remain in local time and will still be displayed with that offset.
+They cannot be corrected automatically, because a local-time row is indistinguishable from a
+correctly stored UTC row. If the skew on historical entries matters for your instance, convert the
+affected rows manually, for example:</p>
+<div class="language-sql codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-sql codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">-- 1. Preflight. This must return a datetime, not NULL. NULL means the named time-zone</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">--    tables are not loaded (see mysql_tzinfo_to_sql) and CONVERT_TZ() cannot be used -</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">--    load them first, or convert with a fixed INTERVAL instead.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">SELECT</span><span class="token plain"> CONVERT_TZ</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'2000-01-01 00:00:00'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Europe/Berlin'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'UTC'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">-- 2. Convert. COALESCE keeps the original value if the conversion yields NULL, so a</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">--    missing time-zone table makes this a no-op rather than erasing the dates.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">UPDATE</span><span class="token plain"> notifications</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">SET</span><span class="token plain"> creationDate </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">COALESCE</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">CONVERT_TZ</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">creationDate</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Europe/Berlin'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'UTC'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> creationDate</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    modificationDate </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">COALESCE</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">CONVERT_TZ</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">modificationDate</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Europe/Berlin'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'UTC'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> modificationDate</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">WHERE</span><span class="token plain"> id </span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token keyword" style="color:#00009f">last</span><span class="token plain"> id created before the upgrade</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p>Take a backup first, and note that a single named-zone conversion is only exact if all the rows
+you convert fall on the same side of a DST boundary.</p>
+<p>Directly after the upgrade, unread notifications created shortly before it may be re-announced by
+the Classic UI popup for up to the zone-offset duration - their local-time <code>creationDate</code> sits
+"in the future" relative to the corrected UTC polling bound. This resolves itself once that
+offset has elapsed (or once the rows are converted / marked as read).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-202629">HyperMDM 2026.2.9<a href="#hypermdm-202629" class="hash-link" aria-label="Direct link to Pimcore 2026.2.9" title="Direct link to Pimcore 2026.2.9" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="deprecations">Deprecations<a href="#deprecations" class="hash-link" aria-label="Direct link to Deprecations" title="Direct link to Deprecations" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="document-editor">[Document Editor]<a href="#document-editor" class="hash-link" aria-label="Direct link to [Document Editor]" title="Direct link to [Document Editor]" translate="no">​</a></h4>
+<p>The <code>height</code> option of the <code>multiselect</code> document editable is deprecated and no longer has any effect.
+The Studio UI does not interpret it — the field is sized via <code>width</code> only.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-202628">HyperMDM 2026.2.8<a href="#hypermdm-202628" class="hash-link" aria-label="Direct link to Pimcore 2026.2.8" title="Direct link to Pimcore 2026.2.8" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="maintenance">[Maintenance]<a href="#maintenance" class="hash-link" aria-label="Direct link to [Maintenance]" title="Direct link to [Maintenance]" translate="no">​</a></h3>
+<ul>
+<li class="">The housekeeping maintenance task no longer removes an empty directory as soon as it finds one. A directory is now removed only once it is also older than the configured retention (<code>hypermdm.maintenance.housekeeping.cleanup_profiler_files_atime_older_than</code> for the profiler directory, 30 minutes by default). Removing empty directories on sight could delete one that another process had just created and was about to write into, which made the write fail. Expect empty directories to linger for up to the retention period before being cleaned up.</li>
+<li class="">Files whose name <em>begins</em> with <code>-low-quality-preview.svg</code> are now excluded from deletion as intended. The previous check treated a match at position 0 as "no match", so those files were deleted despite the exclusion.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-202627">HyperMDM 2026.2.7<a href="#hypermdm-202627" class="hash-link" aria-label="Direct link to Pimcore 2026.2.7" title="Direct link to Pimcore 2026.2.7" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="possible-data-loss-on-11521-12312-12313-202625-and-202626">Possible data loss on 11.5.21, 12.3.12, 12.3.13, 2026.2.5 and 2026.2.6<a href="#possible-data-loss-on-11521-12312-12313-202625-and-202626" class="hash-link" aria-label="Direct link to Possible data loss on 11.5.21, 12.3.12, 12.3.13, 2026.2.5 and 2026.2.6" title="Direct link to Possible data loss on 11.5.21, 12.3.12, 12.3.13, 2026.2.5 and 2026.2.6" translate="no">​</a></h3>
+<p>Those releases restricted object deserialization for two stores that legitimately contain PHP
+objects, so affected values were read back empty:</p>
+<ul>
+<li class=""><strong><code>block</code> fields</strong> — the child types <code>externalImage</code>, <code>consent</code>, <code>date</code>, <code>datetime</code>,
+<code>structuredTable</code>, <code>hotspotimage</code>, <code>imageGallery</code> and <code>dateRange</code>, including inside a block
+nested in <code>localizedfields</code>. A <code>dateRange</code> child raised
+<code>Carbon\Exceptions\InvalidPeriodParameterException</code> on save.</li>
+<li class=""><strong>Document <code>image</code> editables</strong> — hotspot and marker metadata, which made rendering a page with
+such an editable fail with <code>Cannot use object of type __PHP_Incomplete_Class as array</code>.</li>
+</ul>
+<p>Reading was affected, so <strong>saving an object or document while running one of those versions
+persisted the empty value</strong>. A field marked mandatory blocked the save instead, which left the
+stored value intact.</p>
+<p>If you ran any of those versions, check the affected fields after upgrading. Versioning was not
+affected, so earlier values can be recovered from the element's version history.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="webdav-move-failed-on-1237-and-later">WebDAV move failed on 12.3.7 and later<a href="#webdav-move-failed-on-1237-and-later" class="hash-link" aria-label="Direct link to WebDAV move failed on 12.3.7 and later" title="Direct link to WebDAV move failed on 12.3.7 and later" translate="no">​</a></h3>
+<p>Independently of the above, and over a wider range of releases (<strong>12.3.7</strong> and later, <strong>2026.1.3</strong>
+and later), replacing an asset over WebDAV failed when the client deleted the file and then moved
+the new one into place — the pattern used by several desktop applications, Photoshop among them.
+The move aborted with <code>The script tried to call a method on an incomplete object</code>.</p>
+<p>No data was lost in this case; the operation simply did not complete.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-12312">HyperMDM 12.3.12<a href="#hypermdm-12312" class="hash-link" aria-label="Direct link to Pimcore 12.3.12" title="Direct link to Pimcore 12.3.12" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="deprecations-1">Deprecations<a href="#deprecations-1" class="hash-link" aria-label="Direct link to Deprecations" title="Direct link to Deprecations" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="serialization">[Serialization]<a href="#serialization" class="hash-link" aria-label="Direct link to [Serialization]" title="Direct link to [Serialization]" translate="no">​</a></h4>
+<p>Calling <code>HyperMDM\Tool\Serialize::unserialize()</code> without the <code>$allowedClasses</code> argument is deprecated.
+Pass an explicit value: <code>false</code> to forbid object deserialization (the safe choice for scalar/array data),
+or an array of allowed class names when a trusted stored object graph must be reconstructed.
+The default changes from <code>true</code> to <code>false</code> (object deserialization disabled) in HyperMDM 2027.1.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-12310">HyperMDM 12.3.10<a href="#hypermdm-12310" class="hash-link" aria-label="Direct link to Pimcore 12.3.10" title="Direct link to Pimcore 12.3.10" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="deprecations-2">Deprecations<a href="#deprecations-2" class="hash-link" aria-label="Direct link to Deprecations" title="Direct link to Deprecations" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="document-editor-1">[Document Editor]<a href="#document-editor-1" class="hash-link" aria-label="Direct link to [Document Editor]" title="Direct link to [Document Editor]" translate="no">​</a></h4>
+<p>The <code>width</code> and <code>height</code> options of <code>HyperMDM\Extension\Document\Areabrick\EditableDialogBoxConfiguration</code> are deprecated and will be removed in 2027.1.
+Editable dialog boxes work differently in the new Studio UI, so these options no longer have any effect.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1236">HyperMDM 12.3.6<a href="#hypermdm-1236" class="hash-link" aria-label="Direct link to Pimcore 12.3.6" title="Direct link to Pimcore 12.3.6" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="assets">[Assets]<a href="#assets" class="hash-link" aria-label="Direct link to [Assets]" title="Direct link to [Assets]" translate="no">​</a></h3>
+<ul>
+<li class="">The MIME type is now read from the storage adapter after the file is written, with a fallback to stream sniffing and finally <code>application/octet-stream</code>. Existing assets (e.g. <code>.doc</code>/<code>.xls</code>/<code>.ppt</code> files previously misdetected as <code>application/octet-stream</code>) need to be re-uploaded or have their MIME type rewritten to pick up the corrected MIME type.</li>
+<li class="">Added a new command <code>hypermdm:assets:rewrite-mime-type</code> to rewrite the MIME type of existing assets without re-uploading them.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1230">HyperMDM 12.3.0<a href="#hypermdm-1230" class="hash-link" aria-label="Direct link to Pimcore 12.3.0" title="Direct link to Pimcore 12.3.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general">[General]<a href="#general" class="hash-link" aria-label="Direct link to [General]" title="Direct link to [General]" translate="no">​</a></h3>
+<ul>
+<li class="">Added a new command <code>hypermdm:classes:changes</code> to list all Class Definition that have been changed. This command helps in tracking modifications and can be useful for auditing and version control purposes.</li>
+<li class="">Added possibility to <code>hypermdm:classificationstore:delete-store</code> to pass <code>--inactive-only</code> flag to only delete inactive (soft deleted from UI) classification stores Keys.</li>
+<li class="">Added a new command <code>hypermdm:migrate:mail-logs-folder-structure</code> to migrate all mail log files to a new folder structure (YYYY/MM/DD/&lt;log filename&gt;).</li>
+<li class="">Added a thumbnail setting option to use Crop Box (the visible area), instead of Media Box when converting documents via Ghostscript.</li>
+<li class="">Added the Twig function <code>hypermdm_count_block(blockname)</code> to get the count for <code>hypermdmblock</code> editable.</li>
+<li class="">Refactored VersionCleanupTask for improved performance and reduced SQL query amounts. Added a new configuration option <code>disable_events</code> under each version’s configuration block. When enabled, PRE/POST delete events will be suppressed during the version cleanup process to reduce overhead and speed up execution.</li>
+<li class="">Added a new configuration option for Select and MultiSelect object types to enforce validation when setting values via PHP API.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="deprecations-3">Deprecations<a href="#deprecations-3" class="hash-link" aria-label="Direct link to Deprecations" title="Direct link to Deprecations" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="deprecated-and-discontinued">Deprecated and Discontinued<a href="#deprecated-and-discontinued" class="hash-link" aria-label="Direct link to Deprecated and Discontinued" title="Direct link to Deprecated and Discontinued" translate="no">​</a></h4>
+<p>The following bundles got deprecated and won't be migrated to HyperMDM Studio</p>
+<ul>
+<li class="">Glossary Bundle</li>
+<li class="">Simple Backend Search Bundle</li>
+<li class="">Static Routes Bundle</li>
+<li class="">Parts of SeoBundle - All functionality except of the redirects and sitemaps won't be migrated to HyperMDM Studio</li>
+<li class="">WordExport Bundle</li>
+<li class="">XliffBundle Export Bundle</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="deprecated-because-directly-integrated-into-studio">Deprecated because directly integrated into Studio<a href="#deprecated-because-directly-integrated-into-studio" class="hash-link" aria-label="Direct link to Deprecated because directly integrated into Studio" title="Direct link to Deprecated because directly integrated into Studio" translate="no">​</a></h4>
+<ul>
+<li class="">SimpleBackendSearch Bundle</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="symfony-6x-components-support">[Symfony 6.x Components Support]<a href="#symfony-6x-components-support" class="hash-link" aria-label="Direct link to [Symfony 6.x Components Support]" title="Direct link to [Symfony 6.x Components Support]" translate="no">​</a></h4>
+<p>Support for all Symfony 6.x components will be removed in next major version.
+This is part of the migration to Symfony 7, which requires updating all Symfony dependencies to version 7.3 or higher.</p>
+<p><strong>Action Required:</strong>
+Update all Symfony components to version 7.3 or higher before upgrading to HyperMDM 2026.1.</p>
+<p><strong>Note:</strong>
+If you want to stay on Symfony 6.x after updating to this version, you can use the <code>hypermdm/symfony-freeze</code> metapackage to prevent
+automatic upgrades to Symfony 7.x:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/symfony-freeze:^6.0</span><br></span></code></pre></div></div>
+<p>Alternatively, you can add explicit version constraints to your composer.json manually. If not, version 7.3 or later will be installed automatically.</p>
+<p>To ensure all core Symfony components are on version 7.x minimum (recommended for new projects):</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/symfony-freeze:^7.0</span><br></span></code></pre></div></div>
+<p><strong>Note:</strong> The <code>hypermdm/symfony-freeze</code> package is only intended for HyperMDM 12.3 and 12.x development versions. It will not be needed for HyperMDM 2026, as Symfony 6 support will be removed entirely.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="doctrine-annotations">[Doctrine Annotations]<a href="#doctrine-annotations" class="hash-link" aria-label="Direct link to [Doctrine Annotations]" title="Direct link to [Doctrine Annotations]" translate="no">​</a></h4>
+<p>The <code>doctrine/annotations</code> package has been removed as it's no longer needed with modern PHP 8+ attributes.
+This is part of the migration to Symfony 7 and modern PHP practices.</p>
+<p><strong>Action Required:</strong>
+No action required for most users. If your custom code relies on <code>doctrine/annotations</code> directly, update to use PHP 8+ attributes or add the dependency to your own composer.json if still needed.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="symfony-templating-component">[Symfony Templating Component]<a href="#symfony-templating-component" class="hash-link" aria-label="Direct link to [Symfony Templating Component]" title="Direct link to [Symfony Templating Component]" translate="no">​</a></h4>
+<p>The <code>Symfony\Component\Templating\EngineInterface</code> and related templating services are deprecated and will be removed in version 2026.1.
+This is part of the migration to Symfony 7, which no longer includes the <code>symfony/templating</code> component.</p>
+<p><strong>What's Deprecated:</strong></p>
+<ol>
+<li class=""><strong>Service</strong>: <code>hypermdm.templating.engine.delegating</code> and <code>Symfony\Component\Templating\EngineInterface</code>
+<ul>
+<li class="">Use <code>Twig\Environment</code> service directly instead</li>
+</ul>
+</li>
+<li class=""><strong>Classes</strong> using <code>EngineInterface</code>:<!-- -->
+<ul>
+<li class=""><code>HyperMDM\Templating\TwigDefaultDelegatingEngine</code></li>
+<li class=""><code>HyperMDM\Navigation\Renderer\AbstractRenderer</code></li>
+<li class=""><code>HyperMDM\Document\Editable\EditableHandler</code></li>
+<li class=""><code>HyperMDM\Controller\Controller</code></li>
+<li class=""><code>HyperMDM\Workflow\Notification\NotificationEmailService</code></li>
+<li class=""><code>HyperMDM\Bundle\GoogleMarketingBundle\EventListener\Frontend\GoogleTagManagerListener</code></li>
+<li class=""><code>HyperMDM\Bundle\HeadlessDocumentsBundle\Headless\LayoutManager</code></li>
+<li class=""><code>HyperMDM\Bundle\PersonalizationBundle\Targeting\Code\TargetingCodeGenerator</code></li>
+<li class=""><code>HyperMDM\Bundle\PersonalizationBundle\Targeting\EventListener\ToolbarListener</code></li>
+<li class=""><code>HyperMDM\Bundle\EcommerceFrameworkBundle\FilterService\FilterType\AbstractFilterType</code></li>
+</ul>
+</li>
+<li class=""><strong>Container Lookups</strong>:<!-- -->
+<ul>
+<li class="">Retrieving <code>hypermdm.templating.engine.delegating</code> directly from the container</li>
+</ul>
+</li>
+</ol>
+<p><strong>Action Required:</strong>
+Update your code to use <code>Twig\Environment</code> directly instead of <code>Symfony\Component\Templating\EngineInterface</code>.
+All functionality remains the same, but the interface changes from the Symfony templating abstraction to Twig directly.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="folder-structure-for-email-logs">Folder structure for email logs<a href="#folder-structure-for-email-logs" class="hash-link" aria-label="Direct link to Folder structure for email logs" title="Direct link to Folder structure for email logs" translate="no">​</a></h4>
+<p>The command <code>hypermdm:migrate:mail-logs-folder-structure</code> and supporting the old structure are deprecated and will be removed in version 2026.1.</p>
+<p><strong>Action Required:</strong>
+Execute the command <code>hypermdm:migrate:mail-logs-folder-structure</code> or move the files manually to YYYY/MM/DD/&lt;log filename&gt;.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1220">HyperMDM 12.2.0<a href="#hypermdm-1220" class="hash-link" aria-label="Direct link to Pimcore 12.2.0" title="Direct link to Pimcore 12.2.0" translate="no">​</a></h2>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="security">[Security]<a href="#security" class="hash-link" aria-label="Direct link to [Security]" title="Direct link to [Security]" translate="no">​</a></h4>
+<ul>
+<li class="">Implemented a feature that automatically invalidates existing sessions and requires users to re-authenticate whenever their password is updated.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">[Configuration]<a href="#configuration" class="hash-link" aria-label="Direct link to [Configuration]" title="Direct link to [Configuration]" translate="no">​</a></h4>
+<ul>
+<li class="">The <code>hypermdm.maintenance.housekeeping.cleanup_tmp_files_atime_older_than</code> parameter which was previously unused is now used to delete system temp files (var/tmp), with the default retention period of 1 day.</li>
+<li class="">Introduced <code>hypermdm.applicationlog.archive_db_table_storage_engine</code> configuration parameter to define the default engine for the <code>application_log_archive_x</code> tables. The default value is <code>Archive</code>, which have some limitation in clustered environment, please adapt according to your needs. Set it to empty string to auto-detect the engine.</li>
+<li class="">Added <code>--perIteration</code> and <code>--timoutBetweenIteration</code> flags to <code>hypermdm:cache:warming</code> which control the rate as which the cache is warmed.</li>
+<li class="">Introduced <code>hypermdm.assets.image.thumbnails.max_srcset_dpi_factor</code> configuration parameter to define the maximum automatic DPI scaling factor for image thumbnails source set.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="translation">[Translation]<a href="#translation" class="hash-link" aria-label="Direct link to [Translation]" title="Direct link to [Translation]" translate="no">​</a></h4>
+<ul>
+<li class="">Added the possibility to pass parameters to <code>TranslationEvents::PRE_SAVE</code> and <code>TranslationEvents::POST_SAVE</code> on the <code>save()</code> function.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="querybuilder">[QueryBuilder]<a href="#querybuilder" class="hash-link" aria-label="Direct link to [QueryBuilder]" title="Direct link to [QueryBuilder]" translate="no">​</a></h4>
+<ul>
+<li class="">Deprecated <code>onCreateQueryBuilderCallback</code> property in <code>QueryBuilderHelperTrait</code>, please use <code>queryBuilderProcessors</code> instead.</li>
+<li class="">Introduced the feature to add multiple callback processors on query build create by <code>addQueryBuilderProcessor</code>, and reset them by <code>discardQueryBuilderProcessors</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="elements">[Elements]<a href="#elements" class="hash-link" aria-label="Direct link to [Elements]" title="Direct link to [Elements]" translate="no">​</a></h4>
+<ul>
+<li class="">Added the feature of retrying the transaction when RetryableException is thrown during an element deletion.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1210">HyperMDM 12.1.0<a href="#hypermdm-1210" class="hash-link" aria-label="Direct link to Pimcore 12.1.0" title="Direct link to Pimcore 12.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="requirements">[Requirements]<a href="#requirements" class="hash-link" aria-label="Direct link to [Requirements]" title="Direct link to [Requirements]" translate="no">​</a></h3>
+<ul>
+<li class="">Added optional requirements for v7 of certain symfony packages. Version 6.4 is still supported, please make sure to use this version if you encounter any problems with v7 of symfony packages.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="seo-bundle">[SEO Bundle]<a href="#seo-bundle" class="hash-link" aria-label="Direct link to [SEO Bundle]" title="Direct link to [SEO Bundle]" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="redirects">[Redirects]<a href="#redirects" class="hash-link" aria-label="Direct link to [Redirects]" title="Direct link to [Redirects]" translate="no">​</a></h4>
+<ul>
+<li class="">Source site is now optional. Redirects without source site get applied for all domains. Previously, redirects without source site did not get applied at all.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1200">HyperMDM 12.0.0<a href="#hypermdm-1200" class="hash-link" aria-label="Direct link to Pimcore 12.0.0" title="Direct link to Pimcore 12.0.0" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="important-license-change-please-read-the-following-information-carefully">IMPORTANT: License change! Please read the following information carefully:<a href="#important-license-change-please-read-the-following-information-carefully" class="hash-link" aria-label="Direct link to IMPORTANT: License change! Please read the following information carefully:" title="Direct link to IMPORTANT: License change! Please read the following information carefully:" translate="no">​</a></h2>
+<p>With the release of HyperMDM Platform Version 2025.1, HyperMDM has transitioned its
+Community Edition from the GNU General Public License v3 (GPLv3) to the new
+HyperMDM Open Core License (POCL). Platform version 2024.4 marks the final release under
+GPLv3.</p>
+<p>This licensing change only affects users of the free and open-source HyperMDM
+Community Edition previously licensed under GPLv3. If you're already using a HyperMDM Professional
+Edition or Enterprise/PaaS Edition under a commercial agreement, nothing changes for you. Your
+existing contracts, rights, and usage terms remain fully intact — POCL has no impact on your
+deployment or support.</p>
+<p>Please read the <a href="https://github.com/pimcore/pimcore/blob/12.x/LICENSE.md" target="_blank" rel="noopener noreferrer" class="">HyperMDM Open Core License</a> carefully
+and check whether you can continue to use the free HyperMDM Community edition.
+<strong>If you continue to use the Community Edition with the Admin UI Classic bundle, <a href="https://store.pimcore.com/shop/admin-ui-classic-bundle-for-community-edition-pocl-license-134" target="_blank" rel="noopener noreferrer" class="">you need to purchase an
+additional perpetual license at a price of €1,480 at our store</a> because of ExtJS licencing limitations.</strong></p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="system-requirements">[System Requirements]<a href="#system-requirements" class="hash-link" aria-label="Direct link to [System Requirements]" title="Direct link to [System Requirements]" translate="no">​</a></h4>
+<ul>
+<li class="">ext-openssl is now required.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="genericexecutionenginebundle">[GenericExecutionEngineBundle]<a href="#genericexecutionenginebundle" class="hash-link" aria-label="Direct link to [GenericExecutionEngineBundle]" title="Direct link to [GenericExecutionEngineBundle]" translate="no">​</a></h4>
+<ul>
+<li class="">Added <code>executionContext</code> parameter to <code>JobRunRepositoryInterface</code> / <code>JobRunRepository</code>. You need to adapt your implementations according, if necessary.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="documents">[Documents]<a href="#documents" class="hash-link" aria-label="Direct link to [Documents]" title="Direct link to [Documents]" translate="no">​</a></h4>
+<ul>
+<li class="">Removed deprecated Headless Chrome Processor.</li>
+<li class="">Dropped support of <code>gotenberg/gotenberg-php</code> <code>v1.1</code> in favor of just supporting <code>v2</code> which bundles Chromium functionalities that refrain from requiring a standalone chromium binary.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="doctrine">[Doctrine]<a href="#doctrine" class="hash-link" aria-label="Direct link to [Doctrine]" title="Direct link to [Doctrine]" translate="no">​</a></h4>
+<ul>
+<li class="">Bundles now need to use the default EntityManager (name: 'default') with the default connection (name: 'default') or use another EntityManager with an additional connection.</li>
+<li class="">Added support of <code>doctrine/dbal</code> <code>v4</code></li>
+<li class="">Dropped support of <code>doctrine/dbal</code> <code>v3</code></li>
+<li class="">Changed signature of <code>HyperMDM\Db\Helper::quoteInto()</code>, passing <code>$type</code> is not supported anymore to match the changes in <code>DBAL</code> about <code>quote()</code> working only with strings.</li>
+<li class="">Tweaked the way the <code>Listing/Dao::getTotalCount()</code> is used to enable support with DBAL <code>v4</code>, please check the latest docs.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="applicationloggerbundle">[ApplicationLoggerBundle]<a href="#applicationloggerbundle" class="hash-link" aria-label="Direct link to [ApplicationLoggerBundle]" title="Direct link to [ApplicationLoggerBundle]" translate="no">​</a></h4>
+<ul>
+<li class="">
+<p>Log levels can be translated now. The keys are based on the integer representation of the log level:
+<code>application_logger_log_level_1</code> = Emergency,
+<code>application_logger_log_level_2</code> = Alert,
+<code>application_logger_log_level_3</code> = Critical,
+<code>application_logger_log_level_4</code> = Error,
+<code>application_logger_log_level_5</code> = Warning,
+<code>application_logger_log_level_6</code> = Notice,
+<code>application_logger_log_level_7</code> = Info,
+<code>application_logger_log_level_8</code> = Debug,<br>
+<!-- -->Please make sure to add translations for log levels.</p>
+</li>
+<li class="">
+<p><code>filter_priority</code> configuration changed. LogLevels now start at 1 (emergency) - 8 (debug) instead of 0 (emergency) - 7 (debug). Please adjust your configuration accordingly.</p>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="assets-1">[Assets]<a href="#assets-1" class="hash-link" aria-label="Direct link to [Assets]" title="Direct link to [Assets]" translate="no">​</a></h4>
+<ul>
+<li class=""><code>customSettings</code> column in <code>assets</code> table is now a JSON column.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle">[Bundle]<a href="#bundle" class="hash-link" aria-label="Direct link to [Bundle]" title="Direct link to [Bundle]" translate="no">​</a></h4>
+<ul>
+<li class="">Removed compatibility layer static <code>$bundleManager</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="commands">[Commands]<a href="#commands" class="hash-link" aria-label="Direct link to [Commands]" title="Direct link to [Commands]" translate="no">​</a></h4>
+<ul>
+<li class="">Removed deprecated option <code>generator</code> from <code>HyperMDM\Bundle\CoreBundle\Command\LowQualityImagePreviewCommand</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="documents-1">[Documents]<a href="#documents-1" class="hash-link" aria-label="Direct link to [Documents]" title="Direct link to [Documents]" translate="no">​</a></h4>
+<ul>
+<li class="">Date Editable: Removed deprecated outputFormat config. Use outputIsoFormat config instead.</li>
+<li class="">Video Editable: Passing an invalid allowedTypes config will throw an exception.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="database">[Database]<a href="#database" class="hash-link" aria-label="Direct link to [Database]" title="Direct link to [Database]" translate="no">​</a></h4>
+<ul>
+<li class="">Change of default collation to <code>utf8mb4_unicode_520_ci</code> from <code>utf8mb4_general_ci</code>.</li>
+<li class="">Make sure to update your database accordingly but be careful which tables you adapt. You can use the following statements to generate the <code>ALTER TABLE</code> statements for all tables. Please exclude tables you do not want to update.</li>
+</ul>
+<div class="language-sql codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-sql codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">-- Change database collation</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">ALTER</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">DATABASE</span><span class="token plain"> </span><span class="token identifier punctuation" style="color:#393A34">`</span><span class="token identifier">your_database_name</span><span class="token identifier punctuation" style="color:#393A34">`</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">COLLATE</span><span class="token plain"> utf8mb4_unicode_520_ci</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">-- For tables</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">SELECT</span><span class="token plain"> CONCAT</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'ALTER TABLE `'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> TABLE_NAME</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'` COLLATE utf8mb4_unicode_520_ci;'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">FROM</span><span class="token plain"> INFORMATION_SCHEMA</span><span class="token punctuation" style="color:#393A34">.</span><span class="token keyword" style="color:#00009f">TABLES</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">WHERE</span><span class="token plain"> TABLE_SCHEMA </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'your_database_name'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token operator" style="color:#393A34">AND</span><span class="token plain"> TABLE_COLLATION </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'utf8mb4_general_ci'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">ORDER</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">BY</span><span class="token plain"> TABLE_NAME</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">-- For columns</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">SELECT</span><span class="token plain"> CONCAT</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'ALTER TABLE `'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> TABLE_NAME</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'` CHANGE `'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> COLUMN_NAME</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'` `'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> COLUMN_NAME</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'` '</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> COLUMN_TYPE</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">FROM</span><span class="token plain"> INFORMATION_SCHEMA</span><span class="token punctuation" style="color:#393A34">.</span><span class="token keyword" style="color:#00009f">COLUMNS</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">WHERE</span><span class="token plain"> TABLE_SCHEMA </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'your_database_name'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token operator" style="color:#393A34">AND</span><span class="token plain"> COLLATION_NAME </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'utf8mb4_general_ci'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">ORDER</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">BY</span><span class="token plain"> TABLE_NAME</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="dataobjects">[DataObjects]<a href="#dataobjects" class="hash-link" aria-label="Direct link to [DataObjects]" title="Direct link to [DataObjects]" translate="no">​</a></h4>
+<ul>
+<li class="">Removed deprecated <code>unserialize()</code> method from <code>HyperMDM\Model\DataObject\Data\Link</code>. If not the data is not migrated to the new format, to the new default values, please execute a simple script to resave all links.</li>
+<li class="">Parameter <code>$index</code> of method <code>setIndex</code> is not nullable anymore in <code>HyperMDM\Model\DataObject\ClassDefinition\Data</code>.</li>
+<li class="">Removed deprecated <code>getThumbnailConfig()</code> method from <code>HyperMDM\Model\Asset\Image</code>.</li>
+<li class="">Removed deprecated hashing algorithms from <code>HyperMDM\Model\DataObject\Data\Password</code>. <code>password_hash</code> is the only supported hashing algorithm now.</li>
+<li class="">Removed deprecated <code>getVersionDependentDatabaseColumnName</code> method. You can use the column name directly now.</li>
+<li class="">UrlSlug fields can return null and array values now.</li>
+<li class="">Refactored the <code>getRange($step)</code> method in <code>HyperMDM/Model/DataObject/Data/QuantityValueRange</code> and <code>HyperMDM/Model/DataObject/Data/NumericRange</code> to delegate its implementation to <code>HyperMDM/Model/DataObject/Data/Traits/RangeTrait</code>. This refactoring now handles cases where <code>abs($step)</code> is greater than <code>abs($max - $min)</code>.</li>
+<li class="">Updated the <code>getRange($step)</code> method signature in <code>HyperMDM/Model/DataObject/Data/QuantityValueRange</code> to support both <code>int</code> and <code>float</code> step values.</li>
+<li class="">Removed the <code>step</code> parameter and return <code>minimum</code> and <code>maximum</code> from the <code>getValue()</code> method in <code>HyperMDM/Model/DataObject/Data/QuantityValueRange</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="events">[Events]<a href="#events" class="hash-link" aria-label="Direct link to [Events]" title="Direct link to [Events]" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>context</code> property of <code>ResolveUploadTargetEvent</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="lib">[Lib]<a href="#lib" class="hash-link" aria-label="Direct link to [Lib]" title="Direct link to [Lib]" translate="no">​</a></h4>
+<ul>
+<li class="">The method <code>HyperMDM\Db\Helper::upsert()</code> now returns the last insert id instead of the number of affected rows.</li>
+<li class="">Removed deprecated class <code>HyperMDM\Helper\CsvFormulaFormatter</code>. Use <code>\League\Csv\EscapeFormula</code> instead.</li>
+<li class="">Removed deprecated <code>getCachedSymfonyEnvironments()</code> method from <code>HyperMDM\Tool</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="mail">[Mail]<a href="#mail" class="hash-link" aria-label="Direct link to [Mail]" title="Direct link to [Mail]" translate="no">​</a></h4>
+<ul>
+<li class="">If sender is not set in the mail, instead of setting a default <code>from</code> address, an exception is now thrown.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="models">[Models]<a href="#models" class="hash-link" aria-label="Direct link to [Models]" title="Direct link to [Models]" translate="no">​</a></h4>
+<ul>
+<li class="">Method <code>getById()</code> now only accepts <code>int</code> as the first parameter.</li>
+<li class="">Interface <code>ElementInterface</code> now has <code>array $params = []</code> as the second parameter for <code>getById()</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="navigation">[Navigation]<a href="#navigation" class="hash-link" aria-label="Direct link to [Navigation]" title="Direct link to [Navigation]" translate="no">​</a></h4>
+<ul>
+<li class="">Remove deprecated <code>$_defaultPageType</code> from <code>HyperMDM\Navigation\Page</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="select-options">[Select Options]<a href="#select-options" class="hash-link" aria-label="Direct link to [Select Options]" title="Direct link to [Select Options]" translate="no">​</a></h4>
+<ul>
+<li class="">Add 'Admin only' configuration to restrict access to admin users</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="templates">[Templates]<a href="#templates" class="hash-link" aria-label="Direct link to [Templates]" title="Direct link to [Templates]" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>key_value_table.html.twig</code> from <code>CoreBundle</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="workflow">[Workflow]<a href="#workflow" class="hash-link" aria-label="Direct link to [Workflow]" title="Direct link to [Workflow]" translate="no">​</a></h4>
+<ul>
+<li class="">Method <code>getWorkflowByName()</code> now returns <code>?WorkflowInterface</code> instead of <code>?object</code>. This also affected the <code>lib/Workflow/Notification/NotificationEmailService.php</code> and <code>lib/Workflow/Notification/HyperMDMNotificationService.php</code>.</li>
+<li class="">Methods <code>sendHyperMDMNotification</code> and <code>sendWorkflowEmailNotification</code> in <code>lib/Workflow/Notification/NotificationEmailService.php</code> and <code>lib/Workflow/Notification/HyperMDMNotificationService.php</code> now accept the <code>Transition</code> itself, rather than the <code>string</code> label.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="installer">[Installer]<a href="#installer" class="hash-link" aria-label="Direct link to [Installer]" title="Direct link to [Installer]" translate="no">​</a></h4>
+<ul>
+<li class="">From now on, installer will generate a <code>hypermdm.encryption.secret</code> and a <code>hypermdm.product_registration.instance_identifier</code> and
+puts it into the <code>config/local/product_registration.yaml</code> file besides the provided product registration key.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="custom-reports">Custom Reports<a href="#custom-reports" class="hash-link" aria-label="Direct link to Custom Reports" title="Direct link to Custom Reports" translate="no">​</a></h3>
+<ul>
+<li class="">add function <code>getColumnsWithMetadata</code> to <code>bundles/CustomReportsBundle/src/Tool/Adapter/CustomReportAdapterInterface.php</code></li>
+<li class="">add function <code>getPagination</code> to <code>bundles/CustomReportsBundle/src/Tool/Adapter/CustomReportAdapterInterface.php</code></li>
+<li class="">change parameter types of <code>getData</code> in <code>bundles/CustomReportsBundle/src/Tool/Adapter/AbstractAdapter.php</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1159">HyperMDM 11.5.9<a href="#hypermdm-1159" class="hash-link" aria-label="Direct link to Pimcore 11.5.9" title="Direct link to Pimcore 11.5.9" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="security-1">Security<a href="#security-1" class="hash-link" aria-label="Direct link to Security" title="Direct link to Security" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="twig">[Twig]<a href="#twig" class="hash-link" aria-label="Direct link to [Twig]" title="Direct link to [Twig]" translate="no">​</a></h4>
+<ul>
+<li class="">Bumped minimum requirement of <code>twig/twig</code> to <code>^3.21.0</code> to fix security and issues with <code>hypermdmmanualblock</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1155">HyperMDM 11.5.5<a href="#hypermdm-1155" class="hash-link" aria-label="Direct link to Pimcore 11.5.5" title="Direct link to Pimcore 11.5.5" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-1">General<a href="#general-1" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="database-1">[Database]<a href="#database-1" class="hash-link" aria-label="Direct link to [Database]" title="Direct link to [Database]" translate="no">​</a></h4>
+<ul>
+<li class="">Add index to <code>public</code> column in <code>versions</code> table</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1150">HyperMDM 11.5.0<a href="#hypermdm-1150" class="hash-link" aria-label="Direct link to Pimcore 11.5.0" title="Direct link to Pimcore 11.5.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-2">General<a href="#general-2" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="database-2">[Database]<a href="#database-2" class="hash-link" aria-label="Direct link to [Database]" title="Direct link to [Database]" translate="no">​</a></h4>
+<ul>
+<li class="">Adding index to <code>users_workspaces_asset</code>, <code>users_workspaces_document</code> and <code>users_workspaces_object</code> tables on <code>userId</code>, <code>cpath</code> and <code>list</code> to improve permission checks.<br>
+<!-- -->Make sure to run the migration <code>bin/console doctrine:migrations:execute HyperMDM\\Bundle\\CoreBundle\\Migrations\\Version20241114142759</code>.</li>
+<li class="">Added an index on <code>versionCount</code> columns</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="events-1">[Events]<a href="#events-1" class="hash-link" aria-label="Direct link to [Events]" title="Direct link to [Events]" translate="no">​</a></h4>
+<ul>
+<li class=""><code>context</code> property of <code>ResolveUploadTargetEvent</code> is deprecated. Use <code>setArgument()</code> method instead.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="twig-extension-deprecations">[Twig Extension Deprecations]<a href="#twig-extension-deprecations" class="hash-link" aria-label="Direct link to [Twig Extension Deprecations]" title="Direct link to [Twig Extension Deprecations]" translate="no">​</a></h4>
+<ul>
+<li class=""><code>hypermdm_block</code> Twig extension is deprecated. Use <code>hypermdmblock</code> or <code>hypermdmmanualblock</code> instead.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="controllers">[Controllers]<a href="#controllers" class="hash-link" aria-label="Direct link to [Controllers]" title="Direct link to [Controllers]" translate="no">​</a></h4>
+<ul>
+<li class="">Replaced all <code>$request-&gt;get()</code> with their explicit input source.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="dependencies">[Dependencies]<a href="#dependencies" class="hash-link" aria-label="Direct link to [Dependencies]" title="Direct link to [Dependencies]" translate="no">​</a></h4>
+<ul>
+<li class="">Added support to <code>doctrine/orm</code> <code>v3</code> and <code>symfony/webpack-encore-bundle</code> <code>v2</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="wysiwyg-editor">[WYSIWYG-Editor]<a href="#wysiwyg-editor" class="hash-link" aria-label="Direct link to [WYSIWYG-Editor]" title="Direct link to [WYSIWYG-Editor]" translate="no">​</a></h4>
+<ul>
+<li class=""><code>TinyMCE</code> is deprecated for HyperMDM Community edition. Use <code>Quill</code> (<code>hypermdm/quill-bundle</code>) instead.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elements-1">Elements<a href="#elements-1" class="hash-link" aria-label="Direct link to Elements" title="Direct link to Elements" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="assets-2">[Assets]<a href="#assets-2" class="hash-link" aria-label="Direct link to [Assets]" title="Direct link to [Assets]" translate="no">​</a></h4>
+<ul>
+<li class="">Introduced <code>hypermdm.assets.metadata.alt</code>, <code>hypermdm.assets.metadata.copyright</code>, <code>hypermdm.assets.metadata.title</code> configuration to allow defining which metadata should be used when rending the image tag.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="dataobjects-1">[DataObjects]<a href="#dataobjects-1" class="hash-link" aria-label="Direct link to [DataObjects]" title="Direct link to [DataObjects]" translate="no">​</a></h4>
+<ul>
+<li class="">Passing an non-existing or invalid unit when programmatically setting QuantityValue related object types will throw an exception.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1140">HyperMDM 11.4.0<a href="#hypermdm-1140" class="hash-link" aria-label="Direct link to Pimcore 11.4.0" title="Direct link to Pimcore 11.4.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-3">General<a href="#general-3" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="logging">[Logging]<a href="#logging" class="hash-link" aria-label="Direct link to [Logging]" title="Direct link to [Logging]" translate="no">​</a></h4>
+<ul>
+<li class="">Changed log file names. In the <code>dev</code> environment, the file names are now <code>dev-debug.log</code> and <code>dev-error.log</code>. In the <code>prod</code> environment, only <code>prod-error.log</code> is written.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="twig-deferred-extension">[Twig Deferred Extension]<a href="#twig-deferred-extension" class="hash-link" aria-label="Direct link to [Twig Deferred Extension]" title="Direct link to [Twig Deferred Extension]" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>rybakit/twig-deferred-extension</code> dependency and <code>Twig\DeferredExtension\DeferredExtension</code> service.
+If you use deferred twig blocks, please add the dependency to your own <code>composer.json</code> and the service to your own <code>service.yaml</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="twig-extension-deprecations-1">[Twig Extension Deprecations]<a href="#twig-extension-deprecations-1" class="hash-link" aria-label="Direct link to [Twig Extension Deprecations]" title="Direct link to [Twig Extension Deprecations]" translate="no">​</a></h4>
+<ul>
+<li class=""><code>hypermdm_cache</code> Twig extension is deprecated. Use <code>hypermdmcache</code> twig tag instead.</li>
+<li class=""><code>hypermdm_placeholder</code>, <code>hypermdm_head_script</code>, <code>hypermdm_head_style</code>
+<ul>
+<li class=""><code>captureStart()</code> and <code>captureEnd()</code> methods are deprecated. Use native twig <code>set</code> tag instead. Take a look at the related docs of each twig extension for an example.</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="notification">[Notification]<a href="#notification" class="hash-link" aria-label="Direct link to [Notification]" title="Direct link to [Notification]" translate="no">​</a></h4>
+<ul>
+<li class="">Extending notifications for studio adding flag <code>isStudio</code> column and a <code>payload</code> column with according getters and setters.
+Make sure to run the migration <code>bin/console doctrine:migrations:execute HyperMDM\\Bundle\\CoreBundle\\Migrations\\Version20240813085200</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1130">HyperMDM 11.3.0<a href="#hypermdm-1130" class="hash-link" aria-label="Direct link to Pimcore 11.3.0" title="Direct link to Pimcore 11.3.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-4">General<a href="#general-4" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="system-settings">[System Settings]<a href="#system-settings" class="hash-link" aria-label="Direct link to [System Settings]" title="Direct link to [System Settings]" translate="no">​</a></h4>
+<ul>
+<li class="">Unused setting <code>general.language</code> has been deprecated.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="listing">[Listing]<a href="#listing" class="hash-link" aria-label="Direct link to [Listing]" title="Direct link to [Listing]" translate="no">​</a></h4>
+<ul>
+<li class="">The methods <code>setOrder()</code> and <code>setOrderKey()</code> throw an <code>InvalidArgumentException</code> if the parameters are invalid now.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="html-to-image">[Html to Image]<a href="#html-to-image" class="hash-link" aria-label="Direct link to [Html to Image]" title="Direct link to [Html to Image]" translate="no">​</a></h4>
+<ul>
+<li class="">[Gotenberg] Bumped the lowest requirement of <code>gotenberg-php</code> from <code>^2.0</code> to <code>^2.4</code> to add support of passing screenshot size</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="assets-3">[Assets]<a href="#assets-3" class="hash-link" aria-label="Direct link to [Assets]" title="Direct link to [Assets]" translate="no">​</a></h4>
+<ul>
+<li class="">MIME type of uploaded assets get determined by <code>symfony/mime</code>, before in some cases Flysystem got used which resulted in different MIME types for some rarely used file extensions (e.g. STEP).</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="grid">[Grid]:<a href="#grid" class="hash-link" aria-label="Direct link to [Grid]:" title="Direct link to [Grid]:" translate="no">​</a></h4>
+<ul>
+<li class="">Moved grid data related function to <code>admin-classic-ui-bundle</code> <code>v1.5</code>.</li>
+<li class="">Method <code>Service::getHelperDefinitions()</code> is deprecated here and moved to <code>admin-classic-ui-bundle</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="simple-backend-search">[Simple Backend Search]<a href="#simple-backend-search" class="hash-link" aria-label="Direct link to [Simple Backend Search]" title="Direct link to [Simple Backend Search]" translate="no">​</a></h4>
+<ul>
+<li class="">Due to grid data refactoring, please note that in order to run this optional bundle correctly, it is required to install <code>admin-classic-ui-bundle</code> <code>v1.5</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="dbal">[DBAL]<a href="#dbal" class="hash-link" aria-label="Direct link to [DBAL]" title="Direct link to [DBAL]" translate="no">​</a></h4>
+<ul>
+<li class="">Bumped minimum requirement of <code>doctrine/dbal</code> to <code>^3.8</code> and replaced deprecated/unused methods to get closer to support <code>v4</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="composer">[Composer]<a href="#composer" class="hash-link" aria-label="Direct link to [Composer]" title="Direct link to [Composer]" translate="no">​</a></h4>
+<ul>
+<li class="">Removed requirement of "phpoffice/phpspreadsheet" due it being not in used, more specifically moved it to the specific bundle who actually use it. Please check and adapt your project's composer requirement accordingly.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="dependency">[Dependency]<a href="#dependency" class="hash-link" aria-label="Direct link to [Dependency]" title="Direct link to [Dependency]" translate="no">​</a></h4>
+<ul>
+<li class="">Dependencies are now resolved by messenger queue and can be turned off. By default, it is done synchronously, but it's possible to make it async by add the following config:</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">framework</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">messenger</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">transports</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">hypermdm_dependencies</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"doctrine://default?queue_name=hypermdm_dependencies"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">routing</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">'HyperMDM\Messenger\ElementDependenciesMessage'</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> hypermdm_dependencies</span><br></span></code></pre></div></div>
+<p>and disable it by:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">dependency</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">enabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1124--11231--11165">HyperMDM 11.2.4 / 11.2.3.1 / 11.1.6.5<a href="#hypermdm-1124--11231--11165" class="hash-link" aria-label="Direct link to Pimcore 11.2.4 / 11.2.3.1 / 11.1.6.5" title="Direct link to Pimcore 11.2.4 / 11.2.3.1 / 11.1.6.5" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="assets-thumbnails">Assets Thumbnails<a href="#assets-thumbnails" class="hash-link" aria-label="Direct link to Assets Thumbnails" title="Direct link to Assets Thumbnails" translate="no">​</a></h3>
+<ul>
+<li class="">Thumbnail generation for Assets, Documents and Videos now only support the following formats out of the box: <code>'avif', 'eps', 'gif', 'jpeg', 'jpg', 'pjpeg', 'png', 'svg', 'tiff', 'webm', 'webp'</code>.</li>
+<li class="">You can extend this list by adding your formats on the bottom:</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">assets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">thumbnails</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">allowed_formats</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"avif"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"eps"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"gif"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"jpeg"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"jpg"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"pjpeg"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"png"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"svg"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"tiff"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"webm"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"webp"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"pdf"</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic"># Add your desired format here</span><br></span></code></pre></div></div>
+<ul>
+<li class="">High resolution scaling factor for image thumbnails has now been limited to a maximum of <code>5.0</code>. If you need to scale an image more than that, you can use the <code>max_scaling_factor</code> option in the configuration.</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">assets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">thumbnails</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">max_scaling_factor</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">6.0</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1120">HyperMDM 11.2.0<a href="#hypermdm-1120" class="hash-link" aria-label="Direct link to Pimcore 11.2.0" title="Direct link to Pimcore 11.2.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elements-2">Elements<a href="#elements-2" class="hash-link" aria-label="Direct link to Elements" title="Direct link to Elements" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="documents-2">[Documents]:<a href="#documents-2" class="hash-link" aria-label="Direct link to [Documents]:" title="Direct link to [Documents]:" translate="no">​</a></h4>
+<ul>
+<li class="">Using <code>outputFormat</code> config for <code>HyperMDM\Model\Document\Editable\Date</code> editable is deprecated, use <code>outputIsoFormat</code> config instead.</li>
+<li class="">Service <code>HyperMDM\Document\Renderer\DocumentRenderer</code> is deprecated, use <code>HyperMDM\Document\Renderer\DocumentRendererInterface</code> instead.</li>
+<li class="">Page previews and version comparisons can now be rendered using Gotenberg v8.
+To replace Headless Chrome, upgrade to Gotenberg v8 and upgrade the client library: <code>composer require gotenberg/gotenberg-php:^2</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-objects">[Data Objects]:<a href="#data-objects" class="hash-link" aria-label="Direct link to [Data Objects]:" title="Direct link to [Data Objects]:" translate="no">​</a></h4>
+<ul>
+<li class="">Methods <code>getAsIntegerCast()</code> and <code>getAsFloatCast()</code> of the <code>HyperMDM\Model\DataObject\Data</code> class are deprecated now.</li>
+<li class="">All algorithms other than<code>password_hash</code> used in Password Data Type are now deprecated, please use <code>password_hash</code> instead.</li>
+<li class=""><code>MultiSelectOptionsProviderInterface</code> is deprecated, please use <code>SelectOptionsProviderInterface</code> instead.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-5">General<a href="#general-5" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="localization">[Localization]<a href="#localization" class="hash-link" aria-label="Direct link to [Localization]" title="Direct link to [Localization]" translate="no">​</a></h4>
+<ul>
+<li class="">Services <code>HyperMDM\Localization\LocaleService</code> and <code>hypermdm.locale</code> are deprecated, use <code>HyperMDM\Localization\LocaleServiceInterface</code> instead.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="navigation-1">[Navigation]<a href="#navigation-1" class="hash-link" aria-label="Direct link to [Navigation]" title="Direct link to [Navigation]" translate="no">​</a></h4>
+<ul>
+<li class="">Add rootCallback option to <code>HyperMDM\Navigation\Builder::getNavigation()</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="symfony">[Symfony]<a href="#symfony" class="hash-link" aria-label="Direct link to [Symfony]" title="Direct link to [Symfony]" translate="no">​</a></h4>
+<ul>
+<li class="">Bumped Symfony packages to "^6.4".</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="value-objects">[Value Objects]<a href="#value-objects" class="hash-link" aria-label="Direct link to [Value Objects]" title="Direct link to [Value Objects]" translate="no">​</a></h4>
+<ul>
+<li class="">Added new self validating Value Objects:<!-- -->
+<ul>
+<li class=""><code>HyperMDM\ValueObject\String\Path</code></li>
+<li class=""><code>HyperMDM\ValueObject\Integer\PositiveInteger</code></li>
+<li class=""><code>HyperMDM\ValueObject\Collection\ArrayOfBoolean</code></li>
+<li class=""><code>HyperMDM\ValueObject\Collection\ArrayOfIntegers</code></li>
+<li class=""><code>HyperMDM\ValueObject\Collection\ArrayOfPositiveIntegers</code></li>
+<li class=""><code>HyperMDM\ValueObject\Collection\ArrayOfStrings</code></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>[!WARNING]<br>
+<!-- -->For <a href="https://github.com/pimcore/pimcore/issues/16638" target="_blank" rel="noopener noreferrer" class="">environment variable consistency purposes</a> in boostrap, please fix <code>public/index.php</code> in project root by moving <code>Bootstrap::bootstrap();</code> just above <code>$kernel = Bootstrap::kernel()</code> line instead of outside the closure.
+Alternatively can be fixed by appling this <a href="https://patch-diff.githubusercontent.com/raw/pimcore/skeleton/pull/183.patch" target="_blank" rel="noopener noreferrer" class="">patch</a></p>
+<p>You may also need to adjust your <code>bin/console</code> to the latest version of the skeleton: <a href="https://github.com/pimcore/skeleton/blob/2025.x/bin/console" target="_blank" rel="noopener noreferrer" class="">https://github.com/hypermdm/skeleton/blob/2025.x/bin/console</a></p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1110">HyperMDM 11.1.0<a href="#hypermdm-1110" class="hash-link" aria-label="Direct link to Pimcore 11.1.0" title="Direct link to Pimcore 11.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elements-3">Elements<a href="#elements-3" class="hash-link" aria-label="Direct link to Elements" title="Direct link to Elements" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="all">[All]:<a href="#all" class="hash-link" aria-label="Direct link to [All]:" title="Direct link to [All]:" translate="no">​</a></h4>
+<ul>
+<li class="">Properties are now only updated in the database with dirty state (when calling <code>setProperties</code> or <code>setProperty</code>).</li>
+<li class="">Added hint for second parameter <code>array $params = []</code> to <code>Element/ElementInterface::getById</code></li>
+<li class=""><code>HyperMDM\Helper\CsvFormulaFormatter</code> has been deprecated. Use <code>League\Csv\EscapeFormula</code> instead.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="assets-4">[Assets]:<a href="#assets-4" class="hash-link" aria-label="Direct link to [Assets]:" title="Direct link to [Assets]:" translate="no">​</a></h4>
+<ul>
+<li class="">Asset Documents background processing (e.g. page count, thumbnails &amp; search text) can be disabled with config:<!-- -->
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">assets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">document</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">thumbnails</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">enabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">#disable generating thumbnail for Asset Documents</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">process_page_count</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">#disable processing page count</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">process_text</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">#disable processing text extraction</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">scan_pdf</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">#disable scanning PDF documents for unsafe JavaScript.</span><br></span></code></pre></div></div>
+</li>
+<li class="">Video Assets spherical metadata is now calculated in the backfground instead of on load.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-objects-1">[Data Objects]:<a href="#data-objects-1" class="hash-link" aria-label="Direct link to [Data Objects]:" title="Direct link to [Data Objects]:" translate="no">​</a></h4>
+<ul>
+<li class="">Property <code>$fieldtype</code> of the <code>HyperMDM\Model\DataObject\Data</code> class is deprecated now. Use the <code>getFieldType()</code> method instead.</li>
+<li class="">Method <code>getSiblings()</code> output is now sorted based on the parent sorting parameters (same as <code>getChildren</code>) instead of alphabetical.</li>
+<li class="">Input fields <code>CheckValidity</code> checks the column length.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="documents-3">[Documents]:<a href="#documents-3" class="hash-link" aria-label="Direct link to [Documents]:" title="Direct link to [Documents]:" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>allow list</code> filter from <code>HyperMDM\Model\Document\Editable\Link</code> to allow passing any valid attributes in the config.</li>
+<li class="">Property <code>HyperMDM\Navigation\Page::$_defaultPageType</code> is deprecated.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-6">General<a href="#general-6" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="authentication">[Authentication]:<a href="#authentication" class="hash-link" aria-label="Direct link to [Authentication]:" title="Direct link to [Authentication]:" translate="no">​</a></h4>
+<p>The tokens for password reset are now stored in the DB and are one time use only (gets expired whenever a new one is generated or when consumed).</p>
+<ul>
+<li class="">[Static Page Generator]: Static pages can be generated based on sub-sites main domain using below config:<!-- -->
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">documents</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">static_page_router</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">use_main_domain</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">#generates pages in path /public/var/tmp/pages/my-domain.com/en.html</span><br></span></code></pre></div></div>
+<!-- -->and adapting NGINX config:<!-- -->
+<div class="language-nginx codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-nginx codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">map $args $static_page_root {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    default                                 /var/tmp/pages/$host;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "~*(^|&amp;)hypermdm_editmode=true(&amp;|$)"     /var/nonexistent;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "~*(^|&amp;)hypermdm_preview=true(&amp;|$)"      /var/nonexistent;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "~*(^|&amp;)hypermdm_version=[^&amp;]+(&amp;|$)"     /var/nonexistent;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">map $uri $static_page_uri {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    default                                 $uri;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "/"                                     /%home;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="core-cache-handler">[Core Cache Handler]:<a href="#core-cache-handler" class="hash-link" aria-label="Direct link to [Core Cache Handler]:" title="Direct link to [Core Cache Handler]:" translate="no">​</a></h4>
+<ul>
+<li class="">Remove redundant cache item tagging with own key.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="installer-1">[Installer]:<a href="#installer-1" class="hash-link" aria-label="Direct link to [Installer]:" title="Direct link to [Installer]:" translate="no">​</a></h4>
+<ul>
+<li class="">Passing <code>--install-bundles</code> as empty option now installs the required bundles.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="maintenance-mode">[Maintenance Mode]:<a href="#maintenance-mode" class="hash-link" aria-label="Direct link to [Maintenance Mode]:" title="Direct link to [Maintenance Mode]:" translate="no">​</a></h4>
+<ul>
+<li class="">Maintenance mode check is handled via <code>tmp_store</code> in database. Using maintenance mode files is deprecated.</li>
+<li class="">Deprecated following maintenance-mode methods in <code>HyperMDM\Tool\Admin</code>:<!-- -->
+<ul>
+<li class=""><code>activateMaintenanceMode</code>, use <code>MaintenanceModeHelperInterface::activate</code> instead.</li>
+<li class=""><code>deactivateMaintenanceMode</code>, use <code>MaintenanceModeHelperInterface::deactivate</code> instead.</li>
+<li class=""><code>isInMaintenanceMode</code>, use `MaintenanceModeHelperInterface::isActive instead.</li>
+<li class=""><code>isMaintenanceModeScheduledForLogin</code>, <code>scheduleMaintenanceModeOnLogin</code>, <code>unscheduleMaintenanceModeOnLogin</code> will be removed in HyperMDM 12.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1107">HyperMDM 11.0.7<a href="#hypermdm-1107" class="hash-link" aria-label="Direct link to Pimcore 11.0.7" title="Direct link to Pimcore 11.0.7" translate="no">​</a></h2>
+<ul>
+<li class="">Putting <code>null</code> to the <code>HyperMDM\Model\DataObject\Data::setIndex()</code> method is deprecated now. Only booleans are allowed.</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1100">HyperMDM 11.0.0<a href="#hypermdm-1100" class="hash-link" aria-label="Direct link to Pimcore 11.0.0" title="Direct link to Pimcore 11.0.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="api">API<a href="#api" class="hash-link" aria-label="Direct link to API" title="Direct link to API" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-">[General] :<a href="#general-" class="hash-link" aria-label="Direct link to [General] :" title="Direct link to [General] :" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Attention:</strong> Added native php types for argument types, property types, return types and strict type declaration where possible. Double check your classes which are extending from HyperMDM classes and adapt if necessary.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="bootstrap-">[Bootstrap] :<a href="#bootstrap-" class="hash-link" aria-label="Direct link to [Bootstrap] :" title="Direct link to [Bootstrap] :" translate="no">​</a></h4>
+<ul>
+<li class="">Relying on <code>HyperMDM\Bootstrap::bootstrap()</code> for autoloading classes will not work anymore.</li>
+<li class="">Removed unused constant <code>HYPERMDM_APP_BUNDLE_CLASS_FILE</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="events-">[Events] :<a href="#events-" class="hash-link" aria-label="Direct link to [Events] :" title="Direct link to [Events] :" translate="no">​</a></h4>
+<ul>
+<li class="">Event <code>hypermdm.element.note.postAdd</code> has been removed. Use <code>hypermdm.note.postAdd</code> instead. Note: The event type changed from <code>ElementEvent</code> to <code>ModelEvent</code>.</li>
+<li class="">Report Event <code>hypermdm.admin.reports.save_settings</code> has been renamed to <code>hypermdm.reports.save_settings</code>.</li>
+<li class="">Moved <code>SEARCH_LIST_BEFORE_FILTER_PREPARE</code>, <code>SEARCH_LIST_BEFORE_LIST_LOAD</code>, <code>SEARCH_LIST_AFTER_LIST_LOAD</code>, <code>QUICKSEARCH_LIST_BEFORE_LIST_LOAD</code> and <code>QUICKSEARCH_LIST_AFTER_LIST_LOAD</code> events from <code>HyperMDM\Bundle\AdminBundle\Event\AdminEvents</code> to <code>HyperMDM\Bundle\SimpleBackendSearchBundle\Event\AdminSearchEvents</code>.</li>
+<li class=""><code>AdminEvents::ELEMENT_PERMISSION_IS_ALLOWED</code> has been renamed to <code>HyperMDM\Event\ElementEvents::ELEMENT_PERMISSION_IS_ALLOWED</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="installer-">[Installer] :<a href="#installer-" class="hash-link" aria-label="Direct link to [Installer] :" title="Direct link to [Installer] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>--ignore-existing-config</code> option from the <code>hypermdm:install</code> command. The <code>system.yaml</code> file is not used anymore and therefore this flag became obsolete.</li>
+<li class="">Changed the return type of <code>HyperMDM\Extension\Bundle\Installer\InstallerInterface::getOutput</code> to <code>BufferedOutput | NullOutput</code>.</li>
+<li class="">Adding <code>BundleSetupEvent</code> Event. Bundles that are available for installation can be customized in the installing process via an Eventlistener or EventSubscriber.</li>
+<li class="">Bundles can be added and removed. You can set a flag if you want to recommend the bundle.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="logging-">[Logging] :<a href="#logging-" class="hash-link" aria-label="Direct link to [Logging] :" title="Direct link to [Logging] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed constant <code>HYPERMDM_PHP_ERROR_LOG</code></li>
+<li class="">Bumped <code>monolog/monolog</code> to <a href="https://github.com/Seldaek/monolog/blob/main/UPGRADE.md#300" target="_blank" rel="noopener noreferrer" class="">^3.2</a> and <code>symfony/monolog-bundle</code> to <a href="https://github.com/symfony/monolog-bundle/blob/master/CHANGELOG.md#380-2022-05-10" target="_blank" rel="noopener noreferrer" class="">^3.8</a> (which adds support for monolog v3). Please adapt your custom implementation accordingly, eg. log records are now <code>LogRecord</code> Objects instead of array.</li>
+<li class="">Removed the ability to use the <code>hypermdm_log</code> GET parameter.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="miscellaneous-">[Miscellaneous] :<a href="#miscellaneous-" class="hash-link" aria-label="Direct link to [Miscellaneous] :" title="Direct link to [Miscellaneous] :" translate="no">​</a></h4>
+<ul>
+<li class="">Marked <code>HyperMDM\Model\User\AbstractUser</code> and <code>HyperMDM\Model\User\UserRole</code> classes as abstract.</li>
+<li class="">Marked <code>HyperMDM\File</code> as internal. This class shouldn't be used anymore, use <code>Symfony\Component\Filesystem</code> instead.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-removed-api-features-">[Further Removed API Features] :<a href="#further-removed-api-features-" class="hash-link" aria-label="Direct link to [Further Removed API Features] :" title="Direct link to [Further Removed API Features] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>getChilds</code>, <code>setChilds</code> and <code>hasChild</code> use <code>getChildren</code>, <code>setChildren</code> and <code>hasChildren</code> instead.</li>
+<li class="">Removed PhpArrayTable class</li>
+<li class="">Removed deprecated <code>PhpArrayFileTable</code>.</li>
+<li class="">Removed <code>HyperMDM\Db\Helper::insertOrUpdate()</code> method, please use <code>HyperMDM\Db\Helper::upsert()</code> instead.</li>
+<li class="">Removed deprecated <code>HyperMDM\Db\ConnectionInterface</code> interface, <code>HyperMDM\Db\Connection</code> class and <code>HyperMDM\Db\HyperMDMExtensionsTrait</code> trait.</li>
+<li class="">Removed <code>JsonListing</code>, please see <a href="https://github.com/pimcore/pimcore/pull/12877" target="_blank" rel="noopener noreferrer" class="">#12877</a> for details.</li>
+<li class="">Deprecated MissingDependencyException has been removed.</li>
+<li class="">Removed deprecated getMasterRequest() in favor of getMainRequest().</li>
+<li class="">Removed the deprecated method <code>Kernel::getRootDir()</code>, use <code>Kernel::getProjectDir()</code> instead.</li>
+<li class="">Removed methods <code>HyperMDM\Tool\Admin::isExtJS6()</code>, <code>\HyperMDM\Tool\Admin::getLanguageFile()</code>, <code>\HyperMDM\Tool::exitWithError()</code>.</li>
+<li class="">Removed the following methods from <code>HyperMDM\File</code>: <code>mkdir</code>, <code>put</code>, <code>getFileExtension</code>, <code>setDefaultMode</code>, <code>getDefaultMode</code>, <code>setDefaultFlags</code> and <code>rename</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-relevant-third-party-dependency-upgrades-">[Further relevant Third Party Dependency Upgrades] :<a href="#further-relevant-third-party-dependency-upgrades-" class="hash-link" aria-label="Direct link to [Further relevant Third Party Dependency Upgrades] :" title="Direct link to [Further relevant Third Party Dependency Upgrades] :" translate="no">​</a></h4>
+<ul>
+<li class="">Bumped <code>friendsofsymfony/jsrouting-bundle</code> to version <code>^3.2.1</code></li>
+<li class="">Bumped Symfony packages to "^6.2".</li>
+<li class="">Cleanup unused Symfony packages from composer.json, eg. <code>form</code>, <code>web-link</code>, see also <a href="https://github.com/pimcore/pimcore/pull/13097" target="_blank" rel="noopener noreferrer" class="">#13097</a></li>
+<li class="">Bumped <code>mjaschen/phpgeo</code> to "^4.0".</li>
+<li class="">Bumped <code>codeception/codeception</code> version to ^5.0. Now, HyperMDM is using a new directory structure for tests (Codeception 5 directory structure). For details, please see <a href="https://github.com/pimcore/pimcore/pull/13415" target="_blank" rel="noopener noreferrer" class="">#13415</a></li>
+<li class="">Bumped <code>matomo/device-detector</code> to ^6.0.</li>
+<li class="">Bumped minimum requirement of <code>presta\sitemap-bundle</code> to <code>^3.3</code>, dropped support for <code>v2</code> and removed related BC Layer.</li>
+<li class="">Bumped <code>league/flysystem-bundle</code> minimum requirement to ^3.0 (which introduces <code>directoryExists()</code>,<code>has()</code> methods and fixes support for <code>directory_visibility</code> configuration option). Please bump the Flysystem Adapters requirement accordingly to <code>^3.0</code> in your project <code>composer.json</code>.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="admin-ui">Admin UI<a href="#admin-ui" class="hash-link" aria-label="Direct link to Admin UI" title="Direct link to Admin UI" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="general--1">[General] :<a href="#general--1" class="hash-link" aria-label="Direct link to [General] :" title="Direct link to [General] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>adminer</code> as built-in database management tool.</li>
+<li class="">Removed deprecated Admin Event classes: <code>HyperMDM\Event\Admin\*</code>, <code>HyperMDM\Event\AdminEvents</code>, <code>HyperMDM\Event\Model\*</code>.</li>
+<li class="">Changed the navigation building process. It is easier to add main and submenus. For details please see <a href="https://pimcore.com/docs/platform/Pimcore/Extending_Pimcore/Bundle_Developers_Guide/Event_Listener_UI#adding-custom-main-navigation-items" target="_blank" rel="noopener noreferrer" class="">Adding Custom Main Navigation Items</a></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="authentication-">[Authentication] :<a href="#authentication-" class="hash-link" aria-label="Direct link to [Authentication] :" title="Direct link to [Authentication] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed support old authentication system</li>
+<li class="">Removed BruteforceProtection, use Symfony defaults now</li>
+<li class="">Removed PreAuthenticatedAdminToken</li>
+<li class="">Admin Login Events<!-- -->
+<ul>
+<li class="">Removed <code>AdminEvents::LOGIN_CREDENTIALS</code> (<code>hypermdm.admin.login.credentials</code>) event. Use <code>HyperMDM\Bundle\AdminBundle\Event\Login\LoginCredentialsEvent</code> instead.</li>
+<li class="">Removed <code>AdminEvents::LOGIN_FAILED</code> (<code>hypermdm.admin.login.failed</code>) event. Use <code>Symfony\Component\HttpFoundation\Request\LoginFailureEvent</code> instead.</li>
+</ul>
+</li>
+<li class="">Removed HyperMDM Password Encoder factory, <code>hypermdm_admin.security.password_encoder_factory</code> service and <code>hypermdm.security.factory_type</code> config.</li>
+<li class="">Removed deprecated method <code>HyperMDM\Bundle\AdminBundle\Security\User::getUsername()</code>, use <code>getIdentifier()</code> instead.</li>
+<li class="">Deprecated method <code>HyperMDM\Tool\Authentication::authenticateHttpBasic()</code> has been removed.</li>
+<li class="">Deprecated method <code>HyperMDM\Tool\Authentication::authenticatePlaintext()</code> has been removed.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="js-">[JS] :<a href="#js-" class="hash-link" aria-label="Direct link to [JS] :" title="Direct link to [JS] :" translate="no">​</a></h4>
+<ul>
+<li class="">Packaged some JS libraries with encore</li>
+<li class="">Removed deprecated JS functions (<code>ts()</code> and <code>hypermdm.helpers.addCsrfTokenToUrl()</code>)</li>
+<li class="">Removed Plugin Broker BC layer for JS events</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="security-">[Security] :<a href="#security-" class="hash-link" aria-label="Direct link to [Security] :" title="Direct link to [Security] :" translate="no">​</a></h4>
+<ul>
+<li class="">Enabled Content Security Policy by default.</li>
+<li class="">Implemented Symfony HTML sanitizer for WYSIWYG editors. Please make sure to sanitize your persisted data with help of this <a href="https://gist.github.com/dvesh3/0e585a16dfbf546bc17a9eef1c5640b3" target="_blank" rel="noopener noreferrer" class="">script</a>.
+Also, when using API to set WYSIWYG data, please pass encoded characters for html entities <code>&lt;</code>,<code>&gt;</code>, <code>&amp;</code> etc.
+The data is encoded by the sanitizer before persisting into db and the same encoded data will be returned by the API. For configuration details see also <a class="" href="../../Documents/Templates/Editables/WYSIWYG/index.html#extending-symfony-html-sanitizer-configuration">WYSIWYG config</a></li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundles">Bundles<a href="#bundles" class="hash-link" aria-label="Direct link to Bundles" title="Direct link to Bundles" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundles-general-">[Bundles General] :<a href="#bundles-general-" class="hash-link" aria-label="Direct link to [Bundles General] :" title="Direct link to [Bundles General] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed support for loading bundles through <code>extensions.php</code>.</li>
+<li class="">Removed Extension Manager(<code>Tools -&gt; Bundles &amp; Bricks</code> option) from Admin UI.</li>
+<li class="">Removed commands: <code>hypermdm:bundle:enable</code>, <code>hypermdm:bundle:disable</code>.</li>
+<li class="">Removed <code>dontCheckEnabled</code> config support from Areablock editable.</li>
+<li class="">The default behaviour of asset install and <code>Composer::installAssets</code> is changed, which means that the files (like css, js) will be copied instead of symlinked. So, you have to run the command <code>bin/console assets:install</code> for every change. Behavior can be adapted in <code>composer.json</code> as follows:</li>
+</ul>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">"extra": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "symfony-assets-install": "relative"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="extracted-core-functionality-">[Extracted Core Functionality] :<a href="#extracted-core-functionality-" class="hash-link" aria-label="Direct link to [Extracted Core Functionality] :" title="Direct link to [Extracted Core Functionality] :" translate="no">​</a></h4>
+<ul>
+<li class="">
+<p>Functionality that was moved into its own bundle inside hypermdm/hypermdm repository and needs to be enabled during HyperMDM install or in <code>config/bundles.php</code>:</p>
+<ul>
+<li class="">
+<p>[Application Logger] Application logger has been moved into <code>HyperMDMApplicationLoggerBundle</code>. Please pay attention to the new namespaces for the classes from this bundle.</p>
+</li>
+<li class="">
+<p>[CustomReports] have been moved into HyperMDMCustomReportsBundle</p>
+<ul>
+<li class="">Config <code>hypermdm:custom_reports</code> has been removed, please use <code>hypermdm_custom_reports:</code> in the HyperMDMCustomReportsBundle insteand.</li>
+</ul>
+</li>
+<li class="">
+<p>[Glossary] has been moved into HyperMDMGlossaryBundle</p>
+<ul>
+<li class=""><code>hypermdmglossary()</code> tag has been removed, please use the <code>hypermdm_glossary</code> twig filter.<!-- -->
+<ul>
+<li class="">Config <code>hypermdm:glossary</code> has been removed, please use <code>hypermdm_glossary:</code> in the HyperMDMGlossaryBundle instead.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="">
+<p>[Search] has been moved into HyperMDMSimpleBackendSearchBundle</p>
+<ul>
+<li class="">The search functionality has been extracted to its own bundle (<code>HyperMDMSimpleBackendSearchBundle</code>)</li>
+<li class="">The <code>hypermdm:search-backend-reindex</code> command has been moved to the search bundle</li>
+<li class="">Search icons all over HyperMDM won't be available without the search bundle</li>
+<li class="">The inline search feature for some relations won't be available without the search bundle</li>
+<li class="">The "advanced" GDPR search has also been moved. We provide a basic search to cover the fundamental functionality if the search bundle isn't available.</li>
+<li class="">The asset, object, document and quick search have been moved to the search bundle</li>
+<li class="">All backend-search related files have been moved to the search bundle (please check custom implementations if you rely on any backend-search component!)</li>
+<li class="">Added additional messenger transport for backend search (<code>hypermdm_search_backend_message</code>)</li>
+<li class="">Moved <code>FullTextIndexOptimizeTask</code> command to SimpleBackendSearchBundle. According to that the namespace changed from <code>HyperMDM\Maintenance\Tasks\FullTextIndexOptimizeTask</code> to <code>HyperMDM\Bundle\SimpleBackendSearchBundle\Task\Maintenance\FullTextIndexOptimizeTask</code>.</li>
+</ul>
+</li>
+<li class="">
+<p>[SEO] Document Editor, Redirects, Sitemaps, robots.txt and HTTP Errors has been moved into HyperMDMSeoBundle</p>
+</li>
+<li class="">
+<p>[Staticroutes] has been moved into HyperMDMStaticRoutesBundle - Config <code>hypermdm:staticroutes:</code> has been removed, please use <code>hypermdm_static_routes:</code> in the HyperMDMStaticRoutesBundle instead.</p>
+<ul>
+<li class="">
+<p>[UUID] has been moved into HyperMDMUuidBundle</p>
+<ul>
+<li class="">Config <code>hypermdm:general:instance_identifier</code> has been removed, please use <code>hypermdm_uuid:instance_identifier</code> in the HyperMDMUuidBundle instead. Please run <code>bin/console config:dump hypermdm_uuid</code> to see more about the instance identifier config after installing the bundle.</li>
+</ul>
+</li>
+<li class="">
+<p>[WordExport] has been moved into HyperMDMWordExportBundle</p>
+</li>
+</ul>
+</li>
+<li class="">
+<p>[Xliff Translation] Import/Export and related Events have been moved into HyperMDMXliffBundle. Please check and adapt the Events' namespaces.</p>
+</li>
+<li class="">
+<p>[WYSIWYG-Editor] The default editor changed from <code>CKEditor</code> to <code>TinyMCE</code> and has been moved into HyperMDMTinymceBundle. Please adapt custom configuration and <a href="https://pimcore.com/docs/platform/Pimcore/Documents/Editables/WYSIWYG#extending-symfony-html-sanitizer-configuration" target="_blank" rel="noopener noreferrer" class="">extend</a> the html sanitizer for supporting the required html elements in wysiwyg editor.</p>
+</li>
+</ul>
+</li>
+<li class="">
+<p>Functionality that was moved into its own bundle and own repository and needs to installed via composer as well as activated in <code>config/bundles.php</code>:</p>
+<ul>
+<li class="">[AdminBundle] Admin Bundle has been moved to <code>hypermdm/admin-ui-classic-bundle</code> package.<!-- -->
+<ul>
+<li class="">Please require in your project composer.json file and register the bundle in Kernel:<!-- -->
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">registerBundlesToCollection</span><span class="token punctuation" style="color:#393A34">(</span><span class="token class-name type-declaration">BundleCollection</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$collection</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword return-type" style="color:#00009f">void</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">// hypermdm bundles</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token variable" style="color:#36acaa">$collection</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">addBundle</span><span class="token punctuation" style="color:#393A34">(</span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">HyperMDM</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">Bundle</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">AdminBundle</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">HyperMDMAdminBundle</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">HyperMDMAdminBundle</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">60</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<ul>
+<li class="">Removed deprecated methods <code>getTranslator()</code>, <code>getBundleManager()</code> and <code>getTokenResolver()</code> from the <code>HyperMDM\Bundle\AdminBundle\Controller\AdminController</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="">[System Info &amp; Tools] Php Info and Opcache Status has been moved into <code>hypermdm/system-info-bundle</code> package.</li>
+<li class="">[File Explorer] System File explorer has been moved to <code>hypermdm/file-explorer-bundle</code> package.</li>
+<li class="">[Web2Print] has been moved to <code>hypermdm/web-to-print-bundle</code> package.<!-- -->
+<ul>
+<li class="">Config <code>hypermdm:documents:web_to_print</code> has been removed, please use <code>hypermdm_web_to_print</code> in the HyperMDMWebToPrintBundle instead.</li>
+<li class="">Print related Events have been moved into HyperMDMWebToPrintBundle. Please check and adapt the Events' namespaces.</li>
+<li class="">Deprecated HeadlessChrome Processor has been removed. Please use Chromium Processor instead.</li>
+<li class="">Deprecated WkHtmlToPdf Processor has been removed.</li>
+<li class="">Introducing Web2print processor <code>Chromium</code> that use <code>chrome-php/chrome</code> (same as the page previews), as replacement of HeadlessChrome processor which required NodeJS.</li>
+</ul>
+</li>
+<li class="">[Personalization and targeting] has been moved to <code>hypermdm/personalization</code> package.<!-- -->
+<ul>
+<li class="">Config <code>hypermdm:targeting:</code> has been removed, please use <code>hypermdm_personalization.targeting</code> in the HyperMDMPersonalizationBundle instead.</li>
+<li class="">Targeting is now using the opt-in approach and will not be enabled by default. Add following config to enable it:</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_personalization</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">targeting</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">enabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><br></span></code></pre></div></div>
+</li>
+<li class="">[Google Marketing] has been moved to <code>hypermdm/google-marketing-bundle</code> package.<!-- -->
+<ul>
+<li class="">Config <code>hypermdm:services:google</code> has been removed, please use <code>hypermdm_google_marketing</code> in the HyperMDMGoogleMarketingBundle instead.</li>
+<li class="">[Google] Classes Google\Cse and Google\Cse\Item have been removed.</li>
+</ul>
+</li>
+<li class="">[Newsletter] has been moved to <code>hypermdm/newsletter-bundle</code> package.<!-- -->
+<ul>
+<li class="">Config <code>hypermdm:newsletter</code> has been removed, please use <code>hypermdm_newsletter</code> in the HyperMDMNewsletterBundle instead.</li>
+<li class="">Newsletter related Events have been moved into HyperMDMNewsletterBundle. Please check and adapt the Events' namespaces.</li>
+<li class="">Service ids changed from <code>hypermdm.newsletter</code> to <code>hypermdm_newsletter</code> e.g. <code>hypermdm_newsletter.document.newsletter.factory.default</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="core">Core<a href="#core" class="hash-link" aria-label="Direct link to Core" title="Direct link to Core" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="commands-">[Commands] :<a href="#commands-" class="hash-link" aria-label="Direct link to [Commands] :" title="Direct link to [Commands] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>webmozarts/console-parallelization</code> dependency to make parallelization optional. If you still want to use parallelization for console commands, please add the dependency to your own <code>composer.json</code>.</li>
+<li class="">Removed the deprecated <code>Parallelization::configureParallelization()</code> method.</li>
+<li class="">Removed the deprecated trait <code>ConsoleCommandPluginTrait</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-">[Configuration] :<a href="#configuration-" class="hash-link" aria-label="Direct link to [Configuration] :" title="Direct link to [Configuration] :" translate="no">​</a></h4>
+<ul>
+<li class=""><code>HyperMDM\Config\Config</code> has been removed, see <a href="https://github.com/pimcore/pimcore/issues/12477" target="_blank" rel="noopener noreferrer" class="">#12477</a>. Please use the returned array instead, e.g.<!-- -->
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token variable" style="color:#36acaa">$web2printConfig</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token class-name static-context">Config</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">getWeb2PrintConfig</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$web2printConfig</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$web2printConfig</span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'chromiumSettings'</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+</li>
+<li class="">Removed legacy callback from LocationAwareConfigRepository. Therefore, configurations in the old php file format are not supported anymore.</li>
+<li class="">Removed setting write targets and storage directory in the environment file. Instead, use the symfony config.</li>
+<li class="">Renamed default directories from <code>image-thumbnails</code> and <code>video-thumbnails</code> to <code>image_thumbnails</code> and <code>video_thumbnails</code>.</li>
+<li class="">Removed deprecated services/aliases: <code>HyperMDM\Templating\Renderer\TagRenderer</code>, <code>hypermdm.cache.adapter.pdo</code>, <code>hypermdm.cache.adapter.pdo_tag_aware</code></li>
+<li class="">Rename config files from <code>*.yml</code> to <code>*.yaml</code>. Note that we now use <code>system_settings.yaml</code> as config file and not <code>system.yml</code></li>
+<li class="">System Settings are now implementing the LocationAwareConfigRepository.</li>
+<li class="">The config node <code>hypermdm.admin</code> and related parameters are moved to AdminBundle directly under <code>hypermdm_admin</code> node. Please adapt your parameter usage accordingly eg. instead of <code>hypermdm.admin.unauthenticated_routes</code>, it should be <code>hypermdm_admin.unauthenticated_routes</code></li>
+<li class="">The deprecated config node <code>hypermdm.error_handling</code> and the related parameter <code>hypermdm.response_exception_listener.render_error_document</code> was removed.</li>
+<li class="">Moved <code>hide_edit_image</code> &amp; <code>disable_tree_preview</code> configs from <code>hypermdm</code> to <code>hypermdm_admin</code> section.</li>
+<li class="">Recommended and default format for storing the valid languages in <code>system_settings.yaml</code> is now an array, for example:<!-- -->
+<ul>
+<li class="">en</li>
+<li class="">de</li>
+</ul>
+</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">general</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">valid_languages</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> en</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> de</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="corebundle-">[CoreBundle] :<a href="#corebundle-" class="hash-link" aria-label="Direct link to [CoreBundle] :" title="Direct link to [CoreBundle] :" translate="no">​</a></h4>
+<ul>
+<li class="">Please update CoreBundle config resource path from <code>@HyperMDMCoreBundle/Resources/config/...</code> to <code>@HyperMDMCoreBundle/config/..</code> in your project configurations.</li>
+<li class="">Priority of <code>HyperMDMCoreBundle</code> has been changed to <code>-10</code> to make sure that it is loaded after default bundles.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="environment-">[Environment] :<a href="#environment-" class="hash-link" aria-label="Direct link to [Environment] :" title="Direct link to [Environment] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>symfony/dotenv</code> dependency to make loading of <code>.env</code> files optional. please add the requirement to your composer.json, if you still want to use <code>.env</code> files.</li>
+<li class="">Removed <code>HYPERMDM_SKIP_DOTENV_FILE</code> environment var support. You still can use environment specific file like <code>.env.test</code> or <code>.env.prod</code> for environment specific environment variables.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="gotenberg-">[Gotenberg] :<a href="#gotenberg-" class="hash-link" aria-label="Direct link to [Gotenberg] :" title="Direct link to [Gotenberg] :" translate="no">​</a></h4>
+<ul>
+<li class="">Introducing support for <a href="https://gotenberg.dev/" target="_blank" rel="noopener noreferrer" class="">Gotenberg</a> as PDF generation, conversion, merge etc.. tool</li>
+<li class="">[Asset] Added adapter (as alternative to LibreOffice) for preview generation of supported document type assets and set it as default adapter.</li>
+<li class="">[Web2Print] Added settings option, configuration and processor for PDF preview and generation</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="maintenance-">[Maintenance] :<a href="#maintenance-" class="hash-link" aria-label="Direct link to [Maintenance] :" title="Direct link to [Maintenance] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>--async</code> &amp; <code>--force</code> option from <code>hypermdm:maintenance</code> command. Please make sure to setup to <code>messenger:consume hypermdm_maintenance</code> independent</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="migrations-">[Migrations] :<a href="#migrations-" class="hash-link" aria-label="Direct link to [Migrations] :" title="Direct link to [Migrations] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>executeMigrationsUp</code> from <code>HyperMDM\Composer</code>.</li>
+<li class="">HyperMDM does not run core migrations after <code>composer</code> update automatically anymore.
+Make sure that migrations are executed by running the command <code>bin/console doctrine:migrations:migrate --prefix=HyperMDM\\Bundle\\CoreBundle</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="naming-">[Naming] :<a href="#naming-" class="hash-link" aria-label="Direct link to [Naming] :" title="Direct link to [Naming] :" translate="no">​</a></h4>
+<ul>
+<li class="">Renamed master, blacklist and whitelist to main, blocklist, allowlist</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="permissions-">[Permissions] :<a href="#permissions-" class="hash-link" aria-label="Direct link to [Permissions] :" title="Direct link to [Permissions] :" translate="no">​</a></h4>
+<ul>
+<li class="">Permission for DataObjects Classes has been structured in a more granular way to have more control. Field collections, objects bricks, classification stores and quantity value units now have their own permission.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="sessions-">[Sessions] :<a href="#sessions-" class="hash-link" aria-label="Direct link to [Sessions] :" title="Direct link to [Sessions] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed AdminSessionHandler and AdminSessionListener. The session is now handled by Symfony.</li>
+<li class="">Removed <code>SessionConfiguratorInterface</code> &amp; <code>SessionConfigurator</code> so services with tag <code>hypermdm.session.configurator</code> will not register session bags anymore.</li>
+<li class="">Removed parameter <code>hypermdm.admin.session.attribute_bags</code></li>
+<li class="">TargetingSessionBagListener - changed the signature of <code>__construct</code>.</li>
+<li class=""><code>AdminSessionHandler</code> requires session from request stack.</li>
+<li class=""><code>EcommerceFrameworkBundle\SessionEnvironment</code> not loading from or storing into session in cli mode anymore.</li>
+<li class=""><code>EcommerceFrameworkBundle\Tracking\TrackingManager</code> requires session from request stack.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="ecommerce">Ecommerce<a href="#ecommerce" class="hash-link" aria-label="Direct link to Ecommerce" title="Direct link to Ecommerce" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="ecommerce-general-">[Ecommerce General] :<a href="#ecommerce-general-" class="hash-link" aria-label="Direct link to [Ecommerce General] :" title="Direct link to [Ecommerce General] :" translate="no">​</a></h4>
+<ul>
+<li class="">Ecommerce bundle has been moved into a package <code>hypermdm/ecommerce-bundle</code>. If you wish to continue using the ecommerce framework, then please require the package in your composer.json and install it after enabling in <code>config/bundles.php</code>.</li>
+<li class="">The constructor of the following services has been changed, please adapt your custom implementation accordingly:<!-- -->
+<ul>
+<li class=""><code>IndexService\ProductList\DefaultMysql</code>, <code>IndexService\ProductList\DefaultFindologic</code></li>
+<li class=""><code>IndexService\Worker\AbstractElasticSearch</code>, <code>IndexService\Worker\DefaultFindologic</code>, <code>IndexService\Worker\DefaultMysql</code>, <code>IndexService\Worker\OptimizedMysql</code></li>
+<li class=""><code>IndexService\Config\AbstractConfig</code> and it's sub-classes.</li>
+<li class=""><code>Tracking\Tracker\Analytics\AbstractAnalyticsTracker</code> and it's sub-classes.</li>
+</ul>
+</li>
+<li class="">Ecommerce related Events have been moved. Please check and adapt the Events' namespaces.</li>
+<li class="">[ClassDefinition\LinkGeneratorInterface] method signature has changed, instead of <code>HyperMDM\Model\DataObject\Concrete</code> a <code>object</code> is used.</li>
+<li class="">Elasticsearch 7 support was removed</li>
+<li class="">Config option <code>es_client_params</code> in <code>index_service</code> was removed</li>
+<li class="">Remove deprecated methods <code>check()</code> and <code>exists()</code> from class <code>HyperMDM\Bundle\EcommerceFrameworkBundle\VoucherService\Reservation</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="indexservice-">[IndexService] :<a href="#indexservice-" class="hash-link" aria-label="Direct link to [IndexService] :" title="Direct link to [IndexService] :" translate="no">​</a></h4>
+<ul>
+<li class="">Please make sure to rebuild your product index to make sure changes apply accordingly (this is relevant for mysql and elasticsearch indices). As an alternative you could manually rename and remove <code>o_</code> from all index columns/fields.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="product-interfaces-">[Product Interfaces] :<a href="#product-interfaces-" class="hash-link" aria-label="Direct link to [Product Interfaces] :" title="Direct link to [Product Interfaces] :" translate="no">​</a></h4>
+<ul>
+<li class="">Changed return type-hints of <code>CheckoutableInterface</code> methods <code>getOSPrice</code>, <code>getOSPriceInfo</code>, <code>getOSAvailabilityInfo</code>, <code>getPriceSystemName</code>, <code>getAvailabilitySystemName</code>, <code>getPriceSystemImplementation</code>, <code>getAvailabilitySystemImplementation</code> to be non-nullable.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elements-4">Elements<a href="#elements-4" class="hash-link" aria-label="Direct link to Elements" title="Direct link to Elements" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="all-">[All] :<a href="#all-" class="hash-link" aria-label="Direct link to [All] :" title="Direct link to [All] :" translate="no">​</a></h4>
+<ul>
+<li class="">Added <code>setParentId</code>, <code>setType</code> and <code>setParent</code> methods to <code>HyperMDM\Model\Element\ElementInterface</code></li>
+<li class="">Removed fallback to parent id 1, when an element with a non-existing parent id gets created.</li>
+<li class="">Passing $force parameter as boolean is not valid anymore in <code>getById</code>, <code>getByPath</code>, <code>getElementById</code> methods. Instead, please pass it as an associative array ( eg.<code>['force' =&gt; true]</code>).</li>
+<li class="">Changed method signature on <code>HyperMDM\Model\Element\ElementInterface::save()</code>, this changes the <code>::save()</code> method on all classes (e.g. DataObjects and Pages) implementing the interface, including those inheriting from <code>Concrete</code>/<code>AbstractObject</code>, see <a href="https://github.com/pimcore/pimcore/issues/13207" target="_blank" rel="noopener noreferrer" class="">#13207</a></li>
+<li class="">Removed deprecated <code>getTotalCount()</code> method</li>
+<li class="">Removed the deprecated <code>HyperMDM\Model\Element\Service::getType()</code>, use <code>HyperMDM\Model\Element\Service::getElementType()</code> instead.</li>
+<li class=""><code>Element\Service::getValidKey()</code> strips all control/unassigned, invalid and some more special (e.g. tabs, line-breaks, form-feed &amp; vertical whitespace) characters.</li>
+<li class="">Removed deprecated <code>HyperMDM\Model\Element\Service::getSaveCopyName()</code> method, please use the <code>HyperMDM\Model\Element\Service::getSafeCopyName()</code> method instead.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="dataobjectsassetsdocuments-">[DataObjects][Assets][Documents] :<a href="#dataobjectsassetsdocuments-" class="hash-link" aria-label="Direct link to [DataObjects][Assets][Documents] :" title="Direct link to [DataObjects][Assets][Documents] :" translate="no">​</a></h4>
+<ul>
+<li class="">Datetime values for scheduled tasks, application logger and notifications are now displayed in the local timezone.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="dataobjectsdocuments-">[DataObjects][Documents] :<a href="#dataobjectsdocuments-" class="hash-link" aria-label="Direct link to [DataObjects][Documents] :" title="Direct link to [DataObjects][Documents] :" translate="no">​</a></h4>
+<ul>
+<li class="">Calling <code>getChildren/getSiblings</code> on <code>AbstractObject</code>, <code>Document</code> and <code>Asset</code> now returns unloaded listing. If the list is not traveresed immediately, then it is required to call <code>load()</code> explicitily.</li>
+<li class="">Removed deprecated methods <code>getObject()</code> and <code>setObject()</code> on the classes <code>HyperMDM\Model\Document\Link</code> and <code>HyperMDM\Model\DataObject\Data\Link</code>, please use <code>getElement()</code> and <code>setElement()</code> instead.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="assets-5">Assets<a href="#assets-5" class="hash-link" aria-label="Direct link to Assets" title="Direct link to Assets" translate="no">​</a></h3>
+<ul>
+<li class="">Refactored <code>HyperMDM\Model\Asset::getMetadata</code> method to allow listing of all metadata entries filtered by a specific language. Prior this version, the language filter was only available when a specific metadata name was defined in the parameters. Added native type hints and related tests.</li>
+<li class="">Removed the deprecated <code>marshal()/unmarshal()</code> methods for metadata, use <code>normalize()/denormalize()</code> methods instead.</li>
+<li class="">Removed the deprecated <code>Import from Server</code> and <code>Import from URL</code> options.</li>
+<li class="">Asset/Asset Thumbnail Update messages are now routed to different queue</li>
+<li class="">Removed VR Preview. For details please see <a href="https://github.com/pimcore/pimcore/issues/14111" target="_blank" rel="noopener noreferrer" class="">#14111</a></li>
+<li class="">Image thumbnails: Removed support for using custom callbacks for thumbnail transformations.</li>
+<li class="">Removed loading assets via fixed namespace only. Custom Asset Types can be configured.</li>
+<li class="">Thumbnails: improved method signature for <code>$thumbnail-&gt;getPath()</code>. You may now pass options as array <code>$thumbnail-&gt;getPath(["deferredAllowed" =&gt; true, "frontend" =&gt; false]);</code></li>
+<li class="">Removed deprecated property <code>HyperMDM\Model\Asset::$types</code>, use <code>getTypes()</code> instead</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="image-optimizer-">[Image Optimizer] :<a href="#image-optimizer-" class="hash-link" aria-label="Direct link to [Image Optimizer] :" title="Direct link to [Image Optimizer] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed all the Image Optimizer services (e.g. PngCrushOptimizer, JpegoptimOptimizer etc.) as image optimization is done by the new package spatie/image-optimizer.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="webdav-">[WebDAV] :<a href="#webdav-" class="hash-link" aria-label="Direct link to [WebDAV] :" title="Direct link to [WebDAV] :" translate="no">​</a></h4>
+<ul>
+<li class="">
+<p>WebDAV url has been changed from <code>https://YOUR-DOMAIN/admin/asset/webdav</code> to <code>https://YOUR-DOMAIN/asset/webdav</code></p>
+<p>As result of this change, the following changes are required in your nginx configuration:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Assets</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">....</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">location ~* ^(?!/admin)(.+?)....</span><br></span></code></pre></div></div>
+<p>New:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Assets</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">....</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">location ~* ^(?!/admin|/asset/webdav)(.+?)....</span><br></span></code></pre></div></div>
+</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-objects-2">Data Objects<a href="#data-objects-2" class="hash-link" aria-label="Direct link to Data Objects" title="Direct link to Data Objects" translate="no">​</a></h3>
+<ul>
+<li class="">Remove "generate type declarations" in class definitions</li>
+<li class="">Removed method_exists bc layer, please use the corresponding interfaces instead. For details please see <a href="https://github.com/pimcore/pimcore/issues/9571" target="_blank" rel="noopener noreferrer" class="">#9571</a></li>
+<li class=""><code>isEqual()</code> for advanced relational field types does not check for type equality of meta fields anymore, see <a href="https://github.com/pimcore/pimcore/pull/12595" target="_blank" rel="noopener noreferrer" class="">#12595</a></li>
+<li class="">Added return types to setter methods. For details see <a href="https://github.com/pimcore/pimcore/issues/12185" target="_blank" rel="noopener noreferrer" class="">#12185</a></li>
+<li class="">Alias <code>ReverseManyToManyObjectRelation</code> removed, please use <code>ReverseObjectRelation</code> instead.</li>
+<li class="">Changed default behaviour: getByXXX methods on <code>Concrete</code> class now returns objects and variants if nothing else is specified.</li>
+<li class="">Changed <code>$objectTypes</code> default value to include variants in certain scenarios.</li>
+<li class="">Removed deprecated preview url in class editor.</li>
+<li class="">Removed sql filter functionality for data object grid</li>
+<li class="">Loading non-Concrete objects with the Concrete class is no longer possible</li>
+<li class="">Removed setter functions for calculated values, since they weren´t used anyway.</li>
+<li class="">Removed <code>o_</code> prefix for data object properties and database columns.</li>
+<li class="">Due to the removal of the <code>o_</code> prefix the property names <code>classTitle</code>, <code>hasChildren</code>, <code>siblings</code>, <code>hasSiblings</code>, <code>childrenSortBy</code>, <code>childrenSortOrder</code>, <code>versionCount</code>, <code>dirtyLanguages</code> and <code>dirtyFields</code></li>
+<li class="">Text data types now set their corresponding database columns to <code>null</code> instead of <code>''</code> (empty string) when empty.</li>
+<li class="">Method <code>Concrete::getClass()</code> throws NotFoundException if class is not found for an object.</li>
+<li class="">Change type hints of <code>HyperMDM\Model\DataObject\QuantityValue\QuantityValueConverterInterface::convert()</code>:<!-- -->
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">convert</span><span class="token punctuation" style="color:#393A34">(</span><span class="token class-name type-declaration">QuantityValue</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$quantityValue</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token class-name type-declaration">Unit</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$toUnit</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token class-name return-type">QuantityValue</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">convert</span><span class="token punctuation" style="color:#393A34">(</span><span class="token class-name type-declaration">AbstractQuantityValue</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$quantityValue</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token class-name type-declaration">Unit</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$toUnit</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token class-name return-type">AbstractQuantityValue</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+</li>
+<li class="">Added global language switcher for localized fields</li>
+<li class="">Added new helper inheritance helper function <code>DataObject\Service::useInheritedValues</code></li>
+<li class="">It's now possible to drop a video asset directly into an video editable in class</li>
+<li class="">Removed Button control for DataObjects layout definition.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="class-definitions-">[Class Definitions] :<a href="#class-definitions-" class="hash-link" aria-label="Direct link to [Class Definitions] :" title="Direct link to [Class Definitions] :" translate="no">​</a></h4>
+<ul>
+<li class="">Class Resolver does not catch exceptions anymore.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="classsavedinterface-">[ClassSavedInterface] :<a href="#classsavedinterface-" class="hash-link" aria-label="Direct link to [ClassSavedInterface] :" title="Direct link to [ClassSavedInterface] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>method_exists</code> bc layer. Please add the corresponding <code>ClassSavedInterface</code> interface to your custom field definitions. For more details check the 10.6.0 patch notes.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="csv-export-">[CSV Export] :<a href="#csv-export-" class="hash-link" aria-label="Direct link to [CSV Export] :" title="Direct link to [CSV Export] :" translate="no">​</a></h4>
+<ul>
+<li class="">Changed encoding of table data-types to <code>json_encode</code> from <code>base64_encoded</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="customlayouts-">[CustomLayouts] :<a href="#customlayouts-" class="hash-link" aria-label="Direct link to [CustomLayouts] :" title="Direct link to [CustomLayouts] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed command <code>hypermdm:deployment:custom-layouts-rebuild</code> as CustomLayouts are migrated to LocationAwareConfigRepository.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="relations-">[Relations] :<a href="#relations-" class="hash-link" aria-label="Direct link to [Relations] :" title="Direct link to [Relations] :" translate="no">​</a></h4>
+<ul>
+<li class="">Add possibility to inline download asset from relations</li>
+<li class="">Add confirm dialog to empty button of relations and add possibility to disable clear relations in the class layout.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="urlslug-">[UrlSlug] :<a href="#urlslug-" class="hash-link" aria-label="Direct link to [UrlSlug] :" title="Direct link to [UrlSlug] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>index</code> column and <code>index</code> index from <code>object_url_slugs</code> table as it was not being used anywhere.</li>
+<li class="">Allow processing unpublished fallback document is now default behaviour, removed the related configuration options and usages (<code>allow_processing_unpublished_fallback_document</code>, <code>ElementListener::FORCE_ALLOW_PROCESSING_UNPUBLISHED_ELEMENTS</code>). For details, please see <a href="https://github.com/pimcore/pimcore/issues/10005#issuecomment-907007745" target="_blank" rel="noopener noreferrer" class="">#10005</a></li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="documents-4">Documents<a href="#documents-4" class="hash-link" aria-label="Direct link to Documents" title="Direct link to Documents" translate="no">​</a></h3>
+<ul>
+<li class="">Removed the functionality to input <code>metadata</code> html tags in Settings section of the document.</li>
+<li class="">Removed <code>$types</code> property from <code>HyperMDM\Model\Document</code>. Use <code>getTypes</code> method instead.</li>
+<li class="">Removed <code>hypermdm:document:types</code> from config. The types will be represented by the keys of the <code>type_definitions:map</code></li>
+<li class="">Removed deprecated <code>HyperMDM\Routing\Dynamic\DocumentRouteHandler::addDirectRouteDocumentType()</code> method, please use the <code>hypermdm.documents.type_definitions.map.%document_type%.direct_route</code> config instead.</li>
+<li class="">Added <code>hypermdm:documents:cleanup</code> command to remove documents with specified types and drop the related document type tables, useful in the cases like the removal of headless documents or web2print page/containers after uninstallation, see <a class="" href="../../Documents/Working_with_Documents_via_PHP_API/index.html#cleanup-document-types">Documents</a></li>
+<li class="">Removed the <code>attributes</code> field from the link editable.</li>
+<li class="">Deprecated WkHtmlToImage has been removed.</li>
+<li class="">Added a second boolean parameter <code>$validate</code> to the setContentMainDocumentId() method. This will restrict the option to set pages as content main documents to each other. For details, please see <a href="https://github.com/pimcore/pimcore/issues/12891" target="_blank" rel="noopener noreferrer" class="">#12891</a></li>
+<li class="">Refactored <code>hypermdm.documents.valid_tables</code> to be an option under each document type definition (eg. <code>hypermdm.documents.type_definitions.map.%document_type%.valid_table</code>) instead of an own array node</li>
+<li class="">Moving a document in the tree no longer opens the redirect prompt asking to create redirects. Creating a redirect is now configurable with <code>hypermdm:redirects:auto_create_redirects</code>. This config includes URLSlugs and Pretty URLs.</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_seo</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">redirects</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">auto_create_redirects</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><br></span></code></pre></div></div>
+<ul>
+<li class="">Configuration of document types has changed. Now it is possible to change the navigational behavior and more of each document type in the configuration.</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">documents</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">type_definitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">map</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">page</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">class</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> \HyperMDM\Model\Document\Page</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">translatable</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">valid_table</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"page"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">direct_route</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">translatable_inheritance</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">children_supported</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">only_printable_childrens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">predefined_document_types</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="areabricks-">[Areabricks] :<a href="#areabricks-" class="hash-link" aria-label="Direct link to [Areabricks] :" title="Direct link to [Areabricks] :" translate="no">​</a></h4>
+<ul>
+<li class="">The default template location of <code>AbstractTemplateAreabrick</code> is now <code>TEMPLATE_LOCATION_GLOBAL</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="controllers-">[Controllers] :<a href="#controllers-" class="hash-link" aria-label="Direct link to [Controllers] :" title="Direct link to [Controllers] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed deprecated <code>SensioFrameworkExtraBundle</code> which affects the following:<!-- -->
+<ul>
+<li class=""><code>@Template</code> annotation must be replaced with <code>#[Template]</code> attribute. Template guessing based on controller::action is not supported anymore.</li>
+<li class=""><code>@ResponseHeader</code> annotation must be replaced with <code>#[ResponseHeader]</code> attribute. Removed deprecated <code>HyperMDM\Controller\Configuration\ResponseHeader</code>.</li>
+<li class=""><code>@ParamConverter</code> annotation must be replaced with <code>#[DataObjectParam]</code> attribute.</li>
+</ul>
+</li>
+<li class=""><code>FrontendController::renderTemplate()</code>: Changed the visibility to <code>protected</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="chromium-">[Chromium] :<a href="#chromium-" class="hash-link" aria-label="Direct link to [Chromium] :" title="Direct link to [Chromium] :" translate="no">​</a></h4>
+<ul>
+<li class="">Added support to run chromium in Docker container and work via websocket for web2print and page previews, along of running it by a local binary.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="doctype-">[DocType] :<a href="#doctype-" class="hash-link" aria-label="Direct link to [DocType] :" title="Direct link to [DocType] :" translate="no">​</a></h4>
+<ul>
+<li class="">staticGeneratorEnabled is now a boolean instead of an integer</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="document-editables-">[Document Editables] :<a href="#document-editables-" class="hash-link" aria-label="Direct link to [Document Editables] :" title="Direct link to [Document Editables] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed method_exists bc layer for <code>getDataEditmode()</code>, <code>rewriteIds()</code> &amp; <code>load()</code>, please use the corresponding interfaces <code>EditmodeDataInterface</code>, <code>IdRewriterInterface</code> &amp; <code>LazyLoadingInterface</code> instead.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="navigation-">[Navigation] :<a href="#navigation-" class="hash-link" aria-label="Direct link to [Navigation] :" title="Direct link to [Navigation] :" translate="no">​</a></h4>
+<ul>
+<li class="">Calling the method <code>HyperMDM\Navigation\Builder::getNavigation()</code> using extra arguments is</li>
+<li class="">Methods <code>HyperMDM\Navigation::setDefaultPageType</code>, <code>HyperMDM\Navigation::getDefaultPageType</code>, <code>HyperMDM\Navigation\Container::_sort() and </code>HyperMDM\Navigation\Page::_normalizePropertyName()` have been marked as internal.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="sites-">[Sites] :<a href="#sites-" class="hash-link" aria-label="Direct link to [Sites] :" title="Direct link to [Sites] :" translate="no">​</a></h4>
+<ul>
+<li class="">Calling absolute path from a site is not possible anymore. If the absolute path is called, a 404 error will be returned instead.</li>
+<li class="">Default Site Id has been updated from <code>default</code> to <code>0</code>. Please update configs using default site id accordingly.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="video-editable-">[Video Editable] :<a href="#video-editable-" class="hash-link" aria-label="Direct link to [Video Editable] :" title="Direct link to [Video Editable] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe" target="_blank" rel="noopener noreferrer" class="">deprecated and legacy <code>&lt;iframe&gt;</code> attributes</a>: <code>frameborder</code>, <code>webkitAllowFullScreen</code>, <code>mozallowfullscreen</code>, and <code>allowfullscreen</code> for YouTube, Vimeo, and DailyMotion embeds.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="infrastructure">Infrastructure<a href="#infrastructure" class="hash-link" aria-label="Direct link to Infrastructure" title="Direct link to Infrastructure" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="php-options-">[PHP Options] :<a href="#php-options-" class="hash-link" aria-label="Direct link to [PHP Options] :" title="Direct link to [PHP Options] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed setting following options: <code>memory_limit</code>, <code>max_execution_time</code>, <code>max_input_time</code> and <code>display_errors</code></li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="php-">[PHP] :<a href="#php-" class="hash-link" aria-label="Direct link to [PHP] :" title="Direct link to [PHP] :" translate="no">​</a></h4>
+<ul>
+<li class="">The minimum supported PHP version is now 8.1 and added support for 8.2</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="symfony-">[Symfony] :<a href="#symfony-" class="hash-link" aria-label="Direct link to [Symfony] :" title="Direct link to [Symfony] :" translate="no">​</a></h4>
+<ul>
+<li class="">Replace deprecated <code>Symfony\Component\HttpFoundation\RequestMatcher</code> with <code>Symfony\Component\HttpFoundation\ChainRequestMatcher</code></li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="tools">Tools<a href="#tools" class="hash-link" aria-label="Direct link to Tools" title="Direct link to Tools" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="application-logger-">[Application Logger] :<a href="#application-logger-" class="hash-link" aria-label="Direct link to [Application Logger] :" title="Direct link to [Application Logger] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed deprecated <code>HYPERMDM_LOG_FILEOBJECT_DIRECTORY</code> constant, since flysystem is used to save/get fileobjects. Please make sure to adapt your code and migrate your fileobjects manually.</li>
+<li class="">Table names of archive tables are now named with year-month rather than month-year see <a href="https://github.com/pimcore/pimcore/issues/8237" target="_blank" rel="noopener noreferrer" class="">#8237</a>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="cache-">[Cache] :<a href="#cache-" class="hash-link" aria-label="Direct link to [Cache] :" title="Direct link to [Cache] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed <code>psr/simple-cache</code> dependency, due to the lack of usage in the Core.</li>
+<li class="">Responses containing a header <code>Cache-Control: no-store</code> will no longer be cached by the full page cache.</li>
+<li class="">Removed the <code>HyperMDM\Cache\Runtime</code> cache helper and <code>HyperMDM\Cache\RuntimeCacheTrait</code>. The runtime cache is now handled by <code>HyperMDM\Cache\RuntimeCache</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="console-">[Console] :<a href="#console-" class="hash-link" aria-label="Direct link to [Console] :" title="Direct link to [Console] :" translate="no">​</a></h4>
+<ul>
+<li class="">Methods <code>execInBackgroundUnix</code> &amp; <code>execInBackgroundWindows</code> visibility changed from <code>protected</code> to <code>private</code> and for <code>getSystemEnvironment</code> from <code>public</code> to <code>private</code>.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="email-">[Email] :<a href="#email-" class="hash-link" aria-label="Direct link to [Email] :" title="Direct link to [Email] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed the deprecated methods setBodyHtml(), setBodyText(), createAttachment() and setSubject(). Use html(),</li>
+<li class="">Bumped <code>league/html-to-markdown</code> to ^5.1.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="translations-">[Translations] :<a href="#translations-" class="hash-link" aria-label="Direct link to [Translations] :" title="Direct link to [Translations] :" translate="no">​</a></h4>
+<ul>
+<li class="">Translations Domains needs to be registered in order to be considered as valid. If you are using custom domains<!-- -->
+<ul>
+<li class="">site_1</li>
+<li class="">site_2</li>
+</ul>
+</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">translations</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">domains</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> site_1</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> site_2</span><br></span></code></pre></div></div>
+<ul>
+<li class="">Added Symfony's html sanitizer to <code>\HyperMDM\Model\Translation\Dao::save</code> method.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="workflows-">[Workflows] :<a href="#workflows-" class="hash-link" aria-label="Direct link to [Workflows] :" title="Direct link to [Workflows] :" translate="no">​</a></h4>
+<ul>
+<li class="">Removed classes HyperMDM\Model\Workflow, HyperMDM\Model\Workflow\Dao, HyperMDM\Model\Workflow\Listing\Dao and HyperMDM\Model\Workflow\Listing.</li>
+</ul>
+<hr></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

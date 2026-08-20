@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio UI Core Development — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Studio UI Core Development</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-to-install">How to install<a href="#how-to-install" class="hash-link" aria-label="Direct link to How to install" title="Direct link to How to install" translate="no">​</a></h2>
+<ol>
+<li class="">Navigate to the plugin directory.</li>
+<li class="">Change to the assets directory <code>cd ./assets</code></li>
+<li class="">Install dependencies <code>npm install</code></li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-to-build">How to build<a href="#how-to-build" class="hash-link" aria-label="Direct link to How to build" title="Direct link to How to build" translate="no">​</a></h2>
+<p>Create a new build by running:</p>
+<p><code>npm run build-app</code></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-to-run-the-dev-server-hmrlive-reloading">How to run the dev-server (HMR/Live reloading)<a href="#how-to-run-the-dev-server-hmrlive-reloading" class="hash-link" aria-label="Direct link to How to run the dev-server (HMR/Live reloading)" title="Direct link to How to run the dev-server (HMR/Live reloading)" translate="no">​</a></h2>
+<p>HMR requires two commands running simultaneously, started in the order listed:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm run dev-server-sdk</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm run dev-server</span><br></span></code></pre></div></div>
+<p>The dev server runs on the same URL as the project, with HMR for live reloading.
+Access it at:</p>
+<p><code>{your-domain}/hypermdm-studio</code></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="storybook">Storybook<a href="#storybook" class="hash-link" aria-label="Direct link to Storybook" title="Direct link to Storybook" translate="no">​</a></h2>
+<p>HyperMDM Studio uses <a href="https://storybook.js.org/" target="_blank" rel="noopener noreferrer" class="">Storybook</a> for documentation of React components.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="commands">Commands<a href="#commands" class="hash-link" aria-label="Direct link to Commands" title="Direct link to Commands" translate="no">​</a></h3>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm run storybook # run storybook with live reloading</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm run build-storybook # for building storybook for a static hosting</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="docker-environment">Docker environment<a href="#docker-environment" class="hash-link" aria-label="Direct link to Docker environment" title="Direct link to Docker environment" translate="no">​</a></h3>
+<p>For local Docker environments, expose port <code>6006</code>:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">node</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">ports</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"6006:6006"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">...</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="nginx-configuration">Nginx configuration<a href="#nginx-configuration" class="hash-link" aria-label="Direct link to Nginx configuration" title="Direct link to Nginx configuration" translate="no">​</a></h3>
+<p>Add the following Nginx configuration:</p>
+<div class="language-nginx codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-nginx codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">server {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  location ^~ /storybook/ {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      proxy_pass http://node:6006/;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  location ^~ /rsbuild-hmr?compilationId=web_hypermdm_studio_ui_bundle_core {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      proxy_pass http://node:6006/rsbuild-hmr?compilationId=web_hypermdm_studio_ui_bundle_core;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<p>Start Storybook with <code>npm run storybook</code>.
+Access it at <code>{your-domain}/storybook</code></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-to-test-the-package">How to test the package<a href="#how-to-test-the-package" class="hash-link" aria-label="Direct link to How to test the package" title="Direct link to How to test the package" translate="no">​</a></h2>
+<p>Build and link the package locally for testing:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">npm run build-app</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm run build-rsbuild-plugins</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm run generate-types</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm link</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># in your bundle</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">npm link @hypermdm/studio-ui-bundle</span><br></span></code></pre></div></div>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Studio_UI-Development_Details-Studio_UI_Core_Development-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Studio_UI-Development_Details-Studio_UI_Core_Development-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Studio_UI-Development_Details-Studio_UI_Core_Development-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>Re-run <code>npm link @hypermdm/studio-ui-bundle</code> in the bundle after every <code>npm install</code>, as npm install removes symlinks.</p></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

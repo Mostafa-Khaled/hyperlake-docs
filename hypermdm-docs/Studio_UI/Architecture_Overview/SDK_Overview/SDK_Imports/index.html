@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SDK Imports — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>SDK Imports</h1></header>
+<p>The HyperMDM Studio SDK provides predefined imports for building and extending functionality.
+These imports act as modules that encapsulate specific functionalities or utilities.</p>
+<p>The SDK defines the public API of Studio, meaning that not all components of the UI are exported by default. Only the components and modules intended to be used for extensions are made available through the SDK.</p>
+<p>For a full overview of all available import sources, you can refer to the <a href="https://github.com/pimcore/studio-ui-bundle/tree/2026.x/assets/js/src/sdk" target="_blank" rel="noopener noreferrer" class="">GitHub repository</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="folder-structure-and-import-paths">Folder Structure and Import Paths<a href="#folder-structure-and-import-paths" class="hash-link" aria-label="Direct link to Folder Structure and Import Paths" title="Direct link to Folder Structure and Import Paths" translate="no">​</a></h2>
+<p>The folder structure in the SDK mirrors the import paths. Each folder and <code>index.ts</code> in the <a href="https://github.com/pimcore/studio-ui-bundle/tree/2026.x/assets/js/src/sdk" target="_blank" rel="noopener noreferrer" class="">SDK</a> corresponds directly to an importable module. For example, if there is a file located at <code>sdk/api/asset/index.ts</code>, you can import it in your project as follows:</p>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">import</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> useAssetGetByIdQuery </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">from</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'@hypermdm/studio-ui-bundle/api/asset'</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p>This structure ensures that the imports are intuitive and easy to locate within the SDK directory.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="different-types-of-imports">Different Types of Imports<a href="#different-types-of-imports" class="hash-link" aria-label="Direct link to Different Types of Imports" title="Direct link to Different Types of Imports" translate="no">​</a></h2>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="apis">APIs<a href="#apis" class="hash-link" aria-label="Direct link to APIs" title="Direct link to APIs" translate="no">​</a></h4>
+<p><code>@hypermdm/studio-ui-bundle/api/*</code>: Provides access to RTK Query APIs, including hooks for fetching, mutating, and managing data. <a class="" href="../RTK_Query_API/index.html">See here</a> for more details.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="app-import">App Import<a href="#app-import" class="hash-link" aria-label="Direct link to App Import" title="Direct link to App Import" translate="no">​</a></h4>
+<p><code>@hypermdm/studio-ui-bundle/app</code>: Provides some general modules like the DI container, APP config, redux store, and router.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="ui-components">UI Components<a href="#ui-components" class="hash-link" aria-label="Direct link to UI Components" title="Direct link to UI Components" translate="no">​</a></h4>
+<p><code>@hypermdm/studio-ui-bundle/components</code>: Predefined React UI components for building consistent user interfaces. <a class="" href="../UI_Components_and_Storybook/index.html">Read more here</a>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="application-modules">Application Modules<a href="#application-modules" class="hash-link" aria-label="Direct link to Application Modules" title="Direct link to Application Modules" translate="no">​</a></h4>
+<p><code>@hypermdm/studio-ui-bundle/modules/*</code>: The various provided modules and parts of the application, such as the asset editor, data object editor, user management, etc.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="utils">Utils<a href="#utils" class="hash-link" aria-label="Direct link to Utils" title="Direct link to Utils" translate="no">​</a></h4>
+<p><code>@hypermdm/studio-ui-bundle/utils</code>: A collection of helper utilities, such as date and number formatters, UUID generation, and more.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="example">Example<a href="#example" class="hash-link" aria-label="Direct link to Example" title="Direct link to Example" translate="no">​</a></h2>
+<p>Here’s an example of how to use an SDK import:</p>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">// Import and use the Alert component</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">import</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> Alert </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">from</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'@hypermdm/studio-ui-bundle/components'</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">const</span><span class="token plain"> </span><span class="token function-variable function" style="color:#d73a49">App</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">div</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">Alert message</span><span class="token operator" style="color:#393A34">=</span><span class="token string" style="color:#e3116c">"This is an alert message!"</span><span class="token plain"> type</span><span class="token operator" style="color:#393A34">=</span><span class="token string" style="color:#e3116c">"info"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">/</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token operator" style="color:#393A34">/</span><span class="token plain">div</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">export</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">default</span><span class="token plain"> App</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p>This example demonstrates how to use a simple UI component from the SDK to display an alert message.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

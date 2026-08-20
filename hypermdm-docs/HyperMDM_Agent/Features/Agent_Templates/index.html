@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Templates — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Agent Templates</h1></header>
+<p>The bundle can let an agent <strong>generate new Twig templates</strong> - page, snippet, or include-only partial. The agent reads
+developer-curated project context (layouts, partials, brand docs), drafts a template using HyperMDM's editable Twig
+vocabulary, and <strong>proposes</strong> it for human review. On approval the template becomes selectable in the HyperMDM document
+<code>template</code> dropdown and renders through HyperMDM's normal Twig stack.</p>
+<p>This is the <em>write</em> counterpart to the bundle's read/fill tools (<code>get_document_schema</code>, <code>get_area_brick</code>,
+the <a class="" href="../../Extending/Template_Examples/index.html">example fixtures</a>), gated by the same <a class="" href="../HITL_Proposals/index.html">HITL proposal</a>
+pattern as object, document, and asset edits. For the internals,
+see <a class="" href="../../Architecture/Agent_Template_Generation/index.html">Architecture → Agent Template Generation</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-workflow">The workflow<a href="#the-workflow" class="hash-link" aria-label="Direct link to The workflow" title="Direct link to The workflow" translate="no">​</a></h2>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">propose → review → approve → bind → render</span><br></span></code></pre></div></div>
+<ol>
+<li class=""><strong>Discover context.</strong> The agent stages a developer-curated <a class="" href="../../Architecture/File_Staging/index.html">file set</a> (<code>stage_file_set</code>)
+to read parent layouts and reference material, and calls <code>list_editables</code> to see which editable types the project
+has installed.</li>
+<li class=""><strong>Draft &amp; propose.</strong> It composes a single Twig file - type, slug, label, description - and calls <code>propose_agent_template</code>.
+The bundle validates and sandbox-renders it; only a technically valid template reaches the reviewer, and nothing is
+written yet.</li>
+<li class=""><strong>Review.</strong> The proposal card surfaces automatically in the Studio chat - the agent just proposes and stops its
+turn; there is no separate show step. It shows syntax-highlighted source,
+validation warnings, a diff for updates, or a dependency summary for deletions.</li>
+<li class=""><strong>Approve.</strong> The template is persisted and registered; the document <code>template</code> dropdown now offers it. Reject
+leaves disk untouched.</li>
+<li class=""><strong>Bind &amp; render.</strong> An editor binds the template to a Page or Snippet; storefront requests render it normally.</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-gets-generated">What gets generated<a href="#what-gets-generated" class="hash-link" aria-label="Direct link to What gets generated" title="Direct link to What gets generated" translate="no">​</a></h2>
+<p>A single flat Twig file per template, of one type:</p>
+<ul>
+<li class=""><strong>page</strong> / <strong>snippet</strong> - selectable on the matching document type.</li>
+<li class=""><strong>partial</strong> - an include-only fragment (<code>{% include %}</code>), never assignable to a document directly.</li>
+</ul>
+<p>Templates use HyperMDM editables, can <code>{% extends %}</code> a project layout, and may carry inline CSS. Both a hand-written
+<code>&lt;form method="post"&gt;</code> and Symfony form rendering (<code>{{ form(form) }}</code>, <code>form_*</code>, <code>{% form_theme %}</code>) are supported;
+the real form comes from the document's controller at request time.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="mcp-tools">MCP tools<a href="#mcp-tools" class="hash-link" aria-label="Direct link to MCP tools" title="Direct link to MCP tools" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Tool</th><th>Purpose</th></tr></thead><tbody><tr><td><code>list_editables</code></td><td>List the editable type names installed in this project.</td></tr><tr><td><code>propose_agent_template</code></td><td>Validate + sandbox-render a template, then create a create/update proposal.</td></tr><tr><td><code>propose_agent_template_deletion</code></td><td>Create a deletion proposal carrying document bindings and dependent templates.</td></tr><tr><td><code>list_agent_templates</code></td><td>List the persisted templates the current user owns.</td></tr><tr><td><code>list_thumbnail_configs</code></td><td>List the project's named thumbnail configs (image or video) with target dimensions, to pick a valid <code>thumbnail</code> - required for <code>hypermdm_video</code>, whose <code>thumbnail</code> must be a named string config.</td></tr></tbody></table></div>
+<p><code>stage_file_set</code> comes from the <a class="" href="../../Architecture/File_Staging/index.html">file-staging</a> group, not this one.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sample-documents">Sample documents<a href="#sample-documents" class="hash-link" aria-label="Direct link to Sample documents" title="Direct link to Sample documents" translate="no">​</a></h2>
+<p>To preview and iterate on a generated template, the proposal card can link it to a <strong>sample document</strong> - a regular
+HyperMDM Document under a configured folder (<code>/_agent-samples</code> by default) whose <code>template</code> field points at the template.
+No registration is needed: the card offers <strong>Open document</strong> when a bound document or sample already exists, and
+<strong>Create sample</strong> otherwise.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="refining-an-existing-template">Refining an existing template<a href="#refining-an-existing-template" class="hash-link" aria-label="Direct link to Refining an existing template" title="Direct link to Refining an existing template" translate="no">​</a></h2>
+<p>If the user asks the agent to fix a document that uses a <strong>project</strong> (non-agent) template, the agent can't edit the
+project file. Instead it clones the source into a new agent template and, on approve, repoints the document's
+<code>template</code> field to it - the original project template is left untouched. This only takes effect if the document's
+controller renders the document's configured template rather than a hard-coded one.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="enabling-it-on-an-agent">Enabling it on an agent<a href="#enabling-it-on-an-agent" class="hash-link" aria-label="Direct link to Enabling it on an agent" title="Direct link to Enabling it on an agent" translate="no">​</a></h2>
+<p>Enabled per agent, via its definition (the Studio agent-configuration UI, or the equivalent config -
+see <a class="" href="../../Configuration/Agents/index.html">Configuration → Agents</a>):</p>
+<div class="table-container"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td><code>hypermdmMcpServers</code></td><td>include <code>hypermdm-agent-templates</code></td></tr><tr><td><code>allowedFileStagingSets</code></td><td>the file sets the agent may stage</td></tr><tr><td><code>skills</code></td><td><code>document-template-generation</code></td></tr></tbody></table></div>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_agent</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">agents</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">definitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">cms-agent</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">displayName</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'CMS Agent'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">model</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> claude</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">sonnet</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">4</span><span class="token punctuation" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">6</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">skills</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">'document-template-generation'</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hypermdmMcpServers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">'hypermdm-agent-templates'</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">allowedFileStagingSets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">'cms_layouts'</span><span class="token punctuation" style="color:#393A34">]</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further reading" title="Direct link to Further reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Architecture/Agent_Template_Generation/index.html">Architecture → Agent Template Generation</a> - validator, sandbox, private root, persistence.</li>
+<li class=""><a class="" href="../../Architecture/File_Staging/index.html">Architecture → File Staging</a> - how the agent reads project context.</li>
+<li class=""><a class="" href="../../Configuration/Agent_Templates/index.html">Configuration → Agent Templates</a> - private root, test-render budget, sandbox allowlists.</li>
+<li class=""><a class="" href="../HITL_Proposals/index.html">HITL Proposals</a> - the review/approve pattern this feature reuses.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

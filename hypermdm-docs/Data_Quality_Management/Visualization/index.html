@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Quality Visualization — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Data Quality Visualization</h1></header>
+<p>Once a <a class="" href="../Data_Quality_Configuration/index.html">data quality data type</a> is added to a Data Object class, the
+computed score for each Data Object is visible:</p>
+<ul>
+<li class="">in the <a href="#data-object-editor" class="">Data Object editor</a>,</li>
+<li class="">in the <a href="#data-object-grid" class="">Data Object grid</a>,</li>
+<li class="">in the <a href="#data-object-tree" class="">Data Object tree</a> (depending on configuration).</li>
+</ul>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>The screenshots on this page use the <code>Car</code> class's data quality rules from the reference demo. The class defines
+one data quality type per editor panel, each built from Symfony Expression Checks:</p><ul>
+<li class=""><strong>Texts Available</strong> (<code>textsAvailable</code>, <code>Basedata</code> panel): one Symfony Expression Check per localized text
+field, six in total (<code>Name</code> and <code>Description</code>, each in <code>en</code>, <code>de</code> and <code>fr</code>). The "Name (en)" check uses the
+expression <code>object.getName('en')</code> and the suggestion "Fill in name in English". A precondition,
+<code>object.getObjectType() === 'actual-car'</code>, limits the rule to Data Objects of type <code>actual-car</code>, so it only
+scores objects representing an actual car.</li>
+<li class=""><strong>Images Available</strong> (<code>imagesAvailable</code>, <code>Media</code> panel): verifies that images are present.</li>
+<li class=""><strong>Attributes Available</strong> (<code>attributesAvailable</code>, <code>Attributes</code> panel): verifies that attributes are filled.</li>
+<li class=""><strong>Sale Information Available</strong> (<code>saleInformationAvailable</code>, <code>Sale Information</code> panel): verifies that sale
+information is filled.</li>
+</ul><p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data quality rules on the Car class</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_sampleRules-91bed730e34fa299dbcd825ba5f824b0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/dataQuality_sampleRules-91bed730e34fa299dbcd825ba5f824b0.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data quality rules on the Car class</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_sampleRules-91bed730e34fa299dbcd825ba5f824b0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/dataQuality_sampleRules-91bed730e34fa299dbcd825ba5f824b0.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data quality rules on the Car class</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_sampleRules-91bed730e34fa299dbcd825ba5f824b0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-object-editor">Data Object Editor<a href="#data-object-editor" class="hash-link" aria-label="Direct link to Data Object Editor" title="Direct link to Data Object Editor" translate="no">​</a></h2>
+<p>Depending on the class definition, the computed data quality score(s) for a Data Object appear directly in its
+editor.</p>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>Filling in new fields updates the scores only after reloading the Data Object. Changing the rules used to compute
+a score in the class definition likewise requires reloading the Data Object to see the updated score.</p></div></div>
+<p>Each data quality type renders as a score bar at the top of its panel, showing the mark and the completion
+percentage, for example <code>Texts Available: C, 33% completed</code> at the top of the <code>Basedata</code> panel. Each panel's
+score bar is computed only from the rule definitions configured for that data quality type, so panels can show
+different marks on the same Data Object.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Scores in Editor</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_Editor_DataQualityScore-08a8ac91e0685e8516948c4c693dba1b.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/dataQuality_Editor_DataQualityScore-08a8ac91e0685e8516948c4c693dba1b.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Scores in Editor</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_Editor_DataQualityScore-08a8ac91e0685e8516948c4c693dba1b.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/dataQuality_Editor_DataQualityScore-08a8ac91e0685e8516948c4c693dba1b.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Scores in Editor</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_Editor_DataQualityScore-08a8ac91e0685e8516948c4c693dba1b.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>In this example the <code>Texts Available</code> score is lowered because only its two English checks pass, while the German
+and French ones fail. The percentage is the sum of the passing checks' weights divided by the sum of all of them,
+so every failing check pulls it down and the mark drops below <code>A</code>.</p>
+<p>The <code>Data Quality Details</code> tab lists every data quality score computed for the current Data Object, and the
+suggestion configured for each check next to a pass or fail marker (here, "Fill in name in German" for the
+missing German name).</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Details Tab</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_Editor_DataQualityDetails-c0adee0e28cc503848b7a7f49887016d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/dataQuality_Editor_DataQualityDetails-c0adee0e28cc503848b7a7f49887016d.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-10">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-10</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Details Tab</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_Editor_DataQualityDetails-c0adee0e28cc503848b7a7f49887016d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-10">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/dataQuality_Editor_DataQualityDetails-c0adee0e28cc503848b7a7f49887016d.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-11">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-11</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Details Tab</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_Editor_DataQualityDetails-c0adee0e28cc503848b7a7f49887016d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-11">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-object-grid">Data Object Grid<a href="#data-object-grid" class="hash-link" aria-label="Direct link to Data Object Grid" title="Direct link to Data Object Grid" translate="no">​</a></h2>
+<p>Add data quality scores as columns in a Data Object grid through the grid's column configuration.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-12">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-12</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Visualization Grid Options</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_gridOptions-9616017c77ab6105823b1b1f5a077b38.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-12">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/dataQuality_gridOptions-9616017c77ab6105823b1b1f5a077b38.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-13">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-13</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Visualization Grid Options</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_gridOptions-9616017c77ab6105823b1b1f5a077b38.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-13">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/dataQuality_gridOptions-9616017c77ab6105823b1b1f5a077b38.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-14">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-14</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Visualization Grid Options</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_gridOptions-9616017c77ab6105823b1b1f5a077b38.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-14">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Each added score becomes a read-only grid column. Sort by the column header, and filter by adding the column as
+a field filter in the <strong>Search &amp; Filter</strong> panel, where each mark is a separate checkbox.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-15">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-15</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Score Filtering in Grid</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_gridFiltering-1641c7ff75d12d7b9bf61e37930e223d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-15">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/dataQuality_gridFiltering-1641c7ff75d12d7b9bf61e37930e223d.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-16">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-16</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Score Filtering in Grid</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_gridFiltering-1641c7ff75d12d7b9bf61e37930e223d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-16">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/dataQuality_gridFiltering-1641c7ff75d12d7b9bf61e37930e223d.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-17">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-17</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Score Filtering in Grid</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_gridFiltering-1641c7ff75d12d7b9bf61e37930e223d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-17">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-18">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-18</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-18">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>CSV and XLSX exports include only the scores, without color.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="filtering-by-data-quality-via-the-grid-api">Filtering by data quality via the grid API<a href="#filtering-by-data-quality-via-the-grid-api" class="hash-link" aria-label="Direct link to Filtering by data quality via the grid API" title="Direct link to Filtering by data quality via the grid API" translate="no">​</a></h3>
+<p>Data quality columns also support the grid's general <code>columnFilter</code> mechanism (see the Studio Backend
+<a class="" href="../../Studio_Backend/Architecture_Overview/Grid/index.html#columnfilter">Grid documentation</a>
+for the full filter contract). The <code>dataQuality</code> filter type restricts results to one or more score marks:</p>
+<div class="table-container"><table><thead><tr><th style="text-align:left">Type</th><th style="text-align:left">filterValue</th><th style="text-align:left">Options</th><th style="text-align:left"><code>key</code> required</th></tr></thead><tbody><tr><td style="text-align:left"><code>dataQuality</code></td><td style="text-align:left">array of strings</td><td style="text-align:left"><code>A</code>, <code>B</code>, <code>C</code>, <code>D</code></td><td style="text-align:left">true</td></tr></tbody></table></div>
+<p><code>key</code> is the name of the data quality field to filter on. For example, to filter a <code>textsAvailable</code> data quality
+column for scores <code>A</code> and <code>B</code>:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">...</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">"columnFilters": [</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "key": "textsAvailable",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "type": "dataQuality",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "filterValue": ["A", "B"]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">...</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-object-tree">Data Object Tree<a href="#data-object-tree" class="hash-link" aria-label="Direct link to Data Object Tree" title="Direct link to Data Object Tree" translate="no">​</a></h2>
+<p>Enable <code>Show in Tree</code> in the <a class="" href="../Data_Quality_Configuration/index.html#show-in-tree">class definition</a> to display the
+available data quality scores (that is, scores meeting their
+<a class="" href="../Data_Quality_Configuration/index.html#precondition">precondition</a>, if any) next to the Data Object name in the tree.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-19">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-19</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Score in Tree</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_Tree_ScoreBadges-fb71b4aceba51a424b24bbed591ca5d3.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-19">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/dataQuality_Tree_ScoreBadges-fb71b4aceba51a424b24bbed591ca5d3.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-20">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-20</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Score in Tree</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_Tree_ScoreBadges-fb71b4aceba51a424b24bbed591ca5d3.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-20">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/dataQuality_Tree_ScoreBadges-fb71b4aceba51a424b24bbed591ca5d3.png"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-21">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-21</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Quality Score in Tree</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/dataQuality_Tree_ScoreBadges-fb71b4aceba51a424b24bbed591ca5d3.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-21">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Objects that do not meet the data quality type's precondition carry no badge at all, which is why the model and
+variant nodes in the example above are unmarked while the individual cars below them are graded. HyperMDM Studio
+dims the node icon of unpublished objects, but renders their score badges the same as published ones.</p>
+<p>Style score badges with CSS classes; see <a class="" href="../Customization/Custom_Score_Badges/index.html">Custom Score Badges</a>.</p>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-index-22">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-index-22</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-index-22">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>After changing the rules used to compute a score in the class definition, reload the tree (<code>Refresh</code> in the
+context menu) to show the updated scores.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-dashboards">Studio Dashboards<a href="#studio-dashboards" class="hash-link" aria-label="Direct link to Studio Dashboards" title="Direct link to Studio Dashboards" translate="no">​</a></h2>
+<p>Data quality scores can also be visualized in aggregate, across all objects of a class, using dashboard widgets.
+See <a class="" href="Studio_Dashboards/index.html">Studio Dashboards</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

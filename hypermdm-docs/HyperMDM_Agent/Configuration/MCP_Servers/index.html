@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MCP Servers — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>MCP Servers</h1></header>
+<p>This page covers how to configure an agent's MCP tool access. For the catalog of built-in HyperMDM tool groups and
+how to consume them (from the built-in HyperMDM Agent or an external LLM client), see
+<a class="" href="../../Features/Built_in_HyperMDM_MCP_Servers/index.html">Features → Built-in HyperMDM MCP Servers</a>. For the architectural overview -
+transport, authentication, meta-tool - see <a class="" href="../../Architecture/MCP_Integration/index.html">Architecture → MCP Integration</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-three-configuration-keys">The three configuration keys<a href="#the-three-configuration-keys" class="hash-link" aria-label="Direct link to The three configuration keys" title="Direct link to The three configuration keys" translate="no">​</a></h2>
+<p>Each agent YAML can use three independent keys to declare MCP access. An agent uses any combination of the three.</p>
+<div class="table-container"><table><thead><tr><th>Key</th><th>Targets</th><th>Syntax</th></tr></thead><tbody><tr><td><code>hypermdmMcpServers</code></td><td>Internal tool groups, <strong>schemas inline in every turn</strong></td><td>List of group names</td></tr><tr><td><code>hypermdmMetaGroups</code></td><td>Internal tool groups, <strong>behind the meta-tool</strong></td><td>List of group names</td></tr><tr><td><code>mcpServers</code></td><td>Third-party HTTP servers</td><td>Map of server name → <code>{type, url, headers, tools}</code></td></tr></tbody></table></div>
+<p>Examples:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdmMcpServers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">data</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">objects</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">read</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">data</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">objects</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">write</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdmMetaGroups</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">tags</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">read</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">assets</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">read</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">mcpServers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">hypermdm-datahub</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> http</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">url</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> $</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain">MCP_HYPERMDM_URL</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">headers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">Authorization</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"Bearer ${MCP_HYPERMDM_TOKEN}"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">tools</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"*"</span><br></span></code></pre></div></div>
+<p>For the mechanism behind the meta-tool and how internal servers authenticate, see <a class="" href="../../Architecture/MCP_Integration/index.html">Architecture → MCP Integration</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="internal-server-authentication-knob">Internal-server authentication knob<a href="#internal-server-authentication-knob" class="hash-link" aria-label="Direct link to Internal-server authentication knob" title="Direct link to Internal-server authentication knob" translate="no">​</a></h2>
+<p>Internal HyperMDM MCP servers are reached with a per-chat-session bearer token (<code>Authorization: Bearer pmcp_…</code>).
+The only operator-facing setting is its lifetime:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_agent</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">chat_session_token</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">ttl</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">7200</span><span class="token plain">      </span><span class="token comment" style="color:#999988;font-style:italic"># seconds, default 7200 (2 h), minimum 60</span><br></span></code></pre></div></div>
+<p>PHP is the single source of truth - the value is returned alongside the bearer in every
+<code>POST /bundle/agent/sessions</code> and <code>POST /bundle/agent/sessions/{id}/mcp-token</code> response. The
+agent-server reads it from the response and uses it to pace its <strong>server-driven refresh timer</strong>:
+while a task is running, <code>TaskRunner</code> calls <code>refreshToken</code> every <code>max(60s, tokenTtlSeconds/2)</code>.
+Operators can keep the TTL short without risking long-running or overnight turns - the server
+refreshes independently of user interaction or cookie validity. The TTL is a <em>sliding window</em>;
+the per-turn user-interactive refresh also extends it on every chat turn.</p>
+<p>(No agent-server env var to keep in sync - the PHP config is the only place to set this.)</p>
+<p>See <a class="" href="../../Architecture/MCP_Integration/index.html#token-lifecycle">Architecture → MCP Integration → Token lifecycle</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="environment-variable-interpolation-third-party-only">Environment variable interpolation (third-party only)<a href="#environment-variable-interpolation-third-party-only" class="hash-link" aria-label="Direct link to Environment variable interpolation (third-party only)" title="Direct link to Environment variable interpolation (third-party only)" translate="no">​</a></h2>
+<p><code>mcpServers</code> URLs and header values support <code>${VAR_NAME}</code> placeholders.
+They are resolved on the <strong>agent-server side</strong> at session-resolve time
+using the agent-server container's environment - not the HyperMDM PHP
+container's environment. Set these variables in
+<code>.env.local</code>, which is loaded into the agent-server container via
+Docker Compose's <code>env_file</code> directive.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">mcpServers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">external-api</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> http</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">url</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> $</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain">MY_API_URL</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">headers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">Authorization</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"Bearer ${MY_API_TOKEN}"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">tools</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"*"</span><br></span></code></pre></div></div>
+<p>If any placeholder in an MCP entry is unset at resolve time, the entire
+entry is silently skipped - the server is not registered, and the
+agent runs without it. This lets you keep optional integrations in a
+shared YAML without breaking agents when the credentials are absent.</p>
+<p><strong>HyperMDM-internal MCP servers</strong> (<code>hypermdmMcpServers</code>,
+<code>hypermdmMetaGroups</code>) do <strong>not</strong> use env var interpolation. Their URLs
+are built from <code>HYPERMDM_INTERNAL_URL</code> + a well-known prefix, and
+authentication is handled by the chat-scoped <code>pmcp_…</code> bearer token, not
+by a static or user-session credential.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="built-in-hypermdm-tool-groups">Built-in HyperMDM tool groups<a href="#built-in-hypermdm-tool-groups" class="hash-link" aria-label="Direct link to Built-in Pimcore tool groups" title="Direct link to Built-in Pimcore tool groups" translate="no">​</a></h2>
+<p>The catalog of built-in groups (Data Objects, Assets, Documents, Tags, Agent Templates, …), the tools
+in each, the HITL-vs-direct-write distinction, and how to consume the groups from the built-in HyperMDM Agent <strong>or an external
+LLM client</strong> are documented in <a class="" href="../../Features/Built_in_HyperMDM_MCP_Servers/index.html">Features → Built-in HyperMDM MCP Servers</a>.</p>
+<blockquote>
+<p><strong>Always-current list:</strong> run <code>bin/console hypermdm-agent:mcp:list-tools</code> to see the live set of groups and
+tools registered in your installation. Add <code>-v</code> to also print the backing PHP class and method for each tool.</p>
+</blockquote>
+<p>The group names you place under <code>hypermdmMcpServers</code> / <code>hypermdmMetaGroups</code> come from that catalog. To add tools to an
+existing group or register a new one, see <a class="" href="../../Extending/Custom_MCP_Tools/index.html">Extending → Custom MCP Tools</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-docs">Related docs<a href="#related-docs" class="hash-link" aria-label="Direct link to Related docs" title="Direct link to Related docs" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Features/Built_in_HyperMDM_MCP_Servers/index.html">Features → Built-in HyperMDM MCP Servers</a> - the group catalog and how to consume it.</li>
+<li class=""><a class="" href="../../Architecture/MCP_Integration/index.html">Architecture → MCP Integration</a> - transport, auth, meta-tool mechanism.</li>
+<li class=""><a class="" href="../Agents/index.html#field-reference">Agents → <code>hypermdmMcpServers</code> / <code>hypermdmMetaGroups</code> / <code>mcpServers</code></a></li>
+<li class=""><a class="" href="../Tool_Bundles/index.html">Tool Bundles</a> - group <code>hypermdmMcpServers</code> / <code>hypermdmMetaGroups</code> with skills and SDK tools under one reusable name</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

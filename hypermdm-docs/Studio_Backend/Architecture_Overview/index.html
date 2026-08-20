@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Architecture Overview — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Architecture Overview</h1></header>
+<p>The Studio Backend Bundle exposes a REST API built on Symfony that serves as the backend for
+HyperMDM Studio. All endpoints are documented via OpenAPI/Swagger attributes using the
+<a href="https://zircote.github.io/swagger-php/" target="_blank" rel="noopener noreferrer" class="">zircote/swagger-php</a> library.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="request-flow">Request Flow<a href="#request-flow" class="hash-link" aria-label="Direct link to Request Flow" title="Direct link to Request Flow" translate="no">​</a></h2>
+<p>A typical API request flows through these layers:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">HTTP Request</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  → Symfony Firewall (hypermdm_studio authentication)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    → Route matching (#[Route] attribute)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      → Permission check (#[IsGranted] attribute, UserPermissionVoter)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        → Controller (extends AbstractApiController)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">          → Service layer (business logic, data access)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            → Hydrator (transforms models to API schema objects)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → PreResponse event (dispatched before serialization)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                → JSON serialization (Symfony Serializer)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                  → HTTP Response</span><br></span></code></pre></div></div>
+<p><strong>Controllers</strong> extend <code>AbstractApiController</code>, which provides <code>jsonResponse()</code> for JSON
+serialization and a configurable URL prefix (<code>{prefix}</code>). Controllers use Symfony's
+<code>#[MapQueryString]</code> and <code>#[MapRequestPayload]</code> for type-safe parameter binding.</p>
+<p><strong>Services</strong> encapsulate business logic behind interfaces (e.g. <code>NoteServiceInterface</code>,
+<code>LayoutServiceInterface</code>). Controllers depend on service interfaces, not implementations.</p>
+<p><strong>Hydrators</strong> transform HyperMDM model objects into typed API schema classes. Schema classes
+use OpenAPI <code>#[Schema]</code> and <code>#[Property]</code> attributes to generate the Swagger documentation.</p>
+<p><strong>PreResponse events</strong> fire after hydration but before serialization, letting subscribers add
+custom attributes or modify the response. See
+<a class="" href="../Extending/Additional_and_Custom_Attributes/index.html">Additional and Custom Attributes</a>
+for the full event list.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="authentication-and-security">Authentication and Security<a href="#authentication-and-security" class="hash-link" aria-label="Direct link to Authentication and Security" title="Direct link to Authentication and Security" translate="no">​</a></h2>
+<p>The bundle registers its own Symfony firewall (<code>hypermdm_studio</code>) with a custom user provider
+(<code>HyperMDM\Security\User\UserProvider</code>). Authentication uses bearer tokens obtained through
+the login endpoint. The <code>UserPermissionVoter</code> evaluates <code>#[IsGranted]</code> attributes against
+permissions stored in <code>users_permission_definitions</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="tagged-service-extensibility">Tagged Service Extensibility<a href="#tagged-service-extensibility" class="hash-link" aria-label="Direct link to Tagged Service Extensibility" title="Direct link to Tagged Service Extensibility" translate="no">​</a></h2>
+<p>Most extension points follow the same pattern: implement an interface, tag the service,
+and the bundle auto-discovers it at runtime. Key service tags:</p>
+<div class="table-container"><table><thead><tr><th>Tag</th><th>Purpose</th></tr></thead><tbody><tr><td><code>hypermdm.studio_backend.update_adapter</code></td><td>Element update pipeline</td></tr><tr><td><code>hypermdm.studio_backend.patch_adapter</code></td><td>Bulk patch pipeline</td></tr><tr><td><code>hypermdm.studio_backend.data_adapter</code></td><td>Data object field save/load</td></tr><tr><td><code>hypermdm.studio_backend.grid_column_definition</code></td><td>Grid column type registration</td></tr><tr><td><code>hypermdm.studio_backend.grid_column_resolver</code></td><td>Grid column value resolution</td></tr><tr><td><code>hypermdm.studio_backend.grid_column_collector</code></td><td>Grid column availability</td></tr><tr><td><code>hypermdm.studio_backend.grid_transformer</code></td><td>Grid data transformation</td></tr><tr><td><code>hypermdm.studio_backend.search_index.filter</code></td><td>Search index filters (OpenSearch/ES)</td></tr><tr><td><code>hypermdm.studio_backend.listing.filter</code></td><td>Listing filters (classic HyperMDM listings)</td></tr><tr><td><code>hypermdm.studio_backend.field_definition_resolver</code></td><td>Field definition resolution (dot notation)</td></tr><tr><td><code>hypermdm.studio_backend.widget_repository</code></td><td>Perspective widget config storage</td></tr><tr><td><code>hypermdm.studio_backend.widget_hydrator</code></td><td>Perspective widget config hydration</td></tr><tr><td><code>hypermdm.studio_backend.gdpr_data_provider</code></td><td>GDPR data extraction</td></tr><tr><td><code>hypermdm.studio_backend.settings_provider</code></td><td>Settings panel data</td></tr><tr><td><code>hypermdm.studio_backend.filter_service</code></td><td>Filter service registration</td></tr></tbody></table></div>
+<p>Most tags have dedicated guides in <a class="" href="../Extending/index.html">Extending</a>. Tags without
+a dedicated guide (<code>settings_provider</code>, <code>filter_service</code>) follow the same pattern:
+implement the interface and register with the tag.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="real-time-updates">Real-Time Updates<a href="#real-time-updates" class="hash-link" aria-label="Direct link to Real-Time Updates" title="Direct link to Real-Time Updates" translate="no">​</a></h2>
+<p>The bundle integrates <a href="https://mercure.rocks/" target="_blank" rel="noopener noreferrer" class="">Mercure</a> to deliver real-time updates to
+connected HyperMDM Studio clients via Server-Sent Events (SSE). When elements are created,
+modified, or deleted, the backend publishes updates that connected clients receive instantly
+without polling. See <a class="" href="../Installation_and_Configuration/Mercure_Setup/index.html">Mercure Setup</a>
+for configuration details.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="core-subsystems">Core Subsystems<a href="#core-subsystems" class="hash-link" aria-label="Direct link to Core Subsystems" title="Direct link to Core Subsystems" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="grid-system">Grid System<a href="#grid-system" class="hash-link" aria-label="Direct link to Grid System" title="Direct link to Grid System" translate="no">​</a></h3>
+<p>The Grid system provides configurable columns, filters, and data transformers for listing
+and searching assets, data objects, and documents. It is composed of three main components:
+column definitions (what columns exist), column resolvers (how values are fetched), and
+column collectors (which columns are available in a given context).</p>
+<ul>
+<li class=""><a class="" href="Grid/index.html">Grid Architecture</a></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="generic-execution-engine">Generic Execution Engine<a href="#generic-execution-engine" class="hash-link" aria-label="Direct link to Generic Execution Engine" title="Direct link to Generic Execution Engine" translate="no">​</a></h3>
+<p>The Generic Execution Engine handles long-running and background tasks such as bulk operations,
+CSV/XLSX exports, ZIP uploads/downloads, and element cloning. It provides a unified interface
+for scheduling, tracking progress, and reporting results.</p>
+<ul>
+<li class=""><a class="" href="Generic_Execution_Engine/index.html">Generic Execution Engine</a></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="mcp-server-infrastructure-experimental">MCP Server Infrastructure (Experimental)<a href="#mcp-server-infrastructure-experimental" class="hash-link" aria-label="Direct link to MCP Server Infrastructure (Experimental)" title="Direct link to MCP Server Infrastructure (Experimental)" translate="no">​</a></h3>
+<p>The bundle provides shared infrastructure for
+<a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer" class="">Model Context Protocol</a> (MCP) servers. This includes a
+dedicated <code>hypermdm_mcp</code> firewall (separate from the Studio API firewall), a dual authentication
+chain (session bridge for internal agent-server use, personal access tokens for external MCP
+clients like Claude Desktop or Cursor), and pre-registered PSR-7/PSR-17 bridge services.
+Bundles that implement MCP servers route their controllers under <code>/hypermdm-mcp/</code> and get
+authentication handled automatically.</p>
+<ul>
+<li class=""><a class="" href="../Development_Details/MCP_Server/index.html">MCP Server Infrastructure</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

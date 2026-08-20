@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Backup — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Backup</h1></header>
+<p>Use standard backup tools appropriate to your infrastructure.
+Regardless of the tool, back up these components:</p>
+<ul>
+<li class=""><strong>All files in the project root</strong>, excluding:<!-- -->
+<ul>
+<li class=""><code>public/var/tmp</code> - regenerated thumbnails</li>
+<li class=""><code>var/tmp</code> - temporary upload/export files</li>
+<li class=""><code>var/log</code> - log files (rotated automatically)</li>
+<li class=""><code>var/cache</code> - Symfony/HyperMDM cache (rebuilt automatically)</li>
+</ul>
+</li>
+<li class=""><strong>The entire database</strong></li>
+</ul>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-HyperMDM-Deployment_Recommendations-Backup-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Deployment_Recommendations-Backup-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Deployment_Recommendations-Backup-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p><code>var/versions</code> contains version history dumps and can be large, especially for assets.
+Include it in backups to preserve version history, or exclude it if storage is constrained
+and version history is expendable.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="simple-backup-using-unix-tools">Simple Backup Using Unix Tools<a href="#simple-backup-using-unix-tools" class="hash-link" aria-label="Direct link to Simple Backup Using Unix Tools" title="Direct link to Simple Backup Using Unix Tools" translate="no">​</a></h2>
+<p>Use a professional backup solution for production environments. For quick ad-hoc backups,
+standard Unix tools work:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Change to the project root</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">cd /var/www/your/project/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Create the MySQL dump</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">mysqldump -u youruser -p yourdatabase &gt; /tmp/hypermdm-backup.sql</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Create an archive of the project root and database dump, excluding regenerable directories</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">tar cfz /tmp/hypermdm-backup.tar.gz \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  --exclude='public/var/tmp' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  --exclude='var/tmp' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  --exclude='var/log' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  --exclude='var/cache' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  ./ -C /tmp hypermdm-backup.sql</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Interactive Input — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Interactive Input</h1></header>
+<p>Two mechanisms let the agent pause mid-turn and get human input instead of guessing: <code>ask_user</code> for clarifying questions,
+and <code>pauseAfter</code> as a backstop that stops runaway agents and asks the user whether to continue.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="ask_user---mid-turn-questions"><code>ask_user</code> - mid-turn questions<a href="#ask_user---mid-turn-questions" class="hash-link" aria-label="Direct link to ask_user---mid-turn-questions" title="Direct link to ask_user---mid-turn-questions" translate="no">​</a></h2>
+<p><code>ask_user</code> is a Copilot SDK tool the agent can call to ask a question with optional choice buttons. The agent's execution
+pauses until the user responds or the wait times out.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-it-feels-to-the-user">How it feels to the user<a href="#how-it-feels-to-the-user" class="hash-link" aria-label="Direct link to How it feels to the user" title="Direct link to How it feels to the user" translate="no">​</a></h3>
+<p>A question widget appears inline in chat - the question text plus buttons for each choice, optionally a freeform text
+box. The user clicks or types and the agent continues. After answering, the widget switches to a read-only
+"Answered: <em>value</em>" state.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-to-enable-it">How to enable it<a href="#how-to-enable-it" class="hash-link" aria-label="Direct link to How to enable it" title="Direct link to How to enable it" translate="no">​</a></h3>
+<p><code>ask_user</code> is not enabled by default. Opt in per agent:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">includeSdkTools</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> ask_user</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="timeout">Timeout<a href="#timeout" class="hash-link" aria-label="Direct link to Timeout" title="Direct link to Timeout" translate="no">​</a></h3>
+<p>If the user doesn't respond within <code>AGENT_SERVER_ASK_USER_TIMEOUT_MS</code> (default 5 minutes), the bridge auto-resolves
+with "No response from user (timed out)" and the agent continues with that as the answer. Adjust the env var if
+your agents ask questions that reasonably take longer to think about.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="pauseafter---should-i-continue-checkpoints"><code>pauseAfter</code> - "should I continue?" checkpoints<a href="#pauseafter---should-i-continue-checkpoints" class="hash-link" aria-label="Direct link to pauseafter---should-i-continue-checkpoints" title="Direct link to pauseafter---should-i-continue-checkpoints" translate="no">​</a></h2>
+<p>Without a stop signal, an LLM can spiral on a long task - dozens of tool calls, minutes of processing. <code>pauseAfter</code>
+is an agent-level policy that automatically pauses execution and asks the user "Continue or stop?" when a threshold is hit.</p>
+<p>Two thresholds, whichever trips first:</p>
+<div class="table-container"><table><thead><tr><th>Threshold</th><th>Meaning</th></tr></thead><tbody><tr><td><code>pauseAfter.toolCalls</code></td><td>Max tool calls before pausing.</td></tr><tr><td><code>pauseAfter.timeoutMinutes</code></td><td>Max active processing time. Excludes time spent waiting for <code>ask_user</code> responses.</td></tr></tbody></table></div>
+<p>Default (when not configured): 50 tool calls, 5 minutes.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-happens-when-a-threshold-trips">What happens when a threshold trips<a href="#what-happens-when-a-threshold-trips" class="hash-link" aria-label="Direct link to What happens when a threshold trips" title="Direct link to What happens when a threshold trips" translate="no">​</a></h3>
+<ol>
+<li class="">The SDK turn is aborted cleanly.</li>
+<li class="">A pause prompt is emitted via the <code>ask_user</code> channel: <strong>Continue</strong> or <strong>Stop</strong>.</li>
+<li class="">If the user chooses <strong>Continue</strong> → tool counters reset, a continuation prompt is sent, the agent resumes in a new
+SDK turn with history preserved.</li>
+<li class="">If the user chooses <strong>Stop</strong> (or the pause prompt times out) → the task ends gracefully, partial results are persisted.</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h3>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">pauseAfter</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">toolCalls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">100</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">timeoutMinutes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">10</span><br></span></code></pre></div></div>
+<p>For long-running batch agents (bulk imports, mass tagging), raise both values. For interactive assistants,
+the defaults are usually right.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="edge-cases-worth-knowing">Edge cases worth knowing<a href="#edge-cases-worth-knowing" class="hash-link" aria-label="Direct link to Edge cases worth knowing" title="Direct link to Edge cases worth knowing" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>SSE reconnect</strong> - the <code>ask_user</code> widget is replayed from the TaskRunner buffer. If the user clicks after the
+request already resolved or timed out, the 404 is handled silently.</li>
+<li class=""><strong>Cancel while waiting</strong> - <code>POST /chat/:sessionId/cancel</code> cancels the pending <code>ask_user</code> request and aborts the SDK turn cleanly.</li>
+<li class=""><strong>Agent switch while waiting</strong> - pending requests are cancelled for the old agent before the switch completes.</li>
+<li class=""><strong>Inactivity timeout</strong> - if no SDK events arrive for <code>AGENT_SERVER_INACTIVITY_TIMEOUT_MS</code> (default 5 minutes)
+<em>and</em> no <code>ask_user</code> is pending, the task ends with a "no activity" message. This is a separate fallback from <code>pauseAfter</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-reading">Related reading<a href="#related-reading" class="hash-link" aria-label="Direct link to Related reading" title="Direct link to Related reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Architecture/Request_Lifecycle/index.html">Architecture → Request Lifecycle</a> - how the abort-and-resume dance works at the task level.</li>
+<li class=""><a class="" href="../../Architecture/Tool_Security/index.html">Architecture → Tool Security</a> - <code>ask_user</code> is an SDK tool governed by the pre-tool-use hook.</li>
+<li class=""><a class="" href="../../Configuration/Agents/index.html">Configuration → Agents</a> - <code>pauseAfter</code> and <code>includeSdkTools</code> fields.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

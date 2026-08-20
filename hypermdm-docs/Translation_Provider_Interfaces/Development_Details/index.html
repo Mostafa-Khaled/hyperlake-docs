@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Development Details — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Development Details</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="general-aspects">General Aspects<a href="#general-aspects" class="hash-link" aria-label="Direct link to General Aspects" title="Direct link to General Aspects" translate="no">​</a></h2>
+<p>Services for translation adapters and data changed handler are registered automatically when they implement the respecting
+interfaces <code>DataChangedHandlerInterface</code> and <code>TranslationsProviderInterface</code>.</p>
+<p>Register process implemented by</p>
+<ul>
+<li class="">automatically tagging all services that implement the mentioned interfaces via auto configuration during build</li>
+<li class="">registering all tagged services in <code>data changed service</code> and <code>translation provider manager</code> via compiler pass</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="translation-providers">Translation Providers<a href="#translation-providers" class="hash-link" aria-label="Direct link to Translation Providers" title="Direct link to Translation Providers" translate="no">​</a></h2>
+<p>Translation providers are implemented and configured as services. This bundle ships with default service configurations
+of the two supported translation providers:</p>
+<div class="language-yml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">services</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">translations-provider.translationscom</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">class</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> HyperMDM\TranslationsProviderInterfaceBundle\TranslationsProvider\TranslationsCom</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">arguments</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">$shortcut</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'translations.com'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">$workflow</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'@state_machine.translation_job_default'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">calls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">method</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> setTranslationExporter</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              </span><span class="token key atrule" style="color:#00a4db">arguments</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'@translations-exporter.translationscom'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span></code></pre></div></div>
+<p>The project shortcode and the provider credentials are not service arguments. They are read from the bundle
+configuration through <code>ConfigurationService</code>, see <a class="" href="../Installation_and_Configuration/Configuration/index.html">Configuration</a>.</p>
+<p>To add custom instances of these translation providers or to implement additional custom translation providers,
+override the existing services or register new ones.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

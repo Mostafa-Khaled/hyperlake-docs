@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Performance issues while manipulating images — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Performance issues while manipulating images</h1></header>
+<p>HyperMDM generates thumbnails on the fly when they are not created yet, see <a href="../../HyperMDM/Assets/Working_with_Thumbnails/Image_Thumbnails/index.html#dynamic-generation-on-request" target="_blank" rel="noopener noreferrer" class="">https://docs.hypermdm.com/platform/HyperMDM/Assets/Working_with_Thumbnails/Image_Thumbnails/#dynamic-generation-on-request</a>.</p>
+<p>Thumbnail creation, like all image processing tasks, is CPU &amp; RAM intensive.</p>
+<p>The creation of a thumbnail is controlled by PHP, which relies on ImageMagick.</p>
+<p>Creating a single thumbnail can consume more resources than what's available in the quota granted to your PHP container.</p>
+<p>Many factors can influence the amount of RAM required:</p>
+<ul>
+<li class="">The size of the image: width × height</li>
+<li class="">The number of channels needed to encode the image. Channels represent color components (e.g. RGB=3, RGBA=4, CMYK=4, CMYK+Alpha=5).</li>
+<li class="">The number of layers: layers are multiple images stored in a file (common in PSD/AI). There is usually only one layer for a JPEG, but it can be more. PSD files may have a high number of layers, for instance, we saw a PSD file with 23 layers.</li>
+</ul>
+<p>Here are a few examples of images with their file size on disk and the amount of RAM required to create a thumbnail:</p>
+<div class="table-container"><table><thead><tr><th></th><th>Format</th><th>File size</th><th>RAM required</th></tr></thead><tbody><tr><td>File 1</td><td>WEBP</td><td>155kB</td><td>155MB</td></tr><tr><td>File 2</td><td>JPG</td><td>10MB</td><td>473MB</td></tr><tr><td>File 3</td><td>JPG</td><td>74MB</td><td>2.7GB</td></tr><tr><td>File 4</td><td>JPG</td><td>125MB</td><td>4.9GB</td></tr><tr><td>File 5</td><td>JPG</td><td>804MB</td><td>2.2GB</td></tr><tr><td>File 6</td><td>PSD</td><td>154MB</td><td>1GB</td></tr><tr><td>File 7</td><td>PSD</td><td>1.6GB</td><td>24GB</td></tr></tbody></table></div>
+<blockquote>
+<p><em>Note: Values are from real measurements; actual usage may vary depending on channels, layers, bit depth, and concurrent load.</em></p>
+</blockquote>
+<p><strong>Why “file size ≠ memory usage”</strong>
+File size depends on compression; memory size depends on pixel count, bit depth, channels, and layers.</p>
+<blockquote>
+<p><strong>Rule of thumb for RAM usage</strong><br>
+<!-- -->To estimate peak memory consumption when creating thumbnails:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">RAM ≈ decoded size × 3–5   (single-layer images)  </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">RAM ≈ decoded size × 10+   (layered PSD/AI files)</span><br></span></code></pre></div></div>
+<p>where</p>
+<ul>
+<li class=""><strong>decoded size</strong> = <code>width × height × channels × bytes_per_channel</code></li>
+<li class=""><strong>bytes_per_channel</strong> = 1 for 8-bit, 2 for 16-bit, etc.</li>
+</ul>
+<p><strong>Example:</strong><br>
+<!-- -->A 6000×4500 RGB JPEG (8-bit, 3 channels):</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">decoded size = 6000 × 4500 × 3 × 1 ≈ 81,000,000 bytes ≈ 77 MB</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">estimated peak RAM ≈ 77 MB × 5 ≈ 385 MB</span><br></span></code></pre></div></div>
+<p>In practice, ImageMagick used ~473 MB — close to this estimate.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-to-check-the-memory-usage">How to check the memory usage<a href="#how-to-check-the-memory-usage" class="hash-link" aria-label="Direct link to How to check the memory usage" title="Direct link to How to check the memory usage" translate="no">​</a></h2>
+<p>You can check the amount of RAM required to process the image by running the following command: <code>grep VmHWM /proc/PID/status</code> where <code>PID</code> is the PID of the PHP-FPM worker that processed the request.</p>
+<p>You can also log ImageMagick resource activity by adding the following ENV variables in your HyperMDM PaaS environment:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">env:MAGICK_DEBUG: resource,cache</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">env:MAGICK_LOG_FORMAT: "%t %e %r %u %p %m %s"</span><br></span></code></pre></div></div>
+<p>You'll find all the debug outputs in <code>/var/log/app.log</code>.
+You can search for <code>Heap Memory</code>: <code>grep "Heap Memory" /var/log/app.log</code>.
+(Remember to remove these ENV variables once they are no longer needed.)</p>
+<p>Unfortunately, you can't rely on the amount of RAM reported in <code>/var/log/php.access.log</code>. It only counts the RAM consumed by PHP itself. Any external command, such as ImageMagick, is not taken into account.</p>
+<p>You may also wonder if this memory consumption will be seen in <strong>Metrics</strong>. The answer is: it depends on whether the process keeps memory long enough for <strong>Metrics</strong> to measure it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="php-fpm-workers---parallelism">PHP-FPM workers - Parallelism<a href="#php-fpm-workers---parallelism" class="hash-link" aria-label="Direct link to PHP-FPM workers - Parallelism" title="Direct link to PHP-FPM workers - Parallelism" translate="no">​</a></h2>
+<p>Keep in mind that PHP-FPM workers are spawned up to the <code>pm.max_children</code> value.
+So a single person browsing the HyperMDM admin and clicking on a folder can, by default, trigger the creation of 25 thumbnails in parallel.
+Depending on the number of workers and the complexity of the images, the system can quickly run out of resources.
+For instance, if each thumbnail can require 1 GB, and <code>pm.max_children=10</code>, the container may need up to ~10 GB RAM to survive concurrent generation.
+It can impact not only the rendering of images but also the standard PHP processing of typical requests, such as browsing the admin interface. It can result in the admin being completely stuck.</p>
+<p>You can influence the number of PHP-FPM workers by adding the <code>sizing_hints</code> to your PHP app container, check <a href="https://fixed.docs.upsun.com/languages/php/fpm.html" target="_blank" rel="noopener noreferrer" class="">https://fixed.docs.upsun.com/languages/php/fpm.html</a>.</p>
+<p>Remember a few things about PHP-FPM workers:</p>
+<ul>
+<li class="">One PHP-FPM worker can only process one HTTP request at a time,</li>
+<li class="">When all PHP-FPM workers are busy processing requests, the other incoming requests are placed into a queue until a worker has completed its task.</li>
+</ul>
+<p>When the memory limit of your PHP container is reached, the system may kill PHP-FPM workers. You'll find a line related to this action in <code>/var/log/app.log</code>.
+Example:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">[08-Sep-2025 09:04:27] WARNING: [pool web] child 334 exited on signal 9 (SIGKILL) after 113.799485 seconds from start</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-should-i-do-if-i-run-into-this-issue">What should I do if I run into this issue?<a href="#what-should-i-do-if-i-run-into-this-issue" class="hash-link" aria-label="Direct link to What should I do if I run into this issue?" title="Direct link to What should I do if I run into this issue?" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="check-the-resource-allocation">Check the resource allocation<a href="#check-the-resource-allocation" class="hash-link" aria-label="Direct link to Check the resource allocation" title="Direct link to Check the resource allocation" translate="no">​</a></h3>
+<p>The first thing is to review the memory allocation for your app container. You may need to adjust the size or even use <strong>Flexible Resources</strong>: <a href="https://fixed.docs.upsun.com/create-apps/flexible-resources.html" target="_blank" rel="noopener noreferrer" class="">https://fixed.docs.upsun.com/create-apps/flexible-resources.html</a>.
+You need to ensure the container has enough memory to run concurrent resizes (multiple PHP-FPM workers running simultaneously and resizing images).</p>
+<p>If your plan doesn't include enough resources for creating thumbnails of your images, please contact your HyperMDM Sales representative to upgrade to a larger plan.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="adjust-the-imagemagick-policy">Adjust the ImageMagick policy<a href="#adjust-the-imagemagick-policy" class="hash-link" aria-label="Direct link to Adjust the ImageMagick policy" title="Direct link to Adjust the ImageMagick policy" translate="no">​</a></h3>
+<p>You can also adapt your HyperMDM PaaS configuration to fit your needs.</p>
+<p>The first file you can tweak is <code>.magick/policy.xml</code>.
+You may adjust:</p>
+<ul>
+<li class=""><code>memory</code>: amount of RAM that ImageMagick can use for a single request</li>
+<li class=""><code>map</code>: amount of Linux swap that ImageMagick can use for a single request</li>
+<li class=""><code>disk</code>: amount of disk storage in <code>/tmp</code> that ImageMagick can use for a single request</li>
+<li class=""><code>thread</code>: amount of vCPU that ImageMagick can use for a single request</li>
+</ul>
+<p>ImageMagick will always try to allocate as much RAM as it can. If that isn’t enough, it will use Linux swap, and finally write to <code>/tmp</code> if needed.</p>
+<blockquote>
+<p><em>Note: <code>/tmp</code> is limited to 8GB on HyperMDM PaaS</em></p>
+</blockquote>
+<p>Keep in mind that these parameters are for a single instance of ImageMagick. With PHP-FPM workers, you may have multiple instances running in parallel. Numbers add up quickly.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="isolate-image-processing-into-a-dedicated-container">Isolate image processing into a dedicated container<a href="#isolate-image-processing-into-a-dedicated-container" class="hash-link" aria-label="Direct link to Isolate image processing into a dedicated container" title="Direct link to Isolate image processing into a dedicated container" translate="no">​</a></h3>
+<p>To avoid overloading the PHP-FPM workers with thumbnail rendering, you can segregate the thumbnail PHP job from the usual PHP traffic.
+For this, you can simply duplicate your PHP container, naming it <code>hypermdm-assets</code>, for instance.
+You'll need to keep the exact same build hook so that the same build artifact is used.
+Do not copy the deploy hook into this new container. Otherwise, tasks like database migrations would run twice.</p>
+<p>You can then define the <code>sizing_hints</code> differently between the usual PHP container and the one dedicated to the thumbnail generation. The idea is to have more PHP workers dedicated to handling regular traffic rather than generating thumbnails.
+For instance, if you need 1GB of RAM on average to create thumbnails, then you can set <code>request_memory=1024</code>. It'll automatically limit the number of PHP-FPM workers.</p>
+<p>The last thing to do is to configure your <code>.platform/routes.yaml</code> to direct part of the traffic to your new container:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">   "https://www.{all}/admin/asset/get-image-thumbnail":</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">       type: upstream</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">       upstream: "hypermdm-assets:http"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   "https://www.{all}/admin/asset/download-image-thumbnail":</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">       type: upstream</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">       upstream: "hypermdm-assets:http"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">   "https://www.{all}/Sample%20Content/":</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">       type: upstream</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">       upstream: "hypermdm-assets:http"</span><br></span></code></pre></div></div>
+<p>With this configuration, even if all PHP-FPM workers are busy creating thumbnails, the admin and other PHP scripts will continue to work correctly.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="faq">FAQ<a href="#faq" class="hash-link" aria-label="Direct link to FAQ" title="Direct link to FAQ" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-does-my-2-mb-jpg-need-hundreds-of-mb-of-ram">Why does my 2 MB JPG need hundreds of MB of RAM?<a href="#why-does-my-2-mb-jpg-need-hundreds-of-mb-of-ram" class="hash-link" aria-label="Direct link to Why does my 2 MB JPG need hundreds of MB of RAM?" title="Direct link to Why does my 2 MB JPG need hundreds of MB of RAM?" translate="no">​</a></h3>
+<p>File size on disk depends on compression. In memory, the image is fully decoded: width × height × channels × bit depth. For example, a 6000×4500 RGB JPG (~10 MB) becomes ~77 MB decoded, and ImageMagick may use several working copies, resulting in ~400–500 MB RAM consumption.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-do-psd-or-ai-files-consume-so-much-memory">Why do PSD or AI files consume so much memory?<a href="#why-do-psd-or-ai-files-consume-so-much-memory" class="hash-link" aria-label="Direct link to Why do PSD or AI files consume so much memory?" title="Direct link to Why do PSD or AI files consume so much memory?" translate="no">​</a></h3>
+<p>These formats often contain many layers and sometimes extra channels (masks, spot colors). Each layer is decoded into its own pixel cache. We’ve observed PSDs with 20+ layers consuming 20–25 GB of RAM even though the file size was only 1.6 GB.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="can-i-rely-on-file-size-to-know-the-memory-usage">Can I rely on file size to know the memory usage?<a href="#can-i-rely-on-file-size-to-know-the-memory-usage" class="hash-link" aria-label="Direct link to Can I rely on file size to know the memory usage?" title="Direct link to Can I rely on file size to know the memory usage?" translate="no">​</a></h3>
+<p>No. A small compressed file (e.g. a 150 kB WebP) can expand to &gt;150 MB in RAM, while a 20 MB JPG may only need ~500 MB. Always consider pixel dimensions, channels, and layers.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-does-vmhwm-mean-and-why-is-it-useful">What does VmHWM mean and why is it useful?<a href="#what-does-vmhwm-mean-and-why-is-it-useful" class="hash-link" aria-label="Direct link to What does VmHWM mean and why is it useful?" title="Direct link to What does VmHWM mean and why is it useful?" translate="no">​</a></h3>
+<p>VmHWM stands for High Water Mark. It’s the peak resident set size — the maximum physical RAM that a process has consumed since it started. Checking VmHWM in <code>/proc/&lt;pid&gt;/status</code> gives the most reliable number for real RAM usage.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-is-my-hypermdm-admin-freezing-when-browsing-assets">Why is my HyperMDM admin freezing when browsing assets?<a href="#why-is-my-hypermdm-admin-freezing-when-browsing-assets" class="hash-link" aria-label="Direct link to Why is my Pimcore admin freezing when browsing assets?" title="Direct link to Why is my Pimcore admin freezing when browsing assets?" translate="no">​</a></h3>
+<p>When browsing a folder, HyperMDM may generate many thumbnails in parallel. If each thumbnail uses hundreds of MB or even GBs, the PHP-FPM workers can quickly exhaust the container’s memory, blocking all requests until workers are killed or free up memory.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-can-i-prevent-thumbnails-from-exhausting-my-container">How can I prevent thumbnails from exhausting my container?<a href="#how-can-i-prevent-thumbnails-from-exhausting-my-container" class="hash-link" aria-label="Direct link to How can I prevent thumbnails from exhausting my container?" title="Direct link to How can I prevent thumbnails from exhausting my container?" translate="no">​</a></h3>
+<ul>
+<li class="">Adjust container sizing (<code>sizing_hints</code>, Flexible Resources).</li>
+<li class="">Set ImageMagick policies (<code>memory</code>, <code>map</code>, <code>disk</code>, <code>thread</code>) to control resource usage.</li>
+<li class="">Isolate thumbnail generation in a dedicated container with its own limits.</li>
+<li class="">Pre-generate heavy thumbnails using the CLI or use an Upsun (Platform.sh) worker job instead of on-demand.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

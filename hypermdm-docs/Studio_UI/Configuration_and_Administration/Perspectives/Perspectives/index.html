@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Perspectives — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Perspectives</h1></header>
+<p>Perspectives define the layout of HyperMDM Studio by controlling which
+<a class="" href="../Widgets/index.html">tree widgets</a> are visible and where they are positioned.
+Each perspective arranges widgets into left, right, and bottom panels
+and controls which navigation menu items are available.</p>
+<p>Create and manage perspectives through the built-in perspective editor in HyperMDM Studio.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Studio_UI-Configuration_and_Administration-Perspectives-Perspectives-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Studio_UI-Configuration_and_Administration-Perspectives-Perspectives-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-Studio_UI-Configuration_and_Administration-Perspectives-Perspectives-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>Perspectives and widgets are not intended to restrict access to data.
+Use <a class="" href="../../Users_and_Roles/index.html">permissions</a> for access control.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="perspective-configuration">Perspective Configuration<a href="#perspective-configuration" class="hash-link" aria-label="Direct link to Perspective Configuration" title="Direct link to Perspective Configuration" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>name</code></td><td>string</td><td>Display name</td></tr><tr><td><code>icon</code></td><td>ElementIcon</td><td>Icon with <code>type</code> and <code>value</code> for the perspective switcher</td></tr><tr><td><code>widgetsLeft</code></td><td>array</td><td>Widgets assigned to the left panel</td></tr><tr><td><code>widgetsRight</code></td><td>array</td><td>Widgets assigned to the right panel</td></tr><tr><td><code>widgetsBottom</code></td><td>array</td><td>Widgets assigned to the bottom panel</td></tr><tr><td><code>expandedLeft</code></td><td>string</td><td>ID of the widget expanded by default in the left panel</td></tr><tr><td><code>expandedRight</code></td><td>string</td><td>ID of the widget expanded by default in the right panel</td></tr><tr><td><code>contextPermissions</code></td><td>object</td><td>Navigation menu visibility (see below)</td></tr></tbody></table></div>
+<p>Perspectives reference widgets by their unique ID.
+Define widgets first (see <a class="" href="../Widgets/index.html">Widgets</a>),
+then assign them to the perspective's widget arrays.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="navigation-context-permissions">Navigation Context Permissions<a href="#navigation-context-permissions" class="hash-link" aria-label="Direct link to Navigation Context Permissions" title="Direct link to Navigation Context Permissions" translate="no">​</a></h2>
+<p>The <code>contextPermissions</code> property controls which navigation menu items
+are visible in a perspective. Permissions are organized into groups
+matching the HyperMDM Studio mega menu structure.
+Each group supports a <code>hidden</code> flag to hide the entire group, plus boolean flags for individual items within the group.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="switching-perspectives">Switching Perspectives<a href="#switching-perspectives" class="hash-link" aria-label="Direct link to Switching Perspectives" title="Direct link to Switching Perspectives" translate="no">​</a></h2>
+<p>Users switch between perspectives through the perspective selector in HyperMDM Studio.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="restricting-perspective-access">Restricting Perspective Access<a href="#restricting-perspective-access" class="hash-link" aria-label="Direct link to Restricting Perspective Access" title="Direct link to Restricting Perspective Access" translate="no">​</a></h2>
+<p>Restrict which perspectives a user sees through the user settings.
+Navigate to <code>System</code> &gt; <code>Users &amp; Roles</code> &gt; <code>Users</code>, select a user,
+and assign the allowed perspectives.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="example">Example<a href="#example" class="hash-link" aria-label="Direct link to Example" title="Direct link to Example" translate="no">​</a></h2>
+<p>A perspective for catalog administrators showing only product data objects and assets:</p>
+<ol>
+<li class="">
+<p>Create a widget for the product objects tree:</p>
+<ul>
+<li class="">Element type: <code>data-object</code></li>
+<li class="">Root folder: <code>/Product Data/Cars</code></li>
+<li class="">Classes: <code>['CAR']</code></li>
+</ul>
+</li>
+<li class="">
+<p>Create a perspective referencing this widget by its ID:</p>
+<ul>
+<li class="">Add the product widget to <code>widgetsLeft</code></li>
+<li class="">Add a standard asset tree to <code>widgetsRight</code></li>
+<li class="">Set the product widget as <code>expandedLeft</code></li>
+<li class="">Hide irrelevant navigation groups via <code>contextPermissions</code>
+(e.g., set <code>experienceEcommerce.hidden</code> to <code>true</code>)</li>
+</ul>
+</li>
+</ol>
+<p>This gives catalog administrators a focused view with only the relevant
+data objects and assets visible, and a simplified navigation menu.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

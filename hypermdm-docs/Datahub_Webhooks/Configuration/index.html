@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Configuration — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Configuration</h1></header>
+<p>Edit a webhook configuration in HyperMDM Studio under <strong>Automation &amp; Integration</strong> &gt; <strong>Data Hub Configuration</strong>. The
+chapters below follow the tabs of the configuration.</p>
+<div class="table-container"><table><thead><tr><th>Tab</th><th>Chapter</th><th>Answers</th></tr></thead><tbody><tr><td>General</td><td><a class="" href="General/index.html">General</a></td><td>Is the configuration active, and what is logged?</td></tr><tr><td>Events &amp; Schema</td><td><a class="" href="Events_and_Schema/index.html">Events and Schema</a></td><td>Which events fire, and what is in the payload?</td></tr><tr><td>Workspaces</td><td><a class="" href="Workspaces/index.html">Workspaces</a></td><td>Which parts of the element trees are in scope?</td></tr><tr><td>Subscribers</td><td><a class="" href="Subscribers/index.html">Subscribers</a></td><td>Who receives the requests?</td></tr><tr><td>Logs</td><td><a class="" href="Logs/index.html">Logs</a></td><td>What happened on the last runs?</td></tr><tr><td>Permissions</td><td><a class="" href="../Installation/index.html#user-permissions">Installation</a></td><td>Who may read, update and delete this configuration?</td></tr></tbody></table></div>
+<p>A request is sent to the subscribers only when all of the following hold:</p>
+<ol>
+<li class="">The configuration is <strong>active</strong>.</li>
+<li class="">The triggered event is selected in <strong>Events &amp; Schema</strong>.</li>
+<li class="">The element matches the <strong>schema definition</strong> for its type.</li>
+<li class="">The element lies inside the configured <strong>workspace</strong> for its element type, if any workspace is configured.</li>
+</ol>
+<p>Workflow events are the exception to steps 3 and 4: they are matched by workflow name only.</p>
+<p>For data objects one requirement remains, because the workflow payload is built by the same extractor as the element
+events: the object's class needs an entry under <strong>Schema Definition Data Objects</strong>. Without it the payload cannot be
+built and no request is sent, even though the workflow name matched.</p>
+<p>For the shape of the request itself, see <a class="" href="../Request_Structure/index.html">Request Structure</a>.</p></div></article></div></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

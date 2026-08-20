@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Datahub Simple Rest API — HyperMDM</title>
+<link rel="stylesheet" href="../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../hypercdc-print.css">
+</head>
+<body data-docs-root="../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>HyperMDM Datahub Simple Rest API</h1></header>
+<p>This extension adds a simple read-only rest API endpoint to HyperMDM Datahub for assets and data objects. All exposed
+data can be configured, is indexed in OpenSearch or Elasticsearch (based on your configuration) and delivered from
+there for better query performance and scalability.</p>
+<p>Use it to connect HyperMDM to other systems or to frontend applications.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="features-in-a-nutshell">Features in a Nutshell<a href="#features-in-a-nutshell" class="hash-link" aria-label="Direct link to Features in a Nutshell" title="Direct link to Features in a Nutshell" translate="no">​</a></h2>
+<ul>
+<li class="">Schema and exposed data configuration like with other Datahub adapters</li>
+<li class="">Data indexed in and delivered from OpenSearch or Elasticsearch indices, so the three query endpoints put no
+additional load on the database</li>
+<li class="">Endpoint documentation and test via Swagger UI</li>
+<li class="">Four available endpoints:<!-- -->
+<ul>
+<li class=""><strong>tree-items</strong>: loads all elements of a tree level</li>
+<li class=""><strong>search</strong>: searches elements, returns elements of all types, no folder structures</li>
+<li class=""><strong>get-element</strong>: gets one single element by type and id</li>
+<li class=""><strong>download-asset</strong>: delivers the binary of one asset, as original or as a configured thumbnail. This endpoint
+checks the index for access, then loads the asset from the database and streams the file from storage, so unlike
+the three query endpoints it does hit the database.</li>
+</ul>
+</li>
+<li class="">Endpoint security via bearer token that has to be sent as a header with every request.</li>
+<li class=""><strong>MCP Server</strong> (Experimental): Model Context Protocol support for AI agent integration</li>
+</ul>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Datahub_Simple_Rest-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_Simple_Rest-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Swagger</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/swagger-b9c704e243ee3282b70d696ad189ba43.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../visuals-catalog.html#fig-Datahub_Simple_Rest-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/swagger-b9c704e243ee3282b70d696ad189ba43.png"><figure class="visual-placeholder" id="fig-Datahub_Simple_Rest-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_Simple_Rest-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Swagger</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/swagger-b9c704e243ee3282b70d696ad189ba43.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../visuals-catalog.html#fig-Datahub_Simple_Rest-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/swagger-b9c704e243ee3282b70d696ad189ba43.png"><figure class="visual-placeholder" id="fig-Datahub_Simple_Rest-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_Simple_Rest-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Swagger</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/swagger-b9c704e243ee3282b70d696ad189ba43.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../visuals-catalog.html#fig-Datahub_Simple_Rest-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span>
+<em>Datahub Simple Rest API available endpoints</em></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="documentation-overview">Documentation Overview<a href="#documentation-overview" class="hash-link" aria-label="Direct link to Documentation Overview" title="Direct link to Documentation Overview" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="Installation/index.html">Installation &amp; Bundle Configuration</a>
+<ul>
+<li class=""><a class="" href="Installation/Upgrade_Notes/index.html">Upgrade Notes</a></li>
+<li class=""><a class="" href="Installation/Opensearch/index.html">OpenSearch Client Setup</a></li>
+<li class=""><a class="" href="Installation/Elasticsearch/index.html">Elasticsearch Client Setup</a></li>
+<li class=""><a class="" href="Installation/Index_Configuration/index.html">Index Configuration</a></li>
+</ul>
+</li>
+<li class=""><a class="" href="Configuration/index.html">Configuration</a>
+<ul>
+<li class=""><a class="" href="Configuration/Endpoint_Configuration/index.html">Endpoint Configuration</a></li>
+</ul>
+</li>
+<li class=""><a class="" href="Indexing_Details/index.html">Indexing Details</a></li>
+<li class=""><a class="" href="Filtering_and_Paging/index.html">Filtering and Paging</a></li>
+<li class=""><a class="" href="MCP_Server/index.html">MCP Server Integration (Experimental)</a></li>
+<li class=""><a class="" href="Customization/index.html">Customization</a></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-information">Further Information<a href="#further-information" class="hash-link" aria-label="Direct link to Further Information" title="Direct link to Further Information" translate="no">​</a></h2>
+<p>On other HyperMDM Datahub extensions:</p>
+<ul>
+<li class=""><a class="" href="../Datahub/Installation_and_Upgrade/index.html">Datahub (GraphQL API)</a></li>
+<li class=""><a class="" href="../Data_Importer/Installation/index.html">Data Importer</a></li>
+<li class=""><a class="" href="../Datahub_File_Export/Installation/index.html">Datahub File Export</a></li>
+<li class=""><a class="" href="../Datahub_Productsup/Installation/index.html">Datahub Productsup</a></li>
+<li class=""><a class="" href="../Datahub_Webhooks/Installation/index.html">Datahub Webhooks</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../search.js"></script>
+</body>
+</html>

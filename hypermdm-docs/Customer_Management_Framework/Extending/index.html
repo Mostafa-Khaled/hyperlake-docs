@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Extending the Customer Management Framework — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Extending the Customer Management Framework</h1></header>
+<p>CMF is a framework: most of its features (customer save handlers, segment builders, ActionTrigger rule elements,
+newsletter provider handlers, duplicate similarity matchers) are built around interfaces you implement and register as
+tagged Symfony services. Each feature chapter documents its own extension points, for example
+<a class="" href="../CustomerSegments/index.html#create-your-own-segmentbuilder">custom SegmentBuilders</a> or
+<a class="" href="../CustomerSaveManager/index.html#customer-save-handlers">custom customer save handlers</a>.</p>
+<p>This chapter covers extension points that cut across features: events dispatched by CMF, and how to add custom
+elements to the ActionTrigger rule editor in HyperMDM Studio.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="custom-triggers-conditions-and-actions">Custom Triggers, Conditions, and Actions<a href="#custom-triggers-conditions-and-actions" class="hash-link" aria-label="Direct link to Custom Triggers, Conditions, and Actions" title="Direct link to Custom Triggers, Conditions, and Actions" translate="no">​</a></h2>
+<p>Additional bundles can add custom triggers, conditions, and actions to the
+<a class="" href="../ActionTrigger/index.html">ActionTrigger automation rule editor</a>. This requires both a server-side and a HyperMDM
+Studio frontend part.</p>
+<p><strong>Server-side (PHP):</strong></p>
+<ul>
+<li class="">A trigger implements <code>CustomerManagementFrameworkBundle\ActionTrigger\Event\EventInterface</code> (most triggers extend
+<code>AbstractSingleCustomerEvent</code>) and is dispatched on the Symfony event dispatcher.</li>
+<li class="">A condition extends <code>CustomerManagementFrameworkBundle\ActionTrigger\Condition\AbstractCondition</code> (or
+<code>AbstractMatchCondition</code>).</li>
+<li class="">An action extends <code>CustomerManagementFrameworkBundle\ActionTrigger\Action\AbstractAction</code>.</li>
+</ul>
+<p>Use the CMF's own implementations as reference, for example the <code>Add Segment</code> action
+(<a href="https://github.com/pimcore/ee-customer-data-framework/blob/2026.x/src/ActionTrigger/Action/AddSegment.php" target="_blank" rel="noopener noreferrer" class=""><code>AddSegment</code></a>)
+or the <code>Customer</code> condition
+(<a href="https://github.com/pimcore/ee-customer-data-framework/blob/2026.x/src/ActionTrigger/Condition/Customer.php" target="_blank" rel="noopener noreferrer" class=""><code>Condition\Customer</code></a>).</p>
+<p><strong>HyperMDM Studio frontend (TypeScript/React):</strong></p>
+<p>The rule editor renders each trigger, condition, and action as a
+<a class="" href="../../Studio_UI/Architecture_Overview/SDK_Overview/Dynamic_Types/index.html">Dynamic Type</a>
+from the Studio SDK's <code>rule-builder</code> module:</p>
+<ul>
+<li class="">A trigger registers a class extending <code>DynamicTypeRuleTriggerAbstract</code>, with <code>id</code> set to the trigger's <strong>event
+name</strong> (for example <code>plugin.cmf.cron-trigger</code>, see <a class="" href="Events/index.html#actiontrigger-rule-engine-events">Events</a>).</li>
+<li class="">A condition registers a class extending <code>DynamicTypeRuleConditionAbstract</code>, with <code>id</code> set to the condition PHP
+class's <strong>fully qualified name</strong> (for example <code>\CustomerManagementFrameworkBundle\ActionTrigger\Condition\Customer</code>).</li>
+<li class="">An action registers a class extending <code>DynamicTypeRuleActionAbstract</code>, with <code>id</code> set to the action PHP class's
+<strong>fully qualified name</strong> (for example <code>\CustomerManagementFrameworkBundle\ActionTrigger\Action\AddSegment</code>).</li>
+</ul>
+<p>Each of these classes provides a <code>label</code> (a translation key), a <code>defaultValue</code>, and a <code>renderForm()</code> method that
+returns the React form shown in the rule editor. See CMF's own implementations under
+<code>assets/studio/js/src/modules/automation-rules/dynamic-types/</code> for reference.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="gdpr-data-provider">GDPR Data Provider<a href="#gdpr-data-provider" class="hash-link" aria-label="Direct link to GDPR Data Provider" title="Direct link to GDPR Data Provider" translate="no">​</a></h2>
+<p>CMF registers a GDPR data provider with the key <code>customers</code> in the Studio Backend Bundle's GDPR data extraction
+framework; no CMF-specific GDPR controllers are needed. The provider (<code>CustomerDataProvider</code>) exposes:</p>
+<ul>
+<li class="">Customer search, filterable by <code>id</code>, <code>firstname</code>, <code>lastname</code>, and <code>email</code>.</li>
+<li class="">Full customer data export.</li>
+<li class="">Each customer's activity data.</li>
+</ul>
+<p>Access to this provider requires the <code>plugin_cmf_perm_customerview_admin</code> permission (the same permission used for
+all other write operations on customers; see the
+<a class="" href="../Installation/index.html#permissions">Installation chapter's permission table</a>). Downloading a single customer's
+data additionally requires the <code>view</code> element permission on that customer object.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="events">Events<a href="#events" class="hash-link" aria-label="Direct link to Events" title="Direct link to Events" translate="no">​</a></h2>
+<p>See <a class="" href="Events/index.html">Events</a> for the full list of events CMF dispatches, grouped by area.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

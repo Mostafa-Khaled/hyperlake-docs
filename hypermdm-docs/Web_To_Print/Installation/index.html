@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Installation</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="installing-processor-dependencies">Installing processor dependencies<a href="#installing-processor-dependencies" class="hash-link" aria-label="Direct link to Installing processor dependencies" title="Direct link to Installing processor dependencies" translate="no">​</a></h2>
+<p>If you want to use Gotenberg as processor, you need to install additional dependencies. For more information about installation, see <a class="" href="../Doc_Types_and_Available_Processors/index.html#available-pdf-processors">Document Types and Available PDF Processors</a></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="installation-process">Installation Process<a href="#installation-process" class="hash-link" aria-label="Direct link to Installation Process" title="Direct link to Installation Process" translate="no">​</a></h2>
+<p>After installing the bundle and the required dependencies of the processor you wish to use, configure the settings
+under <strong>Experience &amp; E-commerce &gt; Web-to-Print Settings</strong> in the HyperMDM Studio main menu.</p>
+<p>If the <em>Save</em> button on bottom right is disabled, your
+<a class="" href="../../HyperMDM/Development_Details/Configuration/Configuration_Environments/index.html">config location configuration</a>
+does not allow changing the config in HyperMDM Studio. Change this by editing <code>&lt;HyperMDM root&gt;/config/config.yaml</code>:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_web_to_print</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">config_location</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">web_to_print</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">write_target</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'settings-store'</span><br></span></code></pre></div></div>
+<p>The settings form documents the options available for the processor you selected.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="permissions">Permissions<a href="#permissions" class="hash-link" aria-label="Direct link to Permissions" title="Direct link to Permissions" translate="no">​</a></h2>
+<p>The installer registers the <code>web2print_settings</code> permission under the category <em>HyperMDM Web2Print Bundle</em>. Assign it in
+HyperMDM Studio under user and role management.</p>
+<div class="table-container"><table><thead><tr><th>Permission</th><th>Effect</th></tr></thead><tbody><tr><td><code>web2print_settings</code></td><td>Grants access to the Web-to-Print settings. Without it, the settings entry is hidden from the Studio main menu and the settings endpoints are rejected.</td></tr><tr><td><code>documents</code> (HyperMDM core)</td><td>Required to generate, cancel, download and stream PDFs from a print document.</td></tr></tbody></table></div>
+<p>Generating a PDF therefore needs the standard <code>documents</code> permission, not <code>web2print_settings</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="uninstallation">Uninstallation<a href="#uninstallation" class="hash-link" aria-label="Direct link to Uninstallation" title="Direct link to Uninstallation" translate="no">​</a></h2>
+<p>Uninstalling the bundle removes the permission and the print document types. It does not clean up <code>printpages</code> or
+<code>printcontainers</code>. Before uninstalling, remove or archive all dependent documents.</p>
+<p>To clean up the database afterwards, run the command below. Create a backup first, all data of these document types
+will be lost.</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:documents:cleanup printpage printcontainer</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

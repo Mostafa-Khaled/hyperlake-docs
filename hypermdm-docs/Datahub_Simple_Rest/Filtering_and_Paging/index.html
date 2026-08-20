@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Filtering and Paging — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Filtering and Paging</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="fulltext-search-and-simple-filtering">Fulltext search and simple filtering<a href="#fulltext-search-and-simple-filtering" class="hash-link" aria-label="Direct link to Fulltext search and simple filtering" title="Direct link to Fulltext search and simple filtering" translate="no">​</a></h2>
+<p>Use the <code>fulltext_search</code> field for fulltext search and simple filtering.
+It supports <code>simple_query_string</code> capabilities of OpenSearch/Elasticsearch and the following operators:</p>
+<ul>
+<li class=""><code>+</code> signifies AND operation</li>
+<li class=""><code>|</code> signifies OR operation</li>
+<li class=""><code>-</code> negates a single term</li>
+<li class=""><code>"</code> wraps a number of term to signify a phrase for searching</li>
+<li class=""><code>*</code> at the end of a term signifies a prefix query</li>
+<li class=""><code>(</code> and <code>)</code> signify precedence</li>
+<li class=""><code>~n</code> used after a term (for example, <code>wnid~3</code>), sets fuzziness, when used after a phrase, sets slop.</li>
+</ul>
+<p>Details see</p>
+<ul>
+<li class=""><a href="https://docs.opensearch.org/latest/query-dsl/full-text/simple-query-string/#simple-query-string-syntax" target="_blank" rel="noopener noreferrer" class="">OpenSearchDocs</a></li>
+<li class=""><a href="https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-simple-query-string-query" target="_blank" rel="noopener noreferrer" class="">ElasticsearchDocs</a></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="querystringquery-for-advanced-filtering-recommended-for-filtering">QueryStringQuery for Advanced Filtering (recommended for filtering)<a href="#querystringquery-for-advanced-filtering-recommended-for-filtering" class="hash-link" aria-label="Direct link to QueryStringQuery for Advanced Filtering (recommended for filtering)" title="Direct link to QueryStringQuery for Advanced Filtering (recommended for filtering)" translate="no">​</a></h2>
+<p>Use the <code>query_string_query</code> field for advanced filtering.
+It supports <code>query_string</code> capabilities and syntax of OpenSearch/Elasticsearch which allows advanced filtering for
+specific fields.</p>
+<p>Details see</p>
+<ul>
+<li class=""><a href="https://docs.opensearch.org/latest/query-dsl/full-text/query-string/" target="_blank" rel="noopener noreferrer" class="">OpenSearchDocs</a></li>
+<li class=""><a href="https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-query-string-query" target="_blank" rel="noopener noreferrer" class="">ElasticsearchDocs</a></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="query-filters-legacy-filtering-mechanism">Query Filters (legacy filtering mechanism)<a href="#query-filters-legacy-filtering-mechanism" class="hash-link" aria-label="Direct link to Query Filters (legacy filtering mechanism)" title="Direct link to Query Filters (legacy filtering mechanism)" translate="no">​</a></h2>
+<p>Additionally, querying can be done using a limited and simplified subset of the syntax described
+<a href="https://restdb.io/docs/querying-with-the-api" target="_blank" rel="noopener noreferrer" class="">here</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="supported-logic-operators">Supported Logic Operators<a href="#supported-logic-operators" class="hash-link" aria-label="Direct link to Supported Logic Operators" title="Direct link to Supported Logic Operators" translate="no">​</a></h3>
+<ul>
+<li class="">$not</li>
+<li class="">$or</li>
+<li class="">$and</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="examples">Examples<a href="#examples" class="hash-link" aria-label="Direct link to Examples" title="Direct link to Examples" translate="no">​</a></h3>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">filter={"system.modificationDate" : "1729685234"}</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">... SQL equivalent ...</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">where `modificationDate` = '1729685234'</span><br></span></code></pre></div></div>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">filter=[{"system.creationDate" : "1557394706"}, {"system.modificationDate" : "1729685234"}]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">...</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">where `creationDate` = '1557394706' AND `modificationDate` = '1557394706'</span><br></span></code></pre></div></div>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">filter={"$and" : [{"system.subtype" : "Car"}, {"$or": [{"system.id": "14"}, {"system.key": "E-Type"}]}]}</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">...</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">where `subtype` = 'Car' AND (`id` = '14' OR `key` = 'E-Type')</span><br></span></code></pre></div></div>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">filter={"$and" : [{"system.subtype": "Car"}, {"data.Manufacturer" : "Jaguar"}, {"$or": [{"system.id": "14"}, {"system.key": "E-Type"}]}]}</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">...        </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">where `subtype` = 'Car' AND Manufacturer = 'Jaguar' AND (`id` = '14' OR `key` = 'E-Type')</span><br></span></code></pre></div></div>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">filter={"system.type": {"$not": "folder"}}</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">...</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">where NOT `type` = 'folder'</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sorting">Sorting<a href="#sorting" class="hash-link" aria-label="Direct link to Sorting" title="Direct link to Sorting" translate="no">​</a></h2>
+<p>Use the <code>order_by</code> parameter to control result ordering.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="format">Format<a href="#format" class="hash-link" aria-label="Direct link to Format" title="Direct link to Format" translate="no">​</a></h3>
+<p><strong>Simple string</strong> - field name only (defaults to ascending):</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">"fieldPath"</span><br></span></code></pre></div></div>
+<p><strong>JSON object</strong> - field paths as keys and sort direction as values:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{"fieldPath": "asc|desc"}</span><br></span></code></pre></div></div>
+<p><strong>JSON object with options (needed for Elasticsearch only)</strong>  - extended format with sort direction and unmapped_type:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{"fieldPath": {"order": "asc|desc", "unmapped_type": "keyword|double"}}</span><br></span></code></pre></div></div>
+<p><strong>JSON array</strong> - multiple fields (first is primary sort, subsequent are tiebreakers):</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{"data.priority": "desc", "system.creationDate": "asc"}</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="examples-1">Examples<a href="#examples-1" class="hash-link" aria-label="Direct link to Examples" title="Direct link to Examples" translate="no">​</a></h3>
+<p>Sort by modification date (simple string, ascending):</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">system.modificationDate</span><br></span></code></pre></div></div>
+<p>Sort by modification date (newest first):</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{"system.modificationDate": "desc"}</span><br></span></code></pre></div></div>
+<p>Sort by price (lowest first):</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{"data.price": "asc"}</span><br></span></code></pre></div></div>
+<p>Sort by price with explicit unmapped_type (for numeric fields in Elasticsearch):</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{"data.price": {"order": "asc", "unmapped_type": "double"}}</span><br></span></code></pre></div></div>
+<p>Multiple sort fields:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{"data.category": "asc", "data.price": "desc", "system.id": "asc"}</span><br></span></code></pre></div></div>
+<p>Mixed format (simple and extended):</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{"data.price": {"order": "asc", "unmapped_type": "double"}, "system.id": "asc"}</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-unmapped_type-parameter">The <code>unmapped_type</code> Parameter<a href="#the-unmapped_type-parameter" class="hash-link" aria-label="Direct link to the-unmapped_type-parameter" title="Direct link to the-unmapped_type-parameter" translate="no">​</a></h3>
+<p>When querying across multiple indices where a sort field may not exist in all indices, you can specify <code>unmapped_type</code>
+to define how missing fields should be treated.</p>
+<p><strong>When to use:</strong></p>
+<ul>
+<li class=""><strong>Elasticsearch</strong>: Required when sorting by numeric fields (e.g., <code>data.price</code>, <code>data.number</code>) to prevent
+"incompatible sort types" errors</li>
+<li class=""><strong>OpenSearch</strong>: Optional</li>
+</ul>
+<p><strong>Supported types:</strong></p>
+<ul>
+<li class=""><code>keyword</code> - For text/string fields (default)</li>
+<li class=""><code>double</code> - For numeric fields</li>
+</ul>
+<p><strong>Why it matters:</strong>
+When a field exists in some indices but not others (e.g., <code>data.price</code> exists in product objects but not in
+asset or folder indices), Elasticsearch needs to know how to handle the missing field during sorting.
+Without <code>unmapped_type</code>, queries may fail with "incompatible sort types" errors when the same field name has different
+types across shards.</p>
+<p><strong>Examples:</strong></p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">// Numeric field sorting (Elasticsearch)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{"data.number": {"order": "asc", "unmapped_type": "double"}}</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">// Text field sorting</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{"data.name": {"order": "asc", "unmapped_type": "keyword"}}</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">// Multiple fields with mixed types</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "data.priority": {"order": "desc", "unmapped_type": "double"},</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "data.name": {"order": "asc", "unmapped_type": "keyword"},</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "system.id": "asc"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="default-behavior">Default Behavior<a href="#default-behavior" class="hash-link" aria-label="Direct link to Default Behavior" title="Direct link to Default Behavior" translate="no">​</a></h3>
+<p>If <code>order_by</code> is omitted, results are ordered by relevance score.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="paging">Paging<a href="#paging" class="hash-link" aria-label="Direct link to Paging" title="Direct link to Paging" translate="no">​</a></h2>
+<p>The paging can be done via the <code>page_cursor</code> parameter in the query. When loading the next page of a result, use the
+value provided by the previous response for the <code>page_cursor</code> parameter. The value is available in the <code>link</code> header
+or via the data attribute <code>page_cursor</code> in the response content.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="technical-details">Technical Details<a href="#technical-details" class="hash-link" aria-label="Direct link to Technical Details" title="Direct link to Technical Details" translate="no">​</a></h3>
+<p>The <code>page_cursor</code> has two operation modes:</p>
+<ul>
+<li class="">for pages below the configured max results window, it uses a numeric value and OpenSearch <code>from</code> query.</li>
+<li class="">for pages after the max results window, it uses the <code>search_after</code> option of <a href="https://opensearch.org/docs/latest/search-plugins/searching-data/paginate/" target="_blank" rel="noopener noreferrer" class="">OpenSearch</a> or <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/paginate-search-results.html" target="_blank" rel="noopener noreferrer" class="">Elasticsearch</a> respectively.</li>
+</ul>
+<p>The max results window can be configured via symfony configuration:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_data_hub_simple_rest</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># Limit of page size and offset when paging only works via page cursor (and not page numbers anymore).</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">max_results_window</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain">   </span><span class="token number" style="color:#36acaa">10000</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

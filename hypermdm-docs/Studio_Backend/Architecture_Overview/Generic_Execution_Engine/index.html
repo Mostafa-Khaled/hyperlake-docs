@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Generic Execution Engine — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Generic Execution Engine</h1></header>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Studio_Backend-Architecture_Overview-Generic_Execution_Engine-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Studio_Backend-Architecture_Overview-Generic_Execution_Engine-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Studio_Backend-Architecture_Overview-Generic_Execution_Engine-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>caution</div><div class="admonitionContent_BuS1"><p>This documentation is currently work in progress and will be updated soon.</p><p>Messages are dispatched via <code>hypermdm_generic_execution_engine</code> transport. Please ensure you have workers processing this transport.</p></div></div>
+<p>The Generic Execution Engine executes long-running actions in the background using the Symfony Messenger
+component. For the core framework documentation, see the
+<a class="" href="../../../HyperMDM/Development_Tools/Generic_Execution_Engine/index.html">Generic Execution Engine</a>.</p>
+<p>The Studio Backend uses the Execution Engine for these operations:</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="asset-zip-upload">Asset ZIP Upload<a href="#asset-zip-upload" class="hash-link" aria-label="Direct link to Asset ZIP Upload" title="Direct link to Asset ZIP Upload" translate="no">​</a></h3>
+<p>When uploading a ZIP file containing assets, the ZIP file is extracted and the assets are created in the background.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="asset-zip-download">Asset ZIP Download<a href="#asset-zip-download" class="hash-link" aria-label="Direct link to Asset ZIP Download" title="Direct link to Asset ZIP Download" translate="no">​</a></h3>
+<p>When downloading a multiple assets as a ZIP file, this ZIP file is created in the background and can then be downloaded once the processing is finished.
+There are some configuration options available for the ZIP download, which can be configured in the <code>config.yaml</code> file.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_studio_backend</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">asset_download_settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># Maximum number of assets that can be downloaded in a single ZIP file. Default value is 1000.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">amount_limit</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">1000</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># Maximum size of the ZIP file in bytes. Default value is 5 GB.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">size_limit</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">5368709120</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="element-csv-export">Element CSV Export<a href="#element-csv-export" class="hash-link" aria-label="Direct link to Element CSV Export" title="Direct link to Element CSV Export" translate="no">​</a></h3>
+<p>Elements like Assets and Data Objects can be exported based on the provided grid configuration as a CSV file. The export is done in the background and can be downloaded after it's finished.
+There are some configuration options available for the CSV export, which can be configured in the <code>config.yaml</code> file.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="element-xlsx-export">Element XLSX Export<a href="#element-xlsx-export" class="hash-link" aria-label="Direct link to Element XLSX Export" title="Direct link to Element XLSX Export" translate="no">​</a></h3>
+<p>Elements like Assets and Data Objects can be exported based on the provided grid configuration as a XLSX file. The export is done in the background and can be downloaded after it's finished.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_studio_backend</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">csv_settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># Default delimiter for CSV files when no value is passed by grid configuration. Default value is ';'.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">default_delimiter</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">';'</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elements-cloning">Elements Cloning<a href="#elements-cloning" class="hash-link" aria-label="Direct link to Elements Cloning" title="Direct link to Elements Cloning" translate="no">​</a></h3>
+<p>Assets, Documents, Data Objects and folders can be cloned in the background. This is useful when cloning a large number of elements or large trees.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elements-deletion">Elements Deletion<a href="#elements-deletion" class="hash-link" aria-label="Direct link to Elements Deletion" title="Direct link to Elements Deletion" translate="no">​</a></h3>
+<p>Assets, Documents, Data Objects and folders can be deleted in the background. This is useful when deleting a large number of elements or nested trees.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elements-recycle-bin">Elements Recycle Bin<a href="#elements-recycle-bin" class="hash-link" aria-label="Direct link to Elements Recycle Bin" title="Direct link to Elements Recycle Bin" translate="no">​</a></h3>
+<p>Before deleting elements, they and the respective children are moved to the recycle bin. This is done in the background while using the Generic Execution Engine.
+By default, the recycle bin is only used for elements with fewer than 100 children. Configure the threshold in <code>config.yaml</code>:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_studio_backend</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">element_recycle_bin_threshold</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">100</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elements-patching">Elements Patching<a href="#elements-patching" class="hash-link" aria-label="Direct link to Elements Patching" title="Direct link to Elements Patching" translate="no">​</a></h3>
+<p>Patching of multiple elements is executed with the help of Generic Execution Engine in the background. This is useful when using bulk patches on a large number of elements.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elements-rewrite-references">Elements Rewrite References<a href="#elements-rewrite-references" class="hash-link" aria-label="Direct link to Elements Rewrite References" title="Direct link to Elements Rewrite References" translate="no">​</a></h3>
+<p>When cloning elements, the references to other elements can be rewritten. When this is desired, the action is executed in the background. This is useful when cloning a large number of elements or large trees.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="update-to-202610">Update to 2026.1.0<a href="#update-to-202610" class="hash-link" aria-label="Direct link to Update to 2026.1.0" title="Direct link to Update to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php-and-dependency-requirements">PHP and Dependency Requirements<a href="#php-and-dependency-requirements" class="hash-link" aria-label="Direct link to PHP and Dependency Requirements" title="Direct link to PHP and Dependency Requirements" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+<li class="">Removed dependency on <code>hypermdm/admin-ui-classic-bundle</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-extjs--admin-classic">Removed ExtJS / Admin Classic<a href="#removed-extjs--admin-classic" class="hash-link" aria-label="Direct link to Removed ExtJS / Admin Classic" title="Direct link to Removed ExtJS / Admin Classic" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMHeadlessDocumentsBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code>.</li>
+<li class="">Removed <code>BundleAdminClassicTrait</code> and the associated <code>getCssPaths()</code>, <code>getJsPaths()</code>,
+<code>getEditmodeCssPaths()</code>, and <code>getEditmodeJsPaths()</code> methods.</li>
+<li class="">All legacy JS/CSS assets have been deleted: <code>startup.js</code>, event listeners, Datahub config JS,
+headless document editor, bricks/templates JS, editables, and bootstrap4 vendor assets.</li>
+<li class="">The following controllers have been removed:<!-- -->
+<ul>
+<li class=""><code>AdminListener</code></li>
+<li class=""><code>HeadlessDocumentController</code></li>
+<li class=""><code>Brick/ConfigController</code></li>
+<li class=""><code>Template/ConfigController</code></li>
+<li class=""><code>DataHub/Config/GetController</code></li>
+<li class=""><code>DataHub/Config/SaveController</code></li>
+</ul>
+</li>
+<li class=""><code>StudioRouteLoader</code> and <code>config_legacy.yaml</code> have been removed.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-studio-integration">HyperMDM Studio Integration<a href="#hypermdm-studio-integration" class="hash-link" aria-label="Direct link to Pimcore Studio Integration" title="Direct link to Pimcore Studio Integration" translate="no">​</a></h3>
+<ul>
+<li class="">Full HyperMDM Studio frontend assets are now included under <code>assets/studio/</code>.</li>
+<li class="">New Studio backend controllers added:<!-- -->
+<ul>
+<li class=""><code>Controller/Studio/DataHub/Config/GetController</code></li>
+<li class=""><code>Controller/Studio/DataHub/Config/UpdateController</code></li>
+</ul>
+</li>
+<li class="">New service and interface introduced: <code>DataHubConfigurationService</code> /
+<code>DataHubConfigurationServiceInterface</code>.</li>
+<li class="">New schema classes added: <code>DataHubConfigurationDetail</code>, <code>UpdateDataHubConfiguration</code>,
+<code>UpdateDataHubConfigurationResponse</code>.</li>
+<li class="">New events introduced: <code>DataHubConfigurationDetailEvent</code>, <code>DataHubConfigurationUpdateEvent</code>.</li>
+<li class="">New <code>WebpackEntryPointProvider</code> added.</li>
+<li class="">New translations added: <code>studio.en.yaml</code>, <code>studio_api_docs.en.yaml</code>.</li>
+<li class="">New <code>data_hub.yaml</code> configuration file added. It registers the Datahub adapter and is only loaded when the
+<code>hypermdm_data_hub</code> extension is present.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="bug-fixes-and-cleanup">Bug Fixes and Cleanup<a href="#bug-fixes-and-cleanup" class="hash-link" aria-label="Direct link to Bug Fixes and Cleanup" title="Direct link to Bug Fixes and Cleanup" translate="no">​</a></h3>
+<ul>
+<li class="">Datahub configuration import re-enabled via a fix in <code>HyperMDMHeadlessDocumentsExtension</code>
+together with the new <code>data_hub.yaml</code> config.</li>
+<li class="">Doctrine enum type mapping configuration has been removed.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="update-to-version-23">Update to Version 2.3<a href="#update-to-version-23" class="hash-link" aria-label="Direct link to Update to Version 2.3" title="Direct link to Update to Version 2.3" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="general">General<a href="#general" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h3>
+<ul>
+<li class="">Dropped support of HyperMDM 10, bumped minimum requirement of <code>hypermdm/hypermdm</code> to <code>^11.2</code>. Replaced all
+<code>$request-&gt;get()</code> calls with their explicit input source.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="update-to-version-20">Update to Version 2.0<a href="#update-to-version-20" class="hash-link" aria-label="Direct link to Update to Version 2.0" title="Direct link to Update to Version 2.0" translate="no">​</a></h2>
+<ul>
+<li class="">
+<p>If you are upgrading to HyperMDM 11, install the <code>hypermdm/admin-ui-classic-bundle</code> bundle.</p>
+</li>
+<li class="">
+<p>If you are using the <code>symfony-config</code> option for <code>HYPERMDM_WRITE_TARGET_HEADLESS_DOCUMENT_BRICKS</code> and
+<code>HYPERMDM_WRITE_TARGET_HEADLESS_DOCUMENT_TEMPLATES</code>, execute the migration:</p>
+</li>
+</ul>
+<ol>
+<li class="">
+<p><code>bin/console hypermdm:migrations:execute 'HyperMDM\Bundle\HeadlessDocumentsBundle\Migrations\Version20230404095107'</code>.</p>
+</li>
+<li class="">
+<p>Add config to your config file:</p>
+</li>
+</ol>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_headless_documents</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">config_location</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">headless_templates</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">write_target</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'symfony-config'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">directory</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'/var/www/html/var/config/headless_templates'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">headless_bricks</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">write_target</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'symfony-config'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">directory</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'/var/www/html/var/config/headless_bricks'</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

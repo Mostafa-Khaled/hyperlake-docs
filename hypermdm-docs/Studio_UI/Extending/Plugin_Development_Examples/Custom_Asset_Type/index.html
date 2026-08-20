@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Add a Custom Asset Type — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>How to Add a Custom Asset Type</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="overview">Overview<a href="#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h2>
+<p>This example adds a custom <code>indesign</code> asset type to HyperMDM Studio. When users upload
+<code>.indd</code> files, they are automatically detected as InDesign assets and open with a dedicated
+editor showing Custom Metadata, Properties, Versions, and other standard tabs.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="details">Details<a href="#details" class="hash-link" aria-label="Direct link to Details" title="Direct link to Details" translate="no">​</a></h2>
+<p>Adding a custom asset type requires both a PHP backend and a HyperMDM Studio frontend plugin:</p>
+<p><strong>Backend (PHP):</strong></p>
+<ul>
+<li class="">An asset model class extending <code>HyperMDM\Model\Asset</code> (or a specific subtype)</li>
+<li class="">Registration via <code>hypermdm.assets.type_definitions.map</code> configuration with filename matching patterns</li>
+<li class="">No database migration needed - the <code>assets.type</code> column is <code>varchar(20)</code></li>
+</ul>
+<p><strong>Frontend (Studio Plugin):</strong></p>
+<ul>
+<li class="">A <code>TabManager</code> subclass that defines the editor type</li>
+<li class="">Registration in the <code>Asset/Editor/TypeRegistry</code> with the asset type name and tab manager service ID</li>
+<li class="">Tab registration (Custom Metadata, Properties, Versions, Dependencies, Notes &amp; Events, Tags, Workflow)</li>
+</ul>
+<p>Unlike custom document types, asset types do not need a sidebar manager or context menu
+registration - assets are typed automatically based on filename matching patterns.</p>
+<p>For the full backend + frontend guide, see the
+<a class="" href="../../../../HyperMDM/Extending_HyperMDM/Custom_Extension_Guides/Adding_Asset_Types/index.html">Adding Asset Types</a>
+documentation in the HyperMDM core.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="code-example-on-github">Code Example on GitHub<a href="#code-example-on-github" class="hash-link" aria-label="Direct link to Code Example on GitHub" title="Direct link to Code Example on GitHub" translate="no">​</a></h2>
+<blockquote>
+<p><a href="https://github.com/pimcore/studio-example-bundle/tree/main/assets/js/src/examples/custom-asset-type" target="_blank" rel="noopener noreferrer" class="">Custom Asset Type example on GitHub</a>.</p>
+</blockquote>
+<ul>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-asset-type/index.ts" target="_blank" rel="noopener noreferrer" class="">Plugin entry (index.ts)</a> - binds TabManager and registers the module</li>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-asset-type/modules/indesign-asset-module.tsx" target="_blank" rel="noopener noreferrer" class="">Module (indesign-asset-module.tsx)</a> - registers type, tabs, and context menu</li>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-asset-type/asset/editor/types/indesign/tab-manager/indesign-tab-manager.ts" target="_blank" rel="noopener noreferrer" class="">TabManager (indesign-tab-manager.ts)</a> - extends <code>TabManager</code> with <code>type = 'indesign'</code></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

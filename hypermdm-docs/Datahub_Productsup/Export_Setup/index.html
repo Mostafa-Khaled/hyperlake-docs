@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Export Setup — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Export setup</h1></header>
+<p>The Delivery Endpoint serves cached items from the <code>plugin_datahub_productsup_cache_item</code> table (see
+<a class="" href="../Basic_Configuration/index.html">Basic Configuration</a>). Depending on the <code>Save Hook</code>, that cache needs to be filled by
+running the <code>datahub:export:productsup</code> command:</p>
+<ul>
+<li class=""><code>Save Hook = Direct Export</code>: every object save already writes to the cache table. Running the command is optional,
+but useful to refresh the entries the configuration currently matches, for example after a schema or workspace
+change. It is not a complete reset, see the note below.</li>
+<li class=""><code>Save Hook = Queue</code> or <code>Disabled</code>: the command is required to move data into the cache table. Set it up as a
+recurring cron job.</li>
+</ul>
+<p>There is no HyperMDM Studio button or Symfony Messenger transport involved. The command runs synchronously and, via
+the <a href="https://github.com/webmozarts/console-parallelization" target="_blank" rel="noopener noreferrer" class="">webmozarts/console-parallelization</a> package, can fan out
+work across multiple child processes.</p>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Datahub_Productsup-Export_Setup-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_Productsup-Export_Setup-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Datahub_Productsup-Export_Setup-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>Earlier, Admin Classic-based versions of this bundle offered a "Save, reset and clear queue" action that cleared the
+cache table and repopulated the queue in one click. The underlying mechanism (<code>ResetConfigEvent</code>) still exists and is
+reachable through the Studio Backend API by saving the configuration with <code>saveType: reset</code>, but the current HyperMDM
+Studio configuration panel does not expose a button for it. Deleting a configuration triggers the same reset.</p><p>A full run of <code>datahub:export:productsup</code> is not an exact substitute. It only visits items that the configuration
+still matches (right class, inside a workspace path, published), so it drops cache entries for items that fail
+export validation but leaves entries for items that no longer match the configuration at all. A reset deletes every
+cache entry of the configuration before refilling the queue.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="export-modes">Export modes<a href="#export-modes" class="hash-link" aria-label="Direct link to Export modes" title="Direct link to Export modes" translate="no">​</a></h2>
+<ul>
+<li class="">Full export: recomputes and writes every relevant item of a configuration, regardless of the queue. Items that no
+longer pass export validation are removed from the cache table.</li>
+<li class="">Queue-only export (<code>--only-queue-items</code>): only processes items currently in the <code>plugin_datahub_queue_item</code> table,
+which <code>Save Hook = Queue</code> populates on object save. Processed queue entries are deleted afterwards.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="command-usage">Command usage<a href="#command-usage" class="hash-link" aria-label="Direct link to Command usage" title="Direct link to Command usage" translate="no">​</a></h2>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Full export of every active `productsup` configuration</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console datahub:export:productsup</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Full export of a single configuration</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console datahub:export:productsup --config-id=products-marketplace</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Only process items currently in the queue</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console datahub:export:productsup --only-queue-items</span><br></span></code></pre></div></div>
+<p>Without <code>--config-id</code>, the command runs for every active Datahub configuration of type <code>productsup</code>. See
+<code>bin/console datahub:export:productsup --help</code> for the parallelization options (for example, the number of child
+processes) inherited from the <code>webmozarts/console-parallelization</code> package.</p>
+<p>Schedule the command as a regular cron job on your infrastructure. See <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" class="">Crontab Guru</a> to
+build a cron expression.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

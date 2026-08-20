@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cleanup Data Storage — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Cleanup Data Storage</h1></header>
+<p>HyperMDM handles most filesystem cleanup automatically. The following recommendations help reduce
+and manage storage consumption.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="versioning-data">Versioning Data<a href="#versioning-data" class="hash-link" aria-label="Direct link to Versioning Data" title="Direct link to Versioning Data" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="reduce-version-history-per-element">Reduce Version History Per Element<a href="#reduce-version-history-per-element" class="hash-link" aria-label="Direct link to Reduce Version History Per Element" title="Direct link to Reduce Version History Per Element" translate="no">​</a></h3>
+<p>HyperMDM stores version metadata in the database and the version data itself as compressed files (gzip)
+in <code>var/versions</code>. Each version is a complete dump of the element at the time of creation -
+HyperMDM does not use differential or incremental storage.</p>
+<p>This means versioning data can grow fast, especially for large assets.
+Reduce the number of stored versions per element type (assets, objects, documents)
+in HyperMDM Studio under <code>System</code> &gt; <code>System Settings</code> &gt; <code>Documents/Objects/Assets</code>.</p>
+<p>After reducing the value, run the cleanup manually
+(it also runs automatically as part of regular maintenance):</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:maintenance -j versioncleanup</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="example">Example<a href="#example" class="hash-link" aria-label="Direct link to Example" title="Direct link to Example" translate="no">​</a></h4>
+<p>An asset of 100 MB with 10 versioning steps configured requires up to 1.1 GB of storage:
+100 MB for the original asset plus 10 x 100 MB for the version dumps.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="flush-all-versions-of-a-type">Flush All Versions of a Type<a href="#flush-all-versions-of-a-type" class="hash-link" aria-label="Direct link to Flush All Versions of a Type" title="Direct link to Flush All Versions of a Type" translate="no">​</a></h3>
+<p>To delete all versioning information for a specific type:</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The following commands delete all versioning information for the specified type.
+Back up the database and <code>var/versions/</code> directory before running them.</p></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Replace ### with the name of your database</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Use "object" or "document" instead of "asset" as needed</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">mysql -e "DELETE FROM ###.versions WHERE ctype='asset';"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">rm -r var/versions/asset</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="logging-data">Logging Data<a href="#logging-data" class="hash-link" aria-label="Direct link to Logging Data" title="Direct link to Logging Data" translate="no">​</a></h2>
+<p>All log files are stored in <code>var/log/</code>. HyperMDM rotates, compresses, and cleans up logs automatically:</p>
+<ul>
+<li class=""><strong>Rotate</strong>: when the file exceeds 200 MB</li>
+<li class=""><strong>Compress</strong>: immediately after rotating (gzip)</li>
+<li class=""><strong>Delete</strong>: after 30 days</li>
+</ul>
+<p>Delete logs manually at any time.
+To use a custom log rotator, deactivate the <code>logmaintenance</code> job:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:maintenance -J logmaintenance</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="temporary-files">Temporary Files<a href="#temporary-files" class="hash-link" aria-label="Direct link to Temporary Files" title="Direct link to Temporary Files" translate="no">​</a></h2>
+<p>HyperMDM stores temporary files in two locations based on their visibility:</p>
+<p><strong>Private temporary directory</strong>: <code>var/tmp/</code>
+Used for uploads, imports, exports, and page previews.</p>
+<p><strong>Public temporary directory</strong>: <code>public/var/tmp/</code>
+Used for image, video, and document thumbnails served by the web application.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="clearing-temporary-files">Clearing Temporary Files<a href="#clearing-temporary-files" class="hash-link" aria-label="Direct link to Clearing Temporary Files" title="Direct link to Clearing Temporary Files" translate="no">​</a></h3>
+<p>Clear temporary files for a specific thumbnail configuration:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Clear temp files for a specific image thumbnail config</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:thumbnails:clear --type=image --name=myThumbnail</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Clear temp files for a specific video thumbnail config</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:thumbnails:clear --type=video --name=myThumbnail</span><br></span></code></pre></div></div>
+<p>To clear all thumbnails and the asset cache programmatically:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Tool</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Storage</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Db</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// Clear all public thumbnails and the thumbnail database cache</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token class-name static-context">Storage</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">get</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'thumbnail'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">deleteDirectory</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'/'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token class-name static-context">Db</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">get</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">executeQuery</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'TRUNCATE TABLE assets_image_thumbnail_cache'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// Clear the asset cache (preview images, etc.)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token class-name static-context">Storage</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">get</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'asset_cache'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">deleteDirectory</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'/'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p>Clear the private temporary directory using the global
+<code>recursiveDelete()</code> helper (defined in <code>hypermdm/lib/helper-functions.php</code>):</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">// Deletes all files in the system temp directory but keeps the directory itself</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token function" style="color:#d73a49">recursiveDelete</span><span class="token punctuation" style="color:#393A34">(</span><span class="token constant" style="color:#36acaa">HYPERMDM_SYSTEM_TEMP_DIRECTORY</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token constant boolean" style="color:#36acaa">false</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p>All temporary files can be deleted at any time.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>Deleting all files in <code>public/var/tmp/</code> has a significant performance impact
+until all required thumbnails are regenerated.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="recycle-bin">Recycle Bin<a href="#recycle-bin" class="hash-link" aria-label="Direct link to Recycle Bin" title="Direct link to Recycle Bin" translate="no">​</a></h2>
+<p>Deleting items in HyperMDM moves them to the recycle bin first. The recycle bin stores references
+in the database and dumps the element contents into files in <code>var/recyclebin/</code>.</p>
+<p>In HyperMDM Studio, open <code>Quick Access</code> &gt; <code>Recycle Bin</code> to review items or flush the entire bin.</p>
+<p>To delete items based on age:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:recyclebin:cleanup --older-than-days=60</span><br></span></code></pre></div></div>
+<p>To flush the entire recycle bin manually (useful for automation or large bins):</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The following commands permanently delete all recycle bin data.
+Back up the database and <code>var/recyclebin/</code> directory before running them.</p></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Replace ### with the name of your database</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">mysql -e "TRUNCATE TABLE ###.recyclebin;"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">rm -r var/recyclebin</span><br></span></code></pre></div></div>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Deployment_Recommendations-Cleanup_Data_Storage-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The recycle bin is an administrative tool that displays deleted elements from all users.
+Due to the complexity of element deletion and restoration, reserve this tool
+for administrators and advanced users.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="output-cache">Output Cache<a href="#output-cache" class="hash-link" aria-label="Direct link to Output Cache" title="Direct link to Output Cache" translate="no">​</a></h2>
+<p>When enabled, the full-page cache stores complete frontend responses (including headers)
+in the cache.</p>
+<p>Clear the output cache programmatically:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Cache</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// When a cache lifetime is set, the "output" tag is ignored by default during cache clear.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// Remove it from the ignored list so the next clear call affects output cache entries.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token class-name static-context">Cache</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">removeIgnoredTagOnClear</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'output'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// Clear the document cache</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token class-name static-context">Cache</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">clearTags</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'output'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'output_lifetime'</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

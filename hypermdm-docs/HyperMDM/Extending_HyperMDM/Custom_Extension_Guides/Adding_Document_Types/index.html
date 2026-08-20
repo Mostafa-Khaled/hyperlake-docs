@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Adding Document Types — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Adding Document Types</h1></header>
+<p>Custom document types extend HyperMDM's document system with new types that appear in the
+document tree alongside pages, snippets, emails, etc. A custom document type requires both
+a PHP backend (model + configuration) and a HyperMDM Studio frontend (plugin with editor
+registration).</p>
+<p>A complete working example is available in the
+<a href="https://github.com/pimcore/studio-example-bundle/tree/main/assets/js/src/examples/custom-document-type" target="_blank" rel="noopener noreferrer" class="">Studio Example Bundle</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-create-the-document-model-class">1) Create the Document Model Class<a href="#1-create-the-document-model-class" class="hash-link" aria-label="Direct link to 1) Create the Document Model Class" title="Direct link to 1) Create the Document Model Class" translate="no">​</a></h2>
+<p>The document class must extend an existing HyperMDM document type. For page-like documents,
+extend <code>HyperMDM\Model\Document\Page</code>:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">// src/Model/Document/Book.php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">namespace</span><span class="token plain"> </span><span class="token package">App</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Document</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Document</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Page</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name-definition class-name">Book</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">extends</span><span class="token plain"> </span><span class="token class-name">Page</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">protected</span><span class="token plain"> </span><span class="token keyword type-declaration" style="color:#00009f">string</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$type</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string single-quoted-string" style="color:#e3116c">'book'</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-register-the-document-type">2) Register the Document Type<a href="#2-register-the-document-type" class="hash-link" aria-label="Direct link to 2) Register the Document Type" title="Direct link to 2) Register the Document Type" translate="no">​</a></h2>
+<p>Add the type to <code>hypermdm.documents.type_definitions.map</code>. In a bundle, place a
+<code>config.yaml</code> file in <code>config/hypermdm/</code>. HyperMDM
+<a class="" href="../../HyperMDM_Bundle_Developers_Guide/Auto_Loading_Config_and_Routing/index.html">auto-loads</a>
+config files from this directory:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># config/hypermdm/config.yaml</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">documents</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">type_definitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">map</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">book</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">class</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> \App\Model\Document\Book</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">direct_route</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">predefined_document_types</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><br></span></code></pre></div></div>
+<p>In an application (without a bundle), use a project config file instead:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># config/config.yaml</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">documents</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">type_definitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">map</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">book</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">class</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> \App\Model\Document\Book</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">direct_route</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-add-the-type-to-the-database-enum">3) Add the Type to the Database ENUM<a href="#3-add-the-type-to-the-database-enum" class="hash-link" aria-label="Direct link to 3) Add the Type to the Database ENUM" title="Direct link to 3) Add the Type to the Database ENUM" translate="no">​</a></h2>
+<p>The <code>documents</code> table stores the type in an ENUM column. Custom types must be added to
+this ENUM via a bundle installer or migration:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token variable" style="color:#36acaa">$db</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">executeQuery</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string single-quoted-string" style="color:#e3116c">'ALTER TABLE documents MODIFY COLUMN `type` ENUM(:enums)'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'enums'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">array_merge</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$currentEnumTypes</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'book'</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string single-quoted-string" style="color:#e3116c">'enums'</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token class-name static-context">ArrayParameterType</span><span class="token operator" style="color:#393A34">::</span><span class="token keyword type-declaration" style="color:#00009f">STRING</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p>See the
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Installer.php" target="_blank" rel="noopener noreferrer" class="">example bundle installer</a>
+for the full implementation.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="storage-when-do-you-need-a-custom-table">Storage: When Do You Need a Custom Table?<a href="#storage-when-do-you-need-a-custom-table" class="hash-link" aria-label="Direct link to Storage: When Do You Need a Custom Table?" title="Direct link to Storage: When Do You Need a Custom Table?" translate="no">​</a></h3>
+<p>Each built-in document type stores its data in a dedicated table (e.g., <code>documents_page</code>,
+<code>documents_email</code>). When your custom type extends an existing type like <code>Page</code>, it reuses
+that type's table (<code>documents_page</code>) and no additional table is needed. This is sufficient
+when your custom type adds no extra persistent fields.</p>
+<p>If your document type requires <strong>additional database columns</strong>, you need to:</p>
+<ol>
+<li class="">Create a dedicated table (e.g., <code>documents_book</code>) in your installer</li>
+<li class="">Create a custom <code>Dao</code> class that reads/writes from that table</li>
+</ol>
+<p>For a reference implementation, see the
+<a href="https://github.com/pimcore/ee-web-to-print-bundle" target="_blank" rel="noopener noreferrer" class="">Web-to-Print bundle</a>, which adds
+a <code>documents_printpage</code> table with extra fields like <code>lastgenerated</code> and
+<code>lastgeneratemessage</code>. The relevant files are:</p>
+<ul>
+<li class=""><a href="https://github.com/pimcore/ee-web-to-print-bundle/blob/2026.x/src/Model/Document/PrintAbstract/Dao.php" target="_blank" rel="noopener noreferrer" class="">PrintAbstract/Dao.php</a> — custom Dao using <code>documents_printpage</code></li>
+<li class=""><a href="https://github.com/pimcore/ee-web-to-print-bundle/blob/2026.x/src/Installer.php" target="_blank" rel="noopener noreferrer" class="">Installer.php</a> — creates the table and modifies the ENUM</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-register-the-frontend-editor-hypermdm-studio">4) Register the Frontend Editor (HyperMDM Studio)<a href="#4-register-the-frontend-editor-hypermdm-studio" class="hash-link" aria-label="Direct link to 4) Register the Frontend Editor (Pimcore Studio)" title="Direct link to 4) Register the Frontend Editor (Pimcore Studio)" translate="no">​</a></h2>
+<p>The document needs a HyperMDM Studio plugin that registers the editor tabs, sidebars, and
+context menu entry. This involves:</p>
+<ol>
+<li class=""><strong>TabManager</strong> — a class extending <code>TabManager</code> from <code>@hypermdm/studio-ui-bundle/modules/element</code>
+that defines which tabs the editor shows (Edit, Preview, Properties, Versions, etc.)</li>
+<li class=""><strong>SidebarManager</strong> — bound as <code>DocumentSidebarManager</code> from <code>@hypermdm/studio-ui-bundle/modules/document</code>,
+using the service ID pattern <code>Document/Editor/Sidebar/${Type}SidebarManager</code></li>
+<li class=""><strong>TypeRegistry</strong> — registers the document type name and its tab manager service ID</li>
+<li class=""><strong>Context menu</strong> — adds an "Add Book" entry to the document tree right-click menu using
+<code>useAddDocument</code> from <code>@hypermdm/studio-ui-bundle/modules/document</code></li>
+</ol>
+<p>The sidebar manager service ID <strong>must</strong> follow the convention
+<code>Document/Editor/Sidebar/${CapitalizedType}SidebarManager</code> (e.g., <code>Document/Editor/Sidebar/BookSidebarManager</code>),
+as the Studio UI core resolves it by this pattern.</p>
+<p>See the complete frontend example:</p>
+<ul>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-document-type/index.ts" target="_blank" rel="noopener noreferrer" class="">Plugin entry (index.ts)</a> — binds TabManager and SidebarManager</li>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-document-type/modules/book-document-module.tsx" target="_blank" rel="noopener noreferrer" class="">Module (book-document-module.tsx)</a> — registers type, tabs, sidebars, context menu</li>
+<li class=""><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-document-type/document/editor/types/book/tab-manager/book-tab-manager.ts" target="_blank" rel="noopener noreferrer" class="">TabManager (book-tab-manager.ts)</a> — extends <code>TabManager</code> with <code>type = 'book'</code></li>
+</ul>
+<p>For the full plugin scaffold (build configuration, <code>WebpackEntryPointProvider</code>, etc.), see the
+<a class="" href="../../../../Studio_UI/Extending/Getting_Started_with_Your_First_Plugin/index.html">Getting Started with Your First Plugin</a>
+guide.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-backend-api-adapter-optional">5) Backend API Adapter (Optional)<a href="#5-backend-api-adapter-optional" class="hash-link" aria-label="Direct link to 5) Backend API Adapter (Optional)" title="Direct link to 5) Backend API Adapter (Optional)" translate="no">​</a></h2>
+<p>If your custom document type has custom properties or settings that need to be processed when saving or returned in the
+Studio API detail endpoint, you need to register a <strong>document type adapter</strong> in the Studio Backend Bundle.</p>
+<p>Without an adapter, the document's standard editables (from <code>PageSnippet</code>) still work, but custom fields won't be
+processed through the save pipeline or normalized for the API response.</p>
+<p>This is <strong>not required</strong> for simple page-like types that only use standard document editables
+(like the <code>book</code> example). It becomes necessary when your document type adds custom properties,
+custom settings, or needs to transform data during save/load.</p>
+<p>For details on implementing a document type adapter, see the
+<a class="" href="../../../../Studio_Backend/Extending/Documents/Custom_Document_Types/index.html">Custom Document Types</a>
+documentation in the Studio Backend Bundle.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="do-not-use-to-override-a-class">Do not use to override a class<a href="#do-not-use-to-override-a-class" class="hash-link" aria-label="Direct link to Do not use to override a class" title="Direct link to Do not use to override a class" translate="no">​</a></h2>
+<p>The <code>type_definitions</code> should only be used to add new documents.
+If you want to override an existing class, use <code>hypermdm:models:class_overrides</code> instead.
+For a more detailed explanation see <a class="" href="../Overriding_Models/index.html">Overriding Models</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="version-202610">Version 2026.1.0<a href="#version-202610" class="hash-link" aria-label="Direct link to Version 2026.1.0" title="Direct link to Version 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm">[HyperMDM]<a href="#hypermdm" class="hash-link" aria-label="Direct link to [Pimcore]" title="Direct link to [Pimcore]" translate="no">​</a></h3>
+<ul>
+<li class=""><code>CartManager/CartItemInterface</code> now includes the <code>getCustomProperties()</code> and <code>setCustomProperties()</code> methods for custom properties.</li>
+<li class=""><code>setCustomProperties</code> in <code>AbstractCartItem</code> now stores properties as a bag (<code>$this-&gt;customProperties = $customProperties</code>) instead of calling individual setters for each key.</li>
+<li class="">The <code>$params</code> parameter has been renamed to <code>$customProperties</code> in the following methods. <strong>This is a breaking change for code using named arguments</strong> (e.g. <code>addItem(params: [...])</code>):<!-- -->
+<ul>
+<li class=""><code>CartInterface::addItem()</code></li>
+<li class=""><code>CartInterface::updateItem()</code></li>
+<li class=""><code>CartInterface::addGiftItem()</code></li>
+<li class=""><code>CartInterface::updateGiftItem()</code></li>
+<li class=""><code>AbstractCart::addItem()</code></li>
+<li class=""><code>AbstractCart::updateItem()</code></li>
+<li class=""><code>AbstractCart::addGiftItem()</code></li>
+<li class=""><code>AbstractCart::updateGiftItem()</code></li>
+<li class=""><code>CartManagerInterface::addToCart()</code></li>
+<li class=""><code>MultiCartManager::addToCart()</code></li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="version-200">Version 2.0.0<a href="#version-200" class="hash-link" aria-label="Direct link to Version 2.0.0" title="Direct link to Version 2.0.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-1">[HyperMDM]<a href="#hypermdm-1" class="hash-link" aria-label="Direct link to [Pimcore]" title="Direct link to [Pimcore]" translate="no">​</a></h3>
+<ul>
+<li class="">Updated to composer to HyperMDM 12 due to a BC-Break for <code>getById()</code> only accepting <code>int</code> as parameter for <code>id</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="elasticsearch">[Elasticsearch]<a href="#elasticsearch" class="hash-link" aria-label="Direct link to [Elasticsearch]" title="Direct link to [Elasticsearch]" translate="no">​</a></h3>
+<ul>
+<li class="">Removed ElasticSearchConfigInterface, use SearchConfigInterface instead.</li>
+<li class="">Removed EsSyncCommand it is now IndexSyncCommand. Use the ecommerce:indexservice<!-- -->:search-index-sync<!-- --> command instead.</li>
+<li class="">Introduced IndexRefreshInterface for refresh command.</li>
+<li class="">Moved ElasticSearch Filter Types to SearchIndex namespace. Make sure to update your filter namespaces in your yaml configuration.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

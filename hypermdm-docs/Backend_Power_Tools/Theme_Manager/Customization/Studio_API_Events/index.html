@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio API Events — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Studio API Events</h1></header>
+<p>The Theme Manager is a HyperMDM Studio plugin backed by Studio Backend endpoints. Before one of those endpoints
+returns, the bundle dispatches a pre-response event carrying the response schema. Listen for it to add your own data to
+the response.</p>
+<p>This is the supported way to change what the Studio API returns. See the Studio Backend
+<a class="" href="../../../../Studio_Backend/Extending/Additional_and_Custom_Attributes/index.html">Additional and Custom Attributes documentation</a>
+for the listener pattern and how the added attributes reach the frontend.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Backend_Power_Tools-Theme_Manager-Customization-Studio_API_Events-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Backend_Power_Tools-Theme_Manager-Customization-Studio_API_Events-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-Backend_Power_Tools-Theme_Manager-Customization-Studio_API_Events-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The endpoints themselves are not a supported public API. Their controllers are internal and may change in any
+release without a deprecation path. Do not build integrations against them. Their current definitions are generated from
+the code and served at <code>https://&lt;your-hypermdm-host&gt;/hypermdm-studio/api/docs</code>, tagged <code>Bundle Backend Power Tools</code>.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="events">Events<a href="#events" class="hash-link" aria-label="Direct link to Events" title="Direct link to Events" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Event name</th><th>Payload</th></tr></thead><tbody><tr><td><code>pre_response.backend_power_tools.theme</code></td><td><code>Theme</code>, a single theme.</td></tr><tr><td><code>pre_response.backend_power_tools.theme_list</code></td><td><code>ThemeList</code>, the list of themes.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="persisting-your-own-data-on-a-theme">Persisting Your Own Data on a Theme<a href="#persisting-your-own-data-on-a-theme" class="hash-link" aria-label="Direct link to Persisting Your Own Data on a Theme" title="Direct link to Persisting Your Own Data on a Theme" translate="no">​</a></h2>
+<p>A theme schema carries an <code>extensions</code> map keyed by bundle namespace. Use it to persist your own configuration on a
+theme instead of storing it separately, and read it back through the events above.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

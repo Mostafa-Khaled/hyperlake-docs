@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Extending HyperMDM Studio Backend — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Extending HyperMDM Studio Backend</h1></header>
+<p>This chapter covers extension points specific to the Studio Backend API layer.
+For an overview of all HyperMDM extension points across core, backend, and frontend layers,
+see <a class="" href="../../HyperMDM/Extending_HyperMDM/index.html">Extending HyperMDM</a>.</p>
+<p>Most customizations follow the same pattern: implement an interface and register the service with
+the corresponding DI tag. The Studio Backend auto-discovers tagged services at runtime.</p>
+<p>To include your custom endpoints in the OpenAPI documentation, register the scan path:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_studio_backend</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">open_api_scan_paths</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"%kernel.project_dir%/vendor/&lt;namespace&gt;/&lt;bundle-name&gt;/src"</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="extension-points">Extension Points<a href="#extension-points" class="hash-link" aria-label="Direct link to Extension Points" title="Direct link to Extension Points" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="foundational-patterns">Foundational Patterns<a href="#foundational-patterns" class="hash-link" aria-label="Direct link to Foundational Patterns" title="Direct link to Foundational Patterns" translate="no">​</a></h3>
+<ul>
+<li class=""><a class="" href="Extending_via_Events/index.html">Events</a></li>
+<li class=""><a class="" href="Additional_and_Custom_Attributes/index.html">Additional and Custom Attributes</a></li>
+<li class=""><a class="" href="Extending_Endpoints/index.html">Custom Endpoints</a></li>
+<li class=""><a class="" href="Extending_OpenApi/index.html">OpenAPI Schemas</a></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="element-specific-extensions">Element-Specific Extensions<a href="#element-specific-extensions" class="hash-link" aria-label="Direct link to Element-Specific Extensions" title="Direct link to Element-Specific Extensions" translate="no">​</a></h3>
+<ul>
+<li class=""><a class="" href="Assets/Extending_Metadata_Adapters/index.html">Asset Metadata Adapters</a></li>
+<li class=""><a class="" href="Data_Objects/Field_Definition_Adapters/index.html">Field Definition Adapters</a></li>
+<li class=""><a class="" href="Documents/Custom_Document_Types/index.html">Custom Document Types</a></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="cross-cutting-concerns">Cross-Cutting Concerns<a href="#cross-cutting-concerns" class="hash-link" aria-label="Direct link to Cross-Cutting Concerns" title="Direct link to Cross-Cutting Concerns" translate="no">​</a></h3>
+<ul>
+<li class=""><a class="" href="Extending_Grid_with_Custom_Columns/index.html">Custom Grid Columns</a></li>
+<li class=""><a class="" href="Extending_Filters/index.html">Filters</a>
+<ul>
+<li class=""><a class="" href="Extending_Filters/Extending_Search_Index_Filters/index.html">Search Index Filters</a></li>
+<li class=""><a class="" href="Extending_Filters/Extending_Listing_Filters/index.html">Listing Filters</a></li>
+</ul>
+</li>
+<li class=""><a class="" href="Extending_Updater_and_Patcher/index.html">Update and Patch Adapters</a></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="ui-and-specialized">UI and Specialized<a href="#ui-and-specialized" class="hash-link" aria-label="Direct link to UI and Specialized" title="Direct link to UI and Specialized" translate="no">​</a></h3>
+<ul>
+<li class=""><a class="" href="Perspectives/index.html">Perspectives and Widgets</a>
+<ul>
+<li class=""><a class="" href="Perspectives/Extending_Widgets/index.html">Custom Widget Types</a></li>
+</ul>
+</li>
+<li class=""><a class="" href="Extending_GDPR_Data_Providers/index.html">GDPR Data Providers</a></li>
+<li class=""><a class="" href="Extending_Ownership_Management/index.html">Ownership Management Providers</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Core Concepts — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Core Concepts</h1></header>
+<p>Every page in these docs uses the terms below with the meanings defined here. If a concept is unfamiliar, return to this
+page; if a definition on another page seems to contradict this one, this page wins.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="runtime">Runtime<a href="#runtime" class="hash-link" aria-label="Direct link to Runtime" title="Direct link to Runtime" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="agent">Agent<a href="#agent" class="hash-link" aria-label="Direct link to Agent" title="Direct link to Agent" translate="no">​</a></h3>
+<p>A named configuration that tells the LLM how to behave. An agent bundles: a system message, a model, a set of <strong>skills</strong>,
+a set of <strong>MCP tool</strong> groups, a set of <strong>widgets</strong>, and policy knobs (<code>pauseAfter</code>, tool overrides). An agent is
+<em>not</em> a running process - it is a config document that the single per-user SDK session adopts. Switching agents
+mid-conversation replaces the config but preserves the conversation history.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="session">Session<a href="#session" class="hash-link" aria-label="Direct link to Session" title="Direct link to Session" translate="no">​</a></h3>
+<p>One user's ongoing conversation with the bundle. A session persists to the HyperMDM database (sessions, messages,
+proposals, statuses) and survives server restarts, browser reloads, and agent switches. A user has many sessions;
+a session has exactly one current agent at any moment.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="task">Task<a href="#task" class="hash-link" aria-label="Direct link to Task" title="Direct link to Task" translate="no">​</a></h3>
+<p>One agent response to one user message, run by an in-process task runner independently of the HTTP connection that
+started it. A task emits a stream of events (text, tool calls, tool results, widgets, completion) buffered in memory
+with monotonic sequence numbers. A browser can disconnect and reconnect to a live task by passing the last-seen
+sequence number; a task can be cancelled at any time.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="adapter">Adapter<a href="#adapter" class="hash-link" aria-label="Direct link to Adapter" title="Direct link to Adapter" translate="no">​</a></h3>
+<p>The layer between the agent-server and the LLM backend. Two exist:</p>
+<ul>
+<li class=""><strong>Copilot adapter</strong> - uses <code>@github/copilot-sdk</code>. The production path. Supports agent switching via <code>resumeSession(id, newConfig)</code>.</li>
+<li class=""><strong>Dummy adapter</strong> - scripted responses for tests. Never reaches a real LLM.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="inference-provider">Inference provider<a href="#inference-provider" class="hash-link" aria-label="Direct link to Inference provider" title="Direct link to Inference provider" translate="no">​</a></h3>
+<p>A named configuration block under <code>hypermdm_agent.inference.providers</code> that defines how the agent-server reaches
+an LLM backend: authentication mode, credentials, endpoint, default model, title model, and (for byok providers)
+an explicit list of available models with per-model limits. Each agent selects a provider by name; the agent-server
+resolves the effective model and auth credentials at session-creation time. See
+<a class="" href="../../Configuration/Inference_Providers/index.html">Configuration → Inference Providers</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="byok-mode">BYOK mode<a href="#byok-mode" class="hash-link" aria-label="Direct link to BYOK mode" title="Direct link to BYOK mode" translate="no">​</a></h3>
+<p>"Bring Your Own Key". When an inference provider uses <code>auth_mode: byok</code>, the Copilot SDK is pointed at an
+Anthropic, OpenAI, or compatible key defined in the provider block instead of GitHub's managed backend. BYOK has
+two practical consequences:
+(1) no streaming <code>message_delta</code> events from Anthropic - responses arrive as a single <code>assistant.message</code>
+(the bundle synthesises deltas so the UI still streams);
+(2) the title model must belong to the same provider as the main model.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="tools">Tools<a href="#tools" class="hash-link" aria-label="Direct link to Tools" title="Direct link to Tools" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sdk-tool">SDK tool<a href="#sdk-tool" class="hash-link" aria-label="Direct link to SDK tool" title="Direct link to SDK tool" translate="no">​</a></h3>
+<p>A tool built into the Copilot SDK itself (e.g. <code>read_file</code>, <code>grep</code>, <code>web_fetch</code>, <code>web_search</code>, <code>ask_user</code>). Distinct
+from MCP tools. Controlled by a security hook in the bundle that denies some tools outright, sandboxes file-access
+tools to session scratch directories, and requires per-agent opt-in for the rest.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="mcp-server">MCP server<a href="#mcp-server" class="hash-link" aria-label="Direct link to MCP server" title="Direct link to MCP server" translate="no">​</a></h3>
+<p>A server that exposes tools over the Model Context Protocol. Two kinds:</p>
+<ul>
+<li class=""><strong>Internal MCP servers</strong> - authored in PHP inside HyperMDM bundles, served at <code>/hypermdm-mcp/*</code>. Authenticated with
+a per-chat-session MCP access token (<code>Authorization: Bearer pmcp_…</code>), so they inherit the chat initiator's HyperMDM
+permissions automatically.</li>
+<li class=""><strong>External MCP servers</strong> - third-party servers configured by URL or command. The bundle does not authenticate them for you.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="meta-tool">Meta-tool<a href="#meta-tool" class="hash-link" aria-label="Direct link to Meta-tool" title="Direct link to Meta-tool" translate="no">​</a></h3>
+<p>A generic three-tool wrapper (<code>discover</code> / <code>describe</code> / <code>execute</code>) that the agent-server presents to the LLM instead of
+exposing every MCP tool's raw schema. Main benefit: shipping dozens of full tool schemas to every turn burns tokens.
+Configured via <code>hypermdmMetaGroups</code> in an agent's YAML.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="tool-group">Tool group<a href="#tool-group" class="hash-link" aria-label="Direct link to Tool group" title="Direct link to Tool group" translate="no">​</a></h3>
+<p>A named bucket of MCP tools: <code>data-objects</code>, <code>assets</code>, <code>tags</code>, etc. An agent's YAML enables tool groups, not
+individual tools. The bundle ships 14 groups with 35+ tools - for example <code>search_data_objects</code>,
+<code>get_asset</code>, <code>assign_tag</code>. Custom bundles can contribute more.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="interaction">Interaction<a href="#interaction" class="hash-link" aria-label="Direct link to Interaction" title="Direct link to Interaction" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="rich-chat-widget">Rich Chat Widget<a href="#rich-chat-widget" class="hash-link" aria-label="Direct link to Rich Chat Widget" title="Direct link to Rich Chat Widget" translate="no">​</a></h3>
+<p>An interactive React component rendered inline in the chat. The LLM triggers a widget by calling a tool name reserved
+for it (e.g. <code>show_asset_preview</code>, <code>hypermdm_open_element</code>). The backend intercepts the tool call, emits an SSE event,
+and the frontend renders the widget rather than treating the call as a regular tool execution.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="proposal">Proposal<a href="#proposal" class="hash-link" aria-label="Direct link to Proposal" title="Direct link to Proposal" translate="no">​</a></h3>
+<p>A pending write operation suggested by the agent that the user must explicitly act on before it is applied. Three
+kinds ship today: single data-object edit, multi-object overview, tag assignment. A proposal has a lifecycle:
+<strong>propose → review → resolve</strong> (approve / reject / refine). A proposal is persisted in the database, so a user can
+close the browser and return to it later.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="hitl">HITL<a href="#hitl" class="hash-link" aria-label="Direct link to HITL" title="Direct link to HITL" translate="no">​</a></h3>
+<p>"Human-in-the-Loop." The bundle's policy that <strong>no write operation to HyperMDM data happens without explicit user approval</strong>.
+Every write path goes through a <strong>proposal</strong>. There is no "auto-apply" escape hatch; a proposal cannot be bypassed.
+But agents can be configured with direct write mcp tools allowing LLM to directly execute changes without a proposal, if
+you want that.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="skill">Skill<a href="#skill" class="hash-link" aria-label="Direct link to Skill" title="Direct link to Skill" translate="no">​</a></h3>
+<p>A reusable Markdown instruction file - <code>SKILL.md</code> with YAML frontmatter - that teaches an agent a domain workflow
+(e.g. PQL search, proposal review, data-import orchestration). Skills are attached to agents by name. A skill can
+ship referenced resources in its folder.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="field-hint">Field hint<a href="#field-hint" class="hash-link" aria-label="Direct link to Field hint" title="Direct link to Field hint" translate="no">​</a></h3>
+<p>Structured format metadata attached to every data-object field. Each hint describes what shape a value should take:
+date format, enum values, child fields of an object, constraints. The agent receives hints alongside field values so it
+composes edits in the correct format rather than guessing. Hints are produced by provider classes - one per field type,
+registered via a Symfony service tag - which is the extension point if you add a custom data type.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="inference-provider-config">Inference provider config<a href="#inference-provider-config" class="hash-link" aria-label="Direct link to Inference provider config" title="Direct link to Inference provider config" translate="no">​</a></h3>
+<p>The <code>hypermdm_agent.inference</code> Symfony config tree - not editable through HyperMDM Studio. Defines named providers
+(LLM backends with their auth, endpoint, model list, and limits) and the <code>default_provider</code> used when an agent
+does not specify one. This is structural configuration, not runtime data; it is exported to the agent-server on
+startup and on every reload as part of the config export payload.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-preset">Bundle preset<a href="#bundle-preset" class="hash-link" aria-label="Direct link to Bundle preset" title="Direct link to Bundle preset" translate="no">​</a></h3>
+<p>An agent or skill shipped by a HyperMDM bundle - read-only to end users. Presets live on disk at <code>config/agents/*.yaml</code>
+and <code>config/skills/&lt;name&gt;/SKILL.md</code> inside the bundle.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="user-owned-agent">User-owned agent<a href="#user-owned-agent" class="hash-link" aria-label="Direct link to User-owned agent" title="Direct link to User-owned agent" translate="no">​</a></h3>
+<p>An agent authored or customised in HyperMDM Studio. Stored in the HyperMDM database. A user-owned agent with the same name
+as a preset overrides it.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="three-layer-merge">Three-layer merge<a href="#three-layer-merge" class="hash-link" aria-label="Direct link to Three-layer merge" title="Direct link to Three-layer merge" translate="no">​</a></h3>
+<p>The order in which agent/skill configuration is resolved, from lowest to highest precedence:</p>
+<ol>
+<li class=""><strong>Bundle preset</strong> (disk)</li>
+<li class=""><strong>Container config</strong> (Symfony parameters, <code>config.yaml</code>)</li>
+<li class=""><strong>Studio edits</strong> (database / symfony config, <code>LocationAwareConfigRepository</code>)</li>
+</ol>
+<p>Later layers override earlier ones. The merged result is published to the agent-server via the config export
+endpoint on startup and on reload.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

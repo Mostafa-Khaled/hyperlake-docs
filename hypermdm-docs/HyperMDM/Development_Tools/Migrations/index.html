@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Migrations — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Migrations</h1></header>
+<p>Evolving applications frequently need to migrate data and data structures.
+Common examples include adding database columns or transforming data.</p>
+<p>HyperMDM integrates the
+<a href="https://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html" target="_blank" rel="noopener noreferrer" class="">Doctrine Migrations Bundle</a>
+for a migration framework. Follow the official guide linked above
+for project or bundle-specific migrations.</p>
+<p>HyperMDM adds the <code>--prefix</code> option to all Doctrine Migrations commands,
+allowing you to filter migrations by namespace (core, bundle, or project).</p>
+<p>For bundle migrations, see the
+<a class="" href="../../Extending_HyperMDM/HyperMDM_Bundle_Developers_Guide/HyperMDM_Bundles/Installers/index.html">bundles documentation</a>.
+HyperMDM provides a customized abstract for bundles.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="example-commands">Example Commands<a href="#example-commands" class="hash-link" aria-label="Direct link to Example Commands" title="Direct link to Example Commands" translate="no">​</a></h2>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># run migrations of the HyperMDM core</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console doctrine:migrations:migrate --prefix=HyperMDM\\Bundle\\CoreBundle</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># run migrations of a certain bundle</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console doctrine:migrations:migrate --prefix=Vendor\\HyperMDMExampleBundle</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># generate a project specific migration</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console doctrine:migrations:generate --namespace=App\\Migrations</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># run project specific migrations</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">bin/console doctrine:migrations:migrate --prefix=App\\Migrations</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="config-examples-for-your-project-configconfigyaml">Config Examples for Your Project (<code>config/config.yaml</code>)<a href="#config-examples-for-your-project-configconfigyaml" class="hash-link" aria-label="Direct link to config-examples-for-your-project-configconfigyaml" title="Direct link to config-examples-for-your-project-configconfigyaml" translate="no">​</a></h2>
+<div class="language-yml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">doctrine_migrations</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">migrations_paths</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">'App\Migrations'</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%kernel.project_dir%/src/Migrations'</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="run-all-available-migrations-after-composer-update">Run All Available Migrations After <code>composer update</code><a href="#run-all-available-migrations-after-composer-update" class="hash-link" aria-label="Direct link to run-all-available-migrations-after-composer-update" title="Direct link to run-all-available-migrations-after-composer-update" translate="no">​</a></h2>
+<p>To run all available migrations after <code>composer update</code> (including bundle and app-specific migrations),
+add the following to your <code>composer.json</code>:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">"post-update-cmd": [</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "./bin/console doctrine:migrations:migrate"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">]</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

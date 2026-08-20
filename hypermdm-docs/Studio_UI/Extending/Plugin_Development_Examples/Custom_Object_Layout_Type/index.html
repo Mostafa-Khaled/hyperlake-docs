@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Add a Custom Object Layout Type — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>How to Add a Custom Object Layout Type</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="overview">Overview<a href="#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h2>
+<p>This example adds a custom <code>simpleTextLayout</code> layout type to
+HyperMDM Studio. Custom layout types appear in the class definition
+editor's "Add Layout Component" dropdown and render as structural
+containers in the data object editor.</p>
+<p>Unlike data types, layout types do <strong>not</strong> require GDI adapters,
+Studio Backend data adapters, or grid column definitions - they are
+purely structural.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="files-overview">Files Overview<a href="#files-overview" class="hash-link" aria-label="Direct link to Files Overview" title="Direct link to Files Overview" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Layer</th><th>File</th><th>Purpose</th></tr></thead><tbody><tr><td>Core</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Model/DataObject/ClassDefinition/Layout/SimpleTextLayout.php" target="_blank" rel="noopener noreferrer" class="">SimpleTextLayout.php</a></td><td>Layout class</td></tr><tr><td>Core</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/pimcore/config.yaml" target="_blank" rel="noopener noreferrer" class="">config.yaml</a></td><td>Layout type registration</td></tr><tr><td>Studio UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-layout-type/dynamic-types/definitions/dynamic-type-object-layout-simple-text-layout.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-object-layout-simple-text-layout.tsx</a></td><td>Object editor rendering</td></tr><tr><td>Studio UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-layout-type/dynamic-types/definitions/dynamic-type-field-definition-simple-text-layout.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-field-definition-simple-text-layout.tsx</a></td><td>Class editor</td></tr><tr><td>Studio UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-layout-type/modules/simple-text-layout-module.tsx" target="_blank" rel="noopener noreferrer" class="">simple-text-layout-module.tsx</a></td><td>Registry registration</td></tr><tr><td>Studio UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-layout-type/index.ts" target="_blank" rel="noopener noreferrer" class="">index.ts</a></td><td>Plugin entry point</td></tr><tr><td>Studio UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/plugins.ts" target="_blank" rel="noopener noreferrer" class="">plugins.ts</a></td><td>Plugin export</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="details">Details<a href="#details" class="hash-link" aria-label="Direct link to Details" title="Direct link to Details" translate="no">​</a></h2>
+<p>Adding a custom layout type requires registration across two
+layers:</p>
+<p><strong>HyperMDM Core:</strong></p>
+<ul>
+<li class="">A layout class extending
+<code>HyperMDM\Model\DataObject\ClassDefinition\Layout</code></li>
+<li class="">Registration via <code>hypermdm.objects.class_definitions.layout.map</code></li>
+</ul>
+<p><strong>Studio UI (Frontend):</strong></p>
+<ul>
+<li class="">A <code>DynamicTypeObjectLayoutAbstract</code> subclass for the data object
+editor, rendering the layout container</li>
+<li class="">A <code>DynamicTypeFieldDefinitionLayoutAbstract</code> subclass for the
+class definition editor</li>
+<li class="">Registration of both types via a module and plugin</li>
+</ul>
+<p>The example implements <code>simpleTextLayout</code> as a minimal layout that
+renders HTML content, demonstrating the full pattern without
+additional complexity.</p>
+<p>For the step-by-step guide, see
+<a class="" href="../../../../HyperMDM/Extending_HyperMDM/Custom_Extension_Guides/Adding_Object_Layout_Types/index.html">Adding Object Layout Types</a>
+in the HyperMDM core documentation.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

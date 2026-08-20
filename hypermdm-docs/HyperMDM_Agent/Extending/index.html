@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Extending — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Extending</h1></header>
+<p>Five extension points let you bring your own capabilities into the bundle. All five use Symfony service tags, YAML
+config, or co-located fixture files - no changes to the bundle itself.</p>
+<div class="table-container"><table><thead><tr><th>Page</th><th>Add</th></tr></thead><tbody><tr><td><a class="" href="Custom_MCP_Tools/index.html">Custom MCP Tools</a></td><td>New tools the agent can call, via the <code>hypermdm.mcp_tool</code> service tag.</td></tr><tr><td><a class="" href="Rich_Chat_Widgets/index.html">Rich Chat Widgets</a></td><td>Inline interactive components triggered by the LLM. YAML definition + React renderer.</td></tr><tr><td><a class="" href="Custom_Proposal_Types/index.html">Custom Proposal Types</a></td><td>Domain-specific HITL write flows. Three components: a propose tool, a resolver implementing <code>getWidgetType()</code>, and a React component. The proposal widget is server-emitted render-only - no widget YAML and no <code>show_*_proposal</code> tool.</td></tr><tr><td><a class="" href="Custom_Field_Hint_Providers/index.html">Custom Field Hint Providers</a></td><td>Format hints for custom HyperMDM data types so agents compose valid values.</td></tr><tr><td><a class="" href="Template_Examples/index.html">Template Examples</a></td><td>JSON example fixtures for areabricks and document templates so LLMs pattern-match valid edits. Uses a project-shipped SKILL for coding agents + two CLI helpers.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="custom-agents-and-skills-no-code">Custom agents and skills (no code)<a href="#custom-agents-and-skills-no-code" class="hash-link" aria-label="Direct link to Custom agents and skills (no code)" title="Direct link to Custom agents and skills (no code)" translate="no">​</a></h2>
+<p>Adding a new agent or skill does not require code. Drop a YAML or <code>SKILL.md</code> file into your bundle's config directory,
+register the path, and it appears in Studio. See <a class="" href="../Configuration/Shipping_Presets/index.html">Configuration → Shipping Presets</a> for the end-to-end walkthrough
+(hard-dependency vs optional-dependency patterns), and <a class="" href="../Configuration/Agents/index.html">Configuration → Agents</a> / <a class="" href="../Configuration/Skills/index.html">Configuration → Skills</a>
+for the schemas.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-reading">Related reading<a href="#related-reading" class="hash-link" aria-label="Direct link to Related reading" title="Direct link to Related reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../Getting_Started/Concepts/index.html">Core Concepts</a> - glossary of every term used below.</li>
+<li class=""><a class="" href="../Features/index.html">Features</a> - the user-facing catalog of what already ships.</li>
+<li class=""><a class="" href="../Architecture/index.html">Architecture</a> - internals you will interact with when extending.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

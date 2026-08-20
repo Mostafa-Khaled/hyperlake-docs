@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Development Documentation — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Development Documentation</h1></header>
+<p>This section describes the technical concepts and extension points of the HyperMDM targeting engine, for developers
+who need to consume targeting data in custom code or extend the engine with custom conditions, data providers,
+action handlers or storage. For usage and feature descriptions, see the <a class="" href="../Usage/Concepts/index.html">user docs</a> first.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="setup">Setup<a href="#setup" class="hash-link" aria-label="Direct link to Setup" title="Direct link to Setup" translate="no">​</a></h2>
+<p>Enable targeting as described in <a class="" href="../Installation/index.html#enable-targeting">Installation</a>. If you want to use
+geo-related conditions (Country, Geo Point) in your targeting rules, configure the underlying GeoIP data provider
+first.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuring-the-maxmind-geoip-data-provider">Configuring the MaxMind GeoIP Data Provider<a href="#configuring-the-maxmind-geoip-data-provider" class="hash-link" aria-label="Direct link to Configuring the MaxMind GeoIP Data Provider" title="Direct link to Configuring the MaxMind GeoIP Data Provider" translate="no">​</a></h3>
+<p>Follow the <a href="https://dev.maxmind.com/geoip/updating-databases/" target="_blank" rel="noopener noreferrer" class="">official instructions</a> to obtain and update the
+GeoIP database. Store the database file wherever you like; the default location used by <code>geoipupdate</code> is
+<code>/usr/share/GeoIP/GeoLite2-City.mmdb</code>.</p>
+<p>Set the path to the database file under <code>parameters</code> in your <code>config/services.yaml</code> to enable geo support:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">parameters</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">hypermdm.geoip.db_file</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> /usr/share/GeoIP/GeoLite2</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">City.mmdb</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="basic-concepts">Basic Concepts<a href="#basic-concepts" class="hash-link" aria-label="Direct link to Basic Concepts" title="Direct link to Basic Concepts" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Concept</th><th>Description</th></tr></thead><tbody><tr><td><code>VisitorInfo</code></td><td>Contains run-time information about the current visitor. All conditions and action handlers use it to collect and apply data.</td></tr><tr><td><code>DataProvider</code></td><td>Fetches data about the current visitor for other components such as conditions to use. For example, the <code>Device</code> data provider loads device info from the user-agent string. Data loads on demand, only when a component actually needs it.</td></tr><tr><td><code>Condition</code></td><td>A logical block, combinable with others, that matches or doesn't match the current visitor. Configured on global targeting rules in HyperMDM Studio.</td></tr><tr><td><code>ActionHandler</code></td><td>Executes one of the actions a targeting rule runs when its conditions match. For example, the <code>Redirect</code> action handler creates a <code>RedirectResponse</code> that redirects the visitor to another page.</td></tr><tr><td><code>Storage</code></td><td>Where visitor data persists between requests. Each storage implementation supports the <code>session</code> and <code>visitor</code> scopes. Session-scoped data is valid only for the current session, either through a fixed expiry time (the default Cookie storage expires session data 30 minutes after its last update) or through the storage's own mechanics (for example, Session storage relies on the PHP session lifetime). Visitor-scoped data should persist for the visitor's whole lifetime, though this depends on the storage in use (Session storage, for instance, cannot do this). Storage engines include cookie, JWT-signed cookie, database, session and Redis, each with its own trade-offs.</td></tr><tr><td><code>Targeting Rule</code></td><td>A condition/action combination that runs one or more actions when its conditions match (similar to pricing rules in the Ecommerce Framework). Targeting rules run on every request by default, but their scope (hit, visitor, session, session with variables) can limit that.</td></tr><tr><td><code>Target Group</code></td><td>An entity you target content for. A document or snippet can define personalized content for a specific target group (for example a special banner for an "Outdoor Interested" target group). Matching targeting rules, and configuring target groups to track on documents, assigns a visitor a list of target groups; these are stored and added to the <code>VisitorInfo</code> object at runtime. When rendering a document, a <code>DocumentTargetingConfigurator</code> selects the content that best matches the target groups on the <code>VisitorInfo</code>.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="visitorinfo-and-visitor-id">VisitorInfo and Visitor ID<a href="#visitorinfo-and-visitor-id" class="hash-link" aria-label="Direct link to VisitorInfo and Visitor ID" title="Direct link to VisitorInfo and Visitor ID" translate="no">​</a></h2>
+<p>When handling a request, the targeting engine first creates a new <code>VisitorInfo</code> instance: a data container used
+throughout the targeting process to store and pass data between the system's components.</p>
+<p>See <a class="" href="Visitor_Info/index.html">Visitor Info</a> for details.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="targeting-rule-matching">Targeting Rule Matching<a href="#targeting-rule-matching" class="hash-link" aria-label="Direct link to Targeting Rule Matching" title="Direct link to Targeting Rule Matching" translate="no">​</a></h2>
+<p>After building the <code>VisitorInfo</code> and resolving the visitor ID, the matching engine processes every defined
+targeting rule. A rule's scope can cause it to be skipped (for example, a <code>session</code> rule runs only once per
+session). Every condition receives the <code>VisitorInfo</code> instance and decides whether it matches its configured data.</p>
+<p>To fetch additional visitor data, a condition can request data from one or more <code>DataProvider</code> implementations. For
+example, the <code>Device</code> data provider resolves and caches device info from the user-agent string using the
+<code>DeviceDetector</code> library. The <code>Operating System</code> condition declares the <code>Device</code> data provider as a dependency and
+can rely on the device data being added to the <code>VisitorInfo</code> before matching runs. The targeting engine requests
+data from a given data provider only once per request, even if multiple conditions depend on it.</p>
+<p>If a rule matches, its actions run. Example actions include issuing a redirect or assigning a target group to the
+current visitor. Actions, executed by action handlers, can request data from data providers the same way
+conditions do.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="targeting-storage">Targeting Storage<a href="#targeting-storage" class="hash-link" aria-label="Direct link to Targeting Storage" title="Direct link to Targeting Storage" translate="no">​</a></h2>
+<p>Some data needs to persist between requests. The targeting engine uses a <code>TargetingStorage</code>, a key-value store for
+targeting data. Data can be set at the <code>visitor</code> scope (valid for the visitor's whole lifetime) or the <code>session</code>
+scope. When storing data to an external storage, the engine uses the resolved visitor ID to store data for a
+specific visitor.</p>
+<p>Examples of data persisted to storage:</p>
+<ul>
+<li class="">Assigned target groups, either set from targeting rules or tracked automatically when visiting a document that
+has target groups configured on its Target Groups panel.</li>
+<li class="">Rules with <code>session</code> scope that already matched, so they aren't re-applied for the same visitor.</li>
+<li class="">The time of the first request in the current session, to calculate time on site.</li>
+</ul>
+<p>For further details, see <a class="" href="Targeting_Storage/index.html">Targeting Storage</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="content-targeting">Content Targeting<a href="#content-targeting" class="hash-link" aria-label="Direct link to Content Targeting" title="Direct link to Content Targeting" translate="no">​</a></h2>
+<p>After matching all rules, a <code>VisitorInfo</code> may have several assigned target groups. When rendering a document that
+has targeted content for multiple target groups, HyperMDM applies the following logic to pick which version to show
+the current visitor:</p>
+<ul>
+<li class="">If the visitor has only one assigned target group and content exists for that target group, HyperMDM uses the
+personalized version for that target group.</li>
+<li class="">If the visitor has multiple assigned target groups, HyperMDM sorts them by assignment count and uses the first
+target group in that list that has personalized content for the document.</li>
+</ul>
+<p>This logic runs for every document and sub-request, so a document can show personalized content for one target
+group while a snippet or renderlet on the same page shows content for a different target group.</p>
+<p>You can see which target groups were applied to which document in the profiler. In the screenshot below, the main
+document used the target group <code>basketball</code> while the footer snippet was rendered with the target group <code>female</code>.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Targeting-Development_Documentation-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Development_Documentation-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Targeting Profiler Target Groups</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/targeting_profiler_target_groups-9bcb5f5c881bfdb6511eeb055298dffb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Targeting-Development_Documentation-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/targeting_profiler_target_groups-9bcb5f5c881bfdb6511eeb055298dffb.png"><figure class="visual-placeholder" id="fig-Targeting-Development_Documentation-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Development_Documentation-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Targeting Profiler Target Groups</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/targeting_profiler_target_groups-9bcb5f5c881bfdb6511eeb055298dffb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Targeting-Development_Documentation-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/targeting_profiler_target_groups-9bcb5f5c881bfdb6511eeb055298dffb.png"><figure class="visual-placeholder" id="fig-Targeting-Development_Documentation-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Development_Documentation-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Targeting Profiler Target Groups</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/targeting_profiler_target_groups-9bcb5f5c881bfdb6511eeb055298dffb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Targeting-Development_Documentation-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="manually-applying-content-targeting">Manually Applying Content Targeting<a href="#manually-applying-content-targeting" class="hash-link" aria-label="Direct link to Manually Applying Content Targeting" title="Direct link to Manually Applying Content Targeting" translate="no">​</a></h3>
+<p>HyperMDM applies the logic above automatically to documents loaded through its standard routing and rendering. To
+apply it to any other document, use the <code>DocumentTargetingConfigurator</code> service. For example, when handling a
+document inside a controller registered as a service:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter important">&lt;?php</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">namespace</span><span class="token plain"> </span><span class="token package">App</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Controller</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Controller</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">FrontendController</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Document</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Bundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">PersonalizationBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Targeting</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Document</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DocumentTargetingConfigurator</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">Symfony</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Component</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">HttpFoundation</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Response</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name-definition class-name">ContentController</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">extends</span><span class="token plain"> </span><span class="token class-name">FrontendController</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">pageAction</span><span class="token punctuation" style="color:#393A34">(</span><span class="token class-name type-declaration">DocumentTargetingConfigurator</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$targetingConfigurator</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token class-name return-type">Response</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic">// load any document</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token variable" style="color:#36acaa">$document</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token class-name static-context">Document</span><span class="token operator" style="color:#393A34">::</span><span class="token function" style="color:#d73a49">getByPath</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string single-quoted-string" style="color:#e3116c">'/my/page'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic">// configure personalized content based on resolved target groups</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic">// and available personalized content on the document</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token variable" style="color:#36acaa">$targetingConfigurator</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">configureTargetGroup</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$document</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic">//...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="extending-the-targeting-engine">Extending the Targeting Engine<a href="#extending-the-targeting-engine" class="hash-link" aria-label="Direct link to Extending the Targeting Engine" title="Direct link to Extending the Targeting Engine" translate="no">​</a></h2>
+<p>Third-party code can extend and customize the targeting engine's behavior in several ways:</p>
+<ul>
+<li class=""><a class="" href="Conditions/index.html">Conditions</a>: add custom matching logic for targeting rules.</li>
+<li class=""><a class="" href="Data_Providers/index.html">Data Providers</a>: fetch and cache additional visitor data for conditions and action
+handlers to use.</li>
+<li class=""><a class="" href="Action_Handlers/index.html">Action Handlers</a>: add custom actions for targeting rules to run.</li>
+<li class=""><a class="" href="Targeting_Storage/index.html">Targeting Storage</a>: plug in a custom store for visitor and session data.</li>
+<li class=""><a class="" href="Frontend_Javascript/index.html">Frontend JavaScript</a>: extend the client-side visitor ID and code-injection
+mechanism.</li>
+<li class=""><a class="" href="Events/index.html">Events</a>: hook into the targeting lifecycle and the Personalization Studio API responses.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="debugging-targeting-data">Debugging Targeting Data<a href="#debugging-targeting-data" class="hash-link" aria-label="Direct link to Debugging Targeting Data" title="Direct link to Debugging Targeting Data" translate="no">​</a></h2>
+<p>As shown above, targeting data is added to the Symfony profiler. HyperMDM Studio also provides an on-page targeting
+toolbar that works outside the <code>dev</code> environment as long as you're logged in.</p>
+<p><figure class="visual-placeholder" id="fig-Targeting-Development_Documentation-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Development_Documentation-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Targeting Debug Toolbar</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/Targeting/img/targeting_toolbar.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Targeting-Development_Documentation-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></p>
+<p>Open HyperMDM Studio, go to <strong>Personalisation / Targeting &gt; Targeting Toolbar</strong> and click <strong>Activate</strong>. This sets a
+<code>hypermdm_targeting_debug</code> cookie in your browser; the toolbar then appears on every page you visit while logged
+into Studio, until you deactivate it again from the same panel. Since the toolbar only renders for an authenticated
+Studio user, it never appears for anonymous visitors.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="opt-in-for-targeting">Opt-in for Targeting<a href="#opt-in-for-targeting" class="hash-link" aria-label="Direct link to Opt-in for Targeting" title="Direct link to Opt-in for Targeting" translate="no">​</a></h2>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Targeting-Development_Documentation-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Development_Documentation-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Targeting-Development_Documentation-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>caution</div><div class="admonitionContent_BuS1"><p>A visitor can enable targeting for themselves at any time by setting the <code>hypermdm_targeting_enabled=1</code> cookie in
+their browser, regardless of the <code>hypermdm_personalization.targeting.enabled</code> configuration.</p></div></div>
+<p>Since privacy laws vary from country to country, consult your legal team before relying on this behavior.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

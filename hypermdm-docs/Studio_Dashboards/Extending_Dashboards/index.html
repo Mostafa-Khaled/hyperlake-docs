@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Creating Custom Widgets — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Creating Custom Widgets</h1></header>
+<p>Adding a custom widget type requires four components:</p>
+<ol>
+<li class=""><strong><code>ConfigRepositoryInterface</code></strong> (PHP) - persists and retrieves widget configuration via YAML storage</li>
+<li class=""><strong><code>ConfigHydratorInterface</code></strong> (PHP) - maps raw config arrays to typed DTOs for the API layer</li>
+<li class=""><strong><code>DataResolverInterface</code></strong> (PHP) - fetches the data the widget displays at runtime</li>
+<li class=""><strong><code>DynamicTypeWidgetTypeDefinitionAbstract</code></strong> (TypeScript) - controls rendering, slot rules, and the configuration form in HyperMDM Studio</li>
+</ol>
+<p>Tag the PHP classes with the appropriate service tags, register the type identifier in
+<code>hypermdm_studio_dashboards.widget_types</code>, and bind the TypeScript class into the Studio UI
+dependency injection container. The sub-pages below use a <code>top_assets</code> widget as a running example.</p>
+<blockquote>
+<p><strong>Working example:</strong> The
+<a href="https://github.com/pimcore/studio-example-bundle" target="_blank" rel="noopener noreferrer" class="">studio-example-bundle</a> contains a complete,
+runnable <code>top_assets</code> custom dashboard widget. A condensed step-by-step walkthrough is also
+available in the core
+<a class="" href="../../HyperMDM/Extending_HyperMDM/Custom_Extension_Guides/Custom_Dashboard_Widgets/index.html">Custom Dashboard Widgets</a>
+extension guide.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further Reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further Reading" title="Direct link to Further Reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="Config_Repository/index.html">Backend: Config Repository</a></li>
+<li class=""><a class="" href="Config_Hydrator/index.html">Backend: Config Hydrator</a></li>
+<li class=""><a class="" href="Data_Resolver/index.html">Backend: Data Resolver</a></li>
+<li class=""><a class="" href="Frontend_Widget_Type/index.html">Frontend: Widget Type Definition</a></li>
+<li class=""><a class="" href="Registering_Widget_Type/index.html">Registering the Widget Type</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

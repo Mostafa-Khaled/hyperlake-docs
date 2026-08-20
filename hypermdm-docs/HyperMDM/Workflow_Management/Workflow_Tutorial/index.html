@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Workflow Tutorial — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Workflow Tutorial</h1></header>
+<p>This tutorial builds a product workflow for data objects, covering places, transitions, guards,
+custom layouts, and additional fields.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="create-a-class-and-custom-layouts">Create a class and custom layouts<a href="#create-a-class-and-custom-layouts" class="hash-link" aria-label="Direct link to Create a class and custom layouts" title="Direct link to Create a class and custom layouts" translate="no">​</a></h2>
+<p>Start with a simple product class containing sku, localized name, localized picture,
+localized description, price, and quantity.</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Example product class</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_class-a06aca0805a36e89c53052a229fd295c.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_example_product_class-a06aca0805a36e89c53052a229fd295c.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Example product class</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_class-a06aca0805a36e89c53052a229fd295c.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_example_product_class-a06aca0805a36e89c53052a229fd295c.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Example product class</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_class-a06aca0805a36e89c53052a229fd295c.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Add four custom layouts to assign to specific workflow statuses:</p>
+<ul>
+<li class=""><code>newProduct</code> layout with ID = <code>newProduct</code></li>
+</ul>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The new product custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_1-69fa74be4012bb953d7c4ab5eaf8ddee.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_example_product_cl_1-69fa74be4012bb953d7c4ab5eaf8ddee.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The new product custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_1-69fa74be4012bb953d7c4ab5eaf8ddee.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_example_product_cl_1-69fa74be4012bb953d7c4ab5eaf8ddee.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The new product custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_1-69fa74be4012bb953d7c4ab5eaf8ddee.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<ul>
+<li class=""><code>fillContents</code> layout with ID = <code>fillContents</code></li>
+</ul>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The fill contents custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_2-7110b33024aeb5136ae08fae5d652fcc.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_example_product_cl_2-7110b33024aeb5136ae08fae5d652fcc.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The fill contents custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_2-7110b33024aeb5136ae08fae5d652fcc.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_example_product_cl_2-7110b33024aeb5136ae08fae5d652fcc.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The fill contents custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_2-7110b33024aeb5136ae08fae5d652fcc.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<ul>
+<li class=""><code>updatePicture</code> layout with ID = <code>updatePicture</code></li>
+</ul>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-10">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-10</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The update picture custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_3-b7e9ad53df99b114ca1e11dbf3b18ffb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-10">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_example_product_cl_3-b7e9ad53df99b114ca1e11dbf3b18ffb.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-11">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-11</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The update picture custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_3-b7e9ad53df99b114ca1e11dbf3b18ffb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-11">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_example_product_cl_3-b7e9ad53df99b114ca1e11dbf3b18ffb.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-12">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-12</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The update picture custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_3-b7e9ad53df99b114ca1e11dbf3b18ffb.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-12">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<ul>
+<li class=""><code>validateQtyPrice</code> layout with ID = <code>validateQtyPrice</code></li>
+</ul>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-13">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-13</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The validate qty and price custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_4-b886d8f4c8dd5e8433132f5c8d24e469.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-13">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_example_product_cl_4-b886d8f4c8dd5e8433132f5c8d24e469.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-14">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-14</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The validate qty and price custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_4-b886d8f4c8dd5e8433132f5c8d24e469.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-14">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_example_product_cl_4-b886d8f4c8dd5e8433132f5c8d24e469.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-15">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-15</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The validate qty and price custom layout</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_example_product_cl_4-b886d8f4c8dd5e8433132f5c8d24e469.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-15">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-workflow-declaration">The workflow declaration<a href="#the-workflow-declaration" class="hash-link" aria-label="Direct link to The workflow declaration" title="Direct link to The workflow declaration" translate="no">​</a></h2>
+<p>Create the base configuration in <code>config/config.yaml</code>:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">workflows</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">my_workflow</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Product Workflow'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'state_machine'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">supports</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'HyperMDM\Model\DataObject\Product'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">places</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token comment" style="color:#999988;font-style:italic">#TODO</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">transitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token comment" style="color:#999988;font-style:italic">#TODO</span><br></span></code></pre></div></div>
+<p>The workflow is called <strong>Product Workflow</strong> and applies only to instances of
+<code>HyperMDM\Model\DataObject\Product</code>. The workflow type <code>state_machine</code> restricts the element to one active place at a time.
+Places and transitions are defined in the following sections.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="specify-places">Specify places<a href="#specify-places" class="hash-link" aria-label="Direct link to Specify places" title="Direct link to Specify places" translate="no">​</a></h3>
+<p>Define places for products. In this scenario, new products arrive from an external system
+as empty objects with only a SKU. The workflow needs to support deciding which products
+to use in HyperMDM and which to reject. This requires (at least) three places:</p>
+<ul>
+<li class="">new - for the newest products</li>
+<li class="">rejected - for products that will not be used, with a required note explaining the reason</li>
+<li class="">update content - for products to prepare for publishing</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">places</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">new</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'New product'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">color</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'#377ea9'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">permissions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">objectLayout</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'newProduct'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">rejected</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Rejected product'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">color</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'#28a013'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">update_content</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Update Content'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">title</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Updating content step'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">color</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'#d9ef36'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">permissions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">objectLayout</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'fillContents'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span></code></pre></div></div>
+<p>The <code>objectLayout</code> key defines which custom layout to use for each place. Here, the <em>new</em> place
+uses custom layout 1 and <em>update_content</em> uses custom layout 2.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="specify-the-first-transitions">Specify the first transitions<a href="#specify-the-first-transitions" class="hash-link" aria-label="Direct link to Specify the first transitions" title="Direct link to Specify the first transitions" translate="no">​</a></h3>
+<p>An administrator can decide which products to process and which to reject.
+Add two transitions:</p>
+<ul>
+<li class="">reject product - changes the status for products not to be used</li>
+<li class="">start processing - moves the product to the processing step</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">transitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">reject_product</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">from</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> new</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">to</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> rejected</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Reject the product'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">notes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentEnabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentRequired</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">start_processing</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">from</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> new</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">to</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> update_content</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Start processing the product'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="more-statuses-actions-and-definitions">More statuses, actions, and definitions<a href="#more-statuses-actions-and-definitions" class="hash-link" aria-label="Direct link to More statuses, actions, and definitions" title="Direct link to More statuses, actions, and definitions" translate="no">​</a></h3>
+<p>Add 4 more places for the content update pipeline:</p>
+<ul>
+<li class="">updating the content</li>
+<li class="">updating the picture</li>
+<li class="">updating the price and stock</li>
+<li class="">marking content as ready - moving the product back to the administrator</li>
+</ul>
+<p>Add these to the configuration file:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">places</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        (</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">update_picture</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Update Product Picture'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">title</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Update the product picture'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">color</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'#d9ef36'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">permissions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">objectLayout</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'updatePicture'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">validate_stock_and_price</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Validate Stock + Price'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">title</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Check the quantity and the price'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">color</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'#d9ef36'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">permissions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">objectLayout</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'validateQtyPrice'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">content_prepared</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Content Prepared'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">title</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Content ready to publish'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">color</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'#28a013'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">transitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        (</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">content_updated</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">from</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> update_content</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">to</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> update_picture</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Content up-to-date'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">notes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentEnabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentRequired</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">picture_updated</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">from</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> update_picture</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">to</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> validate_stock_and_price</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Picture up-to-date'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">notes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentEnabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentRequired</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">content_ready</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">from</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> validate_stock_and_price</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">to</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> content_prepared</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Content is ready to publish'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="last-actions-publish-or-rollback">Last actions: publish or rollback<a href="#last-actions-publish-or-rollback" class="hash-link" aria-label="Direct link to Last actions: publish or rollback" title="Direct link to Last actions: publish or rollback" translate="no">​</a></h3>
+<p>At the final stage, the workflow offers three choices:</p>
+<ul>
+<li class="">Publish the product (with an additional field called <em>"timeWorked"</em>)</li>
+<li class="">Start the workflow from the beginning</li>
+<li class="">Reject the product (with a note)</li>
+</ul>
+<p>The reject and start processing transitions already exist. Add <code>content_prepared</code> as an additional
+<code>from</code> place. This works because the workflow type <code>state_machine</code> supports multiple <code>from</code> places
+per transition.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">transitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">reject_product</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">from</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain">new</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> content_prepared</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">to</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> rejected</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Reject the product'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">notes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentEnabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentRequired</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">start_processing</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">from</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain">new</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> content_prepared</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">to</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> update_content</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Start processing the product'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">notes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentEnabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentRequired</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span></code></pre></div></div>
+<p>The final addition is a publish transition with a place and a guard restricting it to a certain role:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">places</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        (</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">accepted</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Accepted product'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">color</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'#28a013'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span></code></pre></div></div>
+<p>And the transition with a <em>"timeWorked"</em> additional field:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">transitions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        (</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">publish</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">from</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> content_prepared</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">to</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> accepted</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">guard</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"is_fully_authenticated() and is_granted('ROLE_HYPERMDM_ADMIN')"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">options</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">label</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Publish the product'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">notes</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentEnabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">commentRequired</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                    </span><span class="token key atrule" style="color:#00a4db">additionalFields</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'timeWorked'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                          </span><span class="token key atrule" style="color:#00a4db">fieldType</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'input'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                          </span><span class="token key atrule" style="color:#00a4db">title</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Time Spent'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                          </span><span class="token key atrule" style="color:#00a4db">required</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">(</span><span class="token punctuation" style="color:#393A34">...</span><span class="token plain">)</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="workflow-in-action">Workflow in action<a href="#workflow-in-action" class="hash-link" aria-label="Direct link to Workflow in action" title="Direct link to Workflow in action" translate="no">​</a></h3>
+<p>The following table shows the workflow at each stage:</p>
+<div class="table-container"><table><thead><tr><th>Status</th><th>Screenshot</th></tr></thead><tbody><tr><td>Initial status when new object comes into the system</td><td><div class="image-as-lightbox"></div> <span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-16">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-16</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Initial Place</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_1-9a7bfea81301fef5138dcbf9b8367bd0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-16">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_editmode_1-9a7bfea81301fef5138dcbf9b8367bd0.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-17">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-17</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Initial Place</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_1-9a7bfea81301fef5138dcbf9b8367bd0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-17">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_editmode_1-9a7bfea81301fef5138dcbf9b8367bd0.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-18">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-18</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Initial Place</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_1-9a7bfea81301fef5138dcbf9b8367bd0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-18">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></td></tr><tr><td>Update Content</td><td><div class="image-as-lightbox"></div> <span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-19">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-19</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Update Content</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_2-49c2d5a76477bf278b4dc84e37513543.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-19">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_editmode_2-49c2d5a76477bf278b4dc84e37513543.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-20">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-20</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Update Content</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_2-49c2d5a76477bf278b4dc84e37513543.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-20">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_editmode_2-49c2d5a76477bf278b4dc84e37513543.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-21">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-21</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Update Content</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_2-49c2d5a76477bf278b4dc84e37513543.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-21">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></td></tr><tr><td>Update Picture</td><td><div class="image-as-lightbox"></div> <span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-22">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-22</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Update Picture</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_3-693208f37fa8c3f447a9f60fe9c91c3b.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-22">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_editmode_3-693208f37fa8c3f447a9f60fe9c91c3b.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-23">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-23</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Update Picture</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_3-693208f37fa8c3f447a9f60fe9c91c3b.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-23">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_editmode_3-693208f37fa8c3f447a9f60fe9c91c3b.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-24">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-24</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Update Picture</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_3-693208f37fa8c3f447a9f60fe9c91c3b.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-24">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></td></tr><tr><td>Validate Price and Stock</td><td><div class="image-as-lightbox"></div> <span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-25">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-25</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Validate</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_4-e67e48d09aeeaf4392f9924c1e3292b0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-25">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_editmode_4-e67e48d09aeeaf4392f9924c1e3292b0.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-26">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-26</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Validate</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_4-e67e48d09aeeaf4392f9924c1e3292b0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-26">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_editmode_4-e67e48d09aeeaf4392f9924c1e3292b0.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-27">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-27</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Validate</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_4-e67e48d09aeeaf4392f9924c1e3292b0.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-27">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></td></tr><tr><td>Content is ready</td><td><div class="image-as-lightbox"></div> <span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-28">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-28</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Content Ready</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_5-31b171111a08a7be7ea4a009c2f62bf4.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-28">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_editmode_5-31b171111a08a7be7ea4a009c2f62bf4.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-29">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-29</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Content Ready</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_5-31b171111a08a7be7ea4a009c2f62bf4.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-29">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_editmode_5-31b171111a08a7be7ea4a009c2f62bf4.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-30">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-30</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Content Ready</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_5-31b171111a08a7be7ea4a009c2f62bf4.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-30">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></td></tr><tr><td>Publish the Product</td><td><div class="image-as-lightbox"></div> <span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-31">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-31</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Publish Product</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_6-0f623d690ed672dd7c097c2f59ccdd52.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-31">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/workflow_editmode_6-0f623d690ed672dd7c097c2f59ccdd52.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-32">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-32</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Publish Product</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_6-0f623d690ed672dd7c097c2f59ccdd52.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-32">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/workflow_editmode_6-0f623d690ed672dd7c097c2f59ccdd52.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-33">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-33</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Publish Product</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/workflow_editmode_6-0f623d690ed672dd7c097c2f59ccdd52.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-33">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="check-the-history">Check the history<a href="#check-the-history" class="hash-link" aria-label="Direct link to Check the history" title="Direct link to Check the history" translate="no">​</a></h3>
+<p>The <em>"Notes &amp; Events"</em> tab lists every action applied to the object through the workflow module.</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-34">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-34</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Notes &amp;amp; Events - notes from the workflow</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/notesandevents_object_grid-253285fc0466fe78848856a79a9eca4d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-34">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/notesandevents_object_grid-253285fc0466fe78848856a79a9eca4d.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-35">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-35</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Notes &amp;amp; Events - notes from the workflow</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/notesandevents_object_grid-253285fc0466fe78848856a79a9eca4d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-35">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/notesandevents_object_grid-253285fc0466fe78848856a79a9eca4d.png"><figure class="visual-placeholder" id="fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-36">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-36</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Notes &amp;amp; Events - notes from the workflow</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/notesandevents_object_grid-253285fc0466fe78848856a79a9eca4d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Workflow_Management-Workflow_Tutorial-index-36">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

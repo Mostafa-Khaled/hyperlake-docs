@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Add a Custom Grid Column — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>How to Add a Custom Grid Column</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="overview">Overview<a href="#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h2>
+<p>This example adds a custom progress bar column to the HyperMDM
+Studio grid. Custom grid columns display element data using a
+custom cell renderer that goes beyond the built-in frontend types
+(input, checkbox, select, etc.).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="files-overview">Files Overview<a href="#files-overview" class="hash-link" aria-label="Direct link to Files Overview" title="Direct link to Files Overview" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Layer</th><th>File</th><th>Purpose</th></tr></thead><tbody><tr><td>Backend</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Grid/Column/Definition/ProgressBarDefinition.php" target="_blank" rel="noopener noreferrer" class="">ProgressBarDefinition.php</a></td><td>Column definition</td></tr><tr><td>Backend</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Grid/Column/Resolver/ProgressBarResolver.php" target="_blank" rel="noopener noreferrer" class="">ProgressBarResolver.php</a></td><td>Column value resolver</td></tr><tr><td>Backend</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Grid/Column/Collector/ProgressBarCollector.php" target="_blank" rel="noopener noreferrer" class="">ProgressBarCollector.php</a></td><td>Available columns provider</td></tr><tr><td>Backend</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/services.yaml" target="_blank" rel="noopener noreferrer" class="">services.yaml</a></td><td>Service registration</td></tr><tr><td>UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-grid-column/components/progress-bar-cell.tsx" target="_blank" rel="noopener noreferrer" class="">progress-bar-cell.tsx</a></td><td>React cell component</td></tr><tr><td>UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-grid-column/dynamic-types/definitions/dynamic-type-grid-cell-progress-bar.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-grid-cell-progress-bar.tsx</a></td><td>Grid cell dynamic type</td></tr><tr><td>UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-grid-column/modules/progress-bar-grid-column-module.tsx" target="_blank" rel="noopener noreferrer" class="">progress-bar-grid-column-module.tsx</a></td><td>Registry module</td></tr><tr><td>UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-grid-column/index.ts" target="_blank" rel="noopener noreferrer" class="">index.ts</a></td><td>Plugin entry point</td></tr><tr><td>UI</td><td><a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/plugins.ts" target="_blank" rel="noopener noreferrer" class="">plugins.ts</a></td><td>Plugin export</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="details">Details<a href="#details" class="hash-link" aria-label="Direct link to Details" title="Direct link to Details" translate="no">​</a></h2>
+<p>Adding a custom grid column with a custom cell renderer requires
+work across two layers:</p>
+<p><strong>Studio Backend:</strong></p>
+<ul>
+<li class="">A <code>ColumnDefinitionInterface</code> tagged with
+<code>hypermdm.studio_backend.grid_column_definition</code> that declares the
+column type and returns a custom <code>getFrontendType()</code> value</li>
+<li class="">A <code>ColumnResolverInterface</code> tagged with
+<code>hypermdm.studio_backend.grid_column_resolver</code> that fetches the
+column value for each element</li>
+<li class="">A <code>ColumnCollectorInterface</code> tagged with
+<code>hypermdm.studio_backend.grid_column_collector</code> that lists the
+column in available configurations</li>
+</ul>
+<p><strong>Studio UI (Frontend):</strong></p>
+<ul>
+<li class="">A <code>DynamicTypeGridCellAbstract</code> subclass whose <code>id</code> matches the
+backend <code>getFrontendType()</code> return value</li>
+<li class="">A React component for the custom cell rendering</li>
+<li class="">Registration of the dynamic type via a module and plugin</li>
+</ul>
+<p>The <code>getFrontendType()</code> string is the key that connects backend
+and frontend. If you use a built-in frontend type (e.g. <code>input</code>,
+<code>checkbox</code>, <code>select</code>), no frontend work is needed.</p>
+<p>For the step-by-step guide, see
+<a class="" href="../../../../HyperMDM/Extending_HyperMDM/Custom_Extension_Guides/Custom_Grid_Columns/index.html">Custom Grid Columns</a>
+in the HyperMDM core documentation. For backend details
+(interfaces, constructor signatures, predefined columns,
+transformers), see
+<a class="" href="../../../../Studio_Backend/Extending/Extending_Grid_with_Custom_Columns/index.html">Extending Grid with Custom Columns</a>
+in the Studio Backend documentation.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

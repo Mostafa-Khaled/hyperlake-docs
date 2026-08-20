@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Debugging — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Debugging HyperMDM</h1></header>
+<p>This page covers debugging tools and techniques for HyperMDM development.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="debug-mode">Debug Mode<a href="#debug-mode" class="hash-link" aria-label="Direct link to Debug Mode" title="Direct link to Debug Mode" translate="no">​</a></h2>
+<p>To enable debugging tools (profiler, toolbar, ...), HyperMDM relies on the environment
+variable <code>APP_ENV</code> in the <code>.env</code> file in your project root directory. Set <code>APP_ENV=dev</code> to activate it.
+Additionally you can set the debug flag on the kernel by using <code>APP_DEBUG=1</code>.
+For more details, see the <a href="https://symfony.com/doc/current/configuration/front_controllers_and_kernel.html#debug-mode" target="_blank" rel="noopener noreferrer" class="">Symfony docs</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="dev-mode">Dev Mode<a href="#dev-mode" class="hash-link" aria-label="Direct link to Dev Mode" title="Direct link to Dev Mode" translate="no">​</a></h2>
+<p>The development mode enables some debugging features. This is useful if you're developing on the core of HyperMDM or when
+creating a bundle. Please don't activate it in production systems!</p>
+<p>Dev mode enables:</p>
+<ul>
+<li class="">Disabling of some caches</li>
+<li class="">Extensive logging to log files</li>
+<li class="">... and some more minor behaviors</li>
+</ul>
+<p>Add the following line to your <code>.env</code> file to enable dev mode.
+<code>HYPERMDM_DEV_MODE=true</code></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="server-side-debugging">Server-Side Debugging<a href="#server-side-debugging" class="hash-link" aria-label="Direct link to Server-Side Debugging" title="Direct link to Server-Side Debugging" translate="no">​</a></h2>
+<p>Use standard PHP and Symfony debugging tools for server-side debugging:</p>
+<ul>
+<li class="">Reading log files as described <a class="" href="../../Development_Tools/Logging/index.html">here</a></li>
+<li class="">Using Symfony profiler console depending on the active environment.
+Details see <a href="https://symfony.com/doc/current/reference/configuration/web_profiler.html" target="_blank" rel="noopener noreferrer" class="">Symfony docs</a></li>
+<li class="">Using Xdebug and a proper IDE for stepwise debugging, see the <a href="https://xdebug.org/" target="_blank" rel="noopener noreferrer" class="">Xdebug docs</a></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="http-headers">HTTP Headers<a href="#http-headers" class="hash-link" aria-label="Direct link to HTTP Headers" title="Direct link to HTTP Headers" translate="no">​</a></h2>
+<p>HyperMDM might add following headers to its responses to provide additional debug information, especially concerning full
+page cache:</p>
+<p>If response is delivered directly from full page cache:</p>
+<ul>
+<li class=""><code>X-HyperMDM-Output-Cache-Tag:output_&lt;SOME_HASH&gt;</code>: Cache tag of delivered information.</li>
+<li class=""><code>X-HyperMDM-Cache-Date:&lt;CACHE_DATE&gt;</code>: Date when information was stored to cache.</li>
+</ul>
+<p>If response could be delivered from full page cache, but is not:</p>
+<ul>
+<li class=""><code>X-HyperMDM-Output-Cache-Disable-Reason:&lt;SOME REASON&gt;</code>: Describes reason why response is not delivered directly from full
+page cache. Reasons can be <code>in debug mode</code>, <code>backend user is logged in</code>, <code>exclude path pattern in system-settings matches</code>,
+<code>exclude cookie in system-settings matches</code>, etc.</li>
+</ul>
+<p>One additional header to identify that response is sent by HyperMDM.</p>
+<ul>
+<li class=""><code>X-Powered-By:hypermdm</code>: Added to every request.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

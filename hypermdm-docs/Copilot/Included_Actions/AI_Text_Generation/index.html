@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenAI-Compatible Text Generation — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>OpenAI-Compatible Text Generation</h1></header>
+<p>This document covers the OpenAI-compatible text generation automation action step available in HyperMDM Copilot.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="overview">Overview<a href="#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h2>
+<p>The OpenAI-compatible text generation step (<code>generic_openai_compatible_text_generation</code>) enables you to generate text content using any OpenAI-compatible API, including OpenAI, Azure OpenAI, Anthropic Claude, local models, and other providers that implement the OpenAI chat completions format.</p>
+<p>The step supports dynamic prompt templating using Twig syntax and can save generated text to object fields or execution context.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="features">Features<a href="#features" class="hash-link" aria-label="Direct link to Features" title="Direct link to Features" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="prompt-templating">Prompt Templating<a href="#prompt-templating" class="hash-link" aria-label="Direct link to Prompt Templating" title="Direct link to Prompt Templating" translate="no">​</a></h3>
+<p>The text generation step supports Twig templating with access to the current subject:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">prompt_template</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">|</span><span class="token scalar string" style="color:#e3116c"></span><br></span><span class="token-line" style="color:#393A34"><span class="token scalar string" style="color:#e3116c">  Generate a product description for {{ subject.name }}.</span><br></span><span class="token-line" style="color:#393A34"><span class="token scalar string" style="color:#e3116c">  Category: {{ subject.category }}</span><br></span><span class="token-line" style="color:#393A34"><span class="token scalar string" style="color:#e3116c">  Price: {{ subject.price }}</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="output-configuration">Output Configuration<a href="#output-configuration" class="hash-link" aria-label="Direct link to Output Configuration" title="Direct link to Output Configuration" translate="no">​</a></h3>
+<p>Generated text can be saved to:</p>
+<ul>
+<li class=""><strong>Subject fields</strong>: Save directly to the current object's field</li>
+<li class=""><strong>Execution context</strong>: Store for use in subsequent automation steps</li>
+</ul>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">output_targets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">save_on_subject</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">save_on_execution_context</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">steps</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">step_implementation</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'generic_openai_compatible_text_generation'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'Generate Content with OpenAI'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">configuration</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">endpoint</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://api.openai.com/v1/chat/completions'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">api_key</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'sk-your-openai-api-key'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">model</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'gpt-3.5-turbo'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">prompt_template</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">|</span><span class="token scalar string" style="color:#e3116c"></span><br></span><span class="token-line" style="color:#393A34"><span class="token scalar string" style="color:#e3116c">        Write engaging marketing copy for {{ subject.name }}.</span><br></span><span class="token-line" style="color:#393A34"><span class="token scalar string" style="color:#e3116c">        Target audience: {{ subject.targetAudience }}</span><br></span><span class="token-line" style="color:#393A34"><span class="token scalar string" style="color:#e3116c">        Tone: Professional and friendly</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">output_field</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'marketingCopy'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">language</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'en'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">output_targets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">save_on_subject</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">save_on_execution_context</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">parameters</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">temperature</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">0.7</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">max_tokens</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">500</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">top_p</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">1.0</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="required-configuration">Required Configuration<a href="#required-configuration" class="hash-link" aria-label="Direct link to Required Configuration" title="Direct link to Required Configuration" translate="no">​</a></h3>
+<ul>
+<li class=""><code>endpoint</code>: API endpoint URL</li>
+<li class=""><code>model</code>: Model identifier</li>
+<li class=""><code>prompt_template</code>: Twig template for the prompt</li>
+<li class=""><code>output_field</code>: Field name to save the generated text</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="optional-configuration">Optional Configuration<a href="#optional-configuration" class="hash-link" aria-label="Direct link to Optional Configuration" title="Direct link to Optional Configuration" translate="no">​</a></h3>
+<ul>
+<li class=""><code>api_key</code>: API authentication key that may be needed to use the configured endpoint</li>
+<li class=""><code>language</code>: Language code for localized fields</li>
+<li class=""><code>parameters</code>: OpenAI API parameters<!-- -->
+<ul>
+<li class=""><code>temperature</code>: Randomness (0.0-2.0)</li>
+<li class=""><code>max_tokens</code>: Maximum response length</li>
+<li class=""><code>top_p</code>: Nucleus sampling parameter</li>
+<li class=""><code>frequency_penalty</code>: Reduce repetition (-2.0 to 2.0)</li>
+<li class=""><code>presence_penalty</code>: Encourage new topics (-2.0 to 2.0)</li>
+<li class=""><code>stop</code>: Stop sequences (string or array)</li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="supported-providers">Supported Providers<a href="#supported-providers" class="hash-link" aria-label="Direct link to Supported Providers" title="Direct link to Supported Providers" translate="no">​</a></h3>
+<p>The OpenAI-compatible step works with any provider that implements the OpenAI chat completions API format:</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="openai">OpenAI<a href="#openai" class="hash-link" aria-label="Direct link to OpenAI" title="Direct link to OpenAI" translate="no">​</a></h4>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">endpoint</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://api.openai.com/v1/chat/completions'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">model</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'gpt-4o'</span><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># or gpt-4, gpt-4-turbo, etc.</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="huggingface-inference-endpoints">HuggingFace Inference Endpoints<a href="#huggingface-inference-endpoints" class="hash-link" aria-label="Direct link to HuggingFace Inference Endpoints" title="Direct link to HuggingFace Inference Endpoints" translate="no">​</a></h4>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">endpoint</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://router.huggingface.co/{inference_provider}/v1/chat/completions'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">model</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'&lt;your_model&gt;'</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="error-handling">Error Handling<a href="#error-handling" class="hash-link" aria-label="Direct link to Error Handling" title="Direct link to Error Handling" translate="no">​</a></h2>
+<p>The step includes comprehensive error handling:</p>
+<ul>
+<li class=""><strong>API errors</strong>: Logged with response details</li>
+<li class=""><strong>Empty responses</strong>: Detected and logged</li>
+<li class=""><strong>Template errors</strong>: Twig syntax errors are caught</li>
+<li class=""><strong>Field validation</strong>: Output field availability is verified</li>
+</ul>
+<p>Error messages are logged to the job run with context including:</p>
+<ul>
+<li class="">Subject path</li>
+<li class="">Error details</li>
+<li class="">Generated text length (on success)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="best-practices">Best Practices<a href="#best-practices" class="hash-link" aria-label="Direct link to Best Practices" title="Direct link to Best Practices" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="prompt-design">Prompt Design<a href="#prompt-design" class="hash-link" aria-label="Direct link to Prompt Design" title="Direct link to Prompt Design" translate="no">​</a></h3>
+<ul>
+<li class="">Be specific and clear in your prompts</li>
+<li class="">Include relevant context from the subject</li>
+<li class="">Use consistent formatting</li>
+<li class="">Test prompts with sample data</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="model-selection">Model Selection<a href="#model-selection" class="hash-link" aria-label="Direct link to Model Selection" title="Direct link to Model Selection" translate="no">​</a></h3>
+<ul>
+<li class=""><strong>OpenAI-compatible</strong>: Balance cost, speed, and quality</li>
+<li class=""><strong>Local models</strong>: Consider latency and resource requirements</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="performance">Performance<a href="#performance" class="hash-link" aria-label="Direct link to Performance" title="Direct link to Performance" translate="no">​</a></h3>
+<ul>
+<li class="">Batch similar requests when possible</li>
+<li class="">Monitor API rate limits and costs</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="security">Security<a href="#security" class="hash-link" aria-label="Direct link to Security" title="Direct link to Security" translate="no">​</a></h3>
+<ul>
+<li class="">Store API keys as environment variables</li>
+<li class="">Use least-privilege API keys</li>
+<li class="">Monitor API usage for unexpected spikes</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="troubleshooting">Troubleshooting<a href="#troubleshooting" class="hash-link" aria-label="Direct link to Troubleshooting" title="Direct link to Troubleshooting" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="common-issues">Common Issues<a href="#common-issues" class="hash-link" aria-label="Direct link to Common Issues" title="Direct link to Common Issues" translate="no">​</a></h3>
+<ol>
+<li class=""><strong>Empty responses</strong>: Check model endpoint and API key</li>
+<li class=""><strong>Rate limiting</strong>: Implement delays or use different models</li>
+<li class=""><strong>Template errors</strong>: Validate Twig syntax and subject field access</li>
+<li class=""><strong>Field not found</strong>: Ensure output field exists in object class definition</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="debug-tips">Debug Tips<a href="#debug-tips" class="hash-link" aria-label="Direct link to Debug Tips" title="Direct link to Debug Tips" translate="no">​</a></h3>
+<ul>
+<li class="">Check job run logs for detailed error messages</li>
+<li class="">Test API endpoints manually with curl</li>
+<li class="">Verify environment variable resolution</li>
+<li class="">Use simple prompts first, then add complexity</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

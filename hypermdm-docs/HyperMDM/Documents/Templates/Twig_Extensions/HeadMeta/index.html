@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HeadMeta — HyperMDM</title>
+<link rel="stylesheet" href="../../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>HeadMeta Templating Extension</h1></header>
+<blockquote>
+<p>The HeadMeta templating extension extends <a class="" href="../Placeholder/index.html">Placeholder Templating Extension</a></p>
+</blockquote>
+<p>The HTML <code>&lt;meta&gt;</code> element is used to provide meta information about your HTML document -- typically keywords,
+document character set, caching pragmas, etc. Meta tags may be either of the <code>http-equiv</code> or <code>name</code> types,
+must contain a <code>content</code> attribute, and can also have either of the <code>lang</code> or <code>scheme</code> modifier attributes.</p>
+<p>The HeadMeta helper supports the following methods for setting and adding meta tags:</p>
+<ul>
+<li class="">
+<p><code>appendName($keyValue, $content, $conditionalName)</code></p>
+</li>
+<li class="">
+<p><code>offsetSetName($index, $keyValue, $content, $conditionalName)</code></p>
+</li>
+<li class="">
+<p><code>prependName($keyValue, $content, $conditionalName)</code></p>
+</li>
+<li class="">
+<p><code>setName($keyValue, $content, $modifiers)</code></p>
+</li>
+<li class="">
+<p><code>appendHttpEquiv($keyValue, $content, $conditionalHttpEquiv)</code></p>
+</li>
+<li class="">
+<p><code>offsetSetHttpEquiv($index, $keyValue, $content, $conditionalHttpEquiv)</code></p>
+</li>
+<li class="">
+<p><code>prependHttpEquiv($keyValue, $content, $conditionalHttpEquiv)</code></p>
+</li>
+<li class="">
+<p><code>setHttpEquiv($keyValue, $content, $modifiers)</code></p>
+</li>
+<li class="">
+<p><code>appendProperty($property, $content, $modifiers)</code></p>
+</li>
+<li class="">
+<p><code>offsetSetProperty($index, $property, $content, $modifiers)</code></p>
+</li>
+<li class="">
+<p><code>prependProperty($property, $content, $modifiers)</code></p>
+</li>
+<li class="">
+<p><code>setProperty($property, $content, $modifiers)</code></p>
+</li>
+</ul>
+<p>The <code>$keyValue</code> item is used to define a value for the <code>name</code> or <code>http-equiv</code> key; <code>$content</code> is the value for
+the <code>content</code> key, and <code>$modifiers</code> is an optional associative array that can contain keys for <code>lang</code> and/or <code>scheme</code>.</p>
+<p>You may also set meta tags using the <code>headMeta()</code> helper method, which has the following signature:
+<code>headMeta($content, $keyValue, $keyType = 'name', $modifiers = [], $placement = 'APPEND')</code>.</p>
+<p><code>$keyValue</code> is the content for the key specified in <code>$keyType</code>, which should be either <code>name</code> or <code>http-equiv</code>.
+<code>$placement</code> can be <code>SET</code> (overwrites all previously stored values), <code>APPEND</code> (added to end of stack), or <code>PREPEND</code> (added to top of stack).</p>
+<p>HeadMeta overrides each of <code>append()</code>, <code>offsetSet()</code>, <code>prepend()</code>, and <code>set()</code> to enforce usage of the special methods as
+listed above. Internally, it stores each item as a <code>stdClass</code> token, which it later serializes using the <code>itemToString()</code>
+method. This allows you to perform checks on the items in the stack, and optionally modify these items by simply
+modifying the object returned.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="basic-usage">Basic Usage<a href="#basic-usage" class="hash-link" aria-label="Direct link to Basic Usage" title="Direct link to Basic Usage" translate="no">​</a></h3>
+<p>You may specify a new meta tag at any time. Typically, you will specify client-side caching rules or SEO keywords.</p>
+<p>For instance, if you wish to specify SEO description, you'd be creating a meta name tag with the name
+'keywords' and the content the keywords you wish to associate with your page:</p>
+<div class="language-twig codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-twig codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"># setting meta description #</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token operator" style="color:#393A34">%</span><span class="token plain"> do hypermdm_head_meta</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">appendName</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">description</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">My SEO description for my awesome page</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">%</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"># setting open graph tags #</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token operator" style="color:#393A34">%</span><span class="token plain"> do hypermdm_head_meta</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">setProperty</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">og:title</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">my article title</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">%</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token operator" style="color:#393A34">%</span><span class="token plain"> do hypermdm_head_meta</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">setProperty</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">og:type</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">article</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">%</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"># setting content type </span><span class="token operator" style="color:#393A34">and</span><span class="token plain"> character set #</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token operator" style="color:#393A34">%</span><span class="token plain"> do hypermdm_head_meta</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">appendHttpEquiv</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">Content-Type</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">text/html; charset=UTF-8</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">appendHttpEquiv</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">Content-Language</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">'</span><span class="token string" style="color:#e3116c">en-US</span><span class="token string punctuation" style="color:#393A34">'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token delimiter punctuation" style="color:#393A34">%}</span><br></span></code></pre></div></div>
+<p>When you're ready to place your meta tags in the layout, simply echo the helper:</p>
+<div class="language-twig codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-twig codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token delimiter punctuation" style="color:#393A34">{{</span><span class="token plain"> hypermdm_head_meta</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token delimiter punctuation" style="color:#393A34">}}</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../../search.js"></script>
+</body>
+</html>

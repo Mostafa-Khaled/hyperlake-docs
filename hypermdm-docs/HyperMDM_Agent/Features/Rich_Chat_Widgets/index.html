@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rich Chat Widgets — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Rich Chat Widgets</h1></header>
+<p>Rich chat widgets are interactive React components the LLM can drop into the chat during a response. They turn
+"here is a URL" into a clickable element link, "here are 15 cars I found" into an inline table, "I want to make
+these changes" into a proposal card with a diff modal. Widgets contain no server-side business logic: some render
+the arguments passed in the tool call directly, others (notably the proposal widgets) fetch their payload from
+the Studio Backend via RTK Query on mount - by design, so the LLM never has to relay large or sensitive payloads
+through the conversation.</p>
+<p>This page is the <strong>canonical catalog</strong> of every widget that ships with the bundle. For how to add your
+own, see <a class="" href="../../Extending/Rich_Chat_Widgets/index.html">Extending → Rich Chat Widgets</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-widget-catalog">The widget catalog<a href="#the-widget-catalog" class="hash-link" aria-label="Direct link to The widget catalog" title="Direct link to The widget catalog" translate="no">​</a></h2>
+<p>Nine widgets ship today. The <strong>Triggered by</strong> column shows what makes the widget appear. Five are
+<strong>LLM-callable display tools</strong> - the model chooses whether and what to show:</p>
+<div class="table-container"><table><thead><tr><th>Widget</th><th>Widget type key</th><th>Triggered by</th><th>What the user sees</th></tr></thead><tbody><tr><td>Open element</td><td><code>element-link</code></td><td>LLM tool <code>hypermdm_open_element</code></td><td>Clickable button that opens a data object, asset, or document in Studio. Icon varies by element type.</td></tr><tr><td>Switch agent</td><td><code>agent-switch</code></td><td>LLM tool <code>hypermdm_switch_agent</code></td><td>Pill button suggesting a different agent. One click switches - see <a class="" href="../Agents_and_Switching/index.html">Agents and Switching</a>.</td></tr><tr><td>Asset preview</td><td><code>asset-preview</code></td><td>LLM tool <code>show_asset_preview</code></td><td>Inline image gallery of asset thumbnails. Click to open in Studio.</td></tr><tr><td>Data-object preview</td><td><code>data-object-preview</code></td><td>LLM tool <code>show_data_object_preview</code></td><td>Preview cards with a few key attributes and an "open" button.</td></tr><tr><td>Data table</td><td><code>data-table</code></td><td>LLM tool <code>show_data_table</code></td><td>Interactive, sortable, searchable table for search results.</td></tr></tbody></table></div>
+<p>The remaining four are <strong>server-emitted</strong> - they are not LLM tools. A freshly created proposal should
+<em>always</em> be surfaced, so the agent-server emits the proposal widget automatically from the minted
+proposalId the moment a <code>propose_*</code> tool succeeds (on <code>tool.execution_complete</code>). There is no
+<code>show_*_proposal</code> tool and no widget YAML for these:</p>
+<div class="table-container"><table><thead><tr><th>Widget</th><th>Widget type key</th><th>Triggered by</th><th>What the user sees</th></tr></thead><tbody><tr><td>Data-object proposal</td><td><code>proposal-data-object</code></td><td>Server, after <code>propose_data_object_update</code></td><td>HITL proposal card with approve / reject / refine actions and a diff modal. See <a class="" href="../HITL_Proposals/index.html">HITL Proposals</a>.</td></tr><tr><td>Asset metadata proposal</td><td><code>proposal-asset-metadata</code></td><td>Server, after <code>propose_asset_metadata_update</code></td><td>HITL proposal card for asset metadata edits.</td></tr><tr><td>Document proposal</td><td><code>proposal-document</code></td><td>Server, after <code>propose_document_update</code></td><td>HITL proposal card for document edits. The diff modal carries Preview / Edit / Settings tabs and a target-group control when the personalization-bundle is installed - see <a class="" href="../../Architecture/Document_Schema/index.html#target-group-variants-personalization">Architecture → Document Schema → Target-group variants</a>.</td></tr><tr><td>Tag proposal</td><td><code>proposal-tags</code></td><td>Server, after <code>propose_tag_assignment</code></td><td>HITL proposal card for tag assignments.</td></tr><tr><td>Agent-template proposal</td><td><code>proposal-agent-template</code></td><td>Server, after <code>propose_agent_template</code> / <code>…_deletion</code></td><td>HITL proposal card for agent Twig-template create / update / delete.</td></tr></tbody></table></div>
+<p>Two further widgets are server-emitted outside the proposal flow:</p>
+<div class="table-container"><table><thead><tr><th>Widget</th><th>Widget type key</th><th>Triggered by</th><th>What the user sees</th></tr></thead><tbody><tr><td>Ask user</td><td><code>ask-user</code></td><td>Server, on <code>ask_user</code> tool</td><td>Inline question with choice buttons and/or freeform input. See <a class="" href="../Interactive_Input/index.html">Interactive Input</a>.</td></tr><tr><td>Proposal result</td><td><code>proposal-result</code></td><td>Server, after resolve</td><td>Read-only status chip showing whether a proposal applied, was rejected, or errored.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="enabling-widgets-for-an-agent">Enabling widgets for an agent<a href="#enabling-widgets-for-an-agent" class="hash-link" aria-label="Direct link to Enabling widgets for an agent" title="Direct link to Enabling widgets for an agent" translate="no">​</a></h2>
+<p>The <strong>LLM-callable display widgets</strong> are opt-in per agent. In the YAML under <code>richChatWidgets</code>, list the
+widgets the agent is allowed to trigger:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">richChatWidgets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> hypermdm_open_element</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> show_data_object_preview</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> hypermdm_switch_agent</span><br></span></code></pre></div></div>
+<p>If an agent calls a widget it is not configured for, the call is rejected. A widget not in the agent's list never appears
+in chat, regardless of what the LLM asks for.</p>
+<p>The <strong>proposal widgets are not listed here</strong> - they are server-emitted, so simply granting an agent the
+matching <code>propose_*</code> tool is enough for its review widget to appear automatically.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-widgets-reach-the-screen">How widgets reach the screen<a href="#how-widgets-reach-the-screen" class="hash-link" aria-label="Direct link to How widgets reach the screen" title="Direct link to How widgets reach the screen" translate="no">​</a></h2>
+<p>The mechanism - for when you are debugging why a widget didn't render - is briefly:</p>
+<p><strong>LLM-callable display widgets:</strong></p>
+<ol>
+<li class="">LLM calls a widget tool (e.g. <code>show_data_table</code>).</li>
+<li class="">The agent-server intercepts the SDK's <code>tool.execution_start</code> event <em>before</em> the tool would actually run.</li>
+<li class="">Server checks the tool name against the widget registry; on match, it emits a <code>widget</code> SSE event with the payload.</li>
+<li class="">A confirmation string from the widget's <code>handlerTemplate</code> is returned to the LLM as the tool result, so the LLM knows
+the widget rendered.</li>
+<li class="">The frontend's widget renderer registry maps <code>widgetType</code> to a React component and mounts it inline in the message stream.</li>
+</ol>
+<p><strong>Server-emitted proposal widgets:</strong></p>
+<ol>
+<li class="">LLM calls a <code>propose_*</code> tool, which mints proposalIds and stores the payload server-side.</li>
+<li class="">The PHP propose tool embeds a server-only <code>widget</code> directive (widgetType + proposalIds + summary) in its
+tool result, alongside an LLM-visible stop-signal.</li>
+<li class="">The agent-server intercepts the SDK's <code>tool.execution_complete</code> event, parses the directive out of the
+result, and emits the same <code>widget</code> SSE event - no widget registry / YAML lookup involved.</li>
+<li class="">The frontend renders it via the same <code>widgetType</code> → component registry. The widget fetches its diff from
+the Studio Backend by proposalId.</li>
+</ol>
+<p>Either way the widget appears instantly, before the LLM continues, because the server short-circuits the
+normal tool-call path. The widget event is also persisted as a message part, so it re-renders on reopen.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further reading" title="Direct link to Further reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Extending/Rich_Chat_Widgets/index.html">Extending → Rich Chat Widgets</a> - how to add a widget (YAML definition + React renderer) and the widget-registry DI wiring.</li>
+<li class=""><a class="" href="../HITL_Proposals/index.html">HITL Proposals</a> - how proposal widgets integrate with the review/resolve workflow.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

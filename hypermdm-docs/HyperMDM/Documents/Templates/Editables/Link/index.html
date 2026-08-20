@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Link — HyperMDM</title>
+<link rel="stylesheet" href="../../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Link Editable</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="general">General<a href="#general" class="hash-link" aria-label="Direct link to General" title="Direct link to General" translate="no">​</a></h2>
+<p>The link editable is used for dynamic link creation in documents.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<p>You can pass every valid attribute an <code>&lt;a&gt;</code>-tag can have (<a href="https://www.w3.org/TR/html52/textlevel-semantics.html#the-a-element" target="_blank" rel="noopener noreferrer" class="">w3.org - Link</a>),
+such as: <code>class</code>, <code>target</code>, <code>id</code>, <code>style</code>, <code>accesskey</code>, <code>name</code>, <code>title</code>, <code>data-*</code>, <code>aria-*</code> and additionally the following:</p>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>reload</code></td><td>boolean</td><td>Set to <code>true</code> to reload the page in editmode after changing the state.</td></tr><tr><td><code>textPrefix</code></td><td>string</td><td>Add an icon or something else before Text.</td></tr><tr><td><code>textSuffix</code></td><td>string</td><td>Add an icon or something else after Text.</td></tr><tr><td><code>noText</code></td><td>boolean</td><td>If you need only the <code>&lt;a&gt;</code> tag without text (or only with an <code>textSuffix</code>/<code>textPrefix</code>).</td></tr><tr><td><code>required</code></td><td>boolean/string</td><td>(default: <code>false</code>) set to true to make link and text required for publish, set to <code>linkonly</code> to make only the link required for publish.</td></tr><tr><td><code>allowedTypes</code></td><td>array</td><td>You can limit the available types for this editable by passing the allowed types explicitly. If this option is not used, all types are available. Valid types are: <code>asset</code>, <code>document</code>, <code>object</code></td></tr><tr><td><code>allowedSubtypes</code></td><td>array</td><td>You can limit the available subtypes for this editable by passing the allowed subtypes (grouped by type) explicitly. If this option is not used, all subtypes are available.</td></tr><tr><td><code>allowedClasses</code></td><td>array</td><td>You can limit the available classes for this editable by passing the allowed object class names explicitly. If this option is not used, all classes are available.</td></tr><tr><td><code>allowedTargets</code></td><td>array</td><td>You can limit the available targets for this editable by passing the allowed targets explicitly. If this option is not used, all targets are available. Valid targets are: <code> </code> (empty string), <code>_blank</code>, <code>_self</code>, <code>_top</code>, <code>_parent</code></td></tr><tr><td><code>disabledFields</code></td><td>array</td><td>You can limit the available fields for this editable by passing the allowed fields explicitly. If this option is not used, all fields are available. Valid Fields are: <code>text</code>, <code>target</code>, <code>parameters</code>, <code>anchor</code>, <code>title</code>, <code>accesskey</code>, <code>rel</code>, <code>tabindex</code>, <code>class</code>, <code>attributes</code></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="methods">Methods<a href="#methods" class="hash-link" aria-label="Direct link to Methods" title="Direct link to Methods" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Name</th><th>Return</th><th>Description</th></tr></thead><tbody><tr><td><code>getHref()</code></td><td>string</td><td>Get the path of this link</td></tr><tr><td><code>getText()</code></td><td>string</td><td>Get the text of the link</td></tr><tr><td><code>getTarget()</code></td><td>string</td><td>Get the target of the link</td></tr><tr><td><code>getParameters()</code></td><td>string</td><td>Get the query params of the link</td></tr><tr><td><code>getAnchor()</code></td><td>string</td><td>Get the anchor text of the link</td></tr><tr><td><code>getTitle()</code></td><td>string</td><td>Get the title of the link</td></tr><tr><td><code>getRel()</code></td><td>string</td><td>Get the rel text of the link</td></tr><tr><td><code>getTabindex()</code></td><td>string</td><td>Get the tabindex of the link</td></tr><tr><td><code>getClass()</code></td><td>string</td><td>Get the class of the link</td></tr><tr><td><code>getAccessKey()</code></td><td>string</td><td>Get the access key of the link</td></tr><tr><td><code>isEmpty()</code></td><td>string</td><td>Whether the editable is empty or not</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="examples">Examples<a href="#examples" class="hash-link" aria-label="Direct link to Examples" title="Direct link to Examples" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="basic-usage">Basic Usage<a href="#basic-usage" class="hash-link" aria-label="Direct link to Basic Usage" title="Direct link to Basic Usage" translate="no">​</a></h3>
+<div class="language-twig codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-twig codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">p</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">Visit our</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">|</span><span class="token plain"> trans </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> hypermdm_link</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">blogLink</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token operator" style="color:#393A34">&lt;</span><span class="token operator" style="color:#393A34">/</span><span class="token plain">p</span><span class="token operator" style="color:#393A34">&gt;</span><br></span></code></pre></div></div>
+<p>You could see the edit mode preview in the picture, below.</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Documents-Templates-Editables-Link-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Documents-Templates-Editables-Link-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Link editable - edit mode preview</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/editables_link_backend_preview-eb3e3cfaf7e99c51c0347948e2d95d5c.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Documents-Templates-Editables-Link-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/editables_link_backend_preview-eb3e3cfaf7e99c51c0347948e2d95d5c.png"><figure class="visual-placeholder" id="fig-HyperMDM-Documents-Templates-Editables-Link-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Documents-Templates-Editables-Link-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Link editable - edit mode preview</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/editables_link_backend_preview-eb3e3cfaf7e99c51c0347948e2d95d5c.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Documents-Templates-Editables-Link-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/editables_link_backend_preview-eb3e3cfaf7e99c51c0347948e2d95d5c.png"><figure class="visual-placeholder" id="fig-HyperMDM-Documents-Templates-Editables-Link-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Documents-Templates-Editables-Link-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Link editable - edit mode preview</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/editables_link_backend_preview-eb3e3cfaf7e99c51c0347948e2d95d5c.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Documents-Templates-Editables-Link-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>And the frontend:</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Documents-Templates-Editables-Link-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Documents-Templates-Editables-Link-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Link editable - frontend</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/editables_link_frontend_preview-9f0541b216b406f59b6ee9b9bf9cdde2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Documents-Templates-Editables-Link-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/editables_link_frontend_preview-9f0541b216b406f59b6ee9b9bf9cdde2.png"><figure class="visual-placeholder" id="fig-HyperMDM-Documents-Templates-Editables-Link-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Documents-Templates-Editables-Link-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Link editable - frontend</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/editables_link_frontend_preview-9f0541b216b406f59b6ee9b9bf9cdde2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Documents-Templates-Editables-Link-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/editables_link_frontend_preview-9f0541b216b406f59b6ee9b9bf9cdde2.png"><figure class="visual-placeholder" id="fig-HyperMDM-Documents-Templates-Editables-Link-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Documents-Templates-Editables-Link-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Link editable - frontend</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/editables_link_frontend_preview-9f0541b216b406f59b6ee9b9bf9cdde2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Documents-Templates-Editables-Link-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="use-link-in-the-block-editable">Use Link in the Block Editable<a href="#use-link-in-the-block-editable" class="hash-link" aria-label="Direct link to Use Link in the Block Editable" title="Direct link to Use Link in the Block Editable" translate="no">​</a></h3>
+<p>Let's see how to make a list of links with <a class="" href="../Block/index.html">Block</a>.</p>
+<div class="language-twig codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-twig codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">h3</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token punctuation" style="color:#393A34">{</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">Useful links</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">|</span><span class="token plain"> trans </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">}</span><span class="token operator" style="color:#393A34">&lt;</span><span class="token operator" style="color:#393A34">/</span><span class="token plain">h3</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">ul</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token operator" style="color:#393A34">%</span><span class="token plain"> for i </span><span class="token operator" style="color:#393A34">in</span><span class="token plain"> hypermdm_block</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">linkblock</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">iterator </span><span class="token operator" style="color:#393A34">%</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">li</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token punctuation" style="color:#393A34">{</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> hypermdm_link</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">myLink</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">class</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string punctuation" style="color:#393A34">"</span><span class="token string" style="color:#e3116c">special-link-class</span><span class="token string punctuation" style="color:#393A34">"</span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">}</span><span class="token operator" style="color:#393A34">&lt;</span><span class="token operator" style="color:#393A34">/</span><span class="token plain">li</span><span class="token operator" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token operator" style="color:#393A34">%</span><span class="token plain"> endfor </span><span class="token operator" style="color:#393A34">%</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token operator" style="color:#393A34">&lt;</span><span class="token operator" style="color:#393A34">/</span><span class="token plain">ul</span><span class="token operator" style="color:#393A34">&gt;</span><br></span></code></pre></div></div>
+<p>The above example renders a list of links:</p>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Documents-Templates-Editables-Link-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Documents-Templates-Editables-Link-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The links list in the backend</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/editables_link_inside_block-853f03ea7207029ef6a0add3ce690fc8.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Documents-Templates-Editables-Link-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/editables_link_inside_block-853f03ea7207029ef6a0add3ce690fc8.png"><figure class="visual-placeholder" id="fig-HyperMDM-Documents-Templates-Editables-Link-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Documents-Templates-Editables-Link-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The links list in the backend</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/editables_link_inside_block-853f03ea7207029ef6a0add3ce690fc8.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Documents-Templates-Editables-Link-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/editables_link_inside_block-853f03ea7207029ef6a0add3ce690fc8.png"><figure class="visual-placeholder" id="fig-HyperMDM-Documents-Templates-Editables-Link-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Documents-Templates-Editables-Link-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">The links list in the backend</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/editables_link_inside_block-853f03ea7207029ef6a0add3ce690fc8.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Documents-Templates-Editables-Link-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="link-generators">Link Generators<a href="#link-generators" class="hash-link" aria-label="Direct link to Link Generators" title="Direct link to Link Generators" translate="no">​</a></h3>
+<p>Please also see the section about <a class="" href="../../../../Objects/Object_Classes/Additional_Class_Settings/Link_Generator/index.html">Link Generators</a></p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../../search.js"></script>
+</body>
+</html>

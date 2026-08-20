@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DataObject Queries — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>DataObject Queries</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="supported-data-types">Supported Data Types<a href="#supported-data-types" class="hash-link" aria-label="Direct link to Supported Data Types" title="Direct link to Supported Data Types" translate="no">​</a></h2>
+<p>Also check out the HyperMDM's <a class="" href="../../../../HyperMDM/Objects/Object_Classes/Data_Types/index.html">data type documentation</a>.</p>
+<ul>
+<li class="">Advanced Many-to-Many Relation</li>
+<li class="">Advanced Many-to-Many Object Relation</li>
+<li class="">Block</li>
+<li class="">Boolean Select</li>
+<li class=""><a class="" href="../../../../HyperMDM/Objects/Object_Classes/Data_Types/Calculated_Value_Type/index.html">Calculated Value</a></li>
+<li class="">Checkbox</li>
+<li class="">Classification Store</li>
+<li class="">Country</li>
+<li class="">Countries (Multiselect)</li>
+<li class="">Date</li>
+<li class="">DateTime</li>
+<li class="">Email</li>
+<li class="">External Image</li>
+<li class="">Gender</li>
+<li class=""><a class="" href="../../../../HyperMDM/Objects/Object_Classes/Data_Types/Fieldcollections/index.html">Field-Collections</a></li>
+<li class="">Firstname</li>
+<li class="">Geobounds</li>
+<li class="">Geopoint</li>
+<li class="">Geopolygon</li>
+<li class="">Image</li>
+<li class="">Image Advanced</li>
+<li class="">Input</li>
+<li class="">InputQuantityValue</li>
+<li class="">Language</li>
+<li class="">Languages (Multiselect)</li>
+<li class="">Lastname</li>
+<li class="">Link</li>
+<li class="">Many-to-One Relation</li>
+<li class="">Many-to-Many Relation</li>
+<li class="">Many-to-Many Object Relation</li>
+<li class="">Multiselect</li>
+<li class="">Numeric</li>
+<li class="">Quantity Value</li>
+<li class="">Reverse Many-to-Many Object Relation</li>
+<li class="">RgbaColor</li>
+<li class="">Select</li>
+<li class="">Slider</li>
+<li class="">StructuredTable</li>
+<li class="">Table</li>
+<li class="">Textarea</li>
+<li class="">Time</li>
+<li class=""><a class="" href="../../../../HyperMDM/Objects/Object_Classes/Data_Types/Others/index.html">URL Slug</a></li>
+<li class="">Video</li>
+<li class="">Wysiwyg</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="available-query-operators">Available Query Operators<a href="#available-query-operators" class="hash-link" aria-label="Direct link to Available Query Operators" title="Direct link to Available Query Operators" translate="no">​</a></h2>
+<p>Check out the <a class="" href="../../Operators/index.html">operators section</a> for more information.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="get-single-data-object">Get single Data Object<a href="#get-single-data-object" class="hash-link" aria-label="Direct link to Get single Data Object" title="Direct link to Get single Data Object" translate="no">​</a></h2>
+<p>Base structure for getting single data object:</p>
+<div class="language-graphql codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-graphql codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token property-query">getNews</span><span class="token punctuation" style="color:#393A34">(</span><span class="token attr-name" style="color:#00a4db">id</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">4</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token operator" style="color:#393A34">...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="get-list-of-data-objects">Get List of Data Objects<a href="#get-list-of-data-objects" class="hash-link" aria-label="Direct link to Get List of Data Objects" title="Direct link to Get List of Data Objects" translate="no">​</a></h2>
+<p>Base structure for getting a list of data objects, restricted by IDs:</p>
+<div class="language-graphql codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-graphql codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token property-query">getNewsListing</span><span class="token punctuation" style="color:#393A34">(</span><span class="token attr-name" style="color:#00a4db">ids</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"4,5"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">     </span><span class="token object">edges</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token operator" style="color:#393A34">...</span><br></span></code></pre></div></div>
+<p>Base structure for getting a list of data objects, restricted by fullpath:</p>
+<div class="language-graphql codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-graphql codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token property-query">getNewsListing</span><span class="token punctuation" style="color:#393A34">(</span><span class="token attr-name" style="color:#00a4db">fullpaths</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"/NewsArticle,/NewsArticle2"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token property" style="color:#36acaa">totalCount</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token object">edges</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token object">node</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token property" style="color:#36acaa">id</span><span class="token plain">        </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p>Sometimes it can happen that the fullpath already contains a comma. To make sure the comma is not
+interpreted as a list separator in this case, you can quote the path:</p>
+<div class="language-graphql codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-graphql codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token property-query">getNewsListing</span><span class="token punctuation" style="color:#393A34">(</span><span class="token attr-name" style="color:#00a4db">fullpaths</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"'/NewsArticle,Headline','/NewsArticle2'"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token property" style="color:#36acaa">totalCount</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token object">edges</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token object">node</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token property" style="color:#36acaa">id</span><span class="token plain">        </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="pagination">Pagination<a href="#pagination" class="hash-link" aria-label="Direct link to Pagination" title="Direct link to Pagination" translate="no">​</a></h4>
+<p>Pagination can be applied as query parameters.</p>
+<div class="language-graphql codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-graphql codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># 'first' is the limit</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># 'after' the offset</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token property-query">getManufacturerListing</span><span class="token punctuation" style="color:#393A34">(</span><span class="token attr-name" style="color:#00a4db">first</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">3</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token attr-name" style="color:#00a4db">after</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">1</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token object">edges</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token object">node</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token property" style="color:#36acaa">id</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token property" style="color:#36acaa">name</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="simple-sorting">Simple Sorting<a href="#simple-sorting" class="hash-link" aria-label="Direct link to Simple Sorting" title="Direct link to Simple Sorting" translate="no">​</a></h4>
+<p>Sorting can be applied as query parameters, for example sort by name, descending.</p>
+<div class="language-graphql codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-graphql codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token property-query">getManufacturerListing</span><span class="token punctuation" style="color:#393A34">(</span><span class="token attr-name" style="color:#00a4db">sortBy</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"name"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token attr-name" style="color:#00a4db">sortOrder</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"DESC"</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token object">edges</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token object">node</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token property" style="color:#36acaa">id</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token property" style="color:#36acaa">name</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="filtering">Filtering<a href="#filtering" class="hash-link" aria-label="Direct link to Filtering" title="Direct link to Filtering" translate="no">​</a></h4>
+<p>You can use HyperMDM's webservice filter logic as described
+in the HyperMDM query filter syntax
+for filtering listing requests.</p>
+<p>For details see <a class="" href="../Filtering/index.html">filtering documentation page</a></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="localization-of-queries">Localization of Queries<a href="#localization-of-queries" class="hash-link" aria-label="Direct link to Localization of Queries" title="Direct link to Localization of Queries" translate="no">​</a></h2>
+<p>Queries can be localized For details see the <a class="" href="../Localization/index.html">localization documentation page</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="extend-data-object-queries">Extend Data Object Queries<a href="#extend-data-object-queries" class="hash-link" aria-label="Direct link to Extend Data Object Queries" title="Direct link to Extend Data Object Queries" translate="no">​</a></h2>
+<p>It is possible to add custom query data types and query operators. For details see detail documentation
+pages:</p>
+<ul>
+<li class=""><a class="" href="../Add_Custom_Query_Datatype/index.html">Add a custom query datatype</a></li>
+<li class=""><a class="" href="../Add_Custom_Query_Operator/index.html">Add a custom query operator</a></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="more-examples">More Examples<a href="#more-examples" class="hash-link" aria-label="Direct link to More Examples" title="Direct link to More Examples" translate="no">​</a></h2>
+<p>See following list for more examples with data object queries:</p>
+<ul>
+<li class=""><a class="" href="../Query_Samples/Sample_Manufacturer_Listing/index.html">Manufacturer Listing with sorting and paging</a></li>
+<li class=""><a class="" href="../Query_Samples/Sample_ManyToMany_Object_Relation/index.html">Many-to-Many Object Relation</a></li>
+<li class=""><a class="" href="../Query_Samples/Sample_Advanced_ManyToMany_Object_Relation/index.html">Advanced Many-to-Many Object Relation</a></li>
+<li class=""><a class="" href="../Query_Samples/Sample_Advanced_ManyToMany_Relation_Metadata/index.html">Advanced Many-to-Many Relation Metadata</a></li>
+<li class=""><a class="" href="../Query_Samples/Sample_Fieldcollections/index.html">Field-Collections on Data Objects</a></li>
+<li class=""><a class="" href="../Query_Samples/Sample_Parent_Children_Siblings/index.html">Objects Parent/Children/Siblings</a></li>
+<li class=""><a class="" href="../Query_Samples/Sample_Get_Linked_Data/index.html">Get linked data</a></li>
+<li class=""><a class="" href="../Query_Samples/Sample_Translate_Values/index.html">Translate Values</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

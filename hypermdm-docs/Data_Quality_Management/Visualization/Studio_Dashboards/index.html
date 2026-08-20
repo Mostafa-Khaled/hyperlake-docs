@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio Dashboards — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Studio Dashboards</h1></header>
+<p>The Data Quality Management bundle integrates with the
+<a class="" href="../../../Studio_Dashboards/Installation/index.html">HyperMDM Studio Dashboards Bundle</a>
+and ships dashboard widgets that visualize data quality information on a Studio dashboard.</p>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-Studio_Dashboards-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-Studio_Dashboards-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-Studio_Dashboards-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>Optional dependency</div><div class="admonitionContent_BuS1"><p>The dashboards integration is only active when the Studio Dashboards Bundle is installed. Without it, the bundle
+works as usual and registers no widgets; there is no hard dependency between the two bundles.</p></div></div>
+<p>Add the widgets from the dashboard's <em>Add widget</em> dialog under the <strong>Data Quality</strong> entries.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="widget-types">Widget types<a href="#widget-types" class="hash-link" aria-label="Direct link to Widget types" title="Direct link to Widget types" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th style="text-align:left">Widget</th><th style="text-align:left">Type (backend enum)</th><th style="text-align:left">Visualizations</th><th style="text-align:left">Configuration</th></tr></thead><tbody><tr><td style="text-align:left">Data Quality Score</td><td style="text-align:left"><code>data_quality_score</code></td><td style="text-align:left">Single value, Bar chart</td><td style="text-align:left">Check (<code>class::field</code>)</td></tr><tr><td style="text-align:left">Data Quality Worst Offenders</td><td style="text-align:left"><code>data_quality_worst_offenders</code></td><td style="text-align:left">Table</td><td style="text-align:left">Check (<code>class::field</code>), identifier column, limit</td></tr><tr><td style="text-align:left">Data Quality Rule Violations</td><td style="text-align:left"><code>data_quality_violations</code></td><td style="text-align:left">Bar chart</td><td style="text-align:left">Class</td></tr></tbody></table></div>
+<p>All widget data comes from the database, so it always reflects the current stored gradings; no index refresh is
+required.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-quality-score">Data Quality Score<a href="#data-quality-score" class="hash-link" aria-label="Direct link to Data Quality Score" title="Direct link to Data Quality Score" translate="no">​</a></h3>
+<p>Shows the overall data quality for a single check.</p>
+<ul>
+<li class=""><strong>Single value</strong> - the average quality score as a percentage.</li>
+<li class=""><strong>Bar chart</strong> - the distribution of objects across the rating marks (<code>A</code>/<code>B</code>/<code>C</code>/<code>D</code>). Every configured mark is
+always rendered, even at a count of <code>0</code>, so the distribution stays consistent.</li>
+</ul>
+<p>Clicking a bar opens the object grid filtered to that mark; see <a href="#drill-down" class="">Drill-down</a>. Objects without a
+stored score are excluded from both the average and the distribution.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-quality-worst-offenders">Data Quality Worst Offenders<a href="#data-quality-worst-offenders" class="hash-link" aria-label="Direct link to Data Quality Worst Offenders" title="Direct link to Data Quality Worst Offenders" translate="no">​</a></h3>
+<p>Lists the lowest-scoring objects for a single check as a table.</p>
+<ul>
+<li class=""><strong>Identifier column</strong> - choose whether the row identifier is the object <code>path</code> or <code>key</code>.</li>
+<li class=""><strong>Limit</strong> - the maximum number of rows to display. The widget dialog offers <code>5</code>, <code>10</code>, <code>20</code> and <code>50</code>, and
+defaults to <code>10</code>. A limit set directly in YAML is capped at <code>200</code>.</li>
+</ul>
+<p>Objects without a stored score, and objects with a perfect score for the check, are excluded from the list.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-quality-rule-violations">Data Quality Rule Violations<a href="#data-quality-rule-violations" class="hash-link" aria-label="Direct link to Data Quality Rule Violations" title="Direct link to Data Quality Rule Violations" translate="no">​</a></h3>
+<p>Shows, for a whole class, one bar per failing rule check. Bar height is the number of objects failing that
+check; bars are sorted by count. Each bar's color reflects the check's failure rate mapped through the same score
+ranges as object-level scores: a check failing on few objects gets a good mark, one failing on most objects gets
+a poor mark.</p>
+<p>Clicking a bar opens the object grid restricted to exactly the objects failing that check; see
+<a href="#drill-down" class="">Drill-down</a>. See <a href="#limitations" class="">Limitations</a> for the drill-down cap behavior.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="drill-down">Drill-down<a href="#drill-down" class="hash-link" aria-label="Direct link to Drill-down" title="Direct link to Drill-down" translate="no">​</a></h2>
+<p>The Score and Rule Violations widgets are interactive: clicking a bar opens the native Studio object grid,
+pre-filtered to the relevant objects.</p>
+<ul>
+<li class="">The <strong>Score</strong> widget filters the grid by the clicked rating mark.</li>
+<li class="">The <strong>Rule Violations</strong> widget restricts the grid to the pre-computed failing object ids for that check (using
+the built-in <code>system.ids</code> column filter; no PQL is involved).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="saved-grid-template">Saved grid template<a href="#saved-grid-template" class="hash-link" aria-label="Direct link to Saved grid template" title="Direct link to Saved grid template" translate="no">​</a></h3>
+<p>Each interactive widget can reference a <strong>saved grid configuration</strong> (a <em>global</em> grid template of the target
+class). When set, the drill-down grid opens with that template's columns instead of the default columns. Select
+the template in the widget configuration dialog ("Saved template"); leaving it empty uses the default grid
+columns.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="limitations">Limitations<a href="#limitations" class="hash-link" aria-label="Direct link to Limitations" title="Direct link to Limitations" translate="no">​</a></h2>
+<ul>
+<li class="">The widgets are only available when the Studio Dashboards Bundle is installed (optional dependency).</li>
+<li class=""><strong>Rule Violations drill-down cap:</strong> for payload and performance reasons, the number of object ids collected per
+check for the drill-down is capped; see <a href="#increasing-the-drill-down-limit" class="">Increasing the drill-down limit</a>.
+When a check fails on more objects than the cap, the collected id set would be incomplete, so the <strong>drill-down
+is disabled for that bar</strong> (its tooltip flags it as disabled, and clicking it shows an explanatory message
+instead of opening a partial grid). The full failing count is still shown on the bar either way.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="increasing-the-drill-down-limit">Increasing the drill-down limit<a href="#increasing-the-drill-down-limit" class="hash-link" aria-label="Direct link to Increasing the drill-down limit" title="Direct link to Increasing the drill-down limit" translate="no">​</a></h2>
+<p>The Rule Violations drill-down cap is configurable. The full failing count is always reported; only the number of
+collected object ids (and therefore whether the drill-down stays enabled) is affected.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_data_quality_management</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">dashboards</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># Maximum number of object ids collected per check for the Rule Violations drill-down.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># Default: 1000. Minimum: 1.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">violation_drilldown_limit</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">5000</span><br></span></code></pre></div></div>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Quality_Management-Visualization-Studio_Dashboards-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Quality_Management-Visualization-Studio_Dashboards-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Data_Quality_Management-Visualization-Studio_Dashboards-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>Raising this value allows drilling into larger result sets, but increases the widget payload size and the amount
+of data scanned per request. Increase it deliberately, based on data volume.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="storage-location">Storage location<a href="#storage-location" class="hash-link" aria-label="Direct link to Storage location" title="Direct link to Storage location" translate="no">​</a></h2>
+<p>Widget configurations are stored using HyperMDM's location-aware configuration, so each widget type can write to
+either Symfony config files (<code>var/config/...</code>) or the settings store. Configure this per widget type under the
+<code>config_location</code> node:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_data_quality_management</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">config_location</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">data_quality_score_widgets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">write_target</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'settings-store'</span><span class="token plain">   </span><span class="token comment" style="color:#999988;font-style:italic"># 'symfony-config', 'settings-store', or 'disabled'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">data_quality_worst_offenders_widgets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">write_target</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'settings-store'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">data_quality_violations_widgets</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">write_target</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'settings-store'</span><br></span></code></pre></div></div>
+<p>Valid <code>type</code> values are <code>symfony-config</code> (YAML files under <code>var/config</code>, the default), <code>settings-store</code>
+(database), and <code>disabled</code> (prevents editing the widget configuration through HyperMDM Studio; the configuration
+stays fixed at whatever is defined in YAML). This mirrors the approach used by other HyperMDM bundles that persist
+Studio Dashboards configuration.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

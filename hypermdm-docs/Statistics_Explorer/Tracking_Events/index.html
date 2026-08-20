@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tracking Events — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Tracking Events</h1></header>
+<p>The bundle also ships with basis to easily implement a tracker that tracks events
+to an Elasticsearch/Opensearch index.</p>
+<p>Supports Elasticsearch versions 8.
+Supports Opensearch versions 2.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="implement-tracker">Implement Tracker<a href="#implement-tracker" class="hash-link" aria-label="Direct link to Implement Tracker" title="Direct link to Implement Tracker" translate="no">​</a></h3>
+<p>To implement a tracker, extend the <code>AbstractElasticsearchTracker</code> or <code>AbstractOpensearchTracker</code> and implement all abstract methods:</p>
+<ul>
+<li class=""><code>getIndexName</code>: Define the name of index.</li>
+<li class=""><code>buildMappingArray</code>: Define mapping for index as array.</li>
+<li class=""><code>trackEvent</code>: Method for actual event tracking that is called by outside world. It takes a parameter array,
+prepares data for tracking (e.g. extracting information, adding timestamp, etc.) and builds structure expected by
+the mapping, and then calls <code>doTrackEvent</code> (which does the data backend communication).</li>
+</ul>
+<p>The abstract base class takes care of all the generic index creation, alias management and data backend
+communication.</p>
+<p>A sample implementation can be found in <a href="https://github.com/pimcore/statistics-explorer/blob/master/src/StatisticsTracker/Opensearch/DummyTracker.php" target="_blank" rel="noopener noreferrer" class=""><code>DummyTracker</code></a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="tracking-events-1">Tracking Events<a href="#tracking-events-1" class="hash-link" aria-label="Direct link to Tracking Events" title="Direct link to Tracking Events" translate="no">​</a></h3>
+<p>For each event type, a tracker needs to be implemented. The tracker implementations then need to be registered
+as services and then can be injected to any service or controller.</p>
+<p>By calling <code>$tracker-&gt;trackEvent($parameters)</code> the events get tracked.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="index-structure">Index Structure<a href="#index-structure" class="hash-link" aria-label="Direct link to Index Structure" title="Direct link to Index Structure" translate="no">​</a></h3>
+<p>For performance and data housekeeping reasons, the tracker implements some kind of index rotating.
+This means data is tracked to an index named <code>&lt;INDEX_NAME&gt;__&lt;YEAR&gt;_&lt;MONTH&gt;</code> which always corresponds to the
+current month. If the index doesn't exist, it is created automatically.</p>
+<p>In addition to creation of the indices, there is also an alias <code>&lt;INDEX_NAME&gt;</code> is created. This alias shows to
+all existing rolled indices and can be used for querying the statistics.</p>
+<p>The abstract base class for the tracker takes care of all necessary steps. There are only two things to consider:</p>
+<ul>
+<li class="">When implementing tracker is to extend from the abstract base class and implement the abstract methods.</li>
+<li class="">When setting up a data source for the explorer, the index alias needs to be used as index name.</li>
+</ul>
+<p>Housekeeping itself needs to be done by the administrator of the data backend cluster -
+by closing/archiving deleting old indices that are not needed anymore for statistics and updating the index alias.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

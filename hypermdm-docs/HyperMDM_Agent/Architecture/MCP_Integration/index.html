@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MCP Integration — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>MCP Integration</h1></header>
+<p>The Model Context Protocol (MCP) is how the agent reaches every HyperMDM capability - data objects, assets, documents, tags - and
+any third-party service you wire up. The bundle splits MCP servers into two families:</p>
+<ul>
+<li class=""><strong>internal</strong> (authored in PHP, served by HyperMDM) and</li>
+<li class=""><strong>external</strong> (third-party).</li>
+</ul>
+<p>They are authenticated and authorized differently.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="internal-mcp-servers">Internal MCP servers<a href="#internal-mcp-servers" class="hash-link" aria-label="Direct link to Internal MCP servers" title="Direct link to Internal MCP servers" translate="no">​</a></h2>
+<p>Internal MCP servers are PHP endpoints at <code>/hypermdm-mcp/agent/*</code>, running inside the HyperMDM application. They expose
+data-object CRUD, asset management, document editing, tag operations, and anything else a bundle contributes via the
+<code>hypermdm.mcp_tool</code> service tag.</p>
+<p>Tools are organised into <strong>tool groups</strong> by domain and access level (<code>data-objects</code>, <code>assets</code>, <code>tags</code>, <code>documents</code>, …).
+The <code>McpToolRegistryPass</code> compiler pass collects every tagged service at container compilation and wires up one MCP
+endpoint per group automatically. To add your own tools, see <a class="" href="../../Extending/Custom_MCP_Tools/index.html">Extending → Custom MCP Tools</a>.</p>
+<p>The <code>documents</code> tool group has its own architectural layer because document editables are determined by Twig templates
+rather than class definitions - see <a class="" href="../Document_Schema/index.html">Document Schema</a> for how the agent learns the editable
+surface of a document or areabrick (AST analysis + co-located example fixtures).</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="two-ways-to-expose-internal-tools-to-an-agent">Two ways to expose internal tools to an agent<a href="#two-ways-to-expose-internal-tools-to-an-agent" class="hash-link" aria-label="Direct link to Two ways to expose internal tools to an agent" title="Direct link to Two ways to expose internal tools to an agent" translate="no">​</a></h3>
+<p>An agent's YAML controls which internal tool groups it sees, and <em>how</em> the LLM sees them:</p>
+<div class="table-container"><table><thead><tr><th>Config key</th><th>Presentation</th><th>When to use</th></tr></thead><tbody><tr><td><code>hypermdmMcpServers</code></td><td>Full tool schemas loaded into context on every turn. LLM can call any tool in one roundtrip.</td><td>An agent's <strong>core</strong> tools - the ones it uses frequently.</td></tr><tr><td><code>hypermdmMetaGroups</code></td><td>Tools wrapped behind a meta-tool server. LLM first <code>discover</code>s, then <code>describe_tool</code>s, then <code>execute</code>s.</td><td><strong>Supplementary</strong> tools the agent needs sometimes but shouldn't pay for every turn.</td></tr></tbody></table></div>
+<p>Both routes land on the same underlying PHP tools. The choice is about token budget and discoverability. An agent can
+use both: core tools in <code>hypermdmMcpServers</code>, the long tail in <code>hypermdmMetaGroups</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-meta-tool-server">The meta-tool server<a href="#the-meta-tool-server" class="hash-link" aria-label="Direct link to The meta-tool server" title="Direct link to The meta-tool server" translate="no">​</a></h3>
+<p>The meta-tool server lives at <code>/hypermdm-mcp/agent/meta?groups=&lt;group1&gt;,&lt;group2&gt;</code> and exposes exactly three tools
+regardless of how many PHP tools hide behind it:</p>
+<div class="table-container"><table><thead><tr><th>Tool</th><th>Purpose</th></tr></thead><tbody><tr><td><code>discover</code></td><td>List available groups and their tool names.</td></tr><tr><td><code>describe_tool</code></td><td>Return the full parameter schema for a named tool.</td></tr><tr><td><code>execute</code></td><td>Run a tool by name with JSON arguments.</td></tr></tbody></table></div>
+<p>Allowed groups are set server-side from the agent's <code>hypermdmMetaGroups</code>; the LLM cannot influence the list. The token
+overhead is constant at about 1,200 tokens regardless of group count - the main reason the bundle ships nearly every
+HyperMDM capability through the meta-tool by default.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="external-mcp-servers">External MCP servers<a href="#external-mcp-servers" class="hash-link" aria-label="Direct link to External MCP servers" title="Direct link to External MCP servers" translate="no">​</a></h2>
+<p>Third-party servers run independently of HyperMDM and are configured per agent under <code>mcpServers</code>. HTTP transport,
+typically bearer-token authenticated.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">mcpServers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">hypermdm-datahub</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> http</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">url</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> $</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain">MCP_HYPERMDM_URL</span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">headers</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token key atrule" style="color:#00a4db">Authorization</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"Bearer ${MCP_HYPERMDM_TOKEN}"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">tools</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"*"</span><br></span></code></pre></div></div>
+<p>Environment variable interpolation is supported in <code>url</code> and <code>headers</code>. External servers do not participate in the
+tool-group system and never receive a user cookie.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="authentication-forwarding">Authentication forwarding<a href="#authentication-forwarding" class="hash-link" aria-label="Direct link to Authentication forwarding" title="Direct link to Authentication forwarding" translate="no">​</a></h2>
+<p>The bearer token (<code>Authorization: Bearer pmcp_…</code>) is the credential for <strong>all server-to-server PHP calls
+for a chat session</strong> - not just MCP. This covers both the internal MCP servers (<code>/hypermdm-mcp/agent/*</code>) and
+the bundle API (<code>/hypermdm-studio/api/bundle/agent/*</code>). The agent-server holds two request-scoped store
+instances:</p>
+<ul>
+<li class=""><code>HyperMDMSessionStore.withBearer</code> - used for all per-session operations on bundle/agent routes (proposal
+persistence, token refresh, etc.). Bound to the bearer at task start; survives cookie expiry.</li>
+<li class=""><code>HyperMDMSessionStore.withCookie</code> - used only for session-independent operations (create/list sessions,
+bulk delete, auth-validator, bootstrap <code>ensureMcpToken</code>).</li>
+</ul>
+<p><code>McpAccessTokenAuthenticator</code> in studio-backend resolves the bearer to the chat initiator's HyperMDM <code>User</code>.
+HyperMDM enforces the same workspace ACLs and user/role permissions that apply in Studio. The chat session id is
+<em>bound</em> to the token at issuance time and recovered server-side from the validated token - the previously-used
+<code>X-Chat-Session-Id</code> request header has been removed (it was forgeable). Neither the bearer nor the chat session
+id is controllable by the LLM.</p>
+<p>External MCP servers (under <code>mcpServers</code>) never receive this bearer; they use whatever auth their YAML
+configures. See <a class="" href="../Authentication/index.html">Authentication</a> for the agent-server-facing flows.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="token-lifecycle">Token lifecycle<a href="#token-lifecycle" class="hash-link" aria-label="Direct link to Token lifecycle" title="Direct link to Token lifecycle" translate="no">​</a></h3>
+<p>The token format is <code>pmcp_&lt;64 hex&gt;</code>. It is stored hashed (SHA-256) at rest in
+<code>bundle_studio_mcp_access_token</code>; only the bearer the agent-server holds in memory is reversible.</p>
+<p><strong>Configurable TTL</strong> - <code>hypermdm_agent.chat_session_token.ttl</code> (seconds, default <code>7200</code>, minimum <code>60</code>).</p>
+<div class="table-container"><table><thead><tr><th>Phase</th><th>What happens</th><th>Reminted?</th></tr></thead><tbody><tr><td><strong>Issue</strong> (new chat)</td><td><code>POST /hypermdm-studio/api/bundle/agent/sessions</code> returns <code>{ …, mcpToken: "pmcp_…" }</code>. The agent-server bakes the bearer into the SDK session's MCP server headers.</td><td>n/a (first mint)</td></tr><tr><td><strong>Refresh</strong> (per turn, user-interactive)</td><td>Before resuming an existing chat, the agent-server calls <code>POST /sessions/{id}/mcp-token</code>. If the live row's TTL is still in budget, PHP extends <code>expires_at = now + ttl</code> and returns <code>{ token: null, reminted: false }</code> - the cached SDK session keeps its original bearer. This is the <em>user-triggered</em> path: it runs when a chat turn starts.</td><td>false (sliding-window extend)</td></tr><tr><td><strong>Refresh</strong> (server-driven, autonomous)</td><td>While a task is <code>running</code>, <code>TaskRunner</code> calls <code>refreshToken</code> on a <code>setInterval</code> of <code>max(60s, tokenTtlSeconds/2)</code>. The timer is cleared on every terminal status transition. This keeps long-running or overnight turns alive independently of any user interaction or cookie validity. Configured via <code>AGENT_SERVER_MCP_TOKEN_TTL</code> (see below).</td><td>false (sliding-window extend)</td></tr><tr><td><strong>Re-mint</strong> (token gone)</td><td>If the row was GC'd or revoked, <code>POST /sessions/{id}/mcp-token</code> with <code>{ forceRemint: true }</code> mints a fresh token under the same <code>reference</code> (chat session id), atomically deleting any prior row first, and returns <code>{ token: "pmcp_…", reminted: true }</code>. The agent-server uses <code>forceRemint</code> on cold-resume after a restart, when no usable bearer is held in memory.</td><td>true</td></tr><tr><td><strong>Revoke</strong> (chat deleted)</td><td>Single or bulk delete in the chat sidebar revokes the token row before the session record is removed.</td><td>n/a</td></tr><tr><td><strong>Cascade</strong> (user deleted)</td><td><code>bundle_studio_mcp_access_token.user_id</code> has <code>ON DELETE CASCADE</code> on <code>users.id</code> - deleting a HyperMDM user atomically clears their tokens.</td><td>n/a</td></tr><tr><td><strong>GC</strong></td><td>The <code>studio_mcp_access_token_gc</code> HyperMDM maintenance task removes any row whose <code>expires_at &lt; now()</code>.</td><td>n/a</td></tr></tbody></table></div>
+<p>The agent-server applies the result via the <code>obtainMcpToken</code> helper in <code>routes/sse-helpers.ts</code>. When <code>reminted</code>
+is true the chat route passes <code>tokenReminted: true</code> to <code>resumeSession</code>, which forces the SDK session to be
+destroyed and recreated - see <a href="#sdk-session-rebuilds" class="">SDK session rebuilds</a> below.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="sdk-session-rebuilds">SDK session rebuilds<a href="#sdk-session-rebuilds" class="hash-link" aria-label="Direct link to SDK session rebuilds" title="Direct link to SDK session rebuilds" translate="no">​</a></h3>
+<p>The Copilot SDK caches an active session per chat with the MCP <code>Authorization</code> header baked into the attached
+servers at construction time. The agent-server has three reasons to destroy and recreate that SDK session
+(<code>forceRecreate = isAgentSwitch || mcpResetPending || tokenReminted</code>, see
+<code>adapters/copilot/copilot-adapter.ts:426</code>):</p>
+<ol>
+<li class=""><strong>Agent switch</strong> - the user picked a different agent definition.</li>
+<li class=""><strong>MCP transport reset pending</strong> - see <a href="#transport-session-recovery" class="">Transport-session recovery</a> below.</li>
+<li class=""><strong>Token reminted</strong> - the cached bearer is stale; the new one must be re-baked.</li>
+</ol>
+<p>The hot path (no switch, no reset, no re-mint) early-returns the cached session. Conversation context is
+restored from the persistent session store via <code>priorConversationContext</code> on the first turn after a rebuild -
+the user never sees the gap, only a small recovery delay before the next response.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="transport-session-recovery">Transport-session recovery<a href="#transport-session-recovery" class="hash-link" aria-label="Direct link to Transport-session recovery" title="Direct link to Transport-session recovery" translate="no">​</a></h2>
+<p>The HyperMDM-internal MCP servers, like any HTTP MCP transport, have their own session lifetime. The PHP MCP SDK
+garbage-collects idle sessions independently of the access token's TTL - short-lived in-memory transport
+sessions can die even while the bearer is still valid. When the upstream session is gone, the next MCP call
+returns 404 / 401 and the SDK surfaces the failure as a <code>tool.execution_complete</code> event with <code>success: false</code> -
+but the SDK's <code>onPostToolUse</code> hook never fires for transport-level errors, so a "look at the result and
+recover" approach in the application layer is not viable.</p>
+<p>The agent-server addresses this by inspecting the raw SDK event stream (<code>McpFailureInspector</code> in
+<code>agent-server/src/adapters/copilot/mcp-failure-detector.ts</code>):</p>
+<ol>
+<li class="">Maps <code>tool.execution_start</code> events to <code>toolCallId → toolName</code> so it knows which server is in play.</li>
+<li class="">On <code>tool.execution_complete</code> with <code>success: false</code>, matches the error message against a small set of patterns
+(<code>Session not found</code>, <code>404</code>, <code>401</code>, <code>Unauthorized</code>, …) - false positives only cost one extra
+destroy-and-recreate cycle, so the matcher is deliberately liberal.</li>
+<li class="">Also reacts to <code>session.mcp_server_status_changed</code> events whose status is <code>failed</code> or <code>needs-auth</code>.</li>
+<li class="">When triggered, marks the app session for SDK reset (<code>mcpResetPending</code>).</li>
+</ol>
+<p>On the <strong>next user turn</strong>, the Copilot adapter destroys the existing SDK session via <code>deleteSession</code> and re-creates it
+with a fresh <code>mcp-session-id</code> for every attached MCP server. Conversation history is carried over via the persistent
+session store (the same mechanism used for agent switching), so the user does not see a gap - only a small recovery
+delay before the next response.</p>
+<p>If the failure was a 401 caused by a stale bearer (after a re-mint that for any reason didn't reach the cached
+SDK session - e.g. the recovery path), the chat route's retry callback forces <code>tokenReminted: true</code> so the
+rebuild always picks up the freshest token.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="things-to-know">Things to know<a href="#things-to-know" class="hash-link" aria-label="Direct link to Things to know" title="Direct link to Things to know" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Bearer never appears in browser network traffic.</strong> The token is server-side state in the agent-server
+process. The browser only sees <code>Cookie</code> (PHP session) on <code>/agent-server/api/*</code> and <code>/hypermdm-studio/api/*</code>.
+If you see <code>pmcp_</code> in Chrome DevTools, that's only the one-shot response body when a chat is created or
+re-minted - never an upstream request header.</li>
+<li class=""><strong>Logs are redacted.</strong> Pino's <code>redact</code> config in <code>agent-server/src/server.ts</code> lists both
+<code>req.headers.authorization</code> and <code>req.headers.cookie</code>, with a custom <code>serializers.req</code> that emits headers
+(without it, redaction would be a silent no-op). The PHP side must do the same - see
+<a class="" href="../../Installation/index.html#logging">Installation → Logging</a>.</li>
+<li class=""><strong><code>_mcp_token_reference</code> request attribute.</strong> On a token-authenticated request, studio-backend stashes the
+chat session id on <code>request-&gt;attributes</code> under that key. The <code>HasChatSession</code> trait used by chat-scoped
+MCP tools reads it from there. The previously-supported <code>X-Chat-Session-Id</code> request header has been removed<!-- -->
+<ul>
+<li class="">it was forgeable from the browser and is no longer trusted.</li>
+</ul>
+</li>
+<li class=""><strong>HTTPS in production.</strong> <code>pmcp_…</code> is a credential. Serve Studio (and the agent-server upstream link) over
+TLS - over plain HTTP these tokens are sniffable.</li>
+<li class=""><strong>No effective-user override yet.</strong> <code>EffectiveUserResolver</code> currently returns the chat initiator. Agent
+configs cannot impersonate other users.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-reading">Related reading<a href="#related-reading" class="hash-link" aria-label="Direct link to Related reading" title="Direct link to Related reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Configuration/MCP_Servers/index.html">Configuration → MCP Servers</a> - configuration fields, direct vs meta-tool trade-off, tool group reference.</li>
+<li class=""><a class="" href="../../Extending/Custom_MCP_Tools/index.html">Extending → Custom MCP Tools</a> - add your own tools from a bundle.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

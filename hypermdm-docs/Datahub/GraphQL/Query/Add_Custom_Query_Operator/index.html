@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Add a Custom Query Operator — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Add a Custom Query Operator</h1></header>
+<p>For adding a new query operator two steps are necessary:</p>
+<ul>
+<li class="">add a type definition</li>
+<li class="">add the operator implementation</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="type-definition">Type Definition<a href="#type-definition" class="hash-link" aria-label="Direct link to Type Definition" title="Direct link to Type Definition" translate="no">​</a></h3>
+<p>Add a section similar to this one to your <code>services.yml</code> file.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">hypermdm.datahub.graphql.querytypegenerator_operator_mycustomoperator</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">class</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> HyperMDM\Bundle\DataHubBundle\GraphQL\QueryOperatorConfigGenerator\MyCustomOperator</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">tags</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> hypermdm.datahub.graphql.dataobjectquerytypegenerator</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">id</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> typegenerator_queryoperator_mycustomoperator </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain">                        </span><br></span></code></pre></div></div>
+<p>For reference, have a look at the
+<a href="https://github.com/pimcore/data-hub/blob/2.x/src/GraphQL/Query/Operator/Trimmer.php" target="_blank" rel="noopener noreferrer" class=""><code>Trimmer operator</code></a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="operator-implementation">Operator Implementation<a href="#operator-implementation" class="hash-link" aria-label="Direct link to Operator Implementation" title="Direct link to Operator Implementation" translate="no">​</a></h3>
+<p>An operator has two halves: the server-side PHP implementation doing the actual calculation, and a HyperMDM Studio
+frontend type providing its configuration dialog.</p>
+<p>Provide the server-side implementation first. A sample can be found
+<a href="https://github.com/pimcore/data-hub/blob/2.x/src/GraphQL/Query/Operator/Trimmer.php" target="_blank" rel="noopener noreferrer" class="">here</a>.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Datahub-GraphQL-Query-Add_Custom_Query_Operator-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub-GraphQL-Query-Add_Custom_Query_Operator-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-Datahub-GraphQL-Query-Add_Custom_Query_Operator-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The frontend half is not a public extension point yet. Operators are HyperMDM Studio dynamic types extending
+<code>DynamicTypeOperatorAbstract</code> (<code>readonly id</code>, <code>getIcon()</code>, <code>getLabel()</code>, <code>getConfigModal()</code>, <code>getGroup()</code>), registered
+on the <code>DataHub/DynamicTypes/Operator/GraphQL/QueryRegistry</code> service. That base class is <strong>not exported</strong> from the
+Datahub Studio SDK (<code>assets/studio/js/src/sdk/index.ts</code>), so another bundle's Studio plugin cannot currently import it.
+The shipped operators under <code>assets/studio/js/src/modules/operators/operators/</code> show the pattern, but until the
+operator API is exported, a custom operator has no configuration dialog in HyperMDM Studio.</p></div></div>
+<p>An operator whose server-side implementation needs no configuration options still works: it is selectable only if a
+frontend type is registered for it, so plan for the export limitation above.</p>
+<p>For general plugin setup, see the Studio UI bundle's
+<a class="" href="../../../../Studio_UI/Extending/Getting_Started_with_Your_First_Plugin/index.html">Getting Started with Your First Plugin</a>.</p>
+<p>Finally, we have to define how the operator instances get created.
+In most cases we use the <code>DefaultOperatorFactory</code> for that:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">hypermdm.datahub.graphql.dataobjectqueryoperator.factory.mycustomoperator</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">class</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> HyperMDM\Bundle\DataHubBundle\GraphQL\Query\Operator\Factory\DefaultOperatorFactory</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">arguments</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">$className</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> HyperMDM\Bundle\DataHubBundle\GraphQL\Query\Operator\MyCustomOperator</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">tags</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> hypermdm.datahub.graphql.dataobjectqueryoperator_factory</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">id</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> mycustomoperator </span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

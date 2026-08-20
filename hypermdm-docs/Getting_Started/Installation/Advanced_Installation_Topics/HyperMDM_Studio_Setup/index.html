@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperMDM Studio Setup — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>HyperMDM Studio Setup</h1></header>
+<p>HyperMDM Studio is the administration interface for managing assets, data objects, documents, and system settings.
+It consists of four bundles:</p>
+<ol>
+<li class=""><strong>GenericExecutionEngineBundle</strong> - Background job execution framework (ships with HyperMDM core)</li>
+<li class=""><strong>GenericDataIndexBundle</strong> - Search indexing via OpenSearch or Elasticsearch</li>
+<li class=""><strong>StudioBackendBundle</strong> - REST API powering the Studio interface</li>
+<li class=""><strong>StudioUiBundle</strong> - The Studio frontend application</li>
+</ol>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>The <code>hypermdm/skeleton</code> and <code>hypermdm/demo-enterprise</code> packages already ship HyperMDM Studio
+<strong>pre-configured</strong> — the bundles are registered, the OpenSearch client, security firewall,
+Mercure wiring, and messenger transports are all set up in the committed <code>config/</code> and <code>.docker/</code>
+files, and the Docker environment includes every required service. For a standard skeleton
+install you do not need to change any of the configuration on this page.</p><p>This page documents what the skeleton ships and where, so you can understand or customize it.
+It is also a reference for adding Studio to a project that was <strong>not</strong> based on the skeleton.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<p>HyperMDM Studio needs the following services. The skeleton's <code>docker-compose.yaml</code> already provides them:</p>
+<ul>
+<li class=""><strong>OpenSearch &gt;= 2.7</strong> (or Elasticsearch &gt;= 8.0.0) for search indexing</li>
+<li class=""><strong>Mercure</strong> for real-time updates in the Studio interface</li>
+</ul>
+<p>See the <a class="" href="../../Skeleton_Installation/index.html">Skeleton Installation</a> guide for the Docker setup.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="bundle-installation">Bundle Installation<a href="#bundle-installation" class="hash-link" aria-label="Direct link to Bundle Installation" title="Direct link to Bundle Installation" translate="no">​</a></h2>
+<p>The Skeleton install profile (<code>App\Installer\SkeletonProfile</code>) lists all Studio bundles. When you run
+the installer, it automatically:</p>
+<ul>
+<li class="">Registers the bundles in <code>config/bundles.php</code></li>
+<li class="">Runs <code>hypermdm:bundle:install</code> for each bundle</li>
+<li class="">Installs bundle assets</li>
+</ul>
+<p>The connection details (OpenSearch, Mercure, messenger transport) come from environment variables
+that are already set in the skeleton's committed <code>.env</code> and validated by the installer. No manual
+<code>composer require</code>, <code>bundles.php</code> editing, or <code>hypermdm:bundle:install</code> commands are needed.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="opensearch-configuration">OpenSearch Configuration<a href="#opensearch-configuration" class="hash-link" aria-label="Direct link to OpenSearch Configuration" title="Direct link to OpenSearch Configuration" translate="no">​</a></h2>
+<p>The GenericDataIndex bundle reads the OpenSearch connection from the <code>HYPERMDM_OPENSEARCH_DSN</code>
+environment variable and defaults to the <code>default</code> client with OpenSearch. The skeleton sets this
+in <code>.env</code>, pointing at the bundled OpenSearch service:</p>
+<div class="language-dotenv codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-dotenv codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">HYPERMDM_OPENSEARCH_DSN=opensearch://admin:gBsVe!Dut723@opensearch:9200?ssl=true&amp;ssl_verify=false</span><br></span></code></pre></div></div>
+<p>The bundled OpenSearch runs with the security plugin enabled, so the DSN uses the <code>opensearch://</code>
+scheme, includes the admin credentials, and enables TLS (<code>ssl=true</code>). <code>ssl_verify=false</code> accepts the
+service's self-signed certificate in local development.</p>
+<p><strong>No manual YAML configuration is needed for the skeleton.</strong></p>
+<p>If you need to customize the OpenSearch connection (for example multiple clients, different
+credentials, or a different client name), override the defaults in <code>config/config.yaml</code>:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_open_search_client</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">clients</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">default</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">dsn</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%env(HYPERMDM_OPENSEARCH_DSN)%'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm_generic_data_index</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">index_service</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">client_params</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">client_name</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> default</span><br></span></code></pre></div></div>
+<div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>tip</div><div class="admonitionContent_BuS1"><p>If you use Elasticsearch instead of OpenSearch, set <code>HYPERMDM_ELASTICSEARCH_DSN</code>
+(scheme <code>elasticsearch://</code>) and see the
+<a class="" href="../../../../Generic_Data_Index/Configuration/Elasticsearch/index.html">Generic Data Index configuration documentation</a>
+for the equivalent setup.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="security-firewall">Security Firewall<a href="#security-firewall" class="hash-link" aria-label="Direct link to Security Firewall" title="Direct link to Security Firewall" translate="no">​</a></h2>
+<p>The skeleton already ships the Studio Backend firewall in <code>config/packages/security.yaml</code>.
+The <code>hypermdm_studio</code> firewall is placed before the <code>main</code> firewall, since Symfony evaluates
+firewalls in order. The committed configuration looks like this:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">security</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">firewalls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hypermdm_studio</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"%hypermdm_studio_backend.firewall_settings%"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">access_control</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^/hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">studio/api/(docs</span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">docs/json</span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">translations</span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">user/reset</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">password</span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">setting/admin/thumbnail)$</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> PUBLIC_ACCESS</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">path</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ^/hypermdm</span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain">studio/api</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">roles</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> ROLE_HYPERMDM_USER </span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p>If you are adding Studio to a non-skeleton project, add the same firewall and access-control rules.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="mercure-configuration">Mercure Configuration<a href="#mercure-configuration" class="hash-link" aria-label="Direct link to Mercure Configuration" title="Direct link to Mercure Configuration" translate="no">​</a></h2>
+<p>Mercure enables real-time updates in HyperMDM Studio (progress tracking, live notifications).
+The skeleton sets <code>MERCURE_JWT_KEY</code>, <code>MERCURE_URL</code>, and <code>MERCURE_SERVER_URL</code> in <code>.env</code>, and
+already wires them to the Studio Backend in <code>config/config.yaml</code>:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_studio_backend</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">mercure_settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">jwt_key</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%env(MERCURE_JWT_KEY)%'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hub_url_client</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%env(MERCURE_URL)%'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hub_url_server</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%env(MERCURE_SERVER_URL)%'</span><br></span></code></pre></div></div>
+<div class="table-container"><table><thead><tr><th>Setting</th><th>Env Var</th><th>Description</th></tr></thead><tbody><tr><td><code>jwt_key</code></td><td><code>MERCURE_JWT_KEY</code></td><td>Must match the key configured in the Mercure Docker service. Minimum 256 bits (32 characters).</td></tr><tr><td><code>hub_url_client</code></td><td><code>MERCURE_URL</code></td><td>The URL the browser uses to connect to Mercure (through the Nginx reverse proxy, e.g. <code>http://localhost/hub</code>).</td></tr><tr><td><code>hub_url_server</code></td><td><code>MERCURE_SERVER_URL</code></td><td>The internal Docker URL the PHP application uses to publish messages (e.g. <code>http://mercure/.well-known/mercure</code>).</td></tr></tbody></table></div>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>The Mercure JWT key must be at least 256 bits (32 characters) long. The same key must be used in
+both the Mercure Docker service and <code>MERCURE_JWT_KEY</code>. The skeleton ships a placeholder key
+(<code>CHANGE_ME_...</code>); replace it with your own private key before any non-local deployment.</p></div></div>
+<p>The skeleton's <code>.docker/nginx.conf</code> already exposes the Mercure hub under <code>/hub</code> (same-origin,
+no CORS needed):</p>
+<div class="language-conf codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-conf codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">location /hub {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    proxy_pass http://mercure/.well-known/mercure;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="optional-mercure-settings">Optional Mercure Settings<a href="#optional-mercure-settings" class="hash-link" aria-label="Direct link to Optional Mercure Settings" title="Direct link to Optional Mercure Settings" translate="no">​</a></h3>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_studio_backend</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">mercure_settings</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">jwt_key</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%env(MERCURE_JWT_KEY)%'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hub_url_client</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%env(MERCURE_URL)%'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">hub_url_server</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'%env(MERCURE_SERVER_URL)%'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">cookie_lifetime</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">3600</span><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># JWT token lifetime in seconds (default: 3600)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">cookie_same_site</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'strict'</span><span class="token plain">   </span><span class="token comment" style="color:#999988;font-style:italic"># SameSite attribute: lax, strict, or none (default: strict)</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="verify-mercure-is-running">Verify Mercure is Running<a href="#verify-mercure-is-running" class="hash-link" aria-label="Direct link to Verify Mercure is Running" title="Direct link to Verify Mercure is Running" translate="no">​</a></h3>
+<p>To check if Mercure is available, open the <code>hub_url_client</code> URL in a browser (e.g. <code>http://localhost/hub</code>).
+You should see either <code>Missing "topic" parameter.</code> or <code>Unauthorized</code>.
+Both confirm that Mercure is reachable.</p>
+<p>Also verify server-side connectivity:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec php curl http://mercure/.well-known/mercure</span><br></span></code></pre></div></div>
+<p>For advanced Mercure configuration (external URLs, CORS, Apache reverse proxy, development UI), see the
+<a class="" href="../../../../Studio_Backend/Installation_and_Configuration/Mercure_Setup/index.html">Studio Backend Mercure documentation</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="messenger-transports">Messenger Transports<a href="#messenger-transports" class="hash-link" aria-label="Direct link to Messenger Transports" title="Direct link to Messenger Transports" translate="no">​</a></h2>
+<p>HyperMDM core and the Studio bundles auto-configure the required messenger transports. The
+following transports are registered automatically by the bundles:</p>
+<div class="table-container"><table><thead><tr><th>Transport</th><th>Registered By</th></tr></thead><tbody><tr><td><code>hypermdm_core</code></td><td>HyperMDM Core</td></tr><tr><td><code>hypermdm_maintenance</code></td><td>HyperMDM Core</td></tr><tr><td><code>hypermdm_scheduled_tasks</code></td><td>HyperMDM Core</td></tr><tr><td><code>hypermdm_image_optimize</code></td><td>HyperMDM Core</td></tr><tr><td><code>hypermdm_asset_update</code></td><td>HyperMDM Core</td></tr><tr><td><code>hypermdm_generic_execution_engine</code></td><td>GenericExecutionEngineBundle</td></tr><tr><td><code>hypermdm_generic_data_index_queue</code></td><td>GenericDataIndexBundle</td></tr></tbody></table></div>
+<p>The skeleton uses <strong>RabbitMQ (AMQP)</strong> as the transport backend. The DSN prefix is set in <code>.env</code>:</p>
+<div class="language-dotenv codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-dotenv codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX=amqp://guest:guest@rabbitmq:5672/%2f/</span><br></span></code></pre></div></div>
+<p>Each transport's full DSN is formed by appending the queue name to this prefix, for example
+<code>amqp://guest:guest@rabbitmq:5672/%2f/hypermdm_core</code>. The skeleton additionally pins the core
+transports to RabbitMQ in <code>.docker/messenger.yaml</code> (mounted over <code>config/packages/messenger.yaml</code>).</p>
+<p>See <a class="" href="../Symfony_Messenger/index.html">Symfony Messenger</a> for details on switching transport
+backends (Doctrine, AMQP, Redis).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="messenger-workers">Messenger Workers<a href="#messenger-workers" class="hash-link" aria-label="Direct link to Messenger Workers" title="Direct link to Messenger Workers" translate="no">​</a></h2>
+<p>The messenger transports require active workers to process background jobs (search indexing,
+execution engine tasks).</p>
+<p><strong>In the skeleton, workers run automatically.</strong> The <code>supervisord</code> service in <code>docker-compose.yaml</code>
+starts the consumers for you (see <code>.docker/supervisord.conf</code>), consuming all queues:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">hypermdm_generic_data_index_queue scheduler_generic_data_index hypermdm_core hypermdm_maintenance</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">hypermdm_scheduled_tasks hypermdm_image_optimize hypermdm_asset_update hypermdm_generic_execution_engine</span><br></span></code></pre></div></div>
+<p>If you run HyperMDM <strong>without</strong> the bundled Supervisord service, start the workers manually instead:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec php bin/console messenger:consume \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  hypermdm_generic_execution_engine hypermdm_generic_data_index_queue scheduler_generic_data_index \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  hypermdm_core hypermdm_maintenance hypermdm_scheduled_tasks hypermdm_image_optimize hypermdm_asset_update</span><br></span></code></pre></div></div>
+<p>For production, run the workers as daemons under Supervisord. Example program definition:</p>
+<div class="language-ini codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-ini codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">[program:hypermdm-messenger]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">command=php /var/www/html/bin/console messenger:consume hypermdm_generic_execution_engine hypermdm_generic_data_index_queue scheduler_generic_data_index hypermdm_core hypermdm_maintenance hypermdm_scheduled_tasks hypermdm_image_optimize hypermdm_asset_update --memory-limit=250M --time-limit=3600</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">numprocs=1</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">startsecs=0</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">autostart=true</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">autorestart=true</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">process_name=%(program_name)s_%(process_num)02d</span><br></span></code></pre></div></div>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../../visuals-catalog.html#fig-Getting_Started-Installation-Advanced_Installation_Topics-HyperMDM_Studio_Setup-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>caution</div><div class="admonitionContent_BuS1"><p>Only consume queues that actually exist. Passing an unregistered queue name (for example the
+removed <code>hypermdm_index_queues</code>) makes <code>messenger:consume</code> fail with
+<em>"The receiver ... does not exist"</em> and the worker restarts in a loop. The valid queue names are
+the ones listed in the table above plus the <code>scheduler_generic_data_index</code> scheduler.</p></div></div>
+<p>See the <a href="https://symfony.com/doc/current/messenger.html#deploying-to-production" target="_blank" rel="noopener noreferrer" class="">Symfony Messenger deployment documentation</a> for more options.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="build-the-search-index">Build the Search Index<a href="#build-the-search-index" class="hash-link" aria-label="Direct link to Build the Search Index" title="Direct link to Build the Search Index" translate="no">​</a></h2>
+<p>The GenericDataIndex bundle registers <code>generic-data-index:update:index -r</code> as a post-install
+command, so the installer builds the search index automatically during installation. No manual
+step is needed for a fresh install.</p>
+<p>To rebuild the index later (for example after changing the index configuration), run:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec php bin/console generic-data-index:update:index -r</span><br></span></code></pre></div></div>
+<p>The <code>-r</code> flag recreates the indices from scratch. This command creates the OpenSearch/Elasticsearch
+indices and queues all assets and data objects for indexing; the messenger workers then process the
+queue. Until the indices exist, Studio may show empty trees or return errors.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="verify-the-installation">Verify the Installation<a href="#verify-the-installation" class="hash-link" aria-label="Direct link to Verify the Installation" title="Direct link to Verify the Installation" translate="no">​</a></h2>
+<p>Navigate to <a href="http://localhost/pimcore-studio" target="_blank" rel="noopener noreferrer" class="">http://localhost/hypermdm-studio</a>.
+You should see the HyperMDM Studio login screen, and you can log in with the admin credentials from
+<code>.env</code> (default <code>admin</code> / <code>admin</code>).</p>
+<p>The Studio Backend also provides OpenAPI documentation at <code>/hypermdm-studio/api/docs</code> for exploring the REST API.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Architecture — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Architecture</h1></header>
+<p>This section explains how the bundle works internally. It is for developers who need to understand the system
+end-to-end - to extend it, debug it, or reason about a failure mode. For "what can the product do," see <a class="" href="../Features/index.html">Features</a>.
+For YAML/env reference, see <a class="" href="../Configuration/index.html">Configuration</a>. Terminology is defined once in <a class="" href="../Getting_Started/Concepts/index.html">Core Concepts</a>; this section
+assumes you have read that page.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="system-diagram">System diagram<a href="#system-diagram" class="hash-link" aria-label="Direct link to System diagram" title="Direct link to System diagram" translate="no">​</a></h2>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM_Agent-Architecture-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM_Agent-Architecture-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">system_architecture.png</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/system_architecture-28b37691e69c3e7c8202c30eb8c787e2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-HyperMDM_Agent-Architecture-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/system_architecture-28b37691e69c3e7c8202c30eb8c787e2.png"><figure class="visual-placeholder" id="fig-HyperMDM_Agent-Architecture-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM_Agent-Architecture-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">system_architecture.png</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/system_architecture-28b37691e69c3e7c8202c30eb8c787e2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-HyperMDM_Agent-Architecture-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/system_architecture-28b37691e69c3e7c8202c30eb8c787e2.png"><figure class="visual-placeholder" id="fig-HyperMDM_Agent-Architecture-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM_Agent-Architecture-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">system_architecture.png</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/system_architecture-28b37691e69c3e7c8202c30eb8c787e2.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-HyperMDM_Agent-Architecture-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="pages">Pages<a href="#pages" class="hash-link" aria-label="Direct link to Pages" title="Direct link to Pages" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Page</th><th>What you'll learn</th></tr></thead><tbody><tr><td><a class="" href="Agent_Framework/index.html">01 Agent Framework</a></td><td>How the Copilot SDK is wrapped, the two adapters (Copilot/Dummy), LLM auth modes, model resolution, performance instrumentation.</td></tr><tr><td><a class="" href="Communication_Flows/index.html">02 Communication Flows</a></td><td><strong>Start here.</strong> The system map - every runtime flow (chat/SSE, internal &amp; external MCP, persistence, config export, Mercure, LLM) and the credential each one uses, with links to the canonical detail.</td></tr><tr><td><a class="" href="Request_Lifecycle/index.html">03 Request Lifecycle</a></td><td>End-to-end path of a chat request: auth → session → task → the three event sinks (Mercure / PHP / POST) → catch-up reconnect → completion callback.</td></tr><tr><td><a class="" href="Authentication/index.html">04 Authentication</a></td><td>The credential reference behind the flow map: session cookie validation + identity cache, the <code>pmcp_</code> bearer scope, admin bearer token, per-provider LLM auth, Mercure publisher JWT, rate limits, CSRF, audit log.</td></tr><tr><td><a class="" href="MCP_Integration/index.html">05 MCP Integration</a></td><td>Internal vs external MCP servers, tool groups, the meta-tool wrapper, how the <code>pmcp_</code> bearer and session IDs are forwarded, the token lifecycle.</td></tr><tr><td><a class="" href="Session_Storage/index.html">06 Session Storage</a></td><td>What is persisted, the DB tables, session lifecycle hooks.</td></tr><tr><td><a class="" href="Tool_Security/index.html">07 Tool Security</a></td><td>The pre-tool-use hook, SDK tool whitelist, path sandboxing. Mechanism only - for the tool catalog see the Configuration reference.</td></tr><tr><td><a class="" href="Configuration_System/index.html">08 Configuration System</a></td><td>How agent and skill configuration flows from PHP to the agent-server: the three-layer merge, the export endpoint, skill materialization, reload paths, startup recovery.</td></tr><tr><td><a class="" href="Field_Hint_System/index.html">09 Field Hint System</a></td><td>How the bundle teaches agents the correct JSON shape for every HyperMDM field type - provider pattern, registry, covered types, recursion depth guard.</td></tr><tr><td><a class="" href="Document_Schema/index.html">10 Document Schema</a></td><td>How <code>get_document_schema</code> / <code>get_area_brick</code> work - the four signals an LLM receives, the AST analyzer, fixture loading + validation, the <code>&lt;index&gt;</code> placeholder convention, target-group personalization. For the fixture authoring workflow, see <a class="" href="../Extending/Template_Examples/index.html">Extending → Template Examples</a>.</td></tr><tr><td><a class="" href="File_Staging/index.html">11 File Staging</a></td><td>The generic read-only file-set primitive: developer-configured sets, how an agent stages and reads them, the roots/denylist security model.</td></tr><tr><td><a class="" href="Agent_Template_Generation/index.html">12 Agent Template Generation</a></td><td>The template write path: private root + Twig namespace, the validator and sandbox, test-render, persistence, clone-and-reassign, the drift-guard lint.</td></tr><tr><td><a class="" href="Realtime_Sync/index.html">13 Real-time Sync</a></td><td>Multi-client chat: live turn delivery to every tab/device via Studio's Mercure per-user topic + <code>GlobalMessageBus</code>, PHP as the record, the catch-up / reconnect-refetch reliability model, busy state.</td></tr><tr><td><a class="" href="Agent_Tasks/index.html">14 Agent Tasks</a></td><td>Headless agent tasks: the <code>AgentTask</code> state machine, settlement, turn orchestration, the Node-owned finalize nudge, the maintenance watchdog, and the delegated-access model.</td></tr></tbody></table></div>
+<blockquote>
+<p>The frontend is a HyperMDM Studio plugin delivered via Module Federation. It has no architecturally distinct surface beyond what Studio itself documents - the one extension point you'll likely touch is the widget renderer registry, covered in <a class="" href="../Extending/Rich_Chat_Widgets/index.html">Extending → Custom Rich Chat Widgets</a>.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="components-at-a-glance">Components at a glance<a href="#components-at-a-glance" class="hash-link" aria-label="Direct link to Components at a glance" title="Direct link to Components at a glance" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Component</th><th>Directory</th><th>Stack</th></tr></thead><tbody><tr><td>Agent-server</td><td><code>agent-server/</code></td><td>Node.js 22, Fastify 5, TypeScript, <code>@github/copilot-sdk</code></td></tr><tr><td>Frontend plugin</td><td><code>assets/</code></td><td>React 18, Redux Toolkit, Ant Design / <code>@ant-design/x</code>, RSBuild, Module Federation</td></tr><tr><td>PHP bundle</td><td><code>src/</code></td><td>Symfony 7, HyperMDM 2026.x, MCP tools, session storage API, installer</td></tr></tbody></table></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

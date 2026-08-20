@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Extending — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Extending</h1></header>
+<p>The bundle offers two extension points:</p>
+<ul>
+<li class=""><a class="" href="Custom_Processors/index.html">Custom Processors</a>: control which requests are sent, what they contain, and how responses
+are handled.</li>
+<li class=""><a class="" href="Studio_API_Events/index.html">Studio API Events</a>: enrich the configuration panel's API responses with a pre-response
+event.</li>
+</ul>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Datahub_Webhooks-Extending-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_Webhooks-Extending-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Datahub_Webhooks-Extending-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>As of 2026.1.0 most classes in this bundle are marked <code>@internal</code>, and most of those are <code>final</code>. Build against the
+public surface only:</p><ul>
+<li class=""><code>Processors\WebhookProcessorInterface</code></li>
+<li class=""><code>Processors\DataExtractor\OutputFormatter\OutputFormatterInterface</code>, implemented and registered with the
+<code>hypermdm.datahub.webhooks.output_formatter</code> tag to map a field type into the payload</li>
+<li class=""><code>Event\Studio\PreResponse\ConfigurationDetailEvent</code></li>
+<li class="">The <code>Exception\*</code> classes and the bundle class <code>HyperMDMDataHubWebhooksBundle</code></li>
+</ul><p>Everything else is <code>@internal</code> and may change without a deprecation path. See
+<a class="" href="../Installation/Upgrade_notes/index.html">Upgrade notes</a>.</p></div></div></div></article></div></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

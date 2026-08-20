@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Installation</h1></header>
+<p>HyperMDM 2026.x uses Docker for local development and installation.
+You do not need PHP or Composer installed on your host machine.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<ul>
+<li class="">PHP 8.5+ (provided by the HyperMDM Docker image, no local PHP installation required).</li>
+<li class="">Your user must be allowed to run Docker commands (directly or via sudo).</li>
+<li class="">Docker Compose must be installed.</li>
+<li class="">Your user must be allowed to change file permissions (directly or via sudo).</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="choose-an-installation-package">Choose an Installation Package<a href="#choose-an-installation-package" class="hash-link" aria-label="Direct link to Choose an Installation Package" title="Direct link to Choose an Installation Package" translate="no">​</a></h2>
+<p>HyperMDM offers two installation packages:</p>
+<div class="table-container"><table><thead><tr><th>Package</th><th>Description</th><th>Guide</th></tr></thead><tbody><tr><td><strong><code>hypermdm/skeleton</code></strong></td><td>Empty project for building from scratch. Best for starting a new implementation.</td><td><a class="" href="Skeleton_Installation/index.html">Skeleton Installation</a></td></tr><tr><td><strong><code>hypermdm/demo-enterprise</code></strong></td><td>Pre-built project with enterprise blueprints showcasing advanced features. Requires HyperMDM enterprise repository credentials.</td><td><a class="" href="Demo_Enterprise_Installation/index.html">Demo Enterprise Installation</a></td></tr></tbody></table></div>
+<p>Both packages use the same profile-based installer and ship a pre-configured Docker environment
+together with a pre-filled <code>.env</code>. The installer reads those values, prompts only for what is not
+yet provided (typically product registration), writes the resolved configuration to <code>.env.local</code>,
+installs and registers bundles, and runs post-install commands (including building the search
+index), so the instance is usable right away.</p>
+<p>For automated (CI) installations, see <a class="" href="Advanced_Installation_Topics/index.html">Advanced Installation Topics</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="installing-additional-bundles">Installing Additional Bundles<a href="#installing-additional-bundles" class="hash-link" aria-label="Direct link to Installing Additional Bundles" title="Direct link to Installing Additional Bundles" translate="no">​</a></h2>
+<p>After setting up your HyperMDM instance, you can extend it with additional bundles.
+Each bundle has its own installation documentation. Some commonly used bundles include:</p>
+<ul>
+<li class=""><strong><a class="" href="../../Datahub/Installation_and_Upgrade/index.html">Data Hub</a></strong> -
+GraphQL and REST API endpoints for external data access</li>
+<li class=""><strong><a class="" href="../../Portal_Engine/Installation/index.html">Portal Engine</a></strong> -
+Web portals for sharing data with external stakeholders</li>
+<li class=""><strong><a class="" href="../../Worfklow_Designer/Installation_and_Configuration/index.html">Workflow Designer</a></strong> -
+Visual workflow configuration for approval processes</li>
+</ul>
+<p>See <a class="" href="Advanced_Installation_Topics/index.html">Advanced Installation Topics</a> for automating bundle installation
+during the HyperMDM setup process.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="caching">Caching<a href="#caching" class="hash-link" aria-label="Direct link to Caching" title="Direct link to Caching" translate="no">​</a></h2>
+<p>For any installation, configure a caching backend to improve performance.
+Redis is the recommended cache adapter.
+See the <a class="" href="System_Setup_and_Hosting/Performance_Guide/index.html">Performance Guide</a> for configuration details.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next Steps<a href="#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../Product_Registration/index.html">Product Registration</a> - Register your instance and obtain a product key.</li>
+<li class=""><a class="" href="System_Requirements/index.html">System Requirements</a> - Detailed requirements for PHP, database, and additional software.</li>
+<li class=""><a class="" href="System_Setup_and_Hosting/index.html">System Setup and Hosting</a> - File storage, database replication, and performance optimization.</li>
+<li class=""><a class="" href="Advanced_Installation_Topics/index.html">Advanced Installation Topics</a> - Automated installation, environment variables, and install profiles.</li>
+<li class=""><a class="" href="Advanced_Installation_Topics/Platform_Version/index.html">Platform Version</a> - Version compatibility and installing additional modules.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Migrating HyperMDM from on-premise to HyperMDM PaaS — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Migrating HyperMDM from on-premise to HyperMDM PaaS</h1></header>
+<p><strong>Important notes:</strong></p>
+<ul>
+<li class="">HyperMDM PaaS supports HyperMDM starting from <code>2024.2</code></li>
+<li class="">Available HyperMDM PaaS services and their supported versions are listed <a href="https://fixed.docs.upsun.com/add-services.html#available-services" target="_blank" rel="noopener noreferrer" class="">here</a></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="preparing-for-your-migration"><strong>Preparing for your migration</strong><a href="#preparing-for-your-migration" class="hash-link" aria-label="Direct link to preparing-for-your-migration" title="Direct link to preparing-for-your-migration" translate="no">​</a></h2>
+<ul>
+<li class="">
+<p><strong>Assess the current infrastructure</strong></p>
+<ul>
+<li class="">List all components (HyperMDM version, database, services) and make sure they are supported and available on HyperMDM PaaS</li>
+<li class="">Identify services, bundles or modules that may need special handling</li>
+<li class="">Ensure your codebase is in Git since HyperMDM PaaS requires Git as VCS</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Backup Everything</strong></p>
+<ul>
+<li class="">Create a full backup of the HyperMDM codebase and filesystem</li>
+<li class="">Backup and export your database</li>
+<li class="">Backup and export assets and non versioned files (configs, classes, etc)</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Review HyperMDM PaaS requirements</strong></p>
+<ul>
+<li class="">Ensure compatibility with HyperMDM PaaS supported PHP/HyperMDM versions (8.x / 11.x)</li>
+<li class="">Identify all third-party services (e.g. Redis, Elasticsearch, Opensearch) used in the project</li>
+<li class="">Assess disk space and performance requirements so that you can properly size your apps and services</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuring-hypermdm-paas">Configuring HyperMDM PaaS<a href="#configuring-hypermdm-paas" class="hash-link" aria-label="Direct link to Configuring Pimcore PaaS" title="Direct link to Configuring Pimcore PaaS" translate="no">​</a></h2>
+<ul>
+<li class="">Go through the <a href="https://pimcore.com/docs/platform/Paas" target="_blank" rel="noopener noreferrer" class="">HyperMDM PaaS setup</a> and add the PaaS bundle to your project</li>
+<li class="">Configure your project/environment variables in the <a href="https://console.pimcore.cloud/" target="_blank" rel="noopener noreferrer" class="">HyperMDM PaaS Console</a> under <code>Settings</code> -&gt; <code>Variables</code></li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="migration">Migration<a href="#migration" class="hash-link" aria-label="Direct link to Migration" title="Direct link to Migration" translate="no">​</a></h2>
+<ul>
+<li class="">
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="codebase">Codebase<a href="#codebase" class="hash-link" aria-label="Direct link to Codebase" title="Direct link to Codebase" translate="no">​</a></h3>
+<ul>
+<li class="">Ensure your Git VCS code is ready to be pushed to your HyperMDM PaaS remote. You can add the HyperMDM PaaS remote through the <a class="" href="../Quick_Start_Existing_Project/index.html">Quick Start: Existing Project</a> guide</li>
+<li class="">Update configurations to match your performance requirements, e.g. <code>applications.yaml</code> and <code>services.yaml</code> should be considered</li>
+<li class="">Push your codebase to HyperMDM PaaS remote</li>
+</ul>
+</li>
+<li class="">
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="database">Database<a href="#database" class="hash-link" aria-label="Direct link to Database" title="Direct link to Database" translate="no">​</a></h3>
+<ul>
+<li class="">Import your DB export.
+Tip - You can connect directly to DB with your IDE using <a href="https://fixed.docs.upsun.com/development/local/tethered.html#connect-to-services-directly" target="_blank" rel="noopener noreferrer" class="">tunneling</a></li>
+<li class="">Check if you need some additional handling in your DB (running some custom scripts or something)</li>
+</ul>
+</li>
+<li class="">
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="files">Files<a href="#files" class="hash-link" aria-label="Direct link to Files" title="Direct link to Files" translate="no">​</a></h3>
+<ul>
+<li class="">
+<p>Your app may include content files, meaning files that aren't intended to be part of your codebase so aren't in Git.
+You can upload such files to <a href="https://fixed.docs.upsun.com/create-apps/app-reference/single-runtime-image.html#mounts" target="_blank" rel="noopener noreferrer" class="">mounts you created</a>.
+Upload to each mount separately.</p>
+<p>Upload to each of the directories above by running the following commands:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">hypermdm-cloud mount:upload --mount var/ --source ./var</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">hypermdm-cloud mount:upload --mount public/var --source ./public/var</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p>If you are planning to do a storage type migration during your migration to PaaS check out this <a href="https://pimcore.com/docs/platform/Pimcore/Installation_and_Upgrade/System_Setup_and_Hosting/File_Storage_Setup/#storage-migration" target="_blank" rel="noopener noreferrer" class="">storage migration guide</a></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="final-touches">Final touches<a href="#final-touches" class="hash-link" aria-label="Direct link to Final touches" title="Direct link to Final touches" translate="no">​</a></h2>
+<ul>
+<li class="">
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="run-the-needed-commands">Run the needed commands<a href="#run-the-needed-commands" class="hash-link" aria-label="Direct link to Run the needed commands" title="Direct link to Run the needed commands" translate="no">​</a></h3>
+<ul>
+<li class="">
+<p>After <a href="https://fixed.docs.upsun.com/development/transfer-dedicated.html#synchronize-files-from-development-to-stagingproduction" target="_blank" rel="noopener noreferrer" class="">syncing data</a>
+from <code>/var/</code> and <code>/public/var</code>, ensure you rebuild your classes:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"> php bin/console hypermdm:deployment:classes-rebuild --create-classes</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p>After migrating DB and binaries clear cache</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"> php bin/console hypermdm:cache:clear</span><br></span></code></pre></div></div>
+</li>
+<li class="">
+<p>Depending on your setup, you would likely need to run the following commands which are updating indices in OpenSearch and rebuild Alternative Element Trees:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console datahub:simple-rest:create-or-update-mapping</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console datahub:simple-rest:init-index</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console advanced-object-search:update-mapping</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console advanced-object-search:re-index</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console generic-data-index:update:index </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console bpt:aet:rebuild-tree -a</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console hypermdm:maintenance</span><br></span></code></pre></div></div>
+</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="testing-and-validation">Testing and validation<a href="#testing-and-validation" class="hash-link" aria-label="Direct link to Testing and validation" title="Direct link to Testing and validation" translate="no">​</a></h2>
+<ul>
+<li class="">
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="test-your-app">Test your app<a href="#test-your-app" class="hash-link" aria-label="Direct link to Test your app" title="Direct link to Test your app" translate="no">​</a></h3>
+<ul>
+<li class="">Ensure the frontend and backend functionalities are working.</li>
+<li class="">Test asset loading, object creation, and user sessions to verify the integrity of the migration.</li>
+<li class="">Check your specific configurations</li>
+</ul>
+</li>
+<li class="">
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="check-and-monitor-logs">Check and monitor logs<a href="#check-and-monitor-logs" class="hash-link" aria-label="Direct link to Check and monitor logs" title="Direct link to Check and monitor logs" translate="no">​</a></h3>
+<ul>
+<li class="">Review logs on HyperMDM PaaS for any errors during migration</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="go-live">Go live<a href="#go-live" class="hash-link" aria-label="Direct link to Go live" title="Direct link to Go live" translate="no">​</a></h2>
+<ul>
+<li class="">Prepare your domain and dns records to point to your <a href="https://fixed.docs.upsun.com/domains/steps.html" target="_blank" rel="noopener noreferrer" class="">HyperMDM PaaS</a></li>
+<li class="">Switch DNS to point to HyperMDM PaaS once the migration is validated in a production environment.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="common-pitfalls"><strong>Common Pitfalls</strong><a href="#common-pitfalls" class="hash-link" aria-label="Direct link to common-pitfalls" title="Direct link to common-pitfalls" translate="no">​</a></h3>
+<p><strong>While we are trying to ensure as best possible experience during your migration, some pitfalls can encounter</strong>
+<strong>Here are some tips what they can be and how to overcome them</strong></p>
+<ol>
+<li class="">
+<p><strong>Unsupported PHP or Library Versions</strong></p>
+<ul>
+<li class="">Mismatch between HyperMDM PaaS -supported versions and the ones currently in use. Ensure that the PHP version and dependencies are compatible. Update to latest versions where possible to make future updates faster.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Database Import Errors</strong></p>
+<ul>
+<li class="">Large datasets can sometimes cause issues during the import process, especially if timeouts occur. Use split dumps or staged imports for large databases.</li>
+<li class="">If your DB dump contains <code>DEFINER</code> statements you would need to remove it, as its not supported on <a href="https://fixed.docs.upsun.com/add-services/mysql/troubleshoot.html#definerinvoker-of-view-lack-rights-to-use-them" target="_blank" rel="noopener noreferrer" class="">HyperMDM PaaS</a></li>
+</ul>
+</li>
+<li class="">
+<p><strong>File Storage Differences</strong></p>
+<ul>
+<li class="">HyperMDM PaaS uses a different file storage architecture than on-prem setups.
+The filesystem is read-only after the app has been deployed, so you need to ensure HyperMDM asset storage is correctly mapped and mounted.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Third-Party Service Configurations</strong></p>
+<ul>
+<li class="">Redis, Opensearch or some other services might require reconfiguration for HyperMDM PaaS solution.</li>
+<li class="">Validate that all services are properly connected and configured after migration.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Environment Variables Handling</strong></p>
+<ul>
+<li class="">Misconfigured environment variables could lead to issues.</li>
+<li class="">Ensure your variables and secrets are correctly set per project and environment.</li>
+</ul>
+</li>
+</ol></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

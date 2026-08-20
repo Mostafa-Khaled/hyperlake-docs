@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FAQ &amp; Troubleshooting — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>FAQ &amp; Troubleshooting</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="infrastructure--architecture">Infrastructure &amp; Architecture<a href="#infrastructure--architecture" class="hash-link" aria-label="Direct link to Infrastructure &amp; Architecture" title="Direct link to Infrastructure &amp; Architecture" translate="no">​</a></h2>
+<p><strong>Q: What exactly is the function of Nginx within the application (reverse proxy, load balancer, etc.)? Or does load balancing happen one level higher within the VPN of the Upsun region (keyword Availability Zones)?</strong><br>
+<!-- -->Nginx is used as a web server and the reverse proxy for PHP/FPM, so the actual HyperMDM application.<br>
+<!-- -->There is no loadbalancing in case of a Grid project, as there is only 1 instance running at the same time for each containers.</p>
+<p><strong>Q: What are the scaling options for the individual services ie MariaDB, within a HyperMDM application? Which services can actually be scaled (e.g. multiple containers)? What exactly happens there?</strong><br>
+<!-- -->Currently on HyperMDM PaaS there is no option to have multiple instance of the same app container  - horizontal scaling.<br>
+<!-- -->We can only provide more resources via T-shirt sizing or with <a href="https://fixed.docs.upsun.com/create-apps/flexible-resources.html" target="_blank" rel="noopener noreferrer" class="">flexible resources</a> - vertical scaling.<br>
+<!-- -->Take note that you need to respect your plan sizing and properly size all resources.</p>
+<p>However, the underlying infrastructure is able to provide both vertical or horizontal scaling, this is exposed in Upsun, but not yet in HyperMDM PaaS.
+We are also working on autoscaling support. It should arrive soon on HyperMDM PaaS but we don't have an exact ETA. You can learn more about how autoscaling works on the underlying infrastructure here: <a href="https://devcenter.upsun.com/posts/autoscaling-deep-dive/" target="_blank" rel="noopener noreferrer" class="">https://devcenter.upsun.com/posts/autoscaling-deep-dive/</a></p>
+<p><strong>Q: What are the PHP workers underneath the services for or what is their function?</strong><br>
+<!-- -->Worker instances are well explained here <a href="https://fixed.docs.upsun.com/create-apps/workers.html#workers-vs-cron-jobs" target="_blank" rel="noopener noreferrer" class="">https://fixed.docs.upsun.com/create-apps/workers.html#workers-vs-cron-jobs</a>
+In our use case, workers are handling message transports - <code>message:consume</code> commands.</p>
+<p><strong>Q: Is Mercure always installed/activated in a HyperMDM PaaS application or only when HyperMDM Direct Edit is used?</strong><br>
+<!-- -->Mercure is available as a stand-alone app within the <code>applications.yaml</code> and can be used as needed.
+By default it's commented out.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration--setup">Configuration &amp; Setup<a href="#configuration--setup" class="hash-link" aria-label="Direct link to Configuration &amp; Setup" title="Direct link to Configuration &amp; Setup" translate="no">​</a></h2>
+<p><strong>Q: How do I configure a custom domain?</strong><br>
+<!-- -->Custom domains are configured in your <code>.platform/routes.yaml</code> file and then added via the <a href="https://console.pimcore.cloud/" target="_blank" rel="noopener noreferrer" class="">HyperMDM PaaS Console</a>. Follow the <a href="https://fixed.docs.upsun.com/domains/steps.html" target="_blank" rel="noopener noreferrer" class="">domain setup guide</a> for full instructions on DNS configuration and TLS certificates.</p>
+<p><strong>Q: Does the deploy hook run on every push, including branch pushes?</strong><br>
+<!-- -->The deploy hook runs whenever a <strong>new commit</strong> is pushed to any branch (including non-production branches), as each new commit triggers a new build and deployment. However, a <strong>redeploy without code changes</strong> only triggers the <code>post_deploy</code> hook — the <code>build</code> and <code>deploy</code> hooks are skipped. Ensure that commands in your deploy hook (such as database migrations) can handle being run on each new deployment safely. See the <a href="https://fixed.docs.upsun.com/create-apps/hooks/hooks-comparison.html" target="_blank" rel="noopener noreferrer" class="">hooks comparison</a> for details.</p>
+<p><strong>Q: What prerequisites and training should my team have before starting with HyperMDM PaaS?</strong><br>
+<!-- -->Initial setup should be performed by developers with HyperMDM, Git and CI/CD experience. If your team is new to HyperMDM, complete the <a href="https://pimcore.com/en/academy" target="_blank" rel="noopener noreferrer" class="">HyperMDM Academy</a> and consult the <a href="https://fixed.docs.upsun.com/" target="_blank" rel="noopener noreferrer" class="">Upsun (Platform.sh) documentation</a> and <a href="https://pimcore.com/docs/platform/" target="_blank" rel="noopener noreferrer" class="">HyperMDM docs</a> before starting. This prevents configuration errors and accelerates implementation.</p>
+<p><strong>Q: Why do runtime writes to the filesystem fail after deployment?</strong><br>
+<!-- -->After the build phase, the container filesystem is <strong>read-only</strong>. Attempting to write to non-mounted paths will fail — code changes can only be deployed via Git push. Any runtime writes must target the designated mount points configured in <code>applications.yaml</code>. Review the <a class="" href="../Good_to_know/index.html#working-with-definition-files">Working with definition files</a> section to understand which directories are writable at runtime.</p>
+<p>The PaaS install profile addresses this by implementing <code>InstallStepFilterInterface</code> to skip steps that would write to the read-only filesystem (e.g., <code>WriteEnv</code>, <code>WriteDoctrineConfig</code>, <code>RegisterBundles</code>). See the <a class="" href="../Configuration/index.html#skipped-install-steps-on-paas">Install Profile</a> documentation for details.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="resource-sizing--performance">Resource Sizing &amp; Performance<a href="#resource-sizing--performance" class="hash-link" aria-label="Direct link to Resource Sizing &amp; Performance" title="Direct link to Resource Sizing &amp; Performance" translate="no">​</a></h2>
+<p><strong>Q: How much memory should I allocate for my database?</strong><br>
+<!-- -->Allocating insufficient RAM for your database leads to performance degradation — increased I/O latency and slower queries which can degrade entire system performance. Allocate RAM that at least matches your database size <strong>+10%</strong> to avoid performance issues. Monitor your database size and adjust resources accordingly. Use the <a href="https://console.pimcore.cloud/" target="_blank" rel="noopener noreferrer" class="">HyperMDM PaaS Console</a> to check current resource usage and plan capacity.</p>
+<p><strong>Q: How do I choose the right plan tier for my asset workload?</strong><br>
+<!-- -->Underestimating asset sizing when selecting your plan tier can dramatically impact performance. Asset manipulation is a resource-heavy operation, and an inadequate plan can cause system-wide slowdowns. To avoid this:</p>
+<ul>
+<li class="">Estimate your asset sizing before selecting a plan tier</li>
+<li class="">Review HyperMDM's guide on <a class="" href="../Performance_issues_while_manipulating_images/index.html">performance considerations for image processing</a></li>
+<li class="">Consider enabling <a href="https://fixed.docs.upsun.com/create-apps/flexible-resources.html" target="_blank" rel="noopener noreferrer" class="">flexible resources</a> for dynamic scaling</li>
+<li class="">Monitor resource usage regularly and adjust your plan as your asset library grows</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="email--mail-delivery">Email / Mail Delivery<a href="#email--mail-delivery" class="hash-link" aria-label="Direct link to Email / Mail Delivery" title="Direct link to Email / Mail Delivery" translate="no">​</a></h2>
+<p><strong>Q: How does outgoing email work on HyperMDM PaaS?</strong><br>
+<!-- -->HyperMDM sends mail through <strong>Symfony Mailer</strong>, using the transport defined under <code>framework.mailer</code> (in <code>config/config.yaml</code>). With HyperMDM's default <code>native://default</code> transport, the outbound path on PaaS is:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">HyperMDM (\HyperMDM\Mail) → Symfony Mailer transport → /usr/sbin/sendmail (msmtp) → platform SMTP relay (PLATFORM_SMTP_HOST)</span><br></span></code></pre></div></div>
+<p>There is <strong>no local MTA</strong> in the container. <code>/usr/sbin/sendmail</code> is a symlink to <strong><code>msmtp</code></strong>, which relays to the platform's SMTP service exposed via the <code>PLATFORM_SMTP_HOST</code> environment variable. Outgoing mail also has to be <strong>enabled</strong> on the environment (<code>enable_smtp</code>, on by default for production and configurable per environment).</p>
+<p><strong>Q: Test emails work from a plain PHP script (<code>mail()</code>), but HyperMDM shows "could not send email". Why?</strong><br>
+<!-- -->This is the most common mail issue on PaaS and it comes from a <strong>transport misconfiguration</strong>, not from the platform or PHP.</p>
+<p>The two paths use <em>different</em> <code>sendmail</code> invocations:</p>
+<div class="table-container"><table><thead><tr><th>Path</th><th>Command invoked</th><th>msmtp result</th></tr></thead><tbody><tr><td>PHP <code>mail()</code></td><td><code>/usr/sbin/sendmail -t -i</code> (from php.ini <code>sendmail_path</code>)</td><td>✅ supported</td></tr><tr><td>Symfony <code>native://default</code> (HyperMDM default)</td><td>uses php.ini <code>sendmail_path</code> → <code>/usr/sbin/sendmail -t -i</code></td><td>✅ supported</td></tr><tr><td>Symfony <code>sendmail://default</code></td><td><code>/usr/sbin/sendmail -bs</code></td><td>❌ <strong>rejected</strong></td></tr></tbody></table></div>
+<p><code>msmtp</code> does <strong>not</strong> support the <code>-bs</code> (interactive SMTP) mode. When the transport is <code>sendmail://default</code>, Symfony invokes <code>/usr/sbin/sendmail -bs</code>, msmtp exits immediately with <code>sendmail: unsupported operation mode bs</code>, and Symfony raises:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">Symfony\Component\Mailer\Exception\TransportException:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Connection to "process /usr/sbin/sendmail -bs" has been closed unexpectedly.</span><br></span></code></pre></div></div>
+<p>HyperMDM wraps this into the generic <strong>"could not send email"</strong> in the admin UI. Because PHP <code>mail()</code> uses <code>-t -i</code> (which msmtp <em>does</em> support), a plain PHP test succeeds while HyperMDM fails — a very misleading symptom.</p>
+<p><strong>Fix:</strong> in <code>config/config.yaml</code>, do <strong>not</strong> force <code>sendmail://default</code>. Use one of:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># Option 1 — recommended: let HyperMDM use the default `native://default`</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#            (reads php.ini sendmail_path = "/usr/sbin/sendmail -t -i", msmtp-compatible).</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#            Simply do not override framework.mailer.transports.main.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Option 2 — explicit sendmail command msmtp accepts:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">framework</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">mailer</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">transports</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">main</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'sendmail://default?command=/usr/sbin/sendmail -t -i'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Option 3 — talk to the platform SMTP relay directly:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">framework</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">mailer</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">transports</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">main</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'smtp://%env(PLATFORM_SMTP_HOST)%:25'</span><br></span></code></pre></div></div>
+<blockquote>
+<p>⚠️ A <code>sendmail://default</code> value is often left over from a local development config (where a local <code>sendmail</code>/mailpit <em>does</em> support <code>-bs</code>). Make sure such an override is not carried into your PaaS branches, and remember it will break <strong>any</strong> environment it is deployed to — including production if merged.</p>
+</blockquote>
+<p><strong>Q: How do I diagnose a mail problem myself?</strong><br>
+<!-- -->Work top-down. SSH into the affected environment with <code>hypermdm-cloud ssh</code> (add <code>-e &lt;environment&gt;</code> to target a specific branch) and run:</p>
+<ol>
+<li class="">
+<p><strong>Check the active mailer transport</strong> — this alone reveals the <code>-bs</code> problem:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console debug:config framework mailer</span><br></span></code></pre></div></div>
+<p>Look at <code>transports.main</code>. <code>native://default</code> is fine; <code>sendmail://default</code> is the trap described above.</p>
+</li>
+<li class="">
+<p><strong>Send a real test through the Symfony transport</strong> (this is what HyperMDM uses):</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console mailer:test recipient@example.com \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  --from="noreply@your-domain.com" \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  --subject="PaaS mailer test"</span><br></span></code></pre></div></div>
+<ul>
+<li class="">Exit code <code>0</code> and no output → the transport delivered to the relay.</li>
+<li class="">A <code>TransportException</code> (e.g. the <code>-bs</code> error above) → transport misconfiguration; fix per the question above.</li>
+<li class="">Note: <code>mailer:test</code> exercises the <strong>transport layer only</strong>; it does not go through <code>\HyperMDM\Mail</code>, so it ignores the HyperMDM sender config and the debug redirect (see below).</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Verify the HyperMDM sender is set</strong> — a real HyperMDM action (e.g. <em>Settings → Users → send invitation link</em>) needs a valid <code>From</code>:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console debug:config hypermdm email</span><br></span></code></pre></div></div>
+<p>Confirm <code>sender.email</code> / <code>sender.name</code> are populated. If <code>system_settings</code> uses <code>settings-store</code>, check the runtime value in HyperMDM's System Settings instead; <code>debug:config</code> only shows the container configuration. An empty sender can make HyperMDM mail fail even when the transport is healthy.</p>
+</li>
+<li class="">
+<p><strong>Confirm outgoing mail is enabled and the relay is reachable</strong>:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">echo "PLATFORM_SMTP_HOST=[$PLATFORM_SMTP_HOST]"   # empty ⇒ outgoing email disabled for this environment</span><br></span></code></pre></div></div>
+<p><code>enable_smtp</code> is off by default on some non-production environments; enable it in the <a href="https://console.pimcore.cloud/" target="_blank" rel="noopener noreferrer" class="">HyperMDM PaaS Console</a> if outgoing email is required there.</p>
+</li>
+<li class="">
+<p><strong>Isolate the OS layer</strong> (only if the transport check is inconclusive) — test msmtp directly to see the SMTP dialogue:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">printf 'From: noreply@your-domain.com\nTo: you@example.com\nSubject: msmtp test\n\nbody\n' | msmtp -v -t</span><br></span></code></pre></div></div>
+<p>A successful run shows <code>MAIL FROM</code> and <code>RCPT TO</code> answered with <code>250</code>, <code>DATA</code> answered with <code>354</code>, and final message acceptance answered with <code>250</code>. If this works but <code>mailer:test</code> fails, the problem is the Symfony transport config, not the platform.</p>
+</li>
+</ol>
+<p><strong>Q: My test emails are accepted (exit 0) but never arrive. What now?</strong><br>
+<!-- -->Exit <code>0</code> means the message was handed to the relay successfully; delivery is then subject to normal email rules:</p>
+<ul>
+<li class=""><strong>Delivery lag</strong> — the platform relay can take a few minutes; wait before concluding it failed.</li>
+<li class=""><strong>Spam filtering</strong> — check the spam folder, especially for messages with a generic <code>From</code> or an empty envelope sender.</li>
+<li class=""><strong>Debug redirect</strong> — if <code>hypermdm.email.debug.email_addresses</code> is set (visible in <code>php bin/console debug:config hypermdm email</code>), HyperMDM redirects <strong>all</strong> <code>\HyperMDM\Mail</code> messages to those addresses instead of the real recipients. This is expected in debug/dev mode; <code>mailer:test</code> is <em>not</em> affected by it because it bypasses <code>\HyperMDM\Mail</code>.</li>
+<li class=""><strong>Deliverability / SPF-DKIM</strong> — for production domains, configure SPF/DKIM for your sender domain so external providers (Gmail, Outlook, …) accept the mail.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="see-also">See Also<a href="#see-also" class="hash-link" aria-label="Direct link to See Also" title="Direct link to See Also" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../Configuration/index.html">Configuration Guide</a> — Infrastructure setup and customization</li>
+<li class=""><a class="" href="../Good_to_know/index.html">Good to Know</a> — Operational best practices</li>
+<li class=""><a class="" href="../Performance_issues_while_manipulating_images/index.html">Performance Issues with Image Manipulation</a> — Troubleshooting image processing</li>
+<li class=""><a class="" href="../Environment_Variables_Reference/index.html">Environment Variables Reference</a> — Complete guide to all environment variables</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

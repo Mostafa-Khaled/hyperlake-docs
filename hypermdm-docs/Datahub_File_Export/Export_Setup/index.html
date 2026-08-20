@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Export Setup — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Export Setup</h1></header>
+<p>Exports run manually or automatically. Every way of running one uses the same two export modes:</p>
+<ul>
+<li class=""><strong>Full Export</strong>: exports all relevant items, regardless of what is in the queue.</li>
+<li class=""><strong>Queue Only</strong>: exports only items in the queue, populated by the
+<a class="" href="../Basic_Configuration/index.html">Trigger &amp; Execution settings</a>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="manual-execution-in-the-configuration">Manual Execution in the Configuration<a href="#manual-execution-in-the-configuration" class="hash-link" aria-label="Direct link to Manual Execution in the Configuration" title="Direct link to Manual Execution in the Configuration" translate="no">​</a></h2>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Datahub_File_Export-Export_Setup-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_File_Export-Export_Setup-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Trigger &amp;amp; Execution tab with the Manual Export section</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/startingExport-a83f238a71f83e52906a50c66e27ea55.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Datahub_File_Export-Export_Setup-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/startingExport-a83f238a71f83e52906a50c66e27ea55.png"><figure class="visual-placeholder" id="fig-Datahub_File_Export-Export_Setup-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_File_Export-Export_Setup-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Trigger &amp;amp; Execution tab with the Manual Export section</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/startingExport-a83f238a71f83e52906a50c66e27ea55.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Datahub_File_Export-Export_Setup-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/startingExport-a83f238a71f83e52906a50c66e27ea55.png"><figure class="visual-placeholder" id="fig-Datahub_File_Export-Export_Setup-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Datahub_File_Export-Export_Setup-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Trigger &amp;amp; Execution tab with the Manual Export section</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/startingExport-a83f238a71f83e52906a50c66e27ea55.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Datahub_File_Export-Export_Setup-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>The <strong>Manual Export</strong> section of the <strong>Trigger &amp; Execution</strong> tab has one button per export mode, <strong>Run Full Export</strong>
+and <strong>Run Queue Only</strong>. Both run the export asynchronously through the
+<a href="https://symfony.com/doc/current/messenger.html" target="_blank" rel="noopener noreferrer" class="">Symfony Messenger queue</a>.</p>
+<p>While an export runs, the status line below the buttons reports its progress and a <strong>Cancel Export</strong> button appears.
+The line reads <code>All items processed, no export running.</code> when nothing is pending. The <strong>Logs</strong> tab shows the log
+messages of the export.</p>
+<p>Nothing happens until a <a href="https://symfony.com/doc/current/messenger.html" target="_blank" rel="noopener noreferrer" class="">Symfony Messenger</a> worker consumes the
+<code>hypermdm_datahub_fileexport</code> transport. An export that appears to hang is usually a missing worker:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console messenger:consume hypermdm_datahub_fileexport</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="automatic-execution-via-cron-definition">Automatic Execution via Cron Definition<a href="#automatic-execution-via-cron-definition" class="hash-link" aria-label="Direct link to Automatic Execution via Cron Definition" title="Direct link to Automatic Execution via Cron Definition" translate="no">​</a></h2>
+<p>The same tab schedules recurring exports with a cron expression, one field per export mode: <code>Cron (Full Export)</code> and
+<code>Cron (Queue Only)</code>. An empty field means that mode is not scheduled. The export itself is processed through the
+Symfony Messenger queue.</p>
+<p>See <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer" class="">Crontab Guru</a> for building cron expressions.</p>
+<p>This requires:</p>
+<ul>
+<li class=""><code>bin/console datahub:export:file:execute-cron</code> on a regular schedule, for example every minute. It checks which cron
+definitions are due and dispatches the corresponding exports. Pass configuration names as arguments to limit it to
+those; without arguments it considers all of them.</li>
+<li class="">A <code>bin/console messenger:consume hypermdm_datahub_fileexport</code> worker, as above.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-via-cli-command">Execution via CLI Command<a href="#execution-via-cli-command" class="hash-link" aria-label="Direct link to Execution via CLI Command" title="Direct link to Execution via CLI Command" translate="no">​</a></h2>
+<p>Run <code>bin/console datahub:export:file</code> directly, for example as a system cron job. Use this when the cron fields are not
+flexible enough or the infrastructure requires it.</p>
+<div class="table-container"><table><thead><tr><th>Option</th><th>Effect</th></tr></thead><tbody><tr><td><code>--config-id</code></td><td>The <strong>name</strong> of the Datahub configuration to export. Without it, every configuration of type <code>fileExport</code> runs.</td></tr><tr><td><code>--only-queue-items</code></td><td>Export only items in the queue instead of all relevant items.</td></tr></tbody></table></div>
+<p>Inactive configurations are skipped either way. Exported queue items are removed from the queue afterwards.</p>
+<p>This execution path needs no Symfony Messenger queue; the command performs the export itself.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next Steps<a href="#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../Customize_and_Extend/index.html">Customize and Extend</a>: add formats, transmitters or a custom exporter service.</li>
+<li class=""><a class="" href="../Events/index.html">Events</a>: hook into the export without replacing a service.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

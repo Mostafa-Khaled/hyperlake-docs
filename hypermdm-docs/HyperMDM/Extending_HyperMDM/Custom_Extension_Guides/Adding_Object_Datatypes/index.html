@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Adding Object Datatypes — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Adding Object Datatypes</h1></header>
+<blockquote>
+<p><strong>Working example:</strong> The
+<a href="https://github.com/pimcore/studio-example-bundle" target="_blank" rel="noopener noreferrer" class="">studio-example-bundle</a>
+contains a complete <code>simpleText</code> custom datatype example covering
+all steps below.</p>
+</blockquote>
+<p>Adding a custom object datatype to HyperMDM Studio requires registration
+across four layers:</p>
+<ul>
+<li class=""><strong>HyperMDM Core</strong> (field definition class and config)</li>
+<li class=""><strong>Generic Data Index</strong> (search index adapter)</li>
+<li class=""><strong>Studio Backend</strong> (data adapter, grid column definition)</li>
+<li class=""><strong>Studio UI</strong> (frontend dynamic types and plugin).</li>
+</ul>
+<p>The <code>getFieldType()</code> return value (e.g. <code>'simpleText'</code>) is the common
+identifier that ties all layers together — it must match between the
+PHP class, the GDI adapter tag, the Studio Backend column definition,
+and the frontend dynamic type <code>id</code> property.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-core">HyperMDM Core<a href="#hypermdm-core" class="hash-link" aria-label="Direct link to Pimcore Core" title="Direct link to Pimcore Core" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-1--php-field-definition-class">Step 1 — PHP Field Definition Class<a href="#step-1--php-field-definition-class" class="hash-link" aria-label="Direct link to Step 1 — PHP Field Definition Class" title="Direct link to Step 1 — PHP Field Definition Class" translate="no">​</a></h3>
+<p>Create a class extending
+<code>HyperMDM\Model\DataObject\ClassDefinition\Data</code> that defines how the
+datatype is stored in the database, how getters/setters are generated,
+and how data is serialized.</p>
+<p>Key interfaces to implement:</p>
+<ul>
+<li class=""><code>ResourcePersistenceAwareInterface</code> — database column mapping</li>
+<li class=""><code>QueryResourcePersistenceAwareInterface</code> — query column mapping</li>
+<li class=""><code>TypeDeclarationSupportInterface</code> — PHP type declarations</li>
+<li class=""><code>NormalizerInterface</code> — data normalization for API transport</li>
+</ul>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Model/DataObject/ClassDefinition/Data/SimpleText.php" target="_blank" rel="noopener noreferrer" class="">SimpleText.php</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-2--register-the-field-type">Step 2 — Register the Field Type<a href="#step-2--register-the-field-type" class="hash-link" aria-label="Direct link to Step 2 — Register the Field Type" title="Direct link to Step 2 — Register the Field Type" translate="no">​</a></h3>
+<p>Register the datatype by extending the <code>hypermdm.objects.class_definitions.data.map</code>
+configuration in a config file that is
+<a class="" href="../../HyperMDM_Bundle_Developers_Guide/Auto_Loading_Config_and_Routing/index.html">automatically loaded</a>.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/pimcore/config.yaml" target="_blank" rel="noopener noreferrer" class="">config.yaml</a>
+in the example bundle.</p>
+</blockquote>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="generic-data-index">Generic Data Index<a href="#generic-data-index" class="hash-link" aria-label="Direct link to Generic Data Index" title="Direct link to Generic Data Index" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-3--field-definition-adapter-required-for-indexing">Step 3 — Field Definition Adapter (Required for Indexing)<a href="#step-3--field-definition-adapter-required-for-indexing" class="hash-link" aria-label="Direct link to Step 3 — Field Definition Adapter (Required for Indexing)" title="Direct link to Step 3 — Field Definition Adapter (Required for Indexing)" translate="no">​</a></h3>
+<p>The Generic Data Index (GDI) bundle indexes data object fields in
+OpenSearch/Elasticsearch for search and filtering. Without a
+registered adapter for your field type, the data will not be indexed
+and grid filtering will not return results.</p>
+<p>For simple string fields, reuse the built-in <code>TextKeywordAdapter</code>.
+Register it as a <strong>non-shared</strong> (<code>shared: false</code>) service with the
+<code>hypermdm.generic_data_index.data-object.search_index_field_definition</code>
+tag and your field type as the <code>type</code> attribute. The <code>shared: false</code>
+setting is required because adapters are stateful — each instance
+gets a specific field definition set on it.</p>
+<p>Load the config from your bundle's DI extension <code>load()</code> method.
+After registration, rebuild the search index:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console generic-data-index:update:index -c CLASS_ID -r</span><br></span></code></pre></div></div>
+<p>For details on available built-in adapters and creating custom ones, see the
+<a class="" href="../../../../Generic_Data_Index/Extending_Data_Index/Custom_Field_Definition_Adapters/index.html">Custom Field Definition Adapters</a>
+documentation.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/generic-data-index.yaml" target="_blank" rel="noopener noreferrer" class="">generic-data-index.yaml</a>
+in the example bundle.</p>
+</blockquote>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-backend">Studio Backend<a href="#studio-backend" class="hash-link" aria-label="Direct link to Studio Backend" title="Direct link to Studio Backend" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-4--data-adapter-required-for-saveload">Step 4 — Data Adapter (Required for Save/Load)<a href="#step-4--data-adapter-required-for-saveload" class="hash-link" aria-label="Direct link to Step 4 — Data Adapter (Required for Save/Load)" title="Direct link to Step 4 — Data Adapter (Required for Save/Load)" translate="no">​</a></h3>
+<p>The Studio Backend Bundle uses data adapters to save and load field
+data via the API. Without a mapping for your field type, the field
+will render in the editor but data will not persist.</p>
+<p>For simple string fields, reuse the existing <code>StringAdapter</code> by adding your field
+type to the <code>hypermdm_studio_backend.data_object_data_adapter_mapping</code>
+configuration. Load this config in your bundle's DI extension using
+<code>prepend()</code> (since it targets another bundle's config key).</p>
+<p>For complex field types, create your own adapter implementing
+<code>SetterDataInterface</code> and tag it with <code>hypermdm.studio_backend.data_adapter</code>.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/config/pimcore/studio_backend.yaml" target="_blank" rel="noopener noreferrer" class="">studio_backend.yaml</a>
+and
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/DependencyInjection/PimcoreStudioExampleExtension.php" target="_blank" rel="noopener noreferrer" class="">HyperMDMStudioExampleExtension.php</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-5--grid-column-definition-required-for-grid-view">Step 5 — Grid Column Definition (Required for Grid View)<a href="#step-5--grid-column-definition-required-for-grid-view" class="hash-link" aria-label="Direct link to Step 5 — Grid Column Definition (Required for Grid View)" title="Direct link to Step 5 — Grid Column Definition (Required for Grid View)" translate="no">​</a></h3>
+<p>To make your field available as a column in the data object grid,
+register a <code>ColumnDefinitionInterface</code> implementation with the
+<code>hypermdm.studio_backend.grid_column_definition</code> service tag.</p>
+<p>Key methods:</p>
+<ul>
+<li class=""><code>getType()</code> — must return <code>'data-object.' . $fieldType</code></li>
+<li class=""><code>getFrontendType()</code> — determines grid cell rendering (e.g.
+<code>'input'</code> for text fields, <code>'select'</code> for selects)</li>
+<li class=""><code>isSortable()</code>, <code>isFilterable()</code>, <code>isExportable()</code> — grid
+capabilities</li>
+</ul>
+<p>Without this registration, the field will not appear in the grid
+column configuration or filter sidebar.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/src/Grid/Column/Definition/SimpleTextDefinition.php" target="_blank" rel="noopener noreferrer" class="">SimpleTextDefinition.php</a>
+in the example bundle.</p>
+</blockquote>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-ui-frontend">Studio UI (Frontend)<a href="#studio-ui-frontend" class="hash-link" aria-label="Direct link to Studio UI (Frontend)" title="Direct link to Studio UI (Frontend)" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-6--object-data-dynamic-type">Step 6 — Object Data Dynamic Type<a href="#step-6--object-data-dynamic-type" class="hash-link" aria-label="Direct link to Step 6 — Object Data Dynamic Type" title="Direct link to Step 6 — Object Data Dynamic Type" translate="no">​</a></h3>
+<p>Create a class extending <code>DynamicTypeObjectDataAbstractInput</code> (from
+<code>@hypermdm/studio-ui-bundle/modules/element</code>). This renders the field
+in the <strong>data object editor</strong> and <strong>grid</strong> — how users enter and
+view data.</p>
+<p>Key properties and methods:</p>
+<ul>
+<li class=""><code>id</code> — must match <code>getFieldType()</code> from the PHP class</li>
+<li class=""><code>getObjectDataComponent()</code> — React component for the field; the
+abstract input class provides a default <code>&lt;Input&gt;</code></li>
+<li class=""><code>getDefaultGridColumnWidth()</code> — optional grid column width</li>
+<li class=""><code>dynamicTypeFieldFilterType</code> — determines the grid filter
+behavior (see <a href="#filter-type-mapping" class="">Filter Type Mapping</a> below)</li>
+</ul>
+<p>Register in the <code>DynamicTypeObjectDataRegistry</code> via a module.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-datatype/dynamic-types/definitions/dynamic-type-object-data-simple-text.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-object-data-simple-text.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-7--field-definition-dynamic-type">Step 7 — Field Definition Dynamic Type<a href="#step-7--field-definition-dynamic-type" class="hash-link" aria-label="Direct link to Step 7 — Field Definition Dynamic Type" title="Direct link to Step 7 — Field Definition Dynamic Type" translate="no">​</a></h3>
+<p>Create a class extending <code>DynamicTypeFieldDefinitionDataAbstract</code>
+(from <code>@hypermdm/studio-ui-bundle/modules/field-definitions</code>). This
+renders the field configuration in the <strong>class definition editor</strong> —
+how admins configure the field.</p>
+<p>Key methods:</p>
+<ul>
+<li class=""><code>id</code> — must match <code>getFieldType()</code> from the PHP class</li>
+<li class=""><code>getIcon()</code> — icon for the field type dropdown</li>
+<li class=""><code>getGroup()</code> — category in the dropdown (e.g. <code>'text'</code>)</li>
+<li class=""><code>getSpecificFormFields()</code> — type-specific settings form</li>
+</ul>
+<p>Register in the <code>DynamicTypeFieldDefinitionRegistry</code> via a module.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-datatype/dynamic-types/definitions/dynamic-type-field-definition-simple-text.tsx" target="_blank" rel="noopener noreferrer" class="">dynamic-type-field-definition-simple-text.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-8--plugin-registration">Step 8 — Plugin Registration<a href="#step-8--plugin-registration" class="hash-link" aria-label="Direct link to Step 8 — Plugin Registration" title="Direct link to Step 8 — Plugin Registration" translate="no">​</a></h3>
+<p>Create a plugin that binds both dynamic type classes in <code>onInit</code>
+(singleton scope) and registers the module in <code>onStartup</code>.</p>
+<blockquote>
+<p>See
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-datatype/index.ts" target="_blank" rel="noopener noreferrer" class="">index.ts</a>
+and
+<a href="https://github.com/pimcore/studio-example-bundle/blob/main/assets/js/src/examples/custom-object-datatype/modules/simple-text-datatype-module.tsx" target="_blank" rel="noopener noreferrer" class="">simple-text-datatype-module.tsx</a>
+in the example bundle.</p>
+</blockquote>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="filter-type-mapping">Filter Type Mapping<a href="#filter-type-mapping" class="hash-link" aria-label="Direct link to Filter Type Mapping" title="Direct link to Filter Type Mapping" translate="no">​</a></h2>
+<p>The <code>dynamicTypeFieldFilterType</code> property on the object data dynamic
+type (Step 6) controls both the filter UI in the grid sidebar and
+which backend filter processes the query. Each field filter class
+defines:</p>
+<ul>
+<li class="">A UI component for the filter sidebar (text input, select
+dropdown, date picker, etc.)</li>
+<li class="">A <code>getFieldFilterType()</code> method that returns the backend filter
+type string (e.g. <code>'system.string'</code>)</li>
+</ul>
+<p>When the user applies a filter, the frontend sends this type string
+in the API request. The Studio Backend matches it to a registered
+search index filter that executes the query against the Generic Data
+Index.</p>
+<p><strong>Built-in filter types:</strong></p>
+<div class="table-container"><table><thead><tr><th><code>dynamicTypeFieldFilterType</code></th><th>Filter Type</th><th>UI</th><th>Backend Filter</th></tr></thead><tbody><tr><td><code>FieldFilter/String</code></td><td><code>system.string</code></td><td>text input</td><td>wildcard search</td></tr><tr><td><code>FieldFilter/Select</code></td><td><code>system.select</code></td><td>select dropdown</td><td>exact match</td></tr><tr><td><code>FieldFilter/Number</code></td><td><code>system.number</code></td><td>number input</td><td>range query</td></tr><tr><td><code>FieldFilter/Boolean</code></td><td><code>system.boolean</code></td><td>checkbox</td><td>boolean match</td></tr><tr><td><code>FieldFilter/DateTime</code></td><td><code>system.datetime</code></td><td>date-time picker</td><td>range query</td></tr><tr><td><code>FieldFilter/Date</code></td><td><code>system.date</code></td><td>date picker</td><td>range query</td></tr><tr><td><code>FieldFilter/None</code></td><td><em>(default)</em></td><td>—</td><td>filtering disabled</td></tr></tbody></table></div>
+<p>Set <code>dynamicTypeFieldFilterType</code> using the DI container:</p>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">readonly</span><span class="token plain"> dynamicTypeFieldFilterType</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token builtin">any</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    container</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">get</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">serviceIds</span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">'DynamicTypes/FieldFilter/String'</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">)</span><br></span></code></pre></div></div>
+<p>For standard datatypes, choosing the right built-in filter type from
+the table above is sufficient — no custom backend filter is needed.</p>
+<p><strong>When you need a custom filter:</strong> If your datatype requires filter
+logic not covered by the built-in types (e.g. multi-value matching,
+composite field queries), register a custom <code>FilterInterface</code> with
+the <code>hypermdm.studio_backend.search_index.data_object.filter</code> tag.
+See the
+<a href="https://github.com/pimcore/data-quality-management-bundle" target="_blank" rel="noopener noreferrer" class="">data-quality-management-bundle</a>
+<code>MarkFilter</code> for a reference implementation, and the
+<a class="" href="../../../../Studio_Backend/Extending/Extending_Filters/Extending_Search_Index_Filters/index.html">Extending Search Index Filters</a>
+documentation for details.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="complete-example">Complete Example<a href="#complete-example" class="hash-link" aria-label="Direct link to Complete Example" title="Direct link to Complete Example" translate="no">​</a></h2>
+<p>The
+<a href="https://github.com/pimcore/studio-example-bundle" target="_blank" rel="noopener noreferrer" class="">studio-example-bundle</a>
+implements the complete <code>simpleText</code> custom datatype. See the
+<a class="" href="../../../../Studio_UI/Extending/Plugin_Development_Examples/Custom_Object_Datatype/index.html">Custom Object Datatype</a>
+plugin development example for an overview.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

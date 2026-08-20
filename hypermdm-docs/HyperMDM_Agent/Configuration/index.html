@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Configuration — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Configuration</h1></header>
+<p>This section is the field-by-field reference for everything you can configure in the bundle. For the <em>mechanism</em> that
+loads and merges configuration - layers, export endpoint, reload paths - see <a class="" href="../Architecture/Configuration_System/index.html">Architecture → Configuration System</a>.
+Terminology is defined in <a class="" href="../Getting_Started/Concepts/index.html">Core Concepts</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-to-go">Where to go<a href="#where-to-go" class="hash-link" aria-label="Direct link to Where to go" title="Direct link to Where to go" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>I want to…</th><th>Read</th></tr></thead><tbody><tr><td>Set the bundle up in a fresh project</td><td><a class="" href="../Installation/index.html">Installation</a></td></tr><tr><td>Create or edit an agent</td><td><a class="" href="Agents/index.html">Agents</a></td></tr><tr><td>Understand inference options and pick a model (Copilot vs. BYOK, evaluation results)</td><td><a class="" href="../Inference/index.html">Inference</a></td></tr><tr><td>Define named inference providers (byok, github, Ollama, HF, …)</td><td><a class="" href="Inference_Providers/index.html">Inference Providers</a></td></tr><tr><td>Create a custom skill</td><td><a class="" href="Skills/index.html">Skills</a></td></tr><tr><td>Connect an agent to MCP tool servers</td><td><a class="" href="MCP_Servers/index.html">MCP Servers</a></td></tr><tr><td>Group skills, SDK tools, and MCP groups into one reusable capability pack</td><td><a class="" href="Tool_Bundles/index.html">Tool Bundles</a></td></tr><tr><td>Expose project files to an agent for reading</td><td><a class="" href="File_Staging/index.html">File Staging</a></td></tr><tr><td>Configure agent template generation</td><td><a class="" href="Agent_Templates/index.html">Agent Templates</a></td></tr><tr><td>See the catalog of SDK tools</td><td><a class="" href="Tool_Security_Reference/index.html">Tool Security Reference</a></td></tr><tr><td>Tune env vars, timeouts, provider tokens</td><td><a class="" href="Environment_Variables/index.html">Environment Variables</a></td></tr><tr><td>Use a strict OpenAI-compatible provider (Cerebras, Ollama, vLLM, …)</td><td><a class="" href="Provider_Compatibility/index.html">Provider Compatibility</a></td></tr><tr><td>Ship preset agents or skills from my own bundle</td><td><a class="" href="Shipping_Presets/index.html">Shipping Presets</a></td></tr><tr><td>Delegate work to an agent from PHP without a browser (headless tasks)</td><td><a class="" href="Agents/index.html#agent-tasks">Agents → Agent tasks</a></td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-merge-model-at-a-glance">The merge model at a glance<a href="#the-merge-model-at-a-glance" class="hash-link" aria-label="Direct link to The merge model at a glance" title="Direct link to The merge model at a glance" translate="no">​</a></h2>
+<p>Every agent and every skill comes from one of three layers. Higher layers override lower layers <strong>by name</strong> - full-object
+replacement, no field-level merging.</p>
+<div class="table-container"><table><thead><tr><th>Layer (highest wins)</th><th>Who manages it</th><th>Where it lives</th></tr></thead><tbody><tr><td>HyperMDM Studio edits</td><td>Administrators</td><td>SettingsStore (default) or <code>var/config/agent/*.yaml</code></td></tr><tr><td>Container config</td><td>Project code</td><td><code>hypermdm_agent.agents.definitions</code>, auto-prepended YAML</td></tr><tr><td>Bundle presets</td><td>Bundle authors</td><td><code>hypermdm_agent.agents.paths</code> / <code>skills.paths</code> in bundles</td></tr></tbody></table></div>
+<p><strong>In practice:</strong> a bundle ships sensible defaults; a project overrides any of them from code; an administrator
+tweaks anything further at runtime from HyperMDM Studio without touching code. Upgrading a bundle never clobbers an
+administrator's edits. Every entry in HyperMDM Studio carries a <code>bundle</code> or <code>user</code> source badge.</p>
+<p>Full mechanics - export endpoint, reload paths, skill materialization - in <a class="" href="../Architecture/Configuration_System/index.html">Architecture → Configuration System</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

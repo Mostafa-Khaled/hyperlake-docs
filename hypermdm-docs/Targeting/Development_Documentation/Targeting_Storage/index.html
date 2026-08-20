@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Targeting Storage — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Targeting Storage</h1></header>
+<p>To persist data between requests, the targeting engine uses a targeting storage service responsible for persisting
+the given data. The storage always receives the <code>VisitorInfo</code> instance it should store or retrieve data for, and a
+<code>scope</code> that defines how the data is handled.</p>
+<p>There are two fixed scopes, used depending on what's needed:</p>
+<div class="table-container"><table><thead><tr><th>Scope</th><th>Description</th></tr></thead><tbody><tr><td><code>session</code></td><td>Valid for the current session, expires afterwards. Depending on the implementation, a session is defined either by a timeout of inactivity or natively by the storage system. The DB and Redis storages expire data after a set amount of time, while the Session and Cookie storages rely on the session and cookie lifetime.</td></tr><tr><td><code>visitor</code></td><td>Valid for the whole lifetime of the visitor. When a visitor returns with its unique ID, its data is still usable while session data would have expired.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuring-the-targeting-storage">Configuring the Targeting Storage<a href="#configuring-the-targeting-storage" class="hash-link" aria-label="Direct link to Configuring the Targeting Storage" title="Direct link to Configuring the Targeting Storage" translate="no">​</a></h2>
+<p>Define the targeting storage as a service, and configure its service ID with the following config entry:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_personalization</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">targeting</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain">           </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">storage_id</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> HyperMDM\Bundle\PersonalizationBundle\Targeting\Storage\CookieStorage</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="implement-a-custom-targeting-storage">Implement a Custom Targeting Storage<a href="#implement-a-custom-targeting-storage" class="hash-link" aria-label="Direct link to Implement a Custom Targeting Storage" title="Direct link to Implement a Custom Targeting Storage" translate="no">​</a></h2>
+<p>A targeting storage is a class implementing
+<a href="https://github.com/pimcore/ee-personalization-bundle/blob/2026.x/src/Targeting/Storage/TargetingStorageInterface.php" target="_blank" rel="noopener noreferrer" class=""><code>TargetingStorageInterface</code></a>,
+registered as a service. How you handle the data varies heavily by underlying storage, but you can take the
+<a href="https://github.com/pimcore/ee-personalization-bundle/tree/2026.x/src/Targeting/Storage" target="_blank" rel="noopener noreferrer" class="">shipped storages</a> as a
+starting point.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="core-storage-implementations">Core Storage Implementations<a href="#core-storage-implementations" class="hash-link" aria-label="Direct link to Core Storage Implementations" title="Direct link to Core Storage Implementations" translate="no">​</a></h2>
+<p>HyperMDM implements several storage engines, each with its own pros and cons. Start with the default
+implementation, <strong>JWT signed cookie</strong>, and switch to whichever engine best fits your requirements.</p>
+<p>Future releases may add storage implementations that combine features of multiple engines, for example a storage
+that picks between backends depending on whether the visitor already has a visitor ID.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="cookie-default">Cookie (default)<a href="#cookie-default" class="hash-link" aria-label="Direct link to Cookie (default)" title="Direct link to Cookie (default)" translate="no">​</a></h3>
+<p>Stores data in a cookie in the user's browser, either as plaintext or JWT-signed to prevent tampering with the
+cookie data. The cookie storage delegates the actual cookie read/write operations to a <code>CookieSaveHandler</code>. Below
+is an overview of the shipped save handlers:</p>
+<div class="table-container"><table><thead><tr><th>Handler</th><th>Description</th><th>Notes</th></tr></thead><tbody><tr><td><code>JWT</code> (default)</td><td>Stores cookie data as JWT signed JSON using the <code>kernel.secret</code> parameter to sign and verify the data. This is done to make sure the data can't be altered on the client side to inject malicious data into the targeting engine.</td><td></td></tr><tr><td><code>JSON</code></td><td>Stores cookie data as JSON string.</td><td>Use only for testing!</td></tr></tbody></table></div>
+<p>To change the save handler, override the
+<a href="https://github.com/pimcore/ee-personalization-bundle/blob/2026.x/config/targeting.yaml" target="_blank" rel="noopener noreferrer" class=""><code>CookieStorage</code> service definition</a>
+and set your own handler.</p>
+<div class="theme-admonition theme-admonition-danger admonition_xJq3 alert alert--danger"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Targeting-Development_Documentation-Targeting_Storage-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Targeting-Development_Documentation-Targeting_Storage-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Targeting-Development_Documentation-Targeting_Storage-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>danger</div><div class="admonitionContent_BuS1"><p>Plain text cookie data is inherently insecure and can open vulnerabilities by letting an attacker inject malicious
+data into the client cookie. Use only for testing.</p></div></div>
+<p>Default session scope timeout: 30 minutes. The JWT handler also enforces this by setting the signed data's
+expiration to the same timeout as the cookie, so even if someone changes the cookie lifetime on the client side,
+the data still expires when read on the backend.</p>
+<p>Pros</p>
+<ul>
+<li class="">Easy to use, no additional config needed, and it can store data without needing a visitor ID.</li>
+<li class="">Fast and easy to debug.</li>
+</ul>
+<p>Cons</p>
+<ul>
+<li class="">Cookie size is limited and bloats requests; only use it when the amount of generated targeting data stays small.</li>
+<li class="">Inherently insecure when used with an unsigned cookie.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="db">Db<a href="#db" class="hash-link" aria-label="Direct link to Db" title="Direct link to Db" translate="no">​</a></h3>
+<p>Stores data in the database.</p>
+<p>Default session scope timeout: 30 minutes</p>
+<p>Pros</p>
+<ul>
+<li class="">Easy to use as no additional config is needed</li>
+</ul>
+<p>Cons</p>
+<ul>
+<li class="">Can only store data when a visitor ID is present as the ID is part of the primary key</li>
+<li class="">DB can fill up quickly - not to be used on large sites</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="redis">Redis<a href="#redis" class="hash-link" aria-label="Direct link to Redis" title="Direct link to Redis" translate="no">​</a></h3>
+<p>Stores data in a Redis database. To use this storage, define a service using the storage implementation as its
+class and add connection details to the service definition. An example is shipped (commented out) in
+<a href="https://github.com/pimcore/ee-personalization-bundle/blob/2026.x/config/targeting.yaml" target="_blank" rel="noopener noreferrer" class=""><code>config/targeting.yaml</code></a>.</p>
+<p>Default session scope timeout: 30 minutes</p>
+<p>Pros</p>
+<ul>
+<li class="">Can efficiently handle large amounts of data</li>
+<li class="">Natively supports data expiration</li>
+</ul>
+<p>Cons</p>
+<ul>
+<li class="">Can only store data when a visitor ID is present as the ID is part of the key</li>
+<li class="">Needs a dedicated Redis DB independent of the cache one (needs to be configured on the service definition)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="session">Session<a href="#session" class="hash-link" aria-label="Direct link to Session" title="Direct link to Session" translate="no">​</a></h3>
+<p>Stores data in the session.</p>
+<p>Default session scope timeout: PHP session timeout</p>
+<p>To use the session storage, an additional config entry is needed as the session listeners are disabled by default for
+performance reasons:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm_personalization</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">targeting</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># enable session support</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">session</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">enabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># use the session storage</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">storage_id</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> HyperMDM\Bundle\PersonalizationBundle\Targeting\Storage\SessionStorage</span><br></span></code></pre></div></div>
+<p>Pros</p>
+<ul>
+<li class="">Easy to use as no additional config is needed</li>
+<li class="">Can store data without a visitor ID</li>
+</ul>
+<p>Cons</p>
+<ul>
+<li class="">Can't persistently store data for a visitor</li>
+<li class="">Session size is limited</li>
+<li class="">Slow depending on session storage</li>
+<li class="">Might not work properly in conjunction with full page caches. HyperMDM's full page cache is disabled when the session
+contains targeting data, but if using something else it might be difficult to handle. Use with care when using full
+page caches!</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

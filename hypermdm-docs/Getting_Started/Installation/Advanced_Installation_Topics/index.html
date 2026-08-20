@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Advanced Installation Topics — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Advanced Installation Topics</h1></header>
+<p>This section covers automating the HyperMDM installation, pre-configuring environment variables,
+and customizing the installer for project-specific needs.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="automated-installation">Automated Installation<a href="#automated-installation" class="hash-link" aria-label="Direct link to Automated Installation" title="Direct link to Automated Installation" translate="no">​</a></h2>
+<p>To fully automate the installation process, set all required values as environment variables
+and pass the <code>--no-interaction</code> flag:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">docker compose exec \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  -e DATABASE_URL='mysql://hypermdm:hypermdm@db:3306/hypermdm' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  -e HYPERMDM_ADMIN_USER=admin \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  -e HYPERMDM_ADMIN_PASSWORD='secure-password' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  -e HYPERMDM_PRODUCT_KEY='PK-3f9a8c1b2d4e5f60...' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  -e HYPERMDM_INSTANCE_IDENTIFIER='9f1c2e7a-3b4d-4f8a-9c1e-2d3f4a5b6c7d' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  -e HYPERMDM_ENCRYPTION_SECRET='def00000a1b2c3d4...' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  php vendor/bin/hypermdm-install \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    --install-profile='App\Installer\SkeletonProfile' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    --no-interaction</span><br></span></code></pre></div></div>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Getting_Started-Installation-Advanced_Installation_Topics-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Getting_Started-Installation-Advanced_Installation_Topics-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Getting_Started-Installation-Advanced_Installation_Topics-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p><code>docker compose exec</code> does not forward host-shell environment variables into the
+container automatically. Pass each variable explicitly with <code>-e VAR=value</code> (or
+<code>-e VAR</code> to forward a variable already exported in the host shell), or set the
+values in your <code>.env</code> / <code>docker-compose.yaml</code> so they are available to the <code>php</code>
+service at runtime.</p></div></div>
+<p>The <code>--no-interaction</code> flag suppresses all interactive prompts.
+All required values must be provided via environment variables or CLI options.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="environment-variables">Environment Variables<a href="#environment-variables" class="hash-link" aria-label="Direct link to Environment Variables" title="Direct link to Environment Variables" translate="no">​</a></h2>
+<p>The installer reads environment variables for all configuration values.
+Set these in your <code>.env</code>, <code>docker-compose.yaml</code>, or CI pipeline to avoid interactive prompts.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="core-variables-always-required">Core Variables (Always Required)<a href="#core-variables-always-required" class="hash-link" aria-label="Direct link to Core Variables (Always Required)" title="Direct link to Core Variables (Always Required)" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Variable</th><th>Description</th><th>Example</th></tr></thead><tbody><tr><td><code>DATABASE_URL</code></td><td>Doctrine DBAL connection URL</td><td><code>mysql://user:pass@host:3306/dbname</code></td></tr><tr><td><code>HYPERMDM_ADMIN_USER</code></td><td>Admin username</td><td><code>admin</code></td></tr><tr><td><code>HYPERMDM_ADMIN_PASSWORD</code></td><td>Admin password</td><td><code>secure-password</code></td></tr><tr><td><code>HYPERMDM_PRODUCT_KEY</code></td><td>Product key from the HyperMDM <a href="https://license.pimcore.com/register" target="_blank" rel="noopener noreferrer" class="">registration form</a>; validates the instance against HyperMDM licensing</td><td><code>PK-3f9a8c1b2d4e5f60...</code></td></tr><tr><td><code>HYPERMDM_INSTANCE_IDENTIFIER</code></td><td>Unique instance identifier; must be unique across all HyperMDM installations and match the key</td><td><code>9f1c2e7a-3b4d-4f8a-9c1e-2d3f4a5b6c7d</code></td></tr><tr><td><code>HYPERMDM_ENCRYPTION_SECRET</code></td><td>Defuse encryption secret (generate with <code>vendor/bin/generate-defuse-key</code>); combined with the instance identifier to derive the registration hash</td><td><code>def00000a1b2c3d4...</code></td></tr></tbody></table></div>
+<p>These three product registration values must match each other.
+See <a class="" href="../../Product_Registration/index.html">Product Registration</a> for how they are generated and validated.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="optional-variables-depending-on-install-profile">Optional Variables (Depending on Install Profile)<a href="#optional-variables-depending-on-install-profile" class="hash-link" aria-label="Direct link to Optional Variables (Depending on Install Profile)" title="Direct link to Optional Variables (Depending on Install Profile)" translate="no">​</a></h3>
+<p>The install profile determines which optional variables are available.
+If a variable is not set for an optional service, the installer skips that service.</p>
+<div class="table-container"><table><thead><tr><th>Variable</th><th>Description</th><th>Example</th></tr></thead><tbody><tr><td><code>HYPERMDM_OPENSEARCH_DSN</code></td><td>OpenSearch connection DSN (scheme <code>opensearch://</code>)</td><td><code>opensearch://admin:pass@opensearch:9200?ssl=true&amp;ssl_verify=false</code></td></tr><tr><td><code>HYPERMDM_ELASTICSEARCH_DSN</code></td><td>Elasticsearch connection DSN (scheme <code>elasticsearch://</code>)</td><td><code>elasticsearch://elastic:pass@elasticsearch:9200?ssl=true&amp;ssl_verify=true</code></td></tr><tr><td><code>HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX</code></td><td>Messenger transport DSN with trailing separator</td><td><code>doctrine://default?queue_name=</code></td></tr><tr><td><code>REDIS_URL</code></td><td>Redis connection URL for cache</td><td><code>redis://redis:6379</code></td></tr><tr><td><code>MAILER_DSN</code></td><td>Symfony Mailer DSN</td><td><code>smtp://mail:1025</code></td></tr><tr><td><code>GOTENBERG_BASE_URL</code></td><td>Gotenberg service URL for document conversion</td><td><code>http://gotenberg:3000</code></td></tr><tr><td><code>MERCURE_URL</code></td><td>Mercure hub URL (browser-side, public)</td><td><code>http://localhost/hub</code></td></tr><tr><td><code>MERCURE_SERVER_URL</code></td><td>Mercure hub URL (server-side, internal)</td><td><code>http://mercure/.well-known/mercure</code></td></tr><tr><td><code>MERCURE_JWT_KEY</code></td><td>Mercure JWT signing key (min 32 characters)</td><td><code>YourMercureJwtKey...</code></td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="messenger-transport-dsn">Messenger Transport DSN<a href="#messenger-transport-dsn" class="hash-link" aria-label="Direct link to Messenger Transport DSN" title="Direct link to Messenger Transport DSN" translate="no">​</a></h3>
+<p><code>HYPERMDM_MESSENGER_TRANSPORT_DSN_PREFIX</code> uses a trailing separator approach.
+The installer appends the queue name directly to the prefix to form the full DSN:</p>
+<div class="table-container"><table><thead><tr><th>Transport</th><th>Prefix Value</th><th>Resulting DSN (for queue <code>hypermdm_core</code>)</th></tr></thead><tbody><tr><td>Doctrine</td><td><code>doctrine://default?queue_name=</code></td><td><code>doctrine://default?queue_name=hypermdm_core</code></td></tr><tr><td>AMQP (RabbitMQ)</td><td><code>amqp://guest:guest@rabbit:5672/%2f/</code></td><td><code>amqp://guest:guest@rabbit:5672/%2f/hypermdm_core</code></td></tr><tr><td>Redis</td><td><code>redis://redis:6379/</code></td><td><code>redis://redis:6379/hypermdm_core</code></td></tr></tbody></table></div>
+<p>See <a class="" href="Symfony_Messenger/index.html">Symfony Messenger</a> for transport configuration details.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cli-options-reference">CLI Options Reference<a href="#cli-options-reference" class="hash-link" aria-label="Direct link to CLI Options Reference" title="Direct link to CLI Options Reference" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Option</th><th>Description</th></tr></thead><tbody><tr><td><code>--install-profile=FQCN</code></td><td><strong>Required.</strong> Fully qualified class name of the install profile.</td></tr><tr><td><code>--admin-username=NAME</code></td><td>Admin username (alternative to <code>HYPERMDM_ADMIN_USER</code> env var).</td></tr><tr><td><code>--admin-password=PASS</code></td><td>Admin password (alternative to <code>HYPERMDM_ADMIN_PASSWORD</code> env var).</td></tr><tr><td><code>--env-definition=FQCN</code></td><td>Additional <code>EnvVarDefinitionInterface</code> implementations (repeatable).</td></tr><tr><td><code>--post-install-commands=FQCN</code></td><td>Additional <code>PostInstallCommandsProviderInterface</code> implementations (repeatable).</td></tr><tr><td><code>--skip-validation</code></td><td>Skip all connection/format validation checks.</td></tr><tr><td><code>--skip-validation=KEY</code></td><td>Skip validation for a specific definition by key, class name, or FQCN (repeatable).</td></tr><tr><td><code>--no-interaction</code></td><td>Suppress all interactive prompts (requires all values via env vars or options).</td></tr></tbody></table></div>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Getting_Started-Installation-Advanced_Installation_Topics-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Getting_Started-Installation-Advanced_Installation_Topics-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Getting_Started-Installation-Advanced_Installation_Topics-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>caution</div><div class="admonitionContent_BuS1"><p>Using <code>--admin-username</code> and <code>--admin-password</code> on the command line exposes credentials in shell history
+and process listings. Prefer <code>HYPERMDM_ADMIN_USER</code> and <code>HYPERMDM_ADMIN_PASSWORD</code> environment variables instead.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="install-profiles-and-extension-points">Install Profiles and Extension Points<a href="#install-profiles-and-extension-points" class="hash-link" aria-label="Direct link to Install Profiles and Extension Points" title="Direct link to Install Profiles and Extension Points" translate="no">​</a></h2>
+<p>For details on what install profiles are, how to create custom profiles,
+and the available extension points for developers:</p>
+<ul>
+<li class=""><a class="" href="Install_Profiles/index.html">Install Profiles</a> -- overview, creating profiles, data sources, marker interfaces.</li>
+<li class=""><a class="" href="Env_Var_Definitions/index.html">Env Var Definitions</a> -- built-in definitions, creating custom definitions, <code>ConfigParameter</code>.</li>
+<li class=""><a class="" href="Post_Install_Commands/index.html">Post-Install Commands</a> -- automatic post-install commands, CLI injection, <code>PostInstallHookInterface</code>.</li>
+<li class=""><a class="" href="Install_Step_Filtering/index.html">Install Step Filtering</a> -- skipping install steps for PaaS environments.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="skipping-validation">Skipping Validation<a href="#skipping-validation" class="hash-link" aria-label="Direct link to Skipping Validation" title="Direct link to Skipping Validation" translate="no">​</a></h2>
+<p>By default, the installer validates all collected values (e.g., testing the database connection,
+pinging OpenSearch). To skip validation during development:</p>
+<blockquote>
+<p>When running via Docker, prepend <code>docker compose exec php</code> to the commands below.</p>
+</blockquote>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># Skip all validation</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">vendor/bin/hypermdm-install --install-profile='App\Installer\MyProfile' --skip-validation</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># Skip validation for specific definitions only</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">vendor/bin/hypermdm-install --install-profile='App\Installer\MyProfile' \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  --skip-validation=database \</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  --skip-validation=opensearch</span><br></span></code></pre></div></div>
+<p>The <code>--skip-validation</code> option accepts definition keys (e.g., <code>database</code>, <code>opensearch</code>),
+short class names (e.g., <code>DatabaseEnvVarDefinition</code>), or fully qualified class names.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="set-a-time-zone">Set a Time Zone<a href="#set-a-time-zone" class="hash-link" aria-label="Direct link to Set a Time Zone" title="Direct link to Set a Time Zone" translate="no">​</a></h2>
+<p>Set the time zone in your configuration. It is used for displaying date/time values in HyperMDM Studio.</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">hypermdm</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">general</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">timezone</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> Europe/Berlin</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="office-document-preview">Office Document Preview<a href="#office-document-preview" class="hash-link" aria-label="Direct link to Office Document Preview" title="Direct link to Office Document Preview" translate="no">​</a></h2>
+<p>The document preview feature is optional. To use it, either run Gotenberg
+(a Docker-powered API) or install LibreOffice on the server.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="gotenberg">Gotenberg<a href="#gotenberg" class="hash-link" aria-label="Direct link to Gotenberg" title="Direct link to Gotenberg" translate="no">​</a></h3>
+<p>Add Gotenberg to your Docker Compose services stack as described in the
+<a href="https://gotenberg.dev/docs/getting-started/installation#docker-compose" target="_blank" rel="noopener noreferrer" class="">Gotenberg installation guide</a>.</p>
+<p>Configure the Docker services:</p>
+<ul>
+<li class=""><code>hypermdm.gotenberg.base_url</code> (defaults to <code>http://gotenberg:3000</code>)</li>
+<li class=""><code>hypermdm.documents.preview_url_prefix</code> (e.g. <code>http://nginx:80</code>)</li>
+</ul>
+<p>Install the required PHP library:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require gotenberg/gotenberg-php ^2.0</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="libreoffice">LibreOffice<a href="#libreoffice" class="hash-link" aria-label="Direct link to LibreOffice" title="Direct link to LibreOffice" translate="no">​</a></h3>
+<p>LibreOffice and the related tools (pdftotext, Ghostscript) are pre-installed in the official
+<a href="https://hub.docker.com/r/pimcore/pimcore" target="_blank" rel="noopener noreferrer" class="">HyperMDM Docker images</a>.
+For custom setups on Debian-based Linux distributions, install them with:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">sudo apt-get install libreoffice libreoffice-script-provider-python libreoffice-math xfonts-75dpi poppler-utils ghostscript</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

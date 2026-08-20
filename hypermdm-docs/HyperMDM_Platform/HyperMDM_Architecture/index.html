@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperMDM Architecture — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>HyperMDM Architecture</h1></header>
+<p>HyperMDM is built on PHP and the Symfony framework,
+following a layered architecture that separates presentation, application logic, core data management, and persistence.
+This design allows multiple interfaces - from HyperMDM Studio to websites to external API clients -
+to operate on the same underlying data through a shared core.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="architecture-layers">Architecture Layers<a href="#architecture-layers" class="hash-link" aria-label="Direct link to Architecture Layers" title="Direct link to Architecture Layers" translate="no">​</a></h2>
+<!-- -->
+<p><strong>Presentation Layer</strong> - Multiple interfaces access the same HyperMDM Core.
+HyperMDM Studio is a React-based single-page application for data management, configuration, and administration.
+Websites and web applications can use Twig templates rendered by Symfony controllers,
+or consume content headlessly via REST or GraphQL APIs.
+Background tasks and maintenance run via Symfony Console commands.</p>
+<p><strong>Application Layer</strong> - Two distinct paths serve different use cases.
+The Studio Backend exposes a REST API defined with OpenAPI, consumed by HyperMDM Studio and other API clients.
+For website delivery, standard Symfony MVC controllers handle routing, business logic, and template rendering.
+Extensions and bundles hook into both paths via HyperMDM's plugin architecture and Symfony's service container.</p>
+<p><strong>HyperMDM Core</strong> - The shared foundation that all application paths rely on.
+Documents, Data Objects, and Assets provide the three base data types.
+Cross-cutting services like event dispatching, versioning, workflow management,
+internationalization, and scheduling operate across all data types.
+Extensions interact with the core through a well-defined PHP API and event system.</p>
+<p><strong>Persistence Layer</strong> - Storage is abstracted from the core.
+Structured data lives in MySQL or MariaDB via Doctrine DBAL.
+File storage uses Flysystem, supporting local disk, S3, or other adapters.
+Caching is handled by Redis or Symfony's cache component.
+Search indexing uses OpenSearch or Elasticsearch via the Generic Data Index.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="technology-stack">Technology Stack<a href="#technology-stack" class="hash-link" aria-label="Direct link to Technology Stack" title="Direct link to Technology Stack" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Component</th><th>Technology</th></tr></thead><tbody><tr><td>Language</td><td>PHP 8.5+</td></tr><tr><td>Framework</td><td>Symfony 7</td></tr><tr><td>Database</td><td>MySQL 8.0+ / MariaDB 10.11+</td></tr><tr><td>Templating</td><td>Twig</td></tr><tr><td>Database Abstraction</td><td>Doctrine DBAL</td></tr><tr><td>Async Processing</td><td>Symfony Messenger</td></tr><tr><td>Package Management</td><td>Composer</td></tr><tr><td>Studio UI</td><td>React, Ant Design</td></tr><tr><td>Search Index</td><td>OpenSearch / Elasticsearch</td></tr><tr><td>File Storage</td><td>Flysystem</td></tr><tr><td>Caching</td><td>Redis, Symfony Cache</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="two-application-patterns">Two Application Patterns<a href="#two-application-patterns" class="hash-link" aria-label="Direct link to Two Application Patterns" title="Direct link to Two Application Patterns" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-studio">HyperMDM Studio<a href="#hypermdm-studio" class="hash-link" aria-label="Direct link to Pimcore Studio" title="Direct link to Pimcore Studio" translate="no">​</a></h3>
+<p>HyperMDM Studio provides the administration interface. It consists of two parts:</p>
+<ul>
+<li class=""><strong>Studio Backend</strong>: A Symfony-based API layer exposing REST endpoints documented with OpenAPI.
+Handles authentication, authorization, data operations, and all administrative functions.</li>
+<li class=""><strong>Studio UI</strong>: A React single-page application built with Ant Design.
+Communicates exclusively with the Studio Backend API. Extensible through a plugin architecture.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="website-delivery">Website Delivery<a href="#website-delivery" class="hash-link" aria-label="Direct link to Website Delivery" title="Direct link to Website Delivery" translate="no">​</a></h3>
+<p>Websites and public-facing applications can be built in two ways:</p>
+<ul>
+<li class=""><strong>Server-rendered (MVC)</strong>: Symfony controllers handle routing and request processing.
+Twig templates render the frontend, with access to HyperMDM editables for CMS functionality.
+HyperMDM's document tree provides URL routing, complemented by Symfony's standard routing.</li>
+<li class=""><strong>Headless</strong>: Content is delivered via REST or GraphQL APIs
+(through the <a class="" href="../HyperMDM_Modules/index.html#data-onboarding--distribution">Datahub</a> module),
+consumed by decoupled frontends, mobile apps, or external systems.</li>
+</ul>
+<p>Both patterns share the HyperMDM Core and persistence layer.
+Data created or modified through HyperMDM Studio is immediately available for website delivery and vice versa.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

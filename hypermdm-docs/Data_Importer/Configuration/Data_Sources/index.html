@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Sources — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Data Sources</h1></header>
+<p>Every import configuration reads from exactly one data source. Pick it in the <strong>Data Source</strong> step of the <strong>Data Setup</strong>
+tab, together with a matching <a class="" href="../File_Formats/index.html">file format</a>.</p>
+<p>Five of the six data sources pull data: the importer fetches the file when the import starts. <code>Push</code> is the exception,
+it waits for data to be sent to it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="asset">Asset<a href="#asset" class="hash-link" aria-label="Direct link to Asset" title="Direct link to Asset" translate="no">​</a></h2>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Data_Sources-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Data_Sources-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Source Asset</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/datasource_asset-6b30cb5fedbab8ecadc46ac63af29f0a.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Data_Sources-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/datasource_asset-6b30cb5fedbab8ecadc46ac63af29f0a.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Data_Sources-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Data_Sources-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Source Asset</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/datasource_asset-6b30cb5fedbab8ecadc46ac63af29f0a.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Data_Sources-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/datasource_asset-6b30cb5fedbab8ecadc46ac63af29f0a.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Data_Sources-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Data_Sources-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Source Asset</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/datasource_asset-6b30cb5fedbab8ecadc46ac63af29f0a.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Data_Sources-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Loads data from an asset stored in HyperMDM. Use it when another process drops the file into the asset tree.</p>
+<p><strong>Configuration options</strong></p>
+<ul>
+<li class=""><strong>Asset Path</strong>: path of the asset to read.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upload">Upload<a href="#upload" class="hash-link" aria-label="Direct link to Upload" title="Direct link to Upload" translate="no">​</a></h2>
+<p>Loads data from a file uploaded directly to the import configuration. Use it for one-off imports and to test a
+configuration before automating it.</p>
+<p>Upload the file in the <strong>Data Source</strong> step. The panel shows whether a file is currently uploaded. Uploaded files are
+stored outside the asset tree, under <code>var/tmp/datahub/dataimporter/upload</code>.</p>
+<p><strong>Configuration options</strong></p>
+<ul>
+<li class=""><strong>Upload File</strong>: opens the upload dialog.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="http">HTTP<a href="#http" class="hash-link" aria-label="Direct link to HTTP" title="Direct link to HTTP" translate="no">​</a></h2>
+<p>Loads data from a remote HTTP location.</p>
+<p><strong>Configuration options</strong></p>
+<ul>
+<li class=""><strong>Schema</strong>: <code>http://</code> or <code>https://</code>, prepended to the URL.</li>
+<li class=""><strong>URL</strong>: URL without the schema. The schema is kept separate for security reasons.</li>
+</ul>
+<p>The loader uses <a href="https://www.php.net/manual/en/wrappers.http.php" target="_blank" rel="noopener noreferrer" class="">PHP HTTP wrappers</a> internally.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Data_Sources-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Data_Sources-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Data_Sources-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>Do not put credentials into the URL. <code>HttpLoader</code> includes the full URL in the exception message it throws when a fetch
+fails, so a <code>user:password@example.com</code> URL leaks the password into application logs and error reporting. For
+authenticated endpoints, either expose the file through a mechanism that does not carry the secret in the URL, or
+implement a <a class="" href="../../Extending/Custom_Strategies/index.html">custom loader</a> that sends the credentials in a request header.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sftp">SFTP<a href="#sftp" class="hash-link" aria-label="Direct link to SFTP" title="Direct link to SFTP" translate="no">​</a></h2>
+<p>Loads data from a remote SFTP location.</p>
+<p><strong>Configuration options</strong></p>
+<ul>
+<li class=""><strong>Host</strong></li>
+<li class=""><strong>Port</strong></li>
+<li class=""><strong>Username</strong></li>
+<li class=""><strong>Password</strong></li>
+<li class=""><strong>Remote Path</strong>: absolute path on the remote location.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="push">Push<a href="#push" class="hash-link" aria-label="Direct link to Push" title="Direct link to Push" translate="no">​</a></h2>
+<p>Does not fetch anything. It exposes an HTTP endpoint that data is pushed to with a POST request, and every push starts
+an import.</p>
+<p>Send the data in the configured file format as the raw body of the POST request. The loader reads it via <code>php://input</code>.</p>
+<p>The endpoint is:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">http(s)://&lt;YOUR_DOMAIN&gt;/hypermdm-datahub-import/&lt;IMPORT_CONFIGURATION_NAME&gt;/push</span><br></span></code></pre></div></div>
+<p><strong>Configuration options</strong></p>
+<ul>
+<li class=""><strong>API Key</strong>: must be sent as the <code>authorization</code> header on every push request. It has to be at least 16 characters
+long.</li>
+<li class=""><strong>Ignore Not Empty Queue</strong>: by default an import only starts when the import queue of this configuration is empty, so
+pushing data while the queue still holds items returns an error. Enable this flag to queue the pushed data regardless.
+See <a class="" href="../../Import_Execution_Details/index.html">Import Execution Details</a>.</li>
+</ul>
+<div class="theme-admonition theme-admonition-note admonition_xJq3 alert alert--secondary"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Data_Sources-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Data_Sources-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Data_Sources-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>note</div><div class="admonitionContent_BuS1"><p>The <code>Push</code> data source cannot be started manually. An import is triggered only by a request to the endpoint.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sql">SQL<a href="#sql" class="hash-link" aria-label="Direct link to SQL" title="Direct link to SQL" translate="no">​</a></h2>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Data_Sources-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Data_Sources-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Source SQL</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/datasource_sql-4afd43abdf94f7a9773957339bb57f81.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Data_Sources-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/datasource_sql-4afd43abdf94f7a9773957339bb57f81.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Data_Sources-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Data_Sources-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Source SQL</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/datasource_sql-4afd43abdf94f7a9773957339bb57f81.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Data_Sources-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/datasource_sql-4afd43abdf94f7a9773957339bb57f81.png"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Data_Sources-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Data_Sources-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Data Source SQL</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/datasource_sql-4afd43abdf94f7a9773957339bb57f81.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Data_Sources-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Loads data from a configured Doctrine connection. It uses
+<a href="https://www.doctrine-project.org/projects/dbal.html" target="_blank" rel="noopener noreferrer" class="">DBAL</a>, so every database DBAL supports works, provided the
+connection is declared in the Symfony configuration (conventionally <code>database.yaml</code>).</p>
+<p>Example connection:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">doctrine</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">dbal</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">connections</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">new_connection</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">host</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> db</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">port</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'3306'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">user</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> sample_user</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">password</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> sample_password</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">dbname</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> sample_dbname</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token key atrule" style="color:#00a4db">driver</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> any_supported_by_doctrine</span><br></span></code></pre></div></div>
+<p>Some drivers need additional configuration.</p>
+<p><strong>Configuration options</strong></p>
+<ul>
+<li class=""><strong>Database Connection</strong>: the connection to read from.</li>
+<li class=""><strong>SELECT</strong>: a valid SQL <code>SELECT</code> clause.</li>
+<li class=""><strong>FROM</strong>: a valid SQL <code>FROM</code> clause.</li>
+<li class=""><strong>WHERE</strong>: a valid SQL <code>WHERE</code> clause.</li>
+<li class=""><strong>GROUP BY</strong>: a valid SQL <code>GROUP BY</code> clause.</li>
+</ul>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Data_Importer-Configuration-Data_Sources-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Data_Importer-Configuration-Data_Sources-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Data_Importer-Configuration-Data_Sources-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>Select <strong>SQL</strong> as the file format as well. The SQL file format reads the query result of this data source.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="custom-data-sources">Custom Data Sources<a href="#custom-data-sources" class="hash-link" aria-label="Direct link to Custom Data Sources" title="Direct link to Custom Data Sources" translate="no">​</a></h2>
+<p>Add a data source of your own with a custom loader. See <a class="" href="../../Extending/Custom_Strategies/index.html">Custom Strategies</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

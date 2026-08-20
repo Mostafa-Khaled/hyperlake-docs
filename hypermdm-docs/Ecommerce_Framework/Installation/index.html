@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Installation and First Configuration — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Installation and First Configuration</h1></header>
+<p>This section describes the installation of the E-Commerce Framework and the first steps of configuration.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="installation">Installation<a href="#installation" class="hash-link" aria-label="Direct link to Installation" title="Direct link to Installation" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="minimum-requirements">Minimum Requirements<a href="#minimum-requirements" class="hash-link" aria-label="Direct link to Minimum Requirements" title="Direct link to Minimum Requirements" translate="no">​</a></h3>
+<ul>
+<li class="">HyperMDM &gt;= 11.0</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="install">Install<a href="#install" class="hash-link" aria-label="Direct link to Install" title="Direct link to Install" translate="no">​</a></h3>
+<p>Install bundle via composer:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">composer require hypermdm/ecommerce-framework-bundle</span><br></span></code></pre></div></div>
+<p>Enable bundle via console or extensions manager:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console hypermdm:bundle:install HyperMDMEcommerceFrameworkBundle</span><br></span></code></pre></div></div>
+<p>Check if the bundle has been installed:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console hypermdm:bundle:list</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">+---------------------------------+---------+-----------+----+-----+-----+</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">| Bundle                          | Enabled | Installed | I? | UI? | UP? |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">+---------------------------------+---------+-----------+----+-----+-----+</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">| HyperMDMEcommerceFrameworkBundle  | ✔     | ✔        | ❌  | ✔ | ❌ |</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">+---------------------------------+---------+-----------+----+-----+-----+</span><br></span></code></pre></div></div>
+<p>The installer does following tasks:</p>
+<ul>
+<li class="">Install several field collections.</li>
+<li class="">Install several object classes.</li>
+<li class="">Install several object bricks.</li>
+<li class="">Create additional tables for carts, pricing rules, vouchers, etc.</li>
+<li class="">Import translations for HyperMDM Admin UI and Order Backend.</li>
+<li class="">Add additional permissions.</li>
+</ul>
+<p>If either classes, field collections, object bricks or tables already exist, the installation cannot be started.</p>
+<p>After this installation routine, additional configurations have to be made - most important Product and ProductCategory.
+Please see <a class="" href="../Configuration/index.html">Configuration</a> for further information on available options.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configure-product-and-product-category-class">Configure Product and Product Category Class<a href="#configure-product-and-product-category-class" class="hash-link" aria-label="Direct link to Configure Product and Product Category Class" title="Direct link to Configure Product and Product Category Class" translate="no">​</a></h2>
+<p>The E-Commerce Framework installation does not create classes for products and product categories. That is because the
+framework does not limit you on specific classes or class structures. Literally every class can act as a product or product
+category class, and it is also possible to have several product classes (if necessary).</p>
+<p>The only requirement is, that the classes have to be 'prepared' for being products or product categories.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="product">Product<a href="#product" class="hash-link" aria-label="Direct link to Product" title="Direct link to Product" translate="no">​</a></h3>
+<p>There are two ways of preparing a HyperMDM class for product-usage in the E-Commerce Framework</p>
+<ol>
+<li class="">The HyperMDM class needs to extend the abstract class <code>\HyperMDM\Bundle\EcommerceFrameworkBundle\Model\AbstractProduct</code>
+<ul>
+<li class="">
+<p>This is useful, when both product index and checkout functionality are based on the E-Commerce Framework.</p>
+</li>
+</ul>
+</li>
+<li class="">Make sure that the HyperMDM class implements either <code>\HyperMDM\Bundle\EcommerceFrameworkBundle\Model\IndexableInterface</code> or
+<code>\HyperMDM\Bundle\EcommerceFrameworkBundle\Model\CheckoutableInterface</code> - or both, depending on the use case it is used for.<!-- -->
+<ul>
+<li class="">This is useful, when e.g. only checkout functionality is based on the E-Commerce Framework, but not the product
+presentation.</li>
+<li class="">The interfaces define methods that are needed for the two use cases and need to be implemented.</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>For the abstract class use the parent class functionality of HyperMDM. For implementing the interfaces use either
+the parent class functionality or the overriding models functionality of HyperMDM
+(see also <a href="https://github.com/pimcore/pimcore/tree/11.x/doc/20_Extending_Pimcore/03_Overriding_Models.md" target="_blank" rel="noopener noreferrer" class="">Overriding Models</a>).</p>
+</blockquote>
+<blockquote>
+<p>If using the abstract class, also have a look at its <a href="https://github.com/pimcore/ecommerce-framework-bundle/tree/1.x/src/Model/AbstractProduct.php" target="_blank" rel="noopener noreferrer" class="">implementation</a>.
+You might need to override a few methods that cannot be implemented by the abstract class and throw an
+exception depending on the use case you are using it.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="product-category">Product Category<a href="#product-category" class="hash-link" aria-label="Direct link to Product Category" title="Direct link to Product Category" translate="no">​</a></h3>
+<p>When a product category class is used, this class needs to extend the abstract class
+<code>\HyperMDM\Bundle\EcommerceFrameworkBundle\Model\AbstractCategory</code>.</p>
+<blockquote>
+<p>For product categories only one HyperMDM class should be used. For products, several HyperMDM classes can be used.
+Possibly the index update scripts need to be adapted.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuring-hypermdm-ecommerce-framework">Configuring HyperMDM Ecommerce Framework<a href="#configuring-hypermdm-ecommerce-framework" class="hash-link" aria-label="Direct link to Configuring Pimcore Ecommerce Framework" title="Direct link to Configuring Pimcore Ecommerce Framework" translate="no">​</a></h2>
+<p>The E-Commerce Framework is split up into multiple components which can be configured individually. For further reading please see:</p>
+<ul>
+<li class=""><a class="" href="../Configuration/index.html">Configuration</a> describes configuration features valid for the whole framework configuration</li>
+<li class=""><a class="" href="../Configuration/HyperMDMEcommerceFrameworkBundle_Configuration_Reference/index.html">HyperMDMEcommerceFrameworkBundle Configuration Reference</a>
+contains a reference of the whole configuration tree</li>
+</ul>
+<p>Please see the following sections for a description of each component and a configuration reference describing
+the configuration entries relevant to the component:</p>
+<ul>
+<li class=""><a class="" href="../Cart_Manager/index.html">Cart Manager</a></li>
+<li class=""><a class="" href="../Working_with_Prices/index.html">Price Systems</a></li>
+<li class=""><a class="" href="../Working_with_Availabilities/index.html">Availability Systems</a></li>
+<li class=""><a class="" href="../Checkout_Manager/index.html">Checkout Manager and Checkout Steps</a></li>
+<li class=""><a class="" href="../Payment/index.html">Payment Providers</a></li>
+<li class=""><a class="" href="../Index_Service/index.html">Index Service and which attributes should be in the Product Index</a></li>
+<li class=""><a class="" href="../Working_with_Prices/Pricing_Rules/index.html">Pricing Manager</a></li>
+<li class="">...</li>
+</ul>
+<p>For detailed information see comments within the configuration file. Depending on your use case, you might not need
+all components configured in the configuration file.</p>
+<blockquote>
+<p>During development, you will return to the configuration and adjust the settings multiple times.</p>
+</blockquote></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

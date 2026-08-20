@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Technical Aspects — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Technical Aspects</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="workflow-definition-persistence">Workflow Definition Persistence<a href="#workflow-definition-persistence" class="hash-link" aria-label="Direct link to Workflow Definition Persistence" title="Direct link to Workflow Definition Persistence" translate="no">​</a></h2>
+<p>The workflow designer creates standard HyperMDM workflow definitions which are loaded by the symfony configuration tree.
+All workflows defined with the workflow designer are stored accordingly to the configuration entry
+<code>hypermdm_workflow_designer.configuration_file_path</code>.</p>
+<p>Additional information for the workflow designer (like description, folder, the diagram and some mappings) is packed
+into the
+<code>custom_extensions</code> node of the HyperMDM workflow configuration and read from there.</p>
+<p>In the workflow designer, only workflows created with the workflow designer and saved in the file located under the
+<code>configuration_file_path</code> configuration are listed.</p>
+<p>There might be additional workflows defined in the system. They are also applied to their subjects, but they cannot be
+configured in the workflow designer.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="diagram-synchronization">Diagram Synchronization<a href="#diagram-synchronization" class="hash-link" aria-label="Direct link to Diagram Synchronization" title="Direct link to Diagram Synchronization" translate="no">​</a></h2>
+<p>The workflow diagram for the visual workflow definition and the actual workflow definition of places, transitions and
+global actions need to be synchronized. This happens with following rules:</p>
+<ul>
+<li class="">When opening a workflow in workflow designer and no diagram exists, a diagram is created automatically with some
+simple
+layouting logic.</li>
+<li class="">When opening a workflow in workflow designer and a diagram exists, it is synchronized with the places, transitions and
+global actions definitions of the workflow - means missing elements are added to the diagram, and zombie elements in
+the
+diagram are removed.</li>
+<li class="">When saving a workflow in the workflow designer, all the workflow elements (places, transitions, global actions) are
+extracted from the diagram and added to the workflow configuration.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="events">Events<a href="#events" class="hash-link" aria-label="Direct link to Events" title="Direct link to Events" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="cache-invalidation">Cache Invalidation<a href="#cache-invalidation" class="hash-link" aria-label="Direct link to Cache Invalidation" title="Direct link to Cache Invalidation" translate="no">​</a></h3>
+<p><code>workflow_designer.cache_invalidation</code> is dispatched when a workflow is deleted, and when it is saved with
+<strong>Save and Rebuild</strong>. A plain <strong>Save</strong> does not dispatch it.</p>
+<p>The bundle subscribes to this event itself to rebuild the Symfony container, which is what makes a changed workflow take
+effect. Listen for it to additionally drop your own caches that depend on the workflow definitions.</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">namespace</span><span class="token plain"> </span><span class="token package">App</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">EventListener</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Bundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">WorkflowDesignerBundle</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Event</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Studio</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">WorkflowCacheInvalidationEvent</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">Symfony</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Component</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">EventDispatcher</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Attribute</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">AsEventListener</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token attribute delimiter punctuation" style="color:#393A34">#[</span><span class="token attribute attribute-content attribute-class-name class-name">AsEventListener</span><span class="token attribute attribute-content punctuation" style="color:#393A34">(</span><span class="token attribute attribute-content attribute-class-name class-name">event</span><span class="token attribute attribute-content punctuation" style="color:#393A34">:</span><span class="token attribute attribute-content"> </span><span class="token attribute attribute-content attribute-class-name class-name">WorkflowCacheInvalidationEvent</span><span class="token attribute attribute-content operator" style="color:#393A34">::</span><span class="token attribute attribute-content constant" style="color:#36acaa">EVENT_NAME</span><span class="token attribute attribute-content punctuation" style="color:#393A34">)</span><span class="token attribute delimiter punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">final</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">class</span><span class="token plain"> </span><span class="token class-name-definition class-name">WorkflowCacheListener</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">__invoke</span><span class="token punctuation" style="color:#393A34">(</span><span class="token class-name type-declaration">WorkflowCacheInvalidationEvent</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$event</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword return-type" style="color:#00009f">void</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic">// invalidate caches that depend on workflow definitions</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-api-pre-response-events">Studio API Pre-Response Events<a href="#studio-api-pre-response-events" class="hash-link" aria-label="Direct link to Studio API Pre-Response Events" title="Direct link to Studio API Pre-Response Events" translate="no">​</a></h3>
+<p>The designer is a HyperMDM Studio plugin backed by Studio Backend endpoints. Before one of those endpoints returns, the
+bundle dispatches a pre-response event carrying the response schema. Listen for it to add your own data to the response.</p>
+<div class="table-container"><table><thead><tr><th>Event name</th><th>Dispatched when</th></tr></thead><tbody><tr><td><code>pre_response.workflow_designer.workflow_list</code></td><td>Once per workflow in the list, before the list is returned.</td></tr><tr><td><code>pre_response.workflow_designer.workflow_detail</code></td><td>A single workflow is returned.</td></tr><tr><td><code>pre_response.workflow_designer.workflow_create</code></td><td>A new workflow is initialized and returned. It is not persisted yet, that happens on the following save.</td></tr></tbody></table></div>
+<p>See the Studio Backend
+<a class="" href="../../Studio_Backend/Extending/Additional_and_Custom_Attributes/index.html">Additional and Custom Attributes documentation</a>
+for the listener pattern.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Worfklow_Designer-Technical_Aspects-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Worfklow_Designer-Technical_Aspects-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Worfklow_Designer-Technical_Aspects-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The endpoints themselves are not a supported public API. Their controllers are marked <code>@internal</code> and may change in any
+release without a deprecation path. Do not build integrations against them.</p></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Information — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Information</h1></header>
+<p>The following steps are necessary during updating to newer versions.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202546">Upgrade to 2025.4.6<a href="#upgrade-to-202546" class="hash-link" aria-label="Direct link to Upgrade to 2025.4.6" title="Direct link to Upgrade to 2025.4.6" translate="no">​</a></h2>
+<ul>
+<li class="">[GDPR Objects Export] Fixed: the data object export now includes inherited values (including inherited localized fields).</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> the structure of the exported data changed slightly to align with the Studio API data structure (e.g., relations are now exported as structured element data instead of plain <code>id</code>/<code>type</code> pairs).</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202545">Upgrade to 2025.4.5<a href="#upgrade-to-202545" class="hash-link" aria-label="Direct link to Upgrade to 2025.4.5" title="Direct link to Upgrade to 2025.4.5" translate="no">​</a></h2>
+<ul>
+<li class="">[Grid Configuration] Fixed: Changed the length of <code>classId</code> column in <code>bundle_studio_grid_configurations</code> and <code>bundle_studio_grid_configuration_favorites</code> tables from 10 to 50 characters to support longer class IDs.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="migration-execution-required">Migration execution required<a href="#migration-execution-required" class="hash-link" aria-label="Direct link to Migration execution required" title="Direct link to Migration execution required" translate="no">​</a></h3>
+<p>After upgrading, please execute the migration to apply the necessary database changes.</p>
+<blockquote>
+<p><strong>Note:</strong> Grid configurations that were previously saved with a class ID longer than 10 characters have a truncated <code>classId</code> value in the database and will not be recovered by this migration. These configurations need to be deleted and re-saved after upgrading.</p>
+</blockquote></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

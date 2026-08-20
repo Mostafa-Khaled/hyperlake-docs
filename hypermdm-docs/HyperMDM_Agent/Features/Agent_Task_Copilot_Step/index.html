@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Task Automation-Action Step (agent_task) — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Agent Task Automation-Action Step (<code>agent_task</code>)</h1></header>
+<p>The bundle ships an automation-action step, <code>agent_task</code>, for the HyperMDM Copilot bundle's automation actions
+(Generic Execution Engine). It is the first consumer of the <a class="" href="../Agent_Tasks/index.html">headless agent task</a> facade and the
+reason the concurrency cap below exists. The step registers itself and appears in the step picker automatically
+whenever the Copilot bundle is installed, with no configuration in the Copilot bundle needed.</p>
+<blockquote>
+<p><strong>Naming note.</strong> "Copilot" here is the <strong>HyperMDM Copilot</strong> bundle (automation actions / Generic Execution
+Engine), not the GitHub Copilot SDK this bundle's own <a class="" href="../../Getting_Started/Concepts/index.html#adapter">Core Concepts</a>
+uses as its LLM adapter. The two are unrelated products that happen to share a name.</p>
+</blockquote>
+<p>The step runs the agent exactly like a HyperMDM Studio chat session does - same tools, same permissions - except no
+human is watching: it must finish the task itself and call <code>finalize_task</code> exactly once.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token key atrule" style="color:#00a4db">agent</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'data-management'</span><span class="token plain">               </span><span class="token comment" style="color:#999988;font-style:italic"># Required: agent configuration name</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">instructions</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">|</span><span class="token plain">                        </span><span class="token comment" style="color:#999988;font-style:italic"># Required: task instructions, in addition to selected elements</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  Review the selected products and fix any missing SEO meta descriptions.</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">output_schema</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain">                         </span><span class="token comment" style="color:#999988;font-style:italic"># Optional JSON Schema (written as YAML) the output must validate against</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> object</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">additionalProperties</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">required</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain">processed</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> summary</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key atrule" style="color:#00a4db">properties</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">processed</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> integer </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">summary</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token key atrule" style="color:#00a4db">type</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> string </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">reviewer</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'jdoe'</span><span class="token plain">                       </span><span class="token comment" style="color:#999988;font-style:italic"># Optional HyperMDM username who reviews; falls back to the acting user when empty</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">timeout_seconds</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">900</span><span class="token plain">                   </span><span class="token comment" style="color:#999988;font-style:italic"># How long the step waits, including time queued for a free task slot</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">context_key</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'agent_result'</span><span class="token plain">            </span><span class="token comment" style="color:#999988;font-style:italic"># Job-run context key the result envelope is written under</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">continue_session_from</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">''</span><span class="token plain">              </span><span class="token comment" style="color:#999988;font-style:italic"># Optional: context_key of an earlier agent_task step to resume</span><br></span></code></pre></div></div>
+<ul>
+<li class="">
+<p><strong>Writing <code>output_schema</code>.</strong> The whole automation action is YAML, so <code>output_schema</code> is written as YAML that maps
+to a JSON Schema. The bundle parses it to a PHP array and validates the agent's <code>output</code> with opis/json-schema.
+The example above is equivalent to this JSON Schema:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{ "type": "object", "additionalProperties": false, "required": ["processed", "summary"],</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "properties": { "processed": { "type": "integer" }, "summary": { "type": "string" } } }</span><br></span></code></pre></div></div>
+<p>Values must be real YAML types (<code>false</code>, not <code>"false"</code>). A common mistake when editing the schema in the Studio
+automation-action editor is quoting booleans or strings, which produces an invalid schema and fails the step
+early.</p>
+</li>
+<li class="">
+<p><strong><code>reviewer</code> is a HyperMDM username, not a user id.</strong> The step resolves the configured username to a user id when
+it runs (<code>UserResolverInterface::getByName()</code>). A non-empty but unresolvable username aborts the step. Leaving it
+empty is valid - the session owner then falls back to the task's acting user, per
+<a class="" href="../Agent_Tasks/index.html#access-and-review">Agent Tasks → Access and review</a>. (The PHP facade and the
+<code>hypermdm-agent:task:run</code> command instead take a numeric user id in <code>designatedUserId</code> / <code>--reviewer</code>; only this
+step takes a username, because that is what reads naturally in an automation-action editor.)</p>
+</li>
+<li class="">
+<p><strong>Origin badge.</strong> The step sets the task's <code>origin</code> to <code>copilot-&lt;ACTION_NAME&gt;</code>, where <code>ACTION_NAME</code> is the
+executed automation action's configuration name (the automation action, not this <code>agent_task</code> step - one
+action can chain several steps), or <code>copilot-unknown</code> if the job run carries no name. This value renders as
+a badge on the task's conversation in the HyperMDM Studio chat sidebar's Tasks view, so a reviewer looking at
+several concurrent runs can tell which automation action produced which conversation without opening each
+one. See
+<a class="" href="../../Architecture/Agent_Tasks/index.html#origin-a-provenance-label-on-the-session">Architecture → Agent Tasks → Origin</a>.</p>
+</li>
+<li class="">
+<p><strong>Selection mode.</strong> The step processes all of a job run's selected elements (data objects, assets, documents) as
+<strong>one</strong> task (<code>SelectionProcessingMode::ONCE</code>). A separate task per element (<code>FOR_EACH</code>) is not wired up.</p>
+</li>
+<li class="">
+<p><strong>Resuming a prior step's task.</strong> Set <code>continue_session_from</code> to the <code>context_key</code> of an earlier <code>agent_task</code>
+step in the same job run. The step reads that step's <code>{context_key}__task_id</code> context entry and calls
+<code>continueTask()</code> instead of starting a fresh task. This is valid only in <code>ONCE</code> mode - a shared context key
+cannot address one of several parallel <code>FOR_EACH</code> tasks. A resuming step still applies its <strong>own</strong>
+<code>output_schema</code> (and <code>instructions</code>); the continuation validates <code>finalize_task</code> against the schema
+configured on the continuing step, never the schema of the step it resumes.</p>
+</li>
+<li class="">
+<p><strong>Concurrency cap.</strong> <code>start()</code> (and <code>continueTask()</code>) enforce <code>hypermdm_agent.tasks.max_concurrent</code> (default 5)
+across the whole bundle. While the cap is hit, the step retries every 10 seconds, sharing its own
+<code>timeout_seconds</code> budget with the subsequent wait. Size the Generic Execution Engine worker pool with blocking
+agent steps in mind.</p>
+</li>
+<li class="">
+<p><strong>Runs end to end, no pause-for-input.</strong> Generic Execution Engine steps have no suspend/resume primitive, so the
+step blocks on <code>start()</code> (or <code>continueTask()</code>) plus <code>waitFor()</code>, like the built-in webhook step blocks on HTTP.
+With direct-write tools the whole workflow runs without a human in the loop. With propose tools the step still
+captures the turn's summary and proposals, but nothing is applied until the <code>reviewer</code> (or a participant with
+access) approves it in HyperMDM Studio.</p>
+</li>
+<li class="">
+<p><strong>Failure and timeout.</strong> A <code>failed</code> result, or a client-side wait timeout (which also cancels the task), calls
+<code>throwUnRecoverableException()</code>; ordinary Generic Execution Engine error handling
+(<code>STOP_ON_FIRST_ERROR</code> / <code>CONTINUE_ON_ERROR</code>) applies from there. The result envelope is written to the job run's
+context under <code>context_key</code> before that happens either way, so later steps and the run history still see it.</p>
+</li>
+</ul>
+<p>The step's own dispatch (<code>AgentTaskStepMessage</code>, <code>#[AsMessageHandler]</code>) is the Generic Execution Engine's normal
+messenger path for automation-action steps. It is unrelated to how the task's own settlement publishes
+<code>AgentTaskCompletedEvent</code> inline (see
+<a class="" href="../../Architecture/Agent_Tasks/index.html#announcing-completion">Architecture → Announcing completion</a>).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-docs">Related docs<a href="#related-docs" class="hash-link" aria-label="Direct link to Related docs" title="Direct link to Related docs" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../Agent_Tasks/index.html">Agent Tasks</a> - the facade this step consumes, the result envelope it writes to
+<code>context_key</code>, and the autonomy-vs-HITL choice that decides how much the step does on its own.</li>
+<li class=""><a class="" href="../../Architecture/Agent_Tasks/index.html">Architecture → Agent Tasks</a> - the state machine, settlement, watchdog, and
+delegated-access model behind the facade.</li>
+<li class=""><a class="" href="../../Configuration/Agents/index.html#agent-tasks">Configuration → Agents → Agent tasks</a> - the <code>hypermdm_agent.tasks.*</code>
+limits, including the concurrency cap and deadlines.</li>
+<li class=""><a class="" href="../../Troubleshooting/index.html#agent-tasks">Troubleshooting → Agent tasks</a> - the <code>error.reason</code> values a failed step
+writes into the envelope.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

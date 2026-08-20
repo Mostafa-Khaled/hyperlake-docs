@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Security and Authentication — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Security and Authentication</h1></header>
+<p>HyperMDM integrates with the <a href="https://symfony.com/doc/current/security.html" target="_blank" rel="noopener noreferrer" class="">Symfony Security Component</a>
+for authentication and authorization.
+HyperMDM Studio uses its own security firewall; configure separate firewalls
+for any frontend authentication requirements.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="login-example">Login Example<a href="#login-example" class="hash-link" aria-label="Direct link to Login Example" title="Direct link to Login Example" translate="no">​</a></h2>
+<p>The <a href="https://github.com/pimcore/demo-enterprise" target="_blank" rel="noopener noreferrer" class="">demo-enterprise</a> repository (branch: <code>2026.x</code>)
+provides a full login implementation with form-based authentication, CSRF protection,
+remember-me support, CMF <code>CustomerObjectUserProvider</code>, and e-commerce cart migration on login.</p>
+<p>Key files:</p>
+<ul>
+<li class=""><a href="https://github.com/pimcore/demo-enterprise/blob/2026.x/config/packages/security.yaml" target="_blank" rel="noopener noreferrer" class=""><code>config/packages/security.yaml</code></a>
+<ul>
+<li class="">Firewalls, user providers, access control rules</li>
+</ul>
+</li>
+<li class=""><a href="https://github.com/pimcore/demo-enterprise/blob/2026.x/src/Controller/AccountController.php" target="_blank" rel="noopener noreferrer" class=""><code>src/Controller/AccountController.php</code></a>
+<ul>
+<li class="">Login/logout controller actions</li>
+</ul>
+</li>
+<li class=""><a href="https://github.com/pimcore/demo-enterprise/blob/2026.x/src/Form/LoginFormType.php" target="_blank" rel="noopener noreferrer" class=""><code>src/Form/LoginFormType.php</code></a>
+<ul>
+<li class="">Login form definition</li>
+</ul>
+</li>
+<li class=""><a href="https://github.com/pimcore/demo-enterprise/blob/2026.x/src/EventListener/AuthenticationLoginListener.php" target="_blank" rel="noopener noreferrer" class=""><code>src/EventListener/AuthenticationLoginListener.php</code></a>
+<ul>
+<li class="">Post-login hooks (e.g. cart migration)</li>
+</ul>
+</li>
+</ul>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-HyperMDM-Development_Tools-Security_and_Authentication-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Development_Tools-Security_and_Authentication-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-HyperMDM-Development_Tools-Security_and_Authentication-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>The <code>demo-enterprise</code> repository is private and requires an enterprise license.
+The <a class="" href="Authenticate_HyperMDM_Objects/index.html">simplified authentication guide</a> below
+covers the same concepts with a publicly accessible, minimal example.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="simplified-guide">Simplified Guide<a href="#simplified-guide" class="hash-link" aria-label="Direct link to Simplified Guide" title="Direct link to Simplified Guide" translate="no">​</a></h2>
+<p>For basic setups without CMF or e-commerce, follow the step-by-step guide at
+<a class="" href="Authenticate_HyperMDM_Objects/index.html">Authenticate Against HyperMDM Objects</a>.
+It covers user providers, password hashing with <code>PasswordFieldHasher</code>,
+and firewall configuration using HyperMDM data objects.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further Reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further Reading" title="Direct link to Further Reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="Configure_Password_Hashing_Algorithm/index.html">Configure Password Hashing</a></li>
+<li class=""><a href="https://symfony.com/doc/current/security.html" target="_blank" rel="noopener noreferrer" class="">Symfony Security Component documentation</a></li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

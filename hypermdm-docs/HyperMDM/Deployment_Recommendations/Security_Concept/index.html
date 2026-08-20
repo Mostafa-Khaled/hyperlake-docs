@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Security Concept — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Security Concept</h1></header>
+<p>HyperMDM follows a multi-layer security concept. The framework provides built-in protections
+at the core level, while project-specific security measures are the responsibility
+of the integration partner.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-core-level">HyperMDM Core Level<a href="#hypermdm-core-level" class="hash-link" aria-label="Direct link to Pimcore Core Level" title="Direct link to Pimcore Core Level" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="coding-standards-and-best-practices">Coding Standards and Best Practices<a href="#coding-standards-and-best-practices" class="hash-link" aria-label="Direct link to Coding Standards and Best Practices" title="Direct link to Coding Standards and Best Practices" translate="no">​</a></h3>
+<p>HyperMDM follows established PHP coding standards and industry best practices to minimize
+security risks. The coding standards are based on PSRs (PHP Standards Recommendations)
+developed by the PHP Framework Interop Group (PHP-FIG) and are enforced during
+continuous integration at GitHub.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="dependency-management">Dependency Management<a href="#dependency-management" class="hash-link" aria-label="Direct link to Dependency Management" title="Direct link to Dependency Management" translate="no">​</a></h3>
+<p>HyperMDM is built on the Symfony framework and manages all dependencies through Composer,
+the standard PHP dependency management solution. This makes it straightforward to keep
+all dependencies up to date and secure.</p>
+<p>As a Symfony application, HyperMDM supports all Symfony security tools, including the
+<a href="https://symfony.com/doc/current/security/security_checker.html" target="_blank" rel="noopener noreferrer" class="">Symfony Security Checker</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="content-security-policy">Content Security Policy<a href="#content-security-policy" class="hash-link" aria-label="Direct link to Content Security Policy" title="Direct link to Content Security Policy" translate="no">​</a></h3>
+<p>HyperMDM Studio includes a Content Security Policy (CSP) handler that protects against
+Cross-Site Scripting (XSS) and data injection attacks by adding a <code>Content-Security-Policy</code>
+HTTP header with a <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce" target="_blank" rel="noopener noreferrer" class="">nonce</a>
+to every Studio request. CSP is <strong>enabled by default</strong>.</p>
+<p>Read more about <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" target="_blank" rel="noopener noreferrer" class="">Content Security Policy</a>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-studio-csp-configuration">HyperMDM Studio CSP Configuration<a href="#hypermdm-studio-csp-configuration" class="hash-link" aria-label="Direct link to Pimcore Studio CSP Configuration" title="Direct link to Pimcore Studio CSP Configuration" translate="no">​</a></h4>
+<p>Configure the Studio CSP under <code>hypermdm_studio_ui.csp_header</code>.
+To allow external URLs for specific directives:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># config/config.yaml</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm_studio_ui</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">csp_header</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">additional_urls</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">script-src</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://cdn.example.com/scripts/analytics.js'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">style-src</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://fonts.googleapis.com'</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token key atrule" style="color:#00a4db">connect-src</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">                </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'https://api.example.com'</span><br></span></code></pre></div></div>
+<p>Available directives: <code>default-src</code>, <code>script-src</code>, <code>style-src</code>, <code>connect-src</code>,
+<code>font-src</code>, <code>img-src</code>, <code>media-src</code>, <code>frame-src</code>, <code>worker-src</code></p>
+<p>To disable CSP:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># config/config.yaml</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm_studio_ui</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">csp_header</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">enabled</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean important" style="color:#36acaa">false</span><br></span></code></pre></div></div>
+<p>To exclude specific paths from CSP enforcement:</p>
+<div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># config/config.yaml</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key atrule" style="color:#00a4db">hypermdm_studio_ui</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key atrule" style="color:#00a4db">csp_header</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token key atrule" style="color:#00a4db">exclude_paths</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">            </span><span class="token punctuation" style="color:#393A34">-</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">'/hypermdm-studio/custom-endpoint'</span><br></span></code></pre></div></div>
+<p>If your bundle or custom implementation extends the Studio interface, add the generated nonce
+to inline scripts:</p>
+<div class="language-twig codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-twig codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token operator" style="color:#393A34">&lt;</span><span class="token plain">script </span><span class="token punctuation" style="color:#393A34">{</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> hypermdm_studio_csp</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">getNonceHtmlAttribute</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">|</span><span class="token plain">raw </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">}</span><span class="token operator" style="color:#393A34">&gt;</span><br></span></code></pre></div></div>
+<p>For advanced CSP extension (registering external origins from bundles, dev servers, or CDNs),
+see the
+<a class="" href="../../../Studio_UI/Configuration_and_Administration/Configuration/Content_Security_Policy/index.html">Studio UI Content Security Policy documentation</a>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="frontend-csp">Frontend CSP<a href="#frontend-csp" class="hash-link" aria-label="Direct link to Frontend CSP" title="Direct link to Frontend CSP" translate="no">​</a></h4>
+<p>CSP for customer-facing pages is a project-level responsibility.
+Configure CSP headers through your web server (Nginx, Apache) or Symfony response listeners.
+HyperMDM does not enforce CSP on frontend document responses automatically.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="handling-security-issues">Handling Security Issues<a href="#handling-security-issues" class="hash-link" aria-label="Direct link to Handling Security Issues" title="Direct link to Handling Security Issues" translate="no">​</a></h3>
+<p>HyperMDM handles security vulnerabilities with the following procedure:</p>
+<ul>
+<li class="">
+<p><strong>Reporting</strong>: Report issues via the
+<a href="https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability#privately-reporting-a-security-vulnerability" target="_blank" rel="noopener noreferrer" class="">GitHub security advisory mechanism</a>
+of the corresponding repository, e.g.
+<a href="https://github.com/pimcore/pimcore/security" target="_blank" rel="noopener noreferrer" class="">core framework</a>.
+Do not use the public issue tracker.</p>
+</li>
+<li class="">
+<p><strong>Resolution</strong>:</p>
+<ol>
+<li class="">HyperMDM forwards the report to the core team for verification.</li>
+<li class="">If confirmed, HyperMDM sends an acknowledgement to the reporter.</li>
+<li class="">HyperMDM develops a patch and obtains a CVE identifier if not already available.</li>
+<li class="">HyperMDM publishes the patch and/or a new release.</li>
+<li class="">HyperMDM publishes a security announcement covering affected versions, possible exploits,
+and how to patch or upgrade.</li>
+</ol>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="project-specific-level-integration-partner">Project-Specific Level (Integration Partner)<a href="#project-specific-level-integration-partner" class="hash-link" aria-label="Direct link to Project-Specific Level (Integration Partner)" title="Direct link to Project-Specific Level (Integration Partner)" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="https--tls">HTTPS / TLS<a href="#https--tls" class="hash-link" aria-label="Direct link to HTTPS / TLS" title="Direct link to HTTPS / TLS" translate="no">​</a></h3>
+<p>Serve all HyperMDM endpoints over HTTPS, including HyperMDM Studio (<code>/hypermdm-studio</code>),
+API routes, and customer-facing pages. Configure TLS termination at the web server
+or load balancer level.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="coding-standards-and-best-practices-1">Coding Standards and Best Practices<a href="#coding-standards-and-best-practices-1" class="hash-link" aria-label="Direct link to Coding Standards and Best Practices" title="Direct link to Coding Standards and Best Practices" translate="no">​</a></h3>
+<p>Apply the same coding standards and best practices used in core development to the solution.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="dependency-management-1">Dependency Management<a href="#dependency-management-1" class="hash-link" aria-label="Direct link to Dependency Management" title="Direct link to Dependency Management" translate="no">​</a></h3>
+<p>Run security checks for all additional solution dependencies. All Symfony tools, including the
+<a href="https://symfony.com/doc/current/security/security_checker.html" target="_blank" rel="noopener noreferrer" class="">Symfony Security Checker</a>,
+are available for solution projects.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="project-specific-penetration-testing">Project-Specific Penetration Testing<a href="#project-specific-penetration-testing" class="hash-link" aria-label="Direct link to Project-Specific Penetration Testing" title="Direct link to Project-Specific Penetration Testing" translate="no">​</a></h3>
+<p>Penetration testing should uncover security issues in the solution implementation.
+Run tests on staging systems without additional security layers (WAF, IPS) and cover all
+<a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener noreferrer" class="">OWASP Top 10 risks</a>.</p>
+<p>A third-party testing partner provides an independent assessment.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="waf-and-ips-on-production-systems">WAF and IPS on Production Systems<a href="#waf-and-ips-on-production-systems" class="hash-link" aria-label="Direct link to WAF and IPS on Production Systems" title="Direct link to WAF and IPS on Production Systems" translate="no">​</a></h3>
+<p>Web Application Firewalls (WAF) and Intrusion Protection Systems (IPS) sit in front of the
+application, analyze traffic, and filter malicious activity.</p>
+<p>As a standard PHP application, HyperMDM works with all industry-standard products such as
+ModSecurity, Cloudflare WAF, and others. The choice depends on the IT infrastructure.
+For HyperMDM Studio, WAF rules may need to allow multipart file uploads,
+WebSocket connections (used by Mercure for real-time updates), and larger request bodies.</p>
+<p>WAF and IPS serve as the final safety net in the multi-layer security concept.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

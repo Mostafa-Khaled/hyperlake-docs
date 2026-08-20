@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Frontend folder structure — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Frontend folder structure</h1></header>
+<p>The following chapter contains a deep dive into the folder structure of the frontend application and some important
+additional information. It provides an overview of the frontend architecture and should help you to locate the files
+you need.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-assets-folder">The <code>assets</code> folder<a href="#the-assets-folder" class="hash-link" aria-label="Direct link to the-assets-folder" title="Direct link to the-assets-folder" translate="no">​</a></h2>
+<p>The <code>assets</code> folder serves as root folder for the whole frontend application.</p>
+<ul>
+<li class=""><code>assets/fonts</code><br>
+<!-- -->Self-hosted web font files.</li>
+<li class=""><code>assets/icons</code><br>
+<!-- -->SVG icons</li>
+<li class=""><code>assets/images</code><br>
+<!-- -->Static images (e.g. placeholder image).</li>
+<li class=""><code>assets/scripts</code><br>
+<!-- -->JS files and JSX components. See <a href="#the-assetsscripts-folder" class="">The <code>assets/scripts</code> folder</a> below for more details.</li>
+<li class=""><code>assets/styles</code><br>
+<!-- -->SCSS files for the base styling</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-assetsscripts-folder">The <code>assets/scripts</code> folder<a href="#the-assetsscripts-folder" class="hash-link" aria-label="Direct link to the-assetsscripts-folder" title="Direct link to the-assetsscripts-folder" translate="no">​</a></h3>
+<p>The <code>assets/scripts</code> is home for all JavaScript files. It contains all JSX components, the whole frontend
+application logic and entry files for all pages.</p>
+<ul>
+<li class=""><code>components</code><br>
+<!-- -->Generic JSX components that are used throughout the whole application</li>
+<li class=""><code>consts</code><br>
+<!-- -->Global constants (e.g. media query breakpoints, fetching state types)</li>
+<li class=""><code>features</code><br>
+<!-- -->All JSX components and logic concerning one feature of the application.
+See <a href="#feature-folders" class="">Feature folders</a> below for more details.</li>
+<li class=""><code>pages</code><br>
+<!-- -->Entry files for different pages and shared initialization files.
+Although most parts of the application are rendered on the client, the portal engine is not a single page
+application. The portal engine uses server side routing and only mounts one part of the frontend application on
+each page through these entry files. All entry files have to be listed in the <code>webpack.config.js</code>. The subfolder
+<code>\assets\scripts\pages\shared</code> contains the shared React root component <code>AppRoot.js</code> and some JavaScript files
+which are used by all entry files.</li>
+<li class=""><code>sliceHelper</code><br>
+<!-- -->Shared feature slice helper functions.</li>
+<li class=""><code>utils</code><br>
+<!-- -->Shared utility functions.</li>
+<li class=""><code>entry.js</code><br>
+<!-- -->Shared global initialization function for all entry files.</li>
+<li class=""><code>store.js</code><br>
+<!-- -->Global redux store that contains the whole application state.</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="feature-folders">Feature folders<a href="#feature-folders" class="hash-link" aria-label="Direct link to Feature folders" title="Direct link to Feature folders" translate="no">​</a></h4>
+<p>The <code>assets/scripts/features</code> folder consists of multiple subfolders. Each of these subfolders contains all JSX
+components and logic concerning one part (or feature) of the application. Every feature folder usually contains the
+following content:</p>
+<ul>
+<li class=""><code>components</code> folder<br>
+<!-- -->JSX components for a specific feature. Some of these components are connected to the store through the redux
+<a href="https://react-redux.js.org/api/connect" target="_blank" rel="noopener noreferrer" class=""><code>connect</code></a> function. The connect function takes the arguments
+<code>mapStateToProps</code> and <code>mapDispatchToProps</code> and returns a function that takes a JSX component. The result of this
+call is a connected component. The <code>mapStateToProps</code> uses selector functions to read data from the application store
+and maps the data to the component's props. <code>mapDispatchToProps</code> defines which action creators should be used
+to create and dispatch actions in response to component events. Some components do not include any JSX and only connect
+generic components to a feature slice of the global application state (e.g. pagination components).</li>
+<li class=""><code>{FEATURE_NAME}-actions.js</code><br>
+<!-- -->Action creator functions and action type constants. Action creators are responsible for creating action objects.
+Action objects describe events that happened in the application. This could be an user interaction, the
+fulfillment of a fetch request or some other event. An action object contains a required <code>type</code> and an optional
+<code>payload</code> to describe the event further. Action type constants are string identifiers that are used as <code>type</code>s for
+action objects and by reducers.</li>
+<li class=""><code>{FEATURE_NAME}-api.js</code><br>
+<!-- -->Api functions handle the communication with the backend.</li>
+<li class=""><code>{FEATURE_NAME}-reducer.js</code><br>
+<!-- -->A reducer function with some initial state for the feature slice. The reducer function is responsible for updating
+the feature slice state in response to actions. It is called with the previous state slice and the current action
+object every time an action is dispatched. Reducers must not include any side effects like manipulating external state, making fetch requests or
+generating random numbers or identifiers.</li>
+<li class=""><code>{FEATURE_NAME}-selectors.js</code><br>
+<!-- -->Selector functions get data from the global application store. A selector function takes the application state
+and any number of additional arguments and returns pieces of the state or some derived data.</li>
+</ul>
+<p>You can find further information about these concepts on the <a href="https://redux.js.org/" target="_blank" rel="noopener noreferrer" class="">Redux Website</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

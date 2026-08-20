@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Events — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Events</h1></header>
+<p>CMF dispatches events at several points. All event classes live under <code>src/Event/</code> and
+<code>src/ActionTrigger/Event/</code>. This page groups them by area and lists each event's name and payload, verified against
+the class that dispatches it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="hypermdm-studio-pre-response-events">HyperMDM Studio Pre-Response Events<a href="#hypermdm-studio-pre-response-events" class="hash-link" aria-label="Direct link to Pimcore Studio Pre-Response Events" title="Direct link to Pimcore Studio Pre-Response Events" translate="no">​</a></h2>
+<p>Before a Studio Backend API endpoint returns, CMF dispatches a pre-response event carrying the response schema.
+Listen for it to add your own data to the response. See the Studio Backend
+<a class="" href="../../../Studio_Backend/Extending/Additional_and_Custom_Attributes/index.html">Additional and Custom Attributes documentation</a>
+for the listener pattern.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Extending-Events-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Extending-Events-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Customer_Management_Framework-Extending-Events-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>warning</div><div class="admonitionContent_BuS1"><p>The endpoints these events belong to are not a supported public API. They are marked <code>@internal</code>, exist to serve
+HyperMDM Studio, and may change in any release without a deprecation path. Do not build integrations against them.
+Use the <a class="" href="../../Webservice/index.html">REST webservice</a> for external integrations instead.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="customers">Customers<a href="#customers" class="hash-link" aria-label="Direct link to Customers" title="Direct link to Customers" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Returned data</th></tr></thead><tbody><tr><td><code>pre_response.cmf.customer</code></td><td>A single customer (<code>CustomerData</code>).</td></tr><tr><td><code>pre_response.cmf.customer_collection</code></td><td>A page of customers (<code>CustomerCollection</code>).</td></tr><tr><td><code>pre_response.cmf.segments_of_customer</code></td><td>The segment IDs added to and removed from a customer in one update.</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="activities">Activities<a href="#activities" class="hash-link" aria-label="Direct link to Activities" title="Direct link to Activities" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Returned data</th></tr></thead><tbody><tr><td><code>pre_response.cmf.activity</code></td><td>A single activity entry (<code>ActivityData</code>).</td></tr><tr><td><code>pre_response.cmf.activity_collection</code></td><td>A page of activities (<code>ActivityCollection</code>).</td></tr><tr><td><code>pre_response.cmf.deletion_collection</code></td><td>Recorded deletions of customers or activities.</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="segments">Segments<a href="#segments" class="hash-link" aria-label="Direct link to Segments" title="Direct link to Segments" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Returned data</th></tr></thead><tbody><tr><td><code>pre_response.cmf.segment</code></td><td>A single segment (<code>SegmentData</code>).</td></tr><tr><td><code>pre_response.cmf.segment_collection</code></td><td>A page of segments (<code>SegmentCollection</code>).</td></tr><tr><td><code>pre_response.cmf.segment_group</code></td><td>A single segment group (<code>SegmentGroupData</code>).</td></tr><tr><td><code>pre_response.cmf.segment_group_collection</code></td><td>A page of segment groups (<code>SegmentGroupCollection</code>).</td></tr><tr><td><code>pre_response.cmf.term_segment_builder_definition_collection</code></td><td>All published term segment builder definitions.</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="segment-assignment">Segment Assignment<a href="#segment-assignment" class="hash-link" aria-label="Direct link to Segment Assignment" title="Direct link to Segment Assignment" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Returned data</th></tr></thead><tbody><tr><td><code>pre_response.cmf.segment_assignment_collection</code></td><td>Segments assigned to, or inheritable by, an element.</td></tr><tr><td><code>pre_response.cmf.breaks_inheritance_response</code></td><td>Whether an element breaks segment inheritance.</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="automation-rules">Automation Rules<a href="#automation-rules" class="hash-link" aria-label="Direct link to Automation Rules" title="Direct link to Automation Rules" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Returned data</th></tr></thead><tbody><tr><td><code>pre_response.cmf.automation_rule_collection</code></td><td>All automation rules (<code>AutomationRuleCollection</code>).</td></tr><tr><td><code>pre_response.cmf.automation_rule_detail</code></td><td>A single automation rule's triggers, conditions, and actions.</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="filter-definitions">Filter Definitions<a href="#filter-definitions" class="hash-link" aria-label="Direct link to Filter Definitions" title="Direct link to Filter Definitions" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Returned data</th></tr></thead><tbody><tr><td><code>pre_response.cmf.filter_definition_detail</code></td><td>A single customer view filter definition.</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="newsletter">Newsletter<a href="#newsletter" class="hash-link" aria-label="Direct link to Newsletter" title="Direct link to Newsletter" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Returned data</th></tr></thead><tbody><tr><td><code>pre_response.cmf.newsletter_queue_size</code></td><td>The current newsletter queue size.</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="settings">Settings<a href="#settings" class="hash-link" aria-label="Direct link to Settings" title="Direct link to Settings" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Returned data</th></tr></thead><tbody><tr><td><code>pre_response.cmf.api_key_users</code></td><td>HyperMDM users and their CMF webservice API keys.</td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="helper-lookups">Helper Lookups<a href="#helper-lookups" class="hash-link" aria-label="Direct link to Helper Lookups" title="Direct link to Helper Lookups" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Returned data</th></tr></thead><tbody><tr><td><code>pre_response.cmf.activity_type_collection</code></td><td>The available activity types.</td></tr><tr><td><code>pre_response.cmf.customer_field_collection</code></td><td>The fields defined on the customer class.</td></tr><tr><td><code>pre_response.cmf.grouped_segment_collection</code></td><td>Segments grouped by segment group.</td></tr><tr><td><code>pre_response.cmf.newsletter_filter_flag_collection</code></td><td>The available newsletter opt-in/opt-out filter flags.</td></tr></tbody></table></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="actiontrigger-rule-engine-events">ActionTrigger Rule-Engine Events<a href="#actiontrigger-rule-engine-events" class="hash-link" aria-label="Direct link to ActionTrigger Rule-Engine Events" title="Direct link to ActionTrigger Rule-Engine Events" translate="no">​</a></h2>
+<p>CMF's ActionTrigger service dispatches these events on the Symfony event dispatcher (registered as
+<code>kernel.event_listener</code> services in <code>services_events.yml</code>) whenever the corresponding situation occurs. The rule
+engine's <code>EventHandlerInterface</code> listens for them to evaluate automation rules, but any other listener can subscribe
+to the same event name too. See <a class="" href="../../ActionTrigger/index.html">ActionTrigger</a> for the triggers, conditions, and actions
+built on top of them, and
+<a class="" href="../index.html#custom-triggers-conditions-and-actions">Extending the Customer Management Framework</a> for how a Studio
+Dynamic Type maps a trigger's event name to a UI component.</p>
+<div class="table-container"><table><thead><tr><th>Event name</th><th>Class</th><th>Fired when</th><th>Selectable as a rule Trigger</th></tr></thead><tbody><tr><td><code>plugin.cmf.new-activity</code></td><td><code>ActionTrigger\Event\NewActivity</code></td><td>A new entry is inserted into the ActivityStore.</td><td>Yes ("New Customer Activity")</td></tr><tr><td><code>plugin.cmf.after-track-activity</code></td><td><code>ActionTrigger\Event\AfterTrackActivity</code></td><td>After <code>ActivityManager::trackActivity()</code> finishes, for both new and updated entries.</td><td>No, listen-only</td></tr><tr><td><code>plugin.cmf.execute-segment-builders</code></td><td><code>ActionTrigger\Event\ExecuteSegmentBuilders</code></td><td>The segment building process runs for a customer.</td><td>Yes ("Segment Building")</td></tr><tr><td><code>plugin.cmf.segment-tracked</code></td><td><code>ActionTrigger\Event\SegmentTracked</code></td><td>A segment is tracked to the Targeting Store.</td><td>Yes ("[Targeting] Segment Tracked")</td></tr><tr><td><code>plugin.cmf.target-group-assigned</code></td><td><code>ActionTrigger\Event\TargetGroupAssigned</code></td><td>A target group is assigned to the current visitor.</td><td>Yes ("[Targeting] Assigned Target Group")</td></tr></tbody></table></div>
+<p><code>NewActivity</code> and <code>AfterTrackActivity</code> both carry the tracked <code>ActivityInterface</code> and the resulting
+<code>ActivityStoreEntryInterface</code>. <code>SegmentTracked</code> carries the tracked <code>CustomerSegmentInterface</code> and a count.
+<code>TargetGroupAssigned</code> carries the assigned <code>TargetGroup</code>, the assignment type (<code>documents</code> or <code>targetingRules</code>), and
+the visitor's <code>VisitorInfo</code>.</p>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-Extending-Events-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-Extending-Events-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../../visuals-catalog.html#fig-Customer_Management_Framework-Extending-Events-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>The "Cron" trigger (<code>ActionTrigger\Event\Cron</code>) is <strong>not</strong> in this table. The <code>cmf:handle-cron-triggers</code> command
+instantiates it directly and hands it to the rule engine's <code>EventHandlerInterface</code>; it never passes through the
+Symfony event dispatcher (<code>services_events.yml</code> has no listener registration for it). It is only usable as a
+selectable rule Trigger, not as an event external code can subscribe to.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="newsletter-events">Newsletter Events<a href="#newsletter-events" class="hash-link" aria-label="Direct link to Newsletter Events" title="Direct link to Newsletter Events" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Event</th><th>Class</th><th>Fired when</th><th>Payload</th></tr></thead><tbody><tr><td><code>plugin.cmf.newsletter.mailchimp.template-export-resolve-provider-handler</code></td><td><code>Event\Newsletter\Mailchimp\TemplateExportResolveProviderHandlerEvent</code></td><td>Exporting a newsletter template to Mailchimp needs to resolve which Mailchimp provider handler to use.</td><td>The <code>Document\PageSnippet</code> being exported. Call <code>setProviderHandler()</code> on the event to override which <code>Mailchimp</code> provider handler is used; if no listener sets one, CMF falls back to the first registered <code>Mailchimp</code> provider handler, and throws if there is none.</td></tr></tbody></table></div>
+<p>See <a class="" href="../../NewsletterSync/MultipleMailchimpAccounts/index.html">Multiple Mailchimp Accounts</a> for a project with more than one
+Mailchimp provider handler, where this event lets you pick the correct one per template export.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

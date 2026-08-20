@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Technical Details — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Technical Details</h1></header>
+<p>These internals help you understand what happens during and after an OpenID Connect login.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="user-mapping">User Mapping<a href="#user-mapping" class="hash-link" aria-label="Direct link to User Mapping" title="Direct link to User Mapping" translate="no">​</a></h2>
+<p>Every SSO user gets a matching HyperMDM user. HyperMDM uses the <code>preferred_username</code> claim (mapped through
+<code>claim_mapping</code>, see <a class="" href="../Configuration/index.html#provider-configuration">Configuration</a>) as that user's username, and
+looks up an existing user by that username on every login. The <code>sub</code> claim (the provider's remote user ID) is not
+part of this lookup; it only seeds the generated password of a newly created user and names the temporary file the
+avatar is downloaded into. Renaming a user in HyperMDM therefore detaches it from the provider, and the next login
+creates a second user under the original username.</p>
+<p>If no user with that username exists yet, HyperMDM creates one in the <code>oidc</code> user folder with a random, unknown
+password, so it can only sign in through SSO unless an admin resets its password later. Either way, HyperMDM then
+updates the user's name, email and avatar from the claims, and re-assigns roles (see <a href="#role-mapping" class="">Role Mapping</a>
+below).</p>
+<p>HyperMDM never deletes these users automatically. You can edit their permissions and workspaces directly in HyperMDM
+like any other user.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="role-mapping">Role Mapping<a href="#role-mapping" class="hash-link" aria-label="Direct link to Role Mapping" title="Direct link to Role Mapping" translate="no">​</a></h2>
+<p>Roles delivered by the provider (the <code>groups</code> claim, by default) are matched by name against roles that already
+exist in HyperMDM. A group name with no matching HyperMDM role is ignored.</p>
+<p>HyperMDM re-assigns a user's roles from this claim on every login, replacing whatever was assigned before, unless the
+provider's <code>dont_overwrite_roles</code> option is enabled. Enable it to manage roles for SSO users directly in HyperMDM
+instead.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="token-validation">Token Validation<a href="#token-validation" class="hash-link" aria-label="Direct link to Token Validation" title="Direct link to Token Validation" translate="no">​</a></h2>
+<p>HyperMDM verifies the ID token before trusting any of its claims:</p>
+<ul>
+<li class="">The token's signature is checked against the provider's JSON Web Key Set (fetched from the discovery document's
+<code>jwks_uri</code>). Supported signing algorithms are RS256, RS384, RS512, HS256, HS384 and HS512.</li>
+<li class="">The <code>iss</code> (issuer) and <code>aud</code> (audience) claims must match the provider's issuer and the configured client ID.</li>
+<li class="">The <code>iat</code> (issued at), <code>nbf</code> (not before) and <code>exp</code> (expiration) claims are checked with a 10-second leeway for
+clock drift.</li>
+</ul>
+<p>A token that fails any of these checks is rejected and the login fails.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-caching">Configuration Caching<a href="#configuration-caching" class="hash-link" aria-label="Direct link to Configuration Caching" title="Direct link to Configuration Caching" translate="no">​</a></h2>
+<p>HyperMDM caches each provider's discovery document (authorization, token and userinfo endpoints) and its JSON Web Key
+Set for 24 hours, so a login does not re-fetch them on every request.</p>
+<p>To pick up provider-side changes immediately, clear the <code>oidc</code> cache tag:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:cache:clear --tags=oidc</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="rate-limiting">Rate Limiting<a href="#rate-limiting" class="hash-link" aria-label="Direct link to Rate Limiting" title="Direct link to Rate Limiting" translate="no">​</a></h2>
+<p>The public login routes are rate-limited per client IP with a fixed window, independent of any permission check,
+since they run before a HyperMDM session exists:</p>
+<div class="table-container"><table><thead><tr><th>Route</th><th>Limit</th></tr></thead><tbody><tr><td>OAuth2 callback (<code>/auth/endpoint</code>)</td><td>30 requests per 5 minutes (about 10 login attempts, since each login uses the route more than once)</td></tr><tr><td>Login button script (<code>/auth/script</code>)</td><td>50 requests per 5 minutes</td></tr></tbody></table></div>
+<p>A client that exceeds its limit gets <code>429 Too Many Requests</code> until the window resets. Override the
+<code>oidc_endpoint</code> and <code>oidc_script</code> Symfony rate limiters in your own configuration to change these limits.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

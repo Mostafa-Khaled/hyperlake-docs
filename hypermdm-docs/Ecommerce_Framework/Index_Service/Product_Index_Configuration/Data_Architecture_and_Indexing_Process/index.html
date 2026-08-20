@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Architecture and Indexing Process — HyperMDM</title>
+<link rel="stylesheet" href="../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Data Architecture and Indexing Process</h1></header>
+<p>Depending on the <em>Product Index</em> implementation, there are two different <em>Product Index</em> data architectures and ways for
+indexing: Simple Mysql Architecture and Optimized Architecture.</p>
+<p>For indexing itself the provided HyperMDM console commands can be used.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="simple-mysql-architecture">Simple Mysql Architecture<a href="#simple-mysql-architecture" class="hash-link" aria-label="Direct link to Simple Mysql Architecture" title="Direct link to Simple Mysql Architecture" translate="no">​</a></h2>
+<ul>
+<li class="">HyperMDM object data is transferred directly to the Product Index.</li>
+<li class="">After every update of a HyperMDM object, the changes are directly written into the Product Index.</li>
+<li class="">Only used for <code>\HyperMDM\Bundle\EcommerceFrameworkBundle\IndexService\Config\DefaultMysql</code></li>
+</ul>
+<blockquote>
+<p>Updates of dependent objects (like child objects, variants that inherit data, related objects) are not transferred
+into the index automatically.</p>
+</blockquote>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">productindex-simple</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/productindex-simple-d77e7b257b32e5bc2b40644be461d29d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/productindex-simple-d77e7b257b32e5bc2b40644be461d29d.png"><figure class="visual-placeholder" id="fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">productindex-simple</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/productindex-simple-d77e7b257b32e5bc2b40644be461d29d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/productindex-simple-d77e7b257b32e5bc2b40644be461d29d.png"><figure class="visual-placeholder" id="fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">productindex-simple</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/productindex-simple-d77e7b257b32e5bc2b40644be461d29d.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="console-commands-for-simple-mysql-architecture">Console Commands for Simple Mysql Architecture<a href="#console-commands-for-simple-mysql-architecture" class="hash-link" aria-label="Direct link to Console Commands for Simple Mysql Architecture" title="Direct link to Console Commands for Simple Mysql Architecture" translate="no">​</a></h3>
+<ul>
+<li class="">For manually updating the whole index use following command:</li>
+</ul>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console ecommerce:indexservice:bootstrap --update-index</span><br></span></code></pre></div></div>
+<ul>
+<li class="">If you need to create or update the index structures you can use:</li>
+</ul>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console ecommerce:indexservice:bootstrap --create-or-update-index-structure</span><br></span></code></pre></div></div>
+<ul>
+<li class="">By default, HyperMDM assumes that the product class is <code>HyperMDM\Model\DataObject\Product</code>. If you have a
+different product class name, please use the <code>--object-list-class</code> param and provide the listing class name
+that should be used.</li>
+</ul>
+<blockquote>
+<p>For further details (e.g. only updating certain product types, apply list conditions) see <code>--help</code> section of the
+<code>ecommerce:indexservice:bootstrap</code> command.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="optimized-architecture">Optimized Architecture<a href="#optimized-architecture" class="hash-link" aria-label="Direct link to Optimized Architecture" title="Direct link to Optimized Architecture" translate="no">​</a></h2>
+<ul>
+<li class="">
+<p>In the optimized architecture, object data is transferred <strong>not</strong> directly to the <em>Product Index</em>.</p>
+</li>
+<li class="">
+<p>In this case a so called store table is between the HyperMDM objects and the <em>Product Index</em>. This store table enables to ...</p>
+<ul>
+<li class="">... update the <em>Product Index</em> only if index relevant data has changed. Therefore the load on the index itself is reduced
+and unnecessary write operations are prevented.</li>
+<li class="">... update the <em>Product Index</em> asynchronously and therefore update also dependent elements (children, variants, ...)
+of an updated HyperMDM object without impact on save performance.</li>
+<li class="">... rebuilding the whole <em>Product Index</em> out of the store table much faster since no direct interaction with
+HyperMDM objects is needed.</li>
+</ul>
+</li>
+<li class="">
+<p>After every update of a HyperMDM object, the changes are written into the store table and all child objects of the
+updated object are added to the so called preparation queue (see later). As a consequence a periodic full update
+should not be necessary any more.</p>
+</li>
+<li class="">
+<p>Used for optimized mysql, elasticsearch, ...</p>
+</li>
+</ul>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">productindex-optimized</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/productindex-optimized-4a76b3e8c306ac90dd75f99a1fa831be.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/productindex-optimized-4a76b3e8c306ac90dd75f99a1fa831be.png"><figure class="visual-placeholder" id="fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">productindex-optimized</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/productindex-optimized-4a76b3e8c306ac90dd75f99a1fa831be.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/productindex-optimized-4a76b3e8c306ac90dd75f99a1fa831be.png"><figure class="visual-placeholder" id="fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">productindex-optimized</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/productindex-optimized-4a76b3e8c306ac90dd75f99a1fa831be.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../visuals-catalog.html#fig-Ecommerce_Framework-Index_Service-Product_Index_Configuration-Data_Architecture_and_Indexing_Process-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="console-commands-for-optimized-architecture">Console Commands for Optimized Architecture<a href="#console-commands-for-optimized-architecture" class="hash-link" aria-label="Direct link to Console Commands for Optimized Architecture" title="Direct link to Console Commands for Optimized Architecture" translate="no">​</a></h3>
+<p>For updating data in index following commands are available.</p>
+<ul>
+<li class="">For process the preparation queue and update HyperMDM objects to the index store table, use following command.
+<strong>This command should be executed periodically (e.g. all 10 minutes).</strong></li>
+</ul>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console ecommerce:indexservice:process-preparation-queue</span><br></span></code></pre></div></div>
+<ul>
+<li class="">To update the Product Index based on changes stored in the store table use the following command.
+<strong>This command should be executed periodically (e.g. all 10 minutes).</strong></li>
+</ul>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console ecommerce:indexservice:process-update-queue </span><br></span></code></pre></div></div>
+<ul>
+<li class="">For manually update all HyperMDM objects in the index store use following command. As stated before, this should only be
+necessary for an initial fill-up of the index. After that, at least Product Index Store and HyperMDM objects should always
+be in sync. It is important to execute <code>ecommerce:indexservice:process-preparation-queue</code> and
+<code>ecommerce:indexservice:process-update-queue</code> periodically though.</li>
+</ul>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console ecommerce:indexservice:bootstrap --update-index</span><br></span></code></pre></div></div>
+<blockquote>
+<p>By default, HyperMDM assumes that the product class is <code>HyperMDM\Model\DataObject\Product</code>. If you have a
+different product class name, please use the <code>--object-list-class</code> param and provide the listing class name
+that should be used.</p>
+</blockquote>
+<ul>
+<li class="">Invalidate either the preparation queue or the index-update queue. This is usually <strong>only needed during development</strong> when
+the store table is out of sync. Reset the preparation queue for instance when your product model
+returns updated data for a field.</li>
+</ul>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console ecommerce:indexservice:reset-queue preparation --tenant=MyTenant</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console ecommerce:indexservice:reset-queue update-index --tenant=MyTenant</span><br></span></code></pre></div></div>
+<ul>
+<li class="">If you need to create or update the index structures you can still use:</li>
+</ul>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">php bin/console ecommerce:indexservice:bootstrap --create-or-update-index-structure</span><br></span></code></pre></div></div>
+<blockquote>
+<p>For further details see <code>--help</code> section of the commands.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="paralelization-of-indexing">Paralelization of Indexing<a href="#paralelization-of-indexing" class="hash-link" aria-label="Direct link to Paralelization of Indexing" title="Direct link to Paralelization of Indexing" translate="no">​</a></h3>
+<p>All indexing commands include the <a href="https://github.com/webmozarts/console-parallelization" target="_blank" rel="noopener noreferrer" class="">parallelization trait of webmozart</a>.
+Thus indexing can be parallelized very easily by adding the <code>--processes=X</code> option to the command.</p>
+<p>Be aware that depending on the command too many parallel processes might cause deadlocks on database.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../search.js"></script>
+</body>
+</html>

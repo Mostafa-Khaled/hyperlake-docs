@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MailChimp/Newsletter Sync — HyperMDM</title>
+<link rel="stylesheet" href="../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>MailChimp/Newsletter Sync</h1></header>
+<p>CMF has built-in support for synchronizing customer data with MailChimp. It synchronizes configured parts of customer
+data, and can optionally export mail templates based on HyperMDM mail documents.</p>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>info</div><div class="admonitionContent_BuS1"><p>Integrate other newsletter systems by implementing <code>NewsletterProviderHandlerInterface</code>.</p></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<p>Enable newsletter synchronization in the CMF configuration. Additional settings include:</p>
+<ul>
+<li class=""><code>newsletterQueueImmediateAsyncExecutionEnabled</code>: synchronizes the customer with MailChimp on every save.</li>
+<li class="">MailChimp API settings.</li>
+</ul>
+<p>CMF can also handle multiple MailChimp lists; each list is a separate Symfony service tagged
+<code>cmf.newsletter_provider_handler</code>.</p>
+<p>See <a class="" href="../Configuration/index.html">Configuration</a> for an example service definition and the general newsletter-related
+settings.</p>
+<p>See <a class="" href="MultipleMailchimpAccounts/index.html">Multiple Mailchimp Accounts</a> to handle lists across different Mailchimp accounts.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prepare-data-objects-for-mailchimp-sync">Prepare Data Objects for MailChimp Sync<a href="#prepare-data-objects-for-mailchimp-sync" class="hash-link" aria-label="Direct link to Prepare Data Objects for MailChimp Sync" title="Direct link to Prepare Data Objects for MailChimp Sync" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="customer">Customer<a href="#customer" class="hash-link" aria-label="Direct link to Customer" title="Direct link to Customer" translate="no">​</a></h3>
+<p>Add a <code>newsletterStatus</code> and <code>mailchimpStatus</code> field to the customer class for each MailChimp list:</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Customer newsletter status</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/customer-newsletter-status-fae27309993d47ec62442f998c9ca8fa.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/customer-newsletter-status-fae27309993d47ec62442f998c9ca8fa.png"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Customer newsletter status</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/customer-newsletter-status-fae27309993d47ec62442f998c9ca8fa.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/customer-newsletter-status-fae27309993d47ec62442f998c9ca8fa.png"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Customer newsletter status</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/customer-newsletter-status-fae27309993d47ec62442f998c9ca8fa.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Suffix each field name with the shortcut of the associated provider handler, for example <code>newsletterStatusList1</code> and
+<code>mailchimpStatusList1</code>.</p>
+<p>The newsletter status is project-specific. Map its options to the MailChimp status options in the provider handler's
+service definition.</p>
+<p>The MailChimp status must be a read-only field with these options:</p>
+<ul>
+<li class=""><code>subscribed</code></li>
+<li class=""><code>unsubscribed</code></li>
+<li class=""><code>pending</code></li>
+<li class=""><code>cleaned</code></li>
+</ul>
+<p>When the MailChimp sync feature is enabled, the customer data object class must implement
+<code>MailchimpAwareCustomerInterface</code>, which declares one method:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">public</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function-definition function" style="color:#d73a49">needsExportByNewsletterProviderHandler</span><span class="token punctuation" style="color:#393A34">(</span><span class="token class-name type-declaration">NewsletterProviderHandlerInterface</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$newsletterProviderHandler</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p>Use this method to decide whether a customer needs to be exported to a given MailChimp list, typically by checking
+the provider handler's configured shortcut. This lets you build different lists with different customers based on
+custom rules.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="customersegmentgroup">CustomerSegmentGroup<a href="#customersegmentgroup" class="hash-link" aria-label="Direct link to CustomerSegmentGroup" title="Direct link to CustomerSegmentGroup" translate="no">​</a></h3>
+<p>Besides customers, you can also export customer segments as interest groups to MailChimp. Add a checkbox named
+<code>exportNewsletterProvider{PROVIDER_HANDLER_SHORTCUT}</code> for each list to the <code>CustomerSegmentGroup</code> class. See
+<a href="#exporting-customersegments-to-mailchimp" class="">Exporting CustomerSegments to MailChimp</a> below for details.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="exporting-customers-to-mailchimp">Exporting Customers to MailChimp<a href="#exporting-customers-to-mailchimp" class="hash-link" aria-label="Direct link to Exporting Customers to MailChimp" title="Direct link to Exporting Customers to MailChimp" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="newsletter-queue">Newsletter Queue<a href="#newsletter-queue" class="hash-link" aria-label="Direct link to Newsletter Queue" title="Direct link to Newsletter Queue" translate="no">​</a></h3>
+<p>Exporting customer data to MailChimp is asynchronous. Each time a customer is saved, it is added to the newsletter
+queue, represented by a database table.</p>
+<p>A background cron job, which should run every few minutes, processes the queue items and removes each one once it is
+successfully processed. If the sync fails (for example because MailChimp does not respond correctly), the item stays
+in the queue and is retried later. See also <a class="" href="../Cronjobs/index.html">Cron Jobs</a>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="immediate-execution-of-export-on-customer-save">Immediate Execution of Export on Customer Save<a href="#immediate-execution-of-export-on-customer-save" class="hash-link" aria-label="Direct link to Immediate Execution of Export on Customer Save" title="Direct link to Immediate Execution of Export on Customer Save" translate="no">​</a></h4>
+<p>Although the export is asynchronous, you can enable immediate processing of a queue entry right after a customer is
+saved. This still runs as a background task; it only triggers the queue asynchronously for that one saved customer.
+If the export is not successful, the entry stays in the queue.</p>
+<p>The config option for this behavior is <code>newsletterQueueImmediateAsyncExecutionEnabled</code> (see
+<a class="" href="../Configuration/index.html">Configuration</a>).</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="webhook">Webhook<a href="#webhook" class="hash-link" aria-label="Direct link to Webhook" title="Direct link to Webhook" translate="no">​</a></h3>
+<p>CMF offers a MailChimp webhook endpoint to receive updates from MailChimp. It is implemented as a webservice and
+handled the same way as the HyperMDM core REST webservice.</p>
+<p>To enable the webhook:</p>
+<ul>
+<li class="">
+<p>Enable the HyperMDM core webservice feature.</p>
+</li>
+<li class="">
+<p>Create a HyperMDM user for handling the webhook, for example <code>mailchimp-webhook</code>.</p>
+</li>
+<li class="">
+<p>Generate an API key for that HyperMDM user.</p>
+</li>
+<li class="">
+<p>Add a webhook in the MailChimp web interface with this URL:
+<code>https://mydomain.com/__customermanagementframework/webservice/mailchimp/webhook?apikey=53c5f6f3427545e712fe59ce043489f86ee0eb4b64a7c098d89d4288167eec1c</code></p>
+<p>Configure the webhook like this:</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Webhook options</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mailchimp-webhook-options-632fb81653bf8360dc353ebf3c906cce.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/mailchimp-webhook-options-632fb81653bf8360dc353ebf3c906cce.png"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Webhook options</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mailchimp-webhook-options-632fb81653bf8360dc353ebf3c906cce.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/mailchimp-webhook-options-632fb81653bf8360dc353ebf3c906cce.png"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Webhook options</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mailchimp-webhook-options-632fb81653bf8360dc353ebf3c906cce.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+</li>
+</ul>
+<div class="theme-admonition theme-admonition-caution admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Architecture / Workflow Diagram</div>
+        <div class="visual-placeholder__meta">
+          
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span>caution</div><div class="admonitionContent_BuS1"><p>HyperMDM should be the master database. Do not allow changes to user data (for example interest groups) from within
+MailChimp. CMF processes updates to simple merge fields, but it is safer to disallow such updates on the MailChimp
+side. Customer segments and interest groups can never be synced back to HyperMDM.</p></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="cron-job-for-syncing-data-from-mailchimp-to-hypermdm">Cron Job for Syncing Data from MailChimp to HyperMDM<a href="#cron-job-for-syncing-data-from-mailchimp-to-hypermdm" class="hash-link" aria-label="Direct link to Cron Job for Syncing Data from MailChimp to Pimcore" title="Direct link to Cron Job for Syncing Data from MailChimp to Pimcore" translate="no">​</a></h3>
+<p>The webhook syncs MailChimp updates to HyperMDM close to real time, but this can fail, for example when the server is
+down. CMF offers an additional cron job, which can run once a day, to synchronize any updates that were missed. See
+also <a class="" href="../Cronjobs/index.html">Cron Jobs - Mailchimp status sync</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="exporting-customersegments-to-mailchimp">Exporting CustomerSegments to MailChimp<a href="#exporting-customersegments-to-mailchimp" class="hash-link" aria-label="Direct link to Exporting CustomerSegments to MailChimp" title="Direct link to Exporting CustomerSegments to MailChimp" translate="no">​</a></h2>
+<p>Customer segment exports are also handled by the newsletter queue. Because MailChimp limits a list to 60 interest
+groups (the MailChimp equivalent of CustomerSegments), CMF lets you configure which CustomerSegmentGroups to export;
+all segments within a selected group are exported.</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Export segment group to newsletter provider</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mailchimp-export-segment-group-a4bc152bb6f732e0ba20750b63b21f62.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/mailchimp-export-segment-group-a4bc152bb6f732e0ba20750b63b21f62.png"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-10">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-10</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Export segment group to newsletter provider</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mailchimp-export-segment-group-a4bc152bb6f732e0ba20750b63b21f62.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-10">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/mailchimp-export-segment-group-a4bc152bb6f732e0ba20750b63b21f62.png"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-11">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-11</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Export segment group to newsletter provider</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mailchimp-export-segment-group-a4bc152bb6f732e0ba20750b63b21f62.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-11">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Add a checkbox <code>exportNewsletterProvider{PROVIDER_HANDLER_SHORTCUT}</code> for each provider handler (MailChimp list) to the
+CustomerSegmentGroup data objects. The shortcut is capitalized in the field name, so a provider handler with the
+shortcut <code>list1</code> needs the field <code>exportNewsletterProviderList1</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="exporting-newsletter-templates-to-mailchimp">Exporting Newsletter Templates to MailChimp<a href="#exporting-newsletter-templates-to-mailchimp" class="hash-link" aria-label="Direct link to Exporting Newsletter Templates to MailChimp" title="Direct link to Exporting Newsletter Templates to MailChimp" translate="no">​</a></h2>
+<p>Once the newsletter sync is enabled, an "Export Template to MailChimp" button appears on email documents:</p>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-12">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-12</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Export Template to MailChimp button</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mailchimp-export-template-f938848c46d7b06ffe15b3775b40ffb3.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-12">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/mailchimp-export-template-f938848c46d7b06ffe15b3775b40ffb3.png"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-13">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-13</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Export Template to MailChimp button</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mailchimp-export-template-f938848c46d7b06ffe15b3775b40ffb3.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-13">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/mailchimp-export-template-f938848c46d7b06ffe15b3775b40ffb3.png"><figure class="visual-placeholder" id="fig-Customer_Management_Framework-NewsletterSync-index-14">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-Customer_Management_Framework-NewsletterSync-index-14</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">Export Template to MailChimp button</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/mailchimp-export-template-f938848c46d7b06ffe15b3775b40ffb3.png" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../visuals-catalog.html#fig-Customer_Management_Framework-NewsletterSync-index-14">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Use it to build the newsletter in HyperMDM and then use it for email campaigns in MailChimp.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="logging">Logging<a href="#logging" class="hash-link" aria-label="Direct link to Logging" title="Direct link to Logging" translate="no">​</a></h2>
+<p>CMF logs MailChimp sync activity at three levels:</p>
+<ul>
+<li class="">Customer activities are tracked on each MailChimp status change.</li>
+<li class="">The customer's notes and events tab lists successful exports.</li>
+<li class="">Errors are logged to the application logger.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../search.js"></script>
+</body>
+</html>

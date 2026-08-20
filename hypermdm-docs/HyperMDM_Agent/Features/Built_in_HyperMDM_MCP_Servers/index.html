@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Built-in HyperMDM MCP Servers — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Built-in HyperMDM MCP Servers</h1></header>
+<p>The bundle ships a catalog of HyperMDM operations exposed as <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer" class="">Model Context Protocol</a>
+tools, organised into <strong>tool groups</strong>. Each group is a streamable-HTTP MCP endpoint served at
+<code>/hypermdm-mcp/agent/&lt;group&gt;</code>. Two kinds of client can consume them:</p>
+<ol>
+<li class=""><strong>The built-in HyperMDM Agent</strong> inside Studio - the normal case; an agent declares which groups it may use.</li>
+<li class=""><strong>An external MCP-capable LLM client</strong> (Claude Desktop, Cursor, a custom integration) - pointed directly at the
+endpoints with a personal access token.</li>
+</ol>
+<p>Both consume the <em>same</em> tools and are subject to the <em>same</em> HyperMDM permissions. What differs is the credential and
+whether an interactive chat session exists (which some tools require - see below).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-built-in-tool-groups">The built-in tool groups<a href="#the-built-in-tool-groups" class="hash-link" aria-label="Direct link to The built-in tool groups" title="Direct link to The built-in tool groups" translate="no">​</a></h2>
+<p>All internal tools are registered via the <code>hypermdm.mcp_tool</code> service tag. Endpoints follow the pattern
+<code>/hypermdm-mcp/agent/&lt;group&gt;</code>.</p>
+<blockquote>
+<p><strong>Always-current list:</strong> run <code>bin/console hypermdm-agent:mcp:list-tools</code> to see the live set of groups and
+tools registered in your installation. Add <code>-v</code> to also print the backing PHP class and method for each tool.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="data-objects">Data Objects<a href="#data-objects" class="hash-link" aria-label="Direct link to Data Objects" title="Direct link to Data Objects" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Group</th><th>Description</th><th>Tools</th></tr></thead><tbody><tr><td><code>hypermdm-data-objects-read</code></td><td>Read-only data object access</td><td><code>list_classes</code>, <code>get_class_definition</code>, <code>get_field_schema</code>, <code>get_data_object</code>, <code>get_queryable_fields</code>, <code>search_data_objects</code></td></tr><tr><td><code>hypermdm-data-objects-write</code></td><td>Create objects + propose updates (HITL)</td><td><code>create_data_object</code>, <code>propose_data_object_update</code></td></tr><tr><td><code>hypermdm-data-objects-direct-write</code></td><td>Direct updates (<strong>no</strong> user approval)</td><td><code>update_data_object</code></td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="assets">Assets<a href="#assets" class="hash-link" aria-label="Direct link to Assets" title="Direct link to Assets" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Group</th><th>Description</th><th>Tools</th></tr></thead><tbody><tr><td><code>hypermdm-assets-read</code></td><td>Read-only asset access with staging</td><td><code>get_asset</code>, <code>get_asset_queryable_fields</code>, <code>list_assets</code>, <code>search_assets</code>, <code>stage_asset</code></td></tr><tr><td><code>hypermdm-assets-write</code></td><td>Propose asset metadata changes (HITL)</td><td><code>propose_asset_metadata_update</code></td></tr><tr><td><code>hypermdm-assets-direct-write</code></td><td>Direct asset upload and update (<strong>no</strong> user approval)</td><td><code>update_asset</code>, <code>upload_asset</code></td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="documents">Documents<a href="#documents" class="hash-link" aria-label="Direct link to Documents" title="Direct link to Documents" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Group</th><th>Description</th><th>Tools</th></tr></thead><tbody><tr><td><code>hypermdm-documents-read</code></td><td>Read-only document access</td><td><code>get_area_brick</code>, <code>get_document</code>, <code>get_document_schema</code>, <code>list_target_groups</code>, <code>search_documents</code></td></tr><tr><td><code>hypermdm-documents-write</code></td><td>Create documents and propose editable changes (HITL)</td><td><code>create_document</code>, <code>list_document_types</code>, <code>propose_document_update</code></td></tr><tr><td><code>hypermdm-documents-direct-write</code></td><td>Direct editable updates (<strong>no</strong> user approval)</td><td><code>update_document</code></td></tr></tbody></table></div>
+<blockquote>
+<p><code>list_target_groups</code> lives in the read group only. An agent that authors target-group variants needs read access
+anyway (to inspect the document before proposing), so a second registration in the write group would register the same
+tool twice. When the optional HyperMDM personalization-bundle is not installed it returns
+<code>{available: false, targetGroups: []}</code> - see
+<a class="" href="../../Architecture/Document_Schema/index.html#target-group-variants-personalization">Document Schema → Target-group variants</a>.</p>
+</blockquote>
+<blockquote>
+<p><strong>To get good edits on YOUR documents</strong>, author example fixtures for your areabricks and document templates. The LLM
+uses them to pattern-match a valid edit. See <a class="" href="../../Extending/Template_Examples/index.html">Extending → Template Examples</a>
+for the dev workflow (two CLI commands + a coding-agent SKILL that automates authoring). The MCP tools work without
+fixtures, but small LLMs benefit substantially from worked examples.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="tags">Tags<a href="#tags" class="hash-link" aria-label="Direct link to Tags" title="Direct link to Tags" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Group</th><th>Description</th><th>Tools</th></tr></thead><tbody><tr><td><code>hypermdm-tags-read</code></td><td>Read-only tag access</td><td><code>get_element_tags</code>, <code>list_tags</code></td></tr><tr><td><code>hypermdm-tags-write</code></td><td>Propose tag changes (HITL) and create tags</td><td><code>create_tag</code>, <code>propose_tag_assignment</code></td></tr><tr><td><code>hypermdm-tags-direct-write</code></td><td>Direct tag assign/unassign (<strong>no</strong> user approval)</td><td><code>assign_tag</code>, <code>unassign_tag</code></td></tr></tbody></table></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="agent-templates">Agent Templates<a href="#agent-templates" class="hash-link" aria-label="Direct link to Agent Templates" title="Direct link to Agent Templates" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Group</th><th>Description</th><th>Tools</th></tr></thead><tbody><tr><td><code>hypermdm-agent-templates</code></td><td>Generate Twig page/snippet/partial templates and HITL-propose them</td><td><code>list_editables</code>, <code>propose_agent_template</code>, <code>propose_agent_template_deletion</code>, <code>list_agent_templates</code>, <code>list_thumbnail_configs</code></td></tr><tr><td><code>hypermdm-file-staging</code></td><td>Stage developer-curated project files for reading. <strong>Auto-registered</strong> when the agent's <code>allowedFileStagingSets</code> is non-empty - do not list it in <code>hypermdmMcpServers</code>.</td><td><code>stage_file_set</code></td></tr></tbody></table></div>
+<p>See <a class="" href="../Agent_Templates/index.html">Agent Templates</a> for the feature, and
+<a class="" href="../../Configuration/File_Staging/index.html">Configuration → File Staging</a> /
+<a class="" href="../../Configuration/Agent_Templates/index.html">Configuration → Agent Templates</a> for the <code>file_staging</code> and
+<code>agent_templates</code> reference.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="tasks">Tasks<a href="#tasks" class="hash-link" aria-label="Direct link to Tasks" title="Direct link to Tasks" translate="no">​</a></h3>
+<div class="table-container"><table><thead><tr><th>Group</th><th>Description</th><th>Tools</th></tr></thead><tbody><tr><td><code>hypermdm-task</code></td><td>End a headless agent task with its final, machine-readable result. <strong>Auto-injected</strong> only into a task-type session - do not list it in <code>hypermdmMcpServers</code> / <code>hypermdmMetaGroups</code>; it never reaches a regular chat session.</td><td><code>finalize_task</code></td></tr></tbody></table></div>
+<p>See <a class="" href="../Agent_Tasks/index.html">Features → Agent Tasks</a> for the feature and
+<a class="" href="../../Architecture/Agent_Tasks/index.html">Architecture → Agent Tasks</a> for the mechanism that injects this group.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="workflows">Workflows<a href="#workflows" class="hash-link" aria-label="Direct link to Workflows" title="Direct link to Workflows" translate="no">​</a></h3>
+<p>Interact with the HyperMDM workflow engine — inspect state, list transitions
+and global actions, and apply them to elements.</p>
+<div class="table-container"><table><thead><tr><th>Group</th><th>Description</th><th>Tools</th></tr></thead><tbody><tr><td><code>hypermdm-workflows-read</code></td><td>Introspect workflows and their state on elements.</td><td><code>list_workflows</code>, <code>get_workflow_places</code>, <code>get_element_workflow_details</code>, <code>list_elements_by_workflow_state</code>, <code>get_workflow_graph</code></td></tr><tr><td><code>hypermdm-workflows-direct-write</code></td><td>Apply transitions and global actions (no approval).</td><td><code>apply_transition</code>, <code>apply_global_action</code></td></tr></tbody></table></div>
+<p>The direct-write group applies transitions atomically (no HITL "propose" phase — transitions fire the standard HyperMDM workflow events on submit). Studio enforces <code>view</code> permission on the target element at the boundary; further authorization is delegated to the per-transition guards configured on your workflow. Only wire this group into agents you trust to apply workflow actions unattended.</p>
+<blockquote>
+<p><strong>HITL vs. direct-write:</strong> the <code>*-write</code> groups create proposals the user must approve through the chat UI. The
+<code>*-direct-write</code> groups bypass that approval step - use them only for agents that run in trusted / automated contexts.</p>
+</blockquote>
+<p>See <a class="" href="../../Extending/Custom_MCP_Tools/index.html">Extending → Custom MCP Tools</a> for how to add tools to existing groups or
+register new ones.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="using-the-tool-groups">Using the tool groups<a href="#using-the-tool-groups" class="hash-link" aria-label="Direct link to Using the tool groups" title="Direct link to Using the tool groups" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="from-the-hypermdm-agent-inside-studio">From the HyperMDM Agent (inside Studio)<a href="#from-the-hypermdm-agent-inside-studio" class="hash-link" aria-label="Direct link to From the Pimcore Agent (inside Studio)" title="Direct link to From the Pimcore Agent (inside Studio)" translate="no">​</a></h3>
+<p>This is the primary path. An agent declares the groups it may use in its YAML via <code>hypermdmMcpServers</code> (schemas inline
+every turn) or <code>hypermdmMetaGroups</code> (behind the meta-tool). Calls are authenticated with the chat-scoped <code>pmcp_…</code>
+bearer, so the tools run with <strong>exactly the permissions of the user who started the chat</strong>, and HITL proposals surface
+as approval cards in the chat UI.</p>
+<p>→ Configure this in <a class="" href="../../Configuration/MCP_Servers/index.html">Configuration → MCP Servers</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="from-an-external-llm--mcp-client">From an external LLM / MCP client<a href="#from-an-external-llm--mcp-client" class="hash-link" aria-label="Direct link to From an external LLM / MCP client" title="Direct link to From an external LLM / MCP client" translate="no">​</a></h3>
+<p><strong>Yes - the groups are ordinary streamable-HTTP MCP servers, so any MCP-capable client can call them directly.</strong></p>
+<ul>
+<li class=""><strong>URL.</strong> Point the client at <code>https://&lt;your-hypermdm-host&gt;/hypermdm-mcp/agent/&lt;group&gt;</code> - for example
+<code>…/hypermdm-mcp/agent/hypermdm-data-objects-read</code>. The meta-tool endpoint
+<code>…/hypermdm-mcp/agent/meta?groups=&lt;a,b,c&gt;</code> exposes several groups behind the three generic meta tools.</li>
+<li class=""><strong>Authentication.</strong> External clients use a <strong>static Personal Access Token (PAT)</strong>, sent as
+<code>Authorization: Bearer &lt;token&gt;</code>. PATs are configured in the Studio Backend bundle under
+<code>hypermdm_studio_backend.mcp.authentication.tokens</code> as a <em>HyperMDM-username → token-list</em> map; the request then runs
+as that user. (This is a different credential from the agent's dynamic <code>pmcp_…</code> bearer, which is minted per chat
+session and is not something you configure by hand.)</li>
+<li class=""><strong>Permissions.</strong> Identical to the mapped user's HyperMDM permissions - workspace ACLs and role permissions apply.
+There are no MCP-specific scopes.</li>
+</ul>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  "mcpServers": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    "hypermdm-data-objects": {</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      "url": "https://your-hypermdm-host/hypermdm-mcp/agent/hypermdm-data-objects-read",</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      "headers": { "Authorization": "Bearer &lt;your-PAT&gt;" }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  }</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">}</span><br></span></code></pre></div></div>
+<blockquote>
+<p><strong>Chat-session caveat.</strong> Some tools require an interactive chat session and are therefore <strong>not usable from an
+external client</strong>: every HITL proposal tool (<code>propose_*</code>) and the staging tools (<code>stage_asset</code>, <code>stage_file_set</code>)
+resolve the current chat session from the dynamic <code>pmcp_…</code> token, which a PAT does not carry. From an external
+client, use the <strong>read</strong> groups and the <strong><code>*-direct-write</code></strong> groups; the HITL <code>*-write</code> groups and
+<code>hypermdm-file-staging</code> only work for the built-in HyperMDM Agent.</p>
+</blockquote>
+<p>For the firewall, the PAT configuration, and how the three MCP authenticators relate, see the Studio Backend bundle's
+<strong>MCP Server Infrastructure</strong> documentation. For the internal (<code>pmcp_…</code>) credential and token lifecycle, see
+<a class="" href="../../Architecture/MCP_Integration/index.html#authentication-forwarding">Architecture → MCP Integration</a> and
+<a class="" href="../../Architecture/Authentication/index.html">Architecture → Authentication</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-docs">Related docs<a href="#related-docs" class="hash-link" aria-label="Direct link to Related docs" title="Direct link to Related docs" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Configuration/MCP_Servers/index.html">Configuration → MCP Servers</a> - how an agent declares MCP access (the YAML keys).</li>
+<li class=""><a class="" href="../../Architecture/MCP_Integration/index.html">Architecture → MCP Integration</a> - transport, auth forwarding, meta-tool mechanism.</li>
+<li class=""><a class="" href="../../Architecture/Communication_Flows/index.html">Architecture → Communication Flows</a> - where MCP calls sit among all flows.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>System Requirements — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>System Requirements</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="server-requirements">Server Requirements<a href="#server-requirements" class="hash-link" aria-label="Direct link to Server Requirements" title="Direct link to Server Requirements" translate="no">​</a></h2>
+<p>For production, a *nix based system is highly recommended.</p>
+<blockquote>
+<p>Have a look at the official <a href="https://hub.docker.com/r/pimcore/pimcore" target="_blank" rel="noopener noreferrer" class="">Docker images</a> and the
+docker-compose files in the <a href="https://github.com/pimcore/skeleton/blob/2026.x/docker-compose.yaml" target="_blank" rel="noopener noreferrer" class="">skeleton</a>
+and <a href="https://github.com/pimcore/demo-enterprise" target="_blank" rel="noopener noreferrer" class="">demo enterprise</a> packages.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="web-server">Web Server<a href="#web-server" class="hash-link" aria-label="Direct link to Web Server" title="Direct link to Web Server" translate="no">​</a></h3>
+<ul>
+<li class="">Apache &gt;= 2.4<!-- -->
+<ul>
+<li class="">mod_rewrite</li>
+<li class="">.htaccess support (<code>AllowOverride All</code>)</li>
+</ul>
+</li>
+<li class="">Nginx (see the skeleton <a href="https://github.com/pimcore/skeleton/blob/2026.x/.docker/nginx.conf" target="_blank" rel="noopener noreferrer" class="">nginx.conf</a> for a working sample config)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php-85">PHP 8.5+<a href="#php-85" class="hash-link" aria-label="Direct link to PHP 8.5+" title="Direct link to PHP 8.5+" translate="no">​</a></h3>
+<p>Both <strong>mod_php</strong> and <strong>FCGI (FPM)</strong> are supported.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="required-settings-modules-and-extensions">Required Settings, Modules, and Extensions<a href="#required-settings-modules-and-extensions" class="hash-link" aria-label="Direct link to Required Settings, Modules, and Extensions" title="Direct link to Required Settings, Modules, and Extensions" translate="no">​</a></h4>
+<ul>
+<li class=""><code>memory_limit</code> &gt;= 128M</li>
+<li class=""><code>upload_max_filesize</code> and <code>post_max_size</code> &gt;= 100M (depending on your data)</li>
+<li class=""><a href="https://php.net/pdo-mysql" target="_blank" rel="noopener noreferrer" class="">pdo_mysql</a></li>
+<li class=""><a href="https://php.net/iconv" target="_blank" rel="noopener noreferrer" class="">iconv</a></li>
+<li class=""><a href="https://php.net/dom" target="_blank" rel="noopener noreferrer" class="">dom</a></li>
+<li class=""><a href="https://php.net/simplexml" target="_blank" rel="noopener noreferrer" class="">simplexml</a></li>
+<li class=""><a href="https://php.net/gd" target="_blank" rel="noopener noreferrer" class="">gd</a></li>
+<li class=""><a href="https://php.net/exif" target="_blank" rel="noopener noreferrer" class="">exif</a></li>
+<li class=""><a href="https://php.net/fileinfo" target="_blank" rel="noopener noreferrer" class="">fileinfo</a></li>
+<li class=""><a href="https://php.net/mbstring" target="_blank" rel="noopener noreferrer" class="">mbstring</a></li>
+<li class=""><a href="https://php.net/zlib" target="_blank" rel="noopener noreferrer" class="">zlib</a></li>
+<li class=""><a href="https://php.net/zip" target="_blank" rel="noopener noreferrer" class="">zip</a></li>
+<li class=""><a href="https://www.php.net/intl" target="_blank" rel="noopener noreferrer" class="">intl</a></li>
+<li class=""><a href="https://php.net/opcache" target="_blank" rel="noopener noreferrer" class="">opcache</a></li>
+<li class=""><a href="https://php.net/curl" target="_blank" rel="noopener noreferrer" class="">curl</a></li>
+<li class=""><a href="https://www.php.net/openssl" target="_blank" rel="noopener noreferrer" class="">ext-openssl</a></li>
+<li class="">CLI SAPI (for cron jobs)</li>
+<li class=""><a href="https://getcomposer.org/" target="_blank" rel="noopener noreferrer" class="">Composer 2</a> (added to <code>$PATH</code>)</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="recommended-or-optional-modules-and-extensions">Recommended or Optional Modules and Extensions<a href="#recommended-or-optional-modules-and-extensions" class="hash-link" aria-label="Direct link to Recommended or Optional Modules and Extensions" title="Direct link to Recommended or Optional Modules and Extensions" translate="no">​</a></h4>
+<ul>
+<li class=""><a href="https://php.net/imagick" target="_blank" rel="noopener noreferrer" class="">imagick</a>
+(if not installed, <em>gd</em> is used instead, but with fewer supported image types)<!-- -->
+<ul>
+<li class="">LCMS delegate for ImageMagick to prevent negative colors for CMYK images</li>
+</ul>
+</li>
+<li class=""><a href="https://github.com/phpredis/phpredis" target="_blank" rel="noopener noreferrer" class="">phpredis</a> (recommended cache backend adapter)</li>
+<li class=""><a href="https://php.net/mysqli" target="_blank" rel="noopener noreferrer" class="">mysqli</a> (PDO is still required for parameter mappings)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="database-server">Database Server<a href="#database-server" class="hash-link" aria-label="Direct link to Database Server" title="Direct link to Database Server" translate="no">​</a></h3>
+<ul>
+<li class="">MariaDB &gt;= 10.3</li>
+<li class="">MySQL &gt;= 8.0</li>
+<li class="">Percona Server (supported versions: see MySQL)</li>
+<li class=""><a href="https://aws.amazon.com/about-aws/whats-new/2021/11/amazon-aurora-mysql-8-0/" target="_blank" rel="noopener noreferrer" class="">AWS Aurora</a>
+(supported versions: see MySQL)</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="features">Features<a href="#features" class="hash-link" aria-label="Direct link to Features" title="Direct link to Features" translate="no">​</a></h4>
+<ul>
+<li class="">InnoDB / XtraDB storage engine</li>
+<li class="">Support for InnoDB fulltext indexes</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="permissions">Permissions<a href="#permissions" class="hash-link" aria-label="Direct link to Permissions" title="Direct link to Permissions" translate="no">​</a></h4>
+<p>All permissions on database level, specifically:</p>
+<ul>
+<li class="">Select, Insert, Update, Delete table data</li>
+<li class="">Create tables</li>
+<li class="">Drop tables</li>
+<li class="">Alter tables</li>
+<li class="">Manage indexes</li>
+<li class="">Create temp-tables</li>
+<li class="">Lock tables</li>
+<li class="">Execute</li>
+<li class="">Create view</li>
+<li class="">Show view</li>
+</ul>
+<blockquote>
+<p>For installing the <a href="https://github.com/pimcore/demo-enterprise" target="_blank" rel="noopener noreferrer" class="">demo enterprise</a> package, <code>Create routine</code> and <code>Alter routine</code> are additionally needed.</p>
+</blockquote>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="system-variables">System Variables<a href="#system-variables" class="hash-link" aria-label="Direct link to System Variables" title="Direct link to System Variables" translate="no">​</a></h4>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">[mysqld]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">innodb_file_per_table = 1</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">[mariadb]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">plugin_load_add = ha_archive # optional but recommended, starting from MariaDB 10.1 archive format is no longer activated by default (check and adapt for MySQL or other database software)</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="search-engine-required-for-hypermdm-studio">Search Engine (Required for HyperMDM Studio)<a href="#search-engine-required-for-hypermdm-studio" class="hash-link" aria-label="Direct link to Search Engine (Required for Pimcore Studio)" title="Direct link to Search Engine (Required for Pimcore Studio)" translate="no">​</a></h3>
+<p>HyperMDM Studio uses the Generic Data Index bundle for search and indexing.
+One of the following search engines is required:</p>
+<ul>
+<li class=""><strong>OpenSearch &gt;= 2.7</strong> (recommended)</li>
+<li class=""><strong>Elasticsearch &gt;= 8.0.0</strong></li>
+</ul>
+<p>See the <a class="" href="../index.html">Installation guide</a> for Docker setup and configuration.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="mercure-required-for-hypermdm-studio">Mercure (Required for HyperMDM Studio)<a href="#mercure-required-for-hypermdm-studio" class="hash-link" aria-label="Direct link to Mercure (Required for Pimcore Studio)" title="Direct link to Mercure (Required for Pimcore Studio)" translate="no">​</a></h3>
+<p>HyperMDM Studio uses <a href="https://mercure.rocks/" target="_blank" rel="noopener noreferrer" class="">Mercure</a> for real-time updates
+(progress tracking, live notifications).
+A Mercure hub must be available and reachable by both the server and the browser.</p>
+<p>The recommended setup uses the official Docker image (<code>dunglas/mercure:latest</code>) with an Nginx reverse proxy.
+See the <a class="" href="../index.html">Installation guide</a> for configuration details.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="redis-optional-but-recommended-for-caching">Redis (Optional but Recommended for Caching)<a href="#redis-optional-but-recommended-for-caching" class="hash-link" aria-label="Direct link to Redis (Optional but Recommended for Caching)" title="Direct link to Redis (Optional but Recommended for Caching)" translate="no">​</a></h3>
+<p>All versions &gt; 3 are supported.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h4>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># select an appropriate value for your data</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">maxmemory 768mb</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># IMPORTANT! Other policies will cause random inconsistencies of your data!</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">maxmemory-policy volatile-lru</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">save ""</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="rabbitmq-optional-but-recommended-for-messenger">RabbitMQ (Optional but Recommended for Messenger)<a href="#rabbitmq-optional-but-recommended-for-messenger" class="hash-link" aria-label="Direct link to RabbitMQ (Optional but Recommended for Messenger)" title="Direct link to RabbitMQ (Optional but Recommended for Messenger)" translate="no">​</a></h3>
+<p>HyperMDM uses the Symfony Messenger for background processing.
+As the number of elements grows, a robust queue system becomes important.
+RabbitMQ is recommended for its performance and scalability in managing high message volumes
+and complex workflows.</p>
+<p>See <a class="" href="../Advanced_Installation_Topics/Symfony_Messenger/index.html">Symfony Messenger</a> for messenger configuration.
+For an example configuration, refer to the
+<a href="https://github.com/pimcore/skeleton/blob/2026.x/.docker/messenger.yaml" target="_blank" rel="noopener noreferrer" class="">skeleton messenger config</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="operating-system">Operating System<a href="#operating-system" class="hash-link" aria-label="Direct link to Operating System" title="Direct link to Operating System" translate="no">​</a></h3>
+<p>Ensure all required packages for proper locale support by PHP are installed.
+On Debian-based systems, install the required locale packages:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">apt-get install locales-all</span><br></span></code></pre></div></div>
+<p>A reboot may be required on some systems.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="additional-server-software">Additional Server Software<a href="#additional-server-software" class="hash-link" aria-label="Direct link to Additional Server Software" title="Direct link to Additional Server Software" translate="no">​</a></h3>
+<ul>
+<li class="">FFMPEG (&gt;= 3)</li>
+<li class="">Ghostscript (&gt;= 9.16)</li>
+<li class="">LibreOffice (&gt;= 4.3)</li>
+<li class="">Chromium/Chrome</li>
+<li class="">xvfb</li>
+<li class="">timeout (GNU core utils)</li>
+<li class="">pdftotext (poppler utils)</li>
+<li class="">inkscape</li>
+<li class="">pngquant</li>
+<li class="">optipng</li>
+<li class="">jpegoptim</li>
+<li class="">exiftool</li>
+<li class=""><a href="https://www.graphviz.org/" target="_blank" rel="noopener noreferrer" class="">Graphviz</a></li>
+</ul>
+<p>All of these tools are pre-installed in the official <a href="https://hub.docker.com/r/pimcore/pimcore" target="_blank" rel="noopener noreferrer" class="">HyperMDM Docker images</a>.
+For custom setups, install them with your distribution's package manager and make sure they are
+added to <code>$PATH</code> so HyperMDM can find the executables — alternatively, you can
+<a href="https://github.com/pimcore/skeleton/blob/2026.x/config/services.yaml" target="_blank" rel="noopener noreferrer" class="">manually configure the path for each application</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="browser-requirements">Browser Requirements<a href="#browser-requirements" class="hash-link" aria-label="Direct link to Browser Requirements" title="Direct link to Browser Requirements" translate="no">​</a></h2>
+<p>HyperMDM Studio supports the latest two versions of all four major desktop browsers at the time of a release:</p>
+<ul>
+<li class=""><strong>Google Chrome (Recommended)</strong></li>
+<li class="">Mozilla Firefox</li>
+<li class="">Microsoft Edge</li>
+<li class="">Apple Safari</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="system-requirements-check">System Requirements Check<a href="#system-requirements-check" class="hash-link" aria-label="Direct link to System Requirements Check" title="Direct link to System Requirements Check" translate="no">​</a></h3>
+<p>A built-in tool gives you an overview of required and optional system requirements.</p>
+<p>You can check via the CLI:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bin/console hypermdm:system:requirements:check</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session Storage — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Session Storage</h1></header>
+<p>The agent-server is stateless - no conversation data in memory between requests. Every piece of session state is
+persisted to the HyperMDM database so conversations survive restarts, crashes, and container redeploys, and can be listed
+and resumed across browser sessions. (The Copilot <strong>runtime</strong> the SDK spawns keeps a <em>second</em>, separate copy of the
+conversation on disk - see <a href="#copilot-runtime-session-state" class="">Copilot runtime session state</a> - but PHP remains the record
+for the chat UI.)</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-is-stored">What is stored<a href="#what-is-stored" class="hash-link" aria-label="Direct link to What is stored" title="Direct link to What is stored" translate="no">​</a></h2>
+<div class="table-container"><table><thead><tr><th>Kind</th><th>Contents</th></tr></thead><tbody><tr><td><strong>Session metadata</strong></td><td>Session ID, user ID, current agent name, title, <code>type</code> (<code>chat</code> or <code>task</code>), <code>origin</code> (optional free-form provenance label), creation timestamp, last-activity timestamp.</td></tr><tr><td><strong>Messages</strong></td><td>Full conversation history with structured parts (text, thinking, debug, widgets, errors) and a status (<code>pending</code> / <code>streaming</code> / <code>complete</code> / <code>error</code>).</td></tr><tr><td><strong>Proposal statuses</strong></td><td>Resolution state of HITL proposals (pending, applied, rejected, error).</td></tr></tbody></table></div>
+<p>See <a href="#session-type-and-origin" class="">Session type and origin</a> below for what <code>type</code> and <code>origin</code> mean and where
+each is set.</p>
+<p>PHP is the <strong>record of truth</strong> for chat. The live Mercure layer is lossy by design; a reopened, reconnected, or
+overnight session is reconstructed by reading PHP (see <a class="" href="../Realtime_Sync/index.html">Real-time Sync</a>). For that to work the
+in-progress assistant turn is persisted <strong>incrementally</strong>, not only at completion.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-it-lives">Where it lives<a href="#where-it-lives" class="hash-link" aria-label="Direct link to Where it lives" title="Direct link to Where it lives" translate="no">​</a></h2>
+<p>The agent-server calls the PHP Studio Backend API over HTTP. PHP writes to three tables, all created automatically by
+the bundle installer:</p>
+<div class="table-container"><table><thead><tr><th>Table</th><th>Content</th></tr></thead><tbody><tr><td><code>bundle_agent_sessions</code></td><td>Session metadata.</td></tr><tr><td><code>bundle_agent_messages</code></td><td>Message history (JSON-encoded parts).</td></tr><tr><td><code>bundle_agent_proposal_statuses</code></td><td>Proposal statuses and payloads.</td></tr></tbody></table></div>
+<p>Sessions survive container restarts and are available across every agent-server instance that points at the same HyperMDM database.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="session-type-and-origin">Session type and origin<a href="#session-type-and-origin" class="hash-link" aria-label="Direct link to Session type and origin" title="Direct link to Session type and origin" translate="no">​</a></h2>
+<p>Every session carries a <code>type</code>: <code>'chat'</code> for an ordinary HyperMDM Studio chat conversation (the default), or
+<code>'task'</code> for a session created by <code>AgentTaskService::start()</code> (see
+<a class="" href="../../Features/Agent_Tasks/index.html">Features → Agent Tasks</a>). <code>type</code> is set once at session creation and
+never changes afterward. It drives task-specific access rules and tool overrides; see
+<a class="" href="../Tool_Security/index.html#task-session-tool-overrides">Tool Security → Task-session tool overrides</a>.</p>
+<p>Every session also carries an optional <code>origin</code>: a free-form provenance label, up to 190 characters,
+nullable and generic on every session regardless of <code>type</code>. A caller starting a task can set it through
+<code>AgentTaskRequest::$origin</code>; the value is trimmed and an empty string becomes <code>null</code>. See
+<a class="" href="../Agent_Tasks/index.html#origin-a-provenance-label-on-the-session">Architecture → Agent Tasks → Origin</a> for the
+normalization rule and why <code>origin</code> is a session field rather than a task field. The HyperMDM Copilot
+automation-action step sets it to <code>copilot-&lt;ACTION_NAME&gt;</code>; see
+<a class="" href="../../Features/Agent_Task_Copilot_Step/index.html">Agent Task Automation-Action Step</a>. Nothing in the bundle
+sets <code>origin</code> on a chat session today.</p>
+<p>In the HyperMDM Studio chat sidebar, a Chats / Tasks switch above the search field selects which <code>type</code> the
+conversation list shows. A task conversation with a non-empty <code>origin</code> renders it as a badge (with the full
+value in a tooltip); a task conversation with no <code>origin</code> renders no badge.</p>
+<p><strong>Listing sessions.</strong> The paginated session list backing the sidebar
+(<code>GET /hypermdm-studio/api/bundle/agent/sessions</code>) accepts an optional <code>type</code> query parameter (<code>chat</code> or
+<code>task</code>). Omitting it returns sessions of both types. The parameter is part of the request's cache key on the
+frontend, so the Chats view and the Tasks view keep independent paginated caches and independent
+infinite-scroll cursors.</p>
+<p><strong>Searching sessions.</strong> The same endpoint accepts an optional <code>search</code> query parameter. It matches
+case-insensitively as a substring of the session title or the agent name, and it composes with <code>type</code> and
+with the cursor pagination, so <code>total</code> and <code>nextCursor</code> describe the matching sessions. The term is trimmed,
+capped at 190 characters and <code>LIKE</code> wildcards in it are escaped, so a user searching for <code>%</code> or <code>_</code> matches
+those characters literally. A blank term means no filter. The search runs in the database rather than over
+the pages the sidebar happens to have loaded, so it finds a conversation anywhere in the history. The
+sidebar debounces typing before it issues the request.</p>
+<p><strong>Deleting sessions in bulk.</strong> The bulk-delete endpoint accepts the same optional <code>type</code> and <code>search</code>
+alongside its <code>deleteAll</code> flag, and the sidebar sends the switch's current value and the active search term
+with it. A "select all" therefore deletes exactly the sessions the list is showing: task sessions only in the
+Tasks view, and, while a search is active, only the sessions matching it. This mirrors the count the
+selection banner displays. Omitting both deletes every session the user owns.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="copilot-runtime-session-state">Copilot runtime session state<a href="#copilot-runtime-session-state" class="hash-link" aria-label="Direct link to Copilot runtime session state" title="Direct link to Copilot runtime session state" translate="no">​</a></h2>
+<p>PHP is the record for the <strong>chat UI</strong>, but it is not what the model resumes against. The Copilot runtime the SDK
+spawns maintains its <strong>own</strong> copy of the conversation on disk - the model's working context: user/assistant/tool
+messages (including full tool <strong>results</strong>), reasoning, and compaction checkpoints. Per session it writes:</p>
+<div class="table-container"><table><thead><tr><th>File</th><th>Content</th></tr></thead><tbody><tr><td><code>events.jsonl</code></td><td>Append-on-event conversation log (the replayable transcript).</td></tr><tr><td><code>session.db</code></td><td>SQLite index of the session.</td></tr><tr><td><code>checkpoints/</code></td><td>Compaction snapshots (see <a class="" href="../../Features/Interactive_Input/index.html">Interactive Input → <code>pauseAfter</code></a> and the infinite-session compaction behaviour).</td></tr></tbody></table></div>
+<p><code>client.resumeSession(id)</code> reloads this store to restore the model's in-context conversation - e.g. after an
+agent-server <strong>process</strong> restart, or when a session is evicted from the adapter's in-memory cache. PHP's
+<code>priorConversationContext</code> is only a <em>lossy text fallback</em> (recent messages, no tool results) injected on a
+destroy+recreate (agent switch, token re-mint, MCP transport reset); it is <strong>not</strong> a substitute for the runtime store.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="location-and-durability">Location and durability<a href="#location-and-durability" class="hash-link" aria-label="Direct link to Location and durability" title="Direct link to Location and durability" translate="no">​</a></h3>
+<p>The storage root is the client-level <code>baseDirectory</code> (set in <code>CopilotAdapter.initClient</code>), which sets <code>COPILOT_HOME</code>
+on the spawned runtime. It is sourced from <code>AGENT_SERVER_COPILOT_STATE_DIR</code> (default <code>/app/.copilot-state</code>), bind-mounted
+from <code>./var/tmp/copilot-state</code> in Compose.</p>
+<blockquote>
+<p><strong>This must be a durable mount.</strong> When <code>baseDirectory</code> is unset the runtime defaults to <code>~/.copilot</code> inside the
+container's <em>ephemeral</em> writable layer, which is wiped on container recreation (<code>down</code>/<code>up</code>, rebuild, image bump) -
+the SDK then resumes an <strong>empty</strong> conversation and the agent appears to "start over". A <code>tsx watch</code> process restart
+alone keeps the container filesystem, so it does not lose history. To wipe runtime state deliberately, see
+<a class="" href="../../Development/index.html">Development</a> (<code>rm -rf var/tmp/copilot-state/*</code>).</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="lifecycle">Lifecycle<a href="#lifecycle" class="hash-link" aria-label="Direct link to Lifecycle" title="Direct link to Lifecycle" translate="no">​</a></h2>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">1. Create     POST /agent-server/api/chat (new session)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → store.createSession(meta) → sessionId returned</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">2. User msg   The user message is persisted before the turn starts</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → store.appendMessage(sessionId, userMessage)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">3. Placeholder At turn start the assistant message is created with its stable id</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → store.updateMessage(sessionId, messageId, [], 'streaming')</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">4. Stream     The turn-so-far is flushed incrementally (coalesced)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → store.updateMessage(sessionId, messageId, parts, 'streaming')</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">5. Finalize   onComplete advances the status and writes the final parts</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → store.updateMessage(sessionId, messageId, parts, 'complete')</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">6. Title      Generated after first exchange (see Request Lifecycle)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → store.updateSession(sessionId, {title})</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">7. Resume     User returns to / reconnects an existing session</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → store.getSession(sessionId)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → store.getMessages(sessionId)   ← includes a still-streaming message</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → store.getProposalStatuses(sessionId)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">8. Delete     User deletes conversation</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → store.deleteSession(sessionId)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">              → Cascades: messages, proposals, uploaded files</span><br></span></code></pre></div></div>
+<p>Timing details - in particular the <code>onComplete</code> callback that finalizes the assistant message and triggers title
+generation - live in <a class="" href="../Request_Lifecycle/index.html">Request Lifecycle</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="incremental-persistence-the-record">Incremental persistence (the record)<a href="#incremental-persistence-the-record" class="hash-link" aria-label="Direct link to Incremental persistence (the record)" title="Direct link to Incremental persistence (the record)" translate="no">​</a></h2>
+<p>The agent-server's <code>php-flush-sink</code> writes the in-progress assistant message to PHP throughout a turn, so a
+reopened/overnight session reflects the turn-so-far rather than appearing only at completion:</p>
+<ul>
+<li class=""><strong>Placeholder at turn start.</strong> The assistant message is upserted with its stable id and <code>status: streaming</code> before
+any content lands, so other tabs / a reload see the in-progress bubble keyed consistently.</li>
+<li class=""><strong>Coalesced flushes.</strong> <code>text-delta</code> events debounce a flush (~1.5 s); any non-delta event (tool call, widget,
+error, notice) is a semantic boundary and flushes immediately. At most one flush is in flight (drop-coalesce,
+newest wins).</li>
+<li class=""><strong><code>streaming</code> → <code>complete</code>.</strong> <code>onComplete</code> waits for any in-flight streaming flush to settle, then writes the
+terminal <code>complete</code> state so a finished turn never gets stuck <code>streaming</code> on reload.</li>
+<li class=""><strong><code>debug</code> and <code>thinking</code> parts are persisted</strong>, so the Activity and reasoning bubbles survive a reload. The
+agent-server's response schema (<code>session.schema.ts</code>) carries a <code>debug</code> part variant - without it the catch-up
+<code>GET /sessions/:id</code> serializer rejects any persisted message that contains one.</li>
+<li class=""><strong><code>system-notice</code> persists as a separate <code>system</code>-role message</strong> (not a part of the assistant message), so the
+transport-recovery narrative survives a reload - important for overnight turns, where transport resets are most
+likely to fire.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-patch-endpoint">The PATCH endpoint<a href="#the-patch-endpoint" class="hash-link" aria-label="Direct link to The PATCH endpoint" title="Direct link to The PATCH endpoint" translate="no">​</a></h3>
+<p><code>store.updateMessage</code> calls a dedicated PHP route:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">PATCH /hypermdm-studio/api/bundle/agent/sessions/{id}/messages/{messageId}</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      body: { parts, status }</span><br></span></code></pre></div></div>
+<p><code>UpdateMessageController</code> → <code>AgentSessionService::updateMessage</code> upserts by message id (create-on-first-flush,
+overwrite-in-place thereafter), ownership-checked against the session's user. <code>parts</code> stays opaque JSON - every part
+the agent-server sends (<code>text</code>, <code>widget</code>, <code>debug</code>, <code>thinking</code>, …) is persisted verbatim, so a reopened session
+reproduces the full live turn including the Activity and reasoning bubbles.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration">Configuration<a href="#configuration" class="hash-link" aria-label="Direct link to Configuration" title="Direct link to Configuration" translate="no">​</a></h2>
+<p>The session store is not a configurable backend - the agent-server always calls the PHP Studio Backend API.
+The only wiring knob is <code>HYPERMDM_INTERNAL_URL</code> (default <code>http://nginx</code>), which tells the agent-server where
+to reach HyperMDM. See <a class="" href="../../Configuration/Environment_Variables/index.html">Configuration → Environment Variables</a>.</p></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

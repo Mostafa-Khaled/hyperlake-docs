@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>File Staging — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>File Staging</h1></header>
+<p>File staging exposes <strong>read-only, developer-curated sets of project files</strong> to an agent. It is a generic primitive: any
+agent capability can consume a file set - template generation is the first consumer, but nothing about the mechanism
+is template-specific.</p>
+<p>There are two roles:</p>
+<ul>
+<li class=""><strong>Developers configure file sets.</strong> A file set is a named, glob-defined list of project files (parent layouts, partials,
+brand docs, …), declared under <code>hypermdm_agent.file_staging</code>. Sets are read-only - the agent never writes back to
+project source.</li>
+<li class=""><strong>Agents load a set into their session.</strong> The agent calls the <code>stage_file_set</code> MCP tool with a set name; the bundle
+copies the matching files into the chat session's scratch directory, where the agent reads them with its built-in
+<code>view</code> / <code>grep</code> / <code>glob</code> tools.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-staging-works">How staging works<a href="#how-staging-works" class="hash-link" aria-label="Direct link to How staging works" title="Direct link to How staging works" translate="no">​</a></h2>
+<p><code>stage_file_set</code> resolves the named set, expands its glob patterns, applies the security filters below, and copies each
+accepted file into the session's <code>staged/</code> directory:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">/app/uploads/{chatSessionId}/staged/&lt;path relative to project root&gt;</span><br></span></code></pre></div></div>
+<p>The <strong>relative directory layout is preserved</strong> - a file at <code>templates/layouts/cms.html.twig</code> is staged at
+<code>staged/templates/layouts/cms.html.twig</code>. This keeps <code>{% include %}</code> / <code>{% extends %}</code> paths meaningful and avoids
+basename collisions. Every call is a full re-copy, so re-staging picks up edits to the source files.</p>
+<p>The agent reads the staged files through the same path-sandboxed SDK file tools used for uploads -
+see <a class="" href="../../Features/File_Attachments/index.html">File Attachments</a> for the directory model and
+<a class="" href="../Tool_Security/index.html">Tool Security</a> for the sandbox.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="security-model">Security model<a href="#security-model" class="hash-link" aria-label="Direct link to Security model" title="Direct link to Security model" translate="no">​</a></h2>
+<p>A configured set is fenced by two layers, both enforced at resolve time:</p>
+<div class="table-container"><table><thead><tr><th>Layer</th><th>Effect</th></tr></thead><tbody><tr><td><code>roots</code> allowlist</td><td>A glob match is staged only if it falls under one of the configured project-relative root subtrees; matches outside every root are skipped with a warning.</td></tr><tr><td><code>denylist</code></td><td>Filename/path patterns (<code>.env*</code>, <code>*.key</code>, <code>*.pem</code>, <code>auth.json</code>, …) are always skipped, even inside an allowed root.</td></tr></tbody></table></div>
+<p>Paths are resolved to their real location and confined to the project root, so symlinks cannot escape it. Staging is
+session-scoped: files land only in the requesting session's directory, and an agent can never reach another session's files.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="enabling-it-on-an-agent">Enabling it on an agent<a href="#enabling-it-on-an-agent" class="hash-link" aria-label="Direct link to Enabling it on an agent" title="Direct link to Enabling it on an agent" translate="no">​</a></h2>
+<p>An agent gets file staging through its <code>allowedFileStagingSets</code> field. A non-empty value auto-registers the
+<code>hypermdm-file-staging</code> MCP group (which provides <code>stage_file_set</code>) and restricts the agent to exactly the listed sets</p>
+<ul>
+<li class="">no separate <code>hypermdmMcpServers</code> entry is needed.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-session-files">Related session files<a href="#related-session-files" class="hash-link" aria-label="Direct link to Related session files" title="Direct link to Related session files" translate="no">​</a></h2>
+<p><code>staged/</code> also holds HyperMDM asset copies pulled in by <code>stage_asset</code>, and <code>uploaded/</code> holds user uploads. All three
+sources share one path sandbox.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="further-reading">Further reading<a href="#further-reading" class="hash-link" aria-label="Direct link to Further reading" title="Direct link to Further reading" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="../../Configuration/File_Staging/index.html">Configuration → File Staging</a> - the <code>roots</code> / <code>denylist</code> / <code>sets</code> reference.</li>
+<li class=""><a class="" href="../Tool_Security/index.html">Tool Security</a> - the path sandbox staged files are read through.</li>
+<li class=""><a class="" href="../../Features/File_Attachments/index.html">File Attachments</a> - the session scratch-directory model.</li>
+<li class=""><a class="" href="../../Features/Agent_Templates/index.html">Agent Templates</a> - the first capability that consumes file sets.</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

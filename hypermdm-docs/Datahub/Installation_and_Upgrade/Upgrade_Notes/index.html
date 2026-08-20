@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade Notes — HyperMDM</title>
+<link rel="stylesheet" href="../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Upgrade Notes</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202626">Upgrade to 2026.2.6<a href="#upgrade-to-202626" class="hash-link" aria-label="Direct link to Upgrade to 2026.2.6" title="Direct link to Upgrade to 2026.2.6" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="graphql-unit-of-quantityvalue--inputquantityvalue-is-now-null-when-no-unit-is-set">GraphQL: <code>unit</code> of <code>QuantityValue</code> / <code>InputQuantityValue</code> is now <code>null</code> when no unit is set<a href="#graphql-unit-of-quantityvalue--inputquantityvalue-is-now-null-when-no-unit-is-set" class="hash-link" aria-label="Direct link to graphql-unit-of-quantityvalue--inputquantityvalue-is-now-null-when-no-unit-is-set" title="Direct link to graphql-unit-of-quantityvalue--inputquantityvalue-is-now-null-when-no-unit-is-set" translate="no">​</a></h3>
+<p>Quantity value fields without a selected unit previously returned the <code>unit</code> field as an object whose
+subfields were all <code>null</code> (e.g. <code>"unit": {"id": null}</code>). It is now <code>null</code> as the (nullable) schema
+definition implies:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">{ "length": { "value": 8500, "unit": null } }</span><br></span></code></pre></div></div>
+<p>Clients that access <code>unit</code> subfields unconditionally (e.g. <code>data.length.unit.id</code>) have to null-check
+<code>unit</code> first.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="upgrade-to-202610">Upgrade to 2026.1.0<a href="#upgrade-to-202610" class="hash-link" aria-label="Direct link to Upgrade to 2026.1.0" title="Direct link to Upgrade to 2026.1.0" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="php--symfony-version-requirements">PHP &amp; Symfony Version Requirements<a href="#php--symfony-version-requirements" class="hash-link" aria-label="Direct link to PHP &amp; Symfony Version Requirements" title="Direct link to PHP &amp; Symfony Version Requirements" translate="no">​</a></h3>
+<ul>
+<li class="">Added support for <code>PHP</code> <code>8.5</code>.</li>
+<li class="">Removed support for <code>PHP</code> <code>8.3</code> and Symfony <code>v6</code>.</li>
+<li class="">Minimum required Symfony version is now <code>^7.2</code> (dev: <code>^7.4</code> for <code>symfony/runtime</code>).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="removed-extjs--admin-classic-ui">Removed ExtJS / Admin Classic UI<a href="#removed-extjs--admin-classic-ui" class="hash-link" aria-label="Direct link to Removed ExtJS / Admin Classic UI" title="Direct link to Removed ExtJS / Admin Classic UI" translate="no">​</a></h3>
+<ul>
+<li class="">Removed all ExtJS-based frontend JavaScript files (<code>src/Resources/public/js/</code>), including the full configuration UI, field dialog, adapters, workspace editors, query and mutation operators.</li>
+<li class="">Removed <code>ConfigController</code> (previously provided the classic admin config API at <code>/hypermdm-datahub-webservices/explorer/{clientname}</code> and related actions).</li>
+<li class="">Removed <code>GraphQLExplorerController</code> (previously served the ExtJS-based GraphQL Explorer at <code>/hypermdm-datahub-webservices/explorer/{clientname}</code>).</li>
+<li class="">Removed <code>AdminListener</code> (no longer needed without classic admin integration).</li>
+<li class="">Removed <code>StudioRouteLoader</code>: Studio routes are now registered directly via <code>routing.yml</code> using attribute-based routing.</li>
+<li class="">Removed <code>ExportService</code> and <code>ImportService</code> (classic admin import/export, not related to Studio).</li>
+<li class=""><code>HyperMDMDataHubBundle</code> no longer implements <code>HyperMDMBundleAdminClassicInterface</code> or <code>DependentBundleInterface</code> and no longer uses <code>BundleAdminClassicTrait</code>.</li>
+<li class="">Removed dependency on <code>hypermdm/admin-ui-classic-bundle</code> and <code>hypermdm/compatibility-bridge-v10</code> from <code>composer.json</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="routing-changes">Routing Changes<a href="#routing-changes" class="hash-link" aria-label="Direct link to Routing Changes" title="Direct link to Routing Changes" translate="no">​</a></h3>
+<ul>
+<li class="">The Studio routing entry has been renamed from <code>hypermdm_statistics_explorer_studio</code> to <code>hypermdm_data_hub_studio</code>. Update any references in custom routing configurations accordingly.</li>
+<li class="">The separate <code>studio_routing.yaml</code> file has been removed; Studio routes are now defined directly in <code>routing.yml</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="studio-integration">Studio Integration<a href="#studio-integration" class="hash-link" aria-label="Direct link to Studio Integration" title="Direct link to Studio Integration" translate="no">​</a></h3>
+<ul>
+<li class="">Added full Studio UI integration for GraphQL configurations (browse, create, edit, clone, delete, import, export).</li>
+<li class="">New Studio REST API endpoints added under <code>/hypermdm-studio/api/bundle/data-hub/config/...</code> (collection, add, get, update, clone, delete, import, export).</li>
+<li class="">New Studio REST API endpoints added: GraphQL Explorer URL (<code>/hypermdm-studio/api/bundle/data-hub/graphql/explorer-url/{name}</code>), thumbnails, and user permissions.</li>
+<li class="">New interfaces introduced for Studio services:<!-- -->
+<ul>
+<li class=""><code>ConfigurationServiceInterface</code> (<code>src/Service/Studio/ConfigurationServiceInterface.php</code>)</li>
+<li class=""><code>ConfigurationHydratorInterface</code> (<code>src/Hydrator/ConfigurationHydratorInterface.php</code>)</li>
+<li class=""><code>ConfigurationDehydratorInterface</code> (<code>src/Hydrator/ConfigurationDehydratorInterface.php</code>)</li>
+<li class=""><code>ConfigurationDetailHydratorInterface</code> (<code>src/Hydrator/ConfigurationDetailHydratorInterface.php</code>)</li>
+<li class=""><code>GraphQLExplorerServiceInterface</code> (<code>src/Service/Studio/GraphQLExplorerServiceInterface.php</code>)</li>
+<li class=""><code>ThumbnailHydratorInterface</code> (<code>src/Hydrator/ThumbnailHydratorInterface.php</code>)</li>
+<li class=""><code>ThumbnailServiceInterface</code> (<code>src/Service/Studio/ThumbnailServiceInterface.php</code>)</li>
+<li class=""><code>PermissionUserHydratorInterface</code> (<code>src/Hydrator/PermissionUserHydratorInterface.php</code>)</li>
+<li class=""><code>UserServiceInterface</code> (<code>src/Service/Studio/UserServiceInterface.php</code>)</li>
+</ul>
+</li>
+<li class="">New pre-response events dispatched before Studio API responses:<!-- -->
+<ul>
+<li class=""><code>ConfigurationEvent</code>, <code>ConfigurationDetailEvent</code>, <code>PermissionUserEvent</code>, <code>ThumbnailEvent</code></li>
+</ul>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="new-graphql-events">New GraphQL Events<a href="#new-graphql-events" class="hash-link" aria-label="Direct link to New GraphQL Events" title="Direct link to New GraphQL Events" translate="no">​</a></h3>
+<ul>
+<li class="">Added <code>ListingEvents::PRE_BUILD</code> event dispatched before building GraphQL query listings. Implement a listener on this event to modify listing arguments before the query is executed.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="return-type-and-phpdoc-changes">Return Type and PHPDoc Changes<a href="#return-type-and-phpdoc-changes" class="hash-link" aria-label="Direct link to Return Type and PHPDoc Changes" title="Direct link to Return Type and PHPDoc Changes" translate="no">​</a></h3>
+<ul>
+<li class=""><code>HyperMDMDataHubBundle::getInstaller()</code> return type changed from <code>?InstallerInterface</code> to <code>InstallerInterface</code> (non-nullable).</li>
+<li class=""><code>ElementPropertyType::resolveType()</code> return type changed from <code>ObjectType|string|callable|Deferred|null</code> to <code>ObjectType|callable|null</code>: <code>string</code> and <code>Deferred</code> removed from union.</li>
+<li class=""><code>HotspotMetadataType::resolveType()</code> return type changed from <code>ObjectType|string|callable|Deferred|null</code> to <code>ObjectType|callable|null</code>: <code>string</code> and <code>Deferred</code> removed from union.</li>
+<li class=""><code>DocumentType::resolveType()</code> return type changed from <code>callable|Deferred|ObjectType|null|string</code> to <code>callable|ObjectType|null</code>.</li>
+<li class=""><code>AbstractOperator::$children</code> property PHPDoc type changed from <code>ConfigElementInterface[]</code> to <code>array</code>: <code>ConfigElementInterface</code> from <code>HyperMDM\DataObject\GridColumnConfig</code> is no longer referenced.</li>
+<li class=""><code>AbstractOperator::getChildren()</code> return PHPDoc changed from <code>ConfigElementInterface[]</code> to <code>array</code>.</li>
+<li class=""><code>Service::buildOperator()</code> parameter PHPDoc changed from <code>ConfigElementInterface</code> to <code>array</code>.</li>
+<li class=""><code>ReverseManyToManyObjects::resolve()</code> return PHPDoc changed from <code>array|null</code> to <code>array</code>.</li>
+<li class=""><code>ElementMetadataKeyValuePairInputType::getInstance()</code> return PHPDoc changed from <code>ElementMetadataKeyValuePairInputType|null</code> to <code>ElementMetadataKeyValuePairInputType</code>.</li>
+<li class=""><code>ClassificationstoreFeatureQueryTypeGenerator\Date::getFieldType()</code> return PHPDoc changed from <code>DateType|null</code> to <code>DateType</code>.</li>
+<li class=""><code>Thumbnail::getLabeledValue()</code> and <code>ThumbnailHtml::getLabeledValue()</code> return PHPDoc changed from <code>\stdClass|null</code> to <code>\stdClass</code>.</li>
+<li class=""><code>DateFormatter::format()</code> return PHPDoc changed from <code>Carbon|int|string</code> to <code>int|string</code>.</li>
+<li class=""><code>Link::resolveValue()</code>, <code>Link::resolveHref()</code>, <code>Link::resolveTarget()</code>, <code>Link::resolveLinkValue()</code> return PHPDoc changed from <code>string|null</code> / <code>null</code> to <code>mixed</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="dependency-updates">Dependency Updates<a href="#dependency-updates" class="hash-link" aria-label="Direct link to Dependency Updates" title="Direct link to Dependency Updates" translate="no">​</a></h3>
+<ul>
+<li class="">Removed Doctrine <code>enum</code> type mapping. The custom <code>enum: string</code> mapping is no longer required in Doctrine configuration.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="202620">2026.2.0<a href="#202620" class="hash-link" aria-label="Direct link to 2026.2.0" title="Direct link to 2026.2.0" translate="no">​</a></h2>
+<ul>
+<li class="">[MutationType] Added system field <code>published</code> as an optional argument for data object mutation</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="220">2.2.0<a href="#220" class="hash-link" aria-label="Direct link to 2.2.0" title="Direct link to 2.2.0" translate="no">​</a></h2>
+<ul>
+<li class="">[MutationType] Added system field <code>key</code> as an optional argument for data object mutation</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="200">2.0.0<a href="#200" class="hash-link" aria-label="Direct link to 2.0.0" title="Direct link to 2.0.0" translate="no">​</a></h2>
+<ul>
+<li class="">[General] Marked several classes as internal and/or final.</li>
+<li class="">[General] Added timezone indication for date and datetime fields in the GraphQL schema, including creation and modification date.
+Therefore, the type of both date fields in the GraphQL schema have changed from <code>int</code> (timestamp) to <code>string</code>.</li>
+<li class="">[Operator] Removed merge operator</li>
+<li class="">[Command] Removed RebuildDefinitionsCommand (<code>datahub:graphql:rebuild-definitions</code>), use RebuildWorkspacesCommand (<code>datahub:configuration:rebuild-workspaces</code>) instead.</li>
+<li class="">[Config] Removed DatahubConfigLocator class</li>
+<li class="">[Config] Removed support for legacy config file (<code>datahub-configurations.php</code>)</li>
+<li class="">[Config] Removed <code>getConfigModificationDate</code> from config dao.</li>
+<li class="">[Config] Removed sql query config field</li>
+<li class="">[QueryType] <code>args['path']</code> will no longer be supported, use <code>args['fullpath']</code> instead.</li>
+<li class="">[DataType] Generated type names now include the type itself, see <a href="https://github.com/pimcore/data-hub/issues/879" target="_blank" rel="noopener noreferrer" class="">https://github.com/hypermdm/data-hub/issues/879</a></li>
+<li class="">[QueryType] Change type name for <code>table</code> definition, now the name also includes the type, see <a href="https://github.com/pimcore/data-hub/pull/883" target="_blank" rel="noopener noreferrer" class="">https://github.com/hypermdm/data-hub/pull/883</a></li>
+<li class="">[DataType] Added numeric-prefix <code>col</code> for <code>table</code> columns to allow numbers as column names</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="180">1.8.0<a href="#180" class="hash-link" aria-label="Direct link to 1.8.0" title="Direct link to 1.8.0" translate="no">​</a></h2>
+<ul>
+<li class="">[General] Dropped support of <code>hypermdm/hypermdm</code> v10. Bumped minimum requirement of <code>hypermdm/hypermdm</code> to <code>^11.2</code></li>
+<li class="">[General] Replaced Request::get() with explicit input sources.</li>
+<li class="">[Schema Definition] Added a button to add all definitions except system columns, along with multi drag-and-drop functionality using CTRL+ click to select and drag multiple fields to the configuration.</li>
+<li class="">[Schema Definition] A category selector with CTRL + click functionality was added, and the issue with deleting the entire configuration has been resolved.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="170">1.7.0<a href="#170" class="hash-link" aria-label="Direct link to 1.7.0" title="Direct link to 1.7.0" translate="no">​</a></h2>
+<ul>
+<li class="">[GraphQL] Deprecated SQL Condition.</li>
+<li class="">[GraphQL] Added the possibility to disable deprecated SQL Condition.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="160">1.6.0<a href="#160" class="hash-link" aria-label="Direct link to 1.6.0" title="Direct link to 1.6.0" translate="no">​</a></h2>
+<ul>
+<li class="">[General] If you want to use Datahub 1.6 and HyperMDM 11, please make sure to require the <code>hypermdm/admin-ui-classic-bundle</code>.</li>
+<li class="">[Config Location] Change default directory for configurations to <code>var/config/data_hub</code></li>
+<li class="">When using HyperMDM 11, configurations from <code>datahub-configurations.php</code> are no longer used. To migrate those configurations
+to the settings store, use the provided <code>datahub:configuration:migrate-legacy-config</code> command.</li>
+<li class="">Added the ability to import and export each type of Datahub configuration.
+Be sure to include the <code>supported_types</code> configuration in any custom implementation to use the import functionality!</li>
+<li class="">Added possibility to disable the introspection for GraphQL via configuration tree.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="150">1.5.0<a href="#150" class="hash-link" aria-label="Direct link to 1.5.0" title="Direct link to 1.5.0" translate="no">​</a></h2>
+<ul>
+<li class="">When "Skip Permission Check" is active in a GraphQL configuration, the "Workspaces" settings are also skipped</li>
+<li class="">It is possible to add more than one API key per configuration now. Therefore, the API keys get stored as an array
+in the configuration. Configurations from previous versions are still supported, but they get converted to the new format
+as soon as they get saved.</li>
+<li class="">Added "Translation Listing" and "Translation" to the Generic Types</li>
+</ul></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../search.js"></script>
+</body>
+</html>

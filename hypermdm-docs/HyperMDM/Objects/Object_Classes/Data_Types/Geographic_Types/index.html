@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Geographic Datatypes — HyperMDM</title>
+<link rel="stylesheet" href="../../../../../hypercdc-screen.css">
+<link rel="stylesheet" media="print" href="../../../../../hypercdc-print.css">
+</head>
+<body data-docs-root="../../../../../">
+<header class="topbar">
+  <div class="topbar__left">
+    <a class="topbar__brand" href="../../../../../index.html">HyperMDM</a>
+    <span class="topbar__version">v0.0.1</span>
+  </div>
+  <div class="topbar__center">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="m13 13 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="search" id="docs-search-input" class="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">/</kbd>
+      <div id="docs-search-results" class="search-results" role="listbox"></div>
+    </div>
+  </div>
+  <div class="topbar__right">
+    <a class="topbar__nav-link" href="../../../../../index.html">Docs Index</a>
+    <a class="topbar__nav-link" href="../../../../../visuals-catalog.html">Visuals Catalog</a>
+    <a class="topbar__nav-link" href="../../../../../../index.html">&larr; HyperLake Portal</a>
+  </div>
+</header>
+<div class="page-content">
+<div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><div class="theme-doc-markdown markdown"><header><h1>Geographic Datatypes</h1></header>
+<p>There are different geographic data types available in HyperMDM: <code>Geopoint</code>, <code>Geobounds</code>, <code>Geopolygon</code> and <code>Geopolyline</code>.
+The country select box also belongs to the context of geo widgets, but it is rather a select input widget and therefore it is
+listed with the other select widgets.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="geopoint">Geopoint<a href="#geopoint" class="hash-link" aria-label="Direct link to Geopoint" title="Direct link to Geopoint" translate="no">​</a></h2>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-1">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-1</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoPoint Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo1-ff3969f6c78ff18e0cd368f13ff9cbe6.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-1">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/classes-datatypes-geo1-ff3969f6c78ff18e0cd368f13ff9cbe6.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-2">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-2</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoPoint Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo1-ff3969f6c78ff18e0cd368f13ff9cbe6.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-2">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/classes-datatypes-geo1-ff3969f6c78ff18e0cd368f13ff9cbe6.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-3">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-3</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoPoint Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo1-ff3969f6c78ff18e0cd368f13ff9cbe6.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-3">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>The geopoint consists of two coordinates: latitude and longitude. In HyperMDM Studio there is the same geopoint selector
+widget as shown above for selecting coordinates of a geographic point. In the database the values are
+stored in two columns which are called latitude and longitude. Programmatically the data for this field is
+represented by <code>HyperMDM\Model\DataObject\Data\Geopoint</code>. To set a geopoint programmatically, a new
+<code>HyperMDM\Model\DataObject\Data\GeoCoordinates</code> has to be instantiated:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token variable" style="color:#36acaa">$longitude</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">107.6191228</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$latitude</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">6.9174639</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$point</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">HyperMDM</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">Model</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">DataObject</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">Data</span><span class="token class-name class-name-fully-qualified punctuation" style="color:#393A34">\</span><span class="token class-name class-name-fully-qualified">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$latitude</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token variable" style="color:#36acaa">$longitude</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setPoint</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$point</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">save</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="geobounds">Geobounds<a href="#geobounds" class="hash-link" aria-label="Direct link to Geobounds" title="Direct link to Geobounds" translate="no">​</a></h2>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-4">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-4</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoBounds Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo2-f3211926b6ce2d3950f4a66e69b4588b.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-4">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/classes-datatypes-geo2-f3211926b6ce2d3950f4a66e69b4588b.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-5">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-5</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoBounds Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo2-f3211926b6ce2d3950f4a66e69b4588b.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-5">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/classes-datatypes-geo2-f3211926b6ce2d3950f4a66e69b4588b.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-6">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-6</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoBounds Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo2-f3211926b6ce2d3950f4a66e69b4588b.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-6">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>Geobounds represent a geographic area defined by a north eastern point and a south western point. In HyperMDM Studio the
+input widget as shown above is available. In the database there are 4 columns with coordinates to hold the data of
+geobounds. Programmatically both points are <code>HyperMDM\Model\DataObject\Data\GeoCoordinates</code> and they are wrapped by the
+<code>HyperMDM\Model\DataObject\Data\GeoCoordinates</code> Object. The following code snippet shows how to set Geobounds:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataObject</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Data</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Geobounds</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataObject</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Data</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$northEast</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">(</span><span class="token number" style="color:#36acaa">150.96588134765625</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">33.704920213014425</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$southWest</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">(</span><span class="token number" style="color:#36acaa">150.60333251953125</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">33.893217379440884</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setBounds</span><span class="token punctuation" style="color:#393A34">(</span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">Geobounds</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$northEast</span><span class="token punctuation" style="color:#393A34">,</span><span class="token variable" style="color:#36acaa">$southWest</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">save</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="geopolygon">Geopolygon<a href="#geopolygon" class="hash-link" aria-label="Direct link to Geopolygon" title="Direct link to Geopolygon" translate="no">​</a></h2>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-7">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-7</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoPolygon Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo3-63ff7a1e74bba529e7e73ca124916349.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-7">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/classes-datatypes-geo3-63ff7a1e74bba529e7e73ca124916349.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-8">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-8</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoPolygon Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo3-63ff7a1e74bba529e7e73ca124916349.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-8">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/classes-datatypes-geo3-63ff7a1e74bba529e7e73ca124916349.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-9">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-9</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoPolygon Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo3-63ff7a1e74bba529e7e73ca124916349.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-9">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>The geopolygon is the third in the row of geo widgets. It defines a geographic area by setting multiple geo points. In the database these points are stored in a single column of the data type LONGTEXT in the
+form of a serialized array of <code>HyperMDM\Model\DataObject\Data\GeoCoordinates</code>. To set geopolygon data programmatically, an
+array of Geopoints has to be passed to the setter:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataObject</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Data</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$data</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">(</span><span class="token operator" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">33.464671118242684</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">150.54428100585938</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">(</span><span class="token operator" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">33.913733814316245</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">150.73654174804688</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">(</span><span class="token operator" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">33.9946115848146</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">151.2542724609375</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setPolygon</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$data</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">save</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="geopolyline">Geopolyline<a href="#geopolyline" class="hash-link" aria-label="Direct link to Geopolyline" title="Direct link to Geopolyline" translate="no">​</a></h2>
+<div class="image-as-lightbox"></div>
+<p><span><span class="image"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-10">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-10</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoPolyline Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo4-e190e571ce089bc34f4ea78f67222e3c.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-10">Review in Visuals Catalog →</a>
+        </div>
+      </figure></span><span class="lightbox-image"><a href="#screen-/platform/assets/images/classes-datatypes-geo4-e190e571ce089bc34f4ea78f67222e3c.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-11">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-11</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoPolyline Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo4-e190e571ce089bc34f4ea78f67222e3c.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-11">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a><a href="#_" class="lightbox" id="screen-/platform/assets/images/classes-datatypes-geo4-e190e571ce089bc34f4ea78f67222e3c.jpg"><figure class="visual-placeholder" id="fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-12">
+        <div class="visual-placeholder__header">
+          <span class="visual-placeholder__badge">Visual Asset <code>#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-12</code></span>
+          <span class="status-pill pending">Pending HyperLake Rebrand</span>
+        </div>
+        <div class="visual-placeholder__title">GeoPolyline Field</div>
+        <div class="visual-placeholder__meta">
+          <span>Original: <a href="https://docs.pimcore.com/platform/assets/images/classes-datatypes-geo4-e190e571ce089bc34f4ea78f67222e3c.jpg" target="_blank" rel="noopener" class="external-visual-link">View source asset ↗</a></span> <span>•</span>
+          <a href="../../../../../visuals-catalog.html#fig-HyperMDM-Objects-Object_Classes-Data_Types-Geographic_Types-index-12">Review in Visuals Catalog →</a>
+        </div>
+      </figure></a></span></span></p>
+<p>The geopolyline defines a geographic path by setting multiple geo points. In the database these points are
+stored in a single column of the data type LONGTEXT in the form of a serialized array of
+<code>HyperMDM\Model\DataObject\Data\GeoCoordinates</code>. To set geopolygon data programmatically, an array of Geopoints has to be
+passed to the setter:</p>
+<div class="language-php codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-php codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">use</span><span class="token plain"> </span><span class="token package">HyperMDM</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Model</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">DataObject</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">Data</span><span class="token package punctuation" style="color:#393A34">\</span><span class="token package">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$data</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">(</span><span class="token operator" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">33.464671118242684</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">150.54428100585938</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">(</span><span class="token operator" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">33.913733814316245</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">150.73654174804688</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">GeoCoordinates</span><span class="token punctuation" style="color:#393A34">(</span><span class="token operator" style="color:#393A34">-</span><span class="token number" style="color:#36acaa">33.9946115848146</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">151.2542724609375</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">setPolyline</span><span class="token punctuation" style="color:#393A34">(</span><span class="token variable" style="color:#36acaa">$data</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token variable" style="color:#36acaa">$object</span><span class="token operator" style="color:#393A34">-&gt;</span><span class="token function" style="color:#d73a49">save</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div></div></article></div></div><div class="col col--3"></div></div></div>
+</div>
+<script src="../../../../../search.js"></script>
+</body>
+</html>
