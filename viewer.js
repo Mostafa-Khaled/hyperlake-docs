@@ -1,4 +1,4 @@
-const root = document.documentElement;
+﻿const root = document.documentElement;
 const app = document.querySelector('#content');
 const sidebar = document.querySelector('#sidebar');
 const search = document.querySelector('#search');
@@ -1020,76 +1020,63 @@ const PRODUCT_METADATA = {
 function renderHome() {
   renderSidebar(null, '');
   updateProductPickerLabel(null);
-  
+
   const totalProducts = manifest.products.length;
   const totalPages = manifest.products.reduce((acc, p) => acc + Object.keys(p.pages).length, 0);
-  
+
   app.innerHTML = `
     <div class="portal-home">
-      <!-- Hero Banner -->
+
+      <!-- Hero -->
       <section class="portal-hero">
-        <div class="portal-hero-inner">
-          <div class="portal-badge">HYPERLAKE DOCUMENTATION PORTAL</div>
-          <h1 class="portal-title">Explore Enterprise Data Docs</h1>
-          <p class="portal-subtitle">Comprehensive technical documentation, architecture guides, APIs, and reference manuals across all ${totalProducts} core HyperLake data ecosystem products.</p>
-          
-          <div class="portal-stats-bar">
-            <div class="portal-stat-item">
-              <span class="portal-stat-val">${totalProducts}</span>
-              <span class="portal-stat-lbl">Ecosystem Products</span>
-            </div>
-            <div class="portal-stat-divider"></div>
-            <div class="portal-stat-item">
-              <span class="portal-stat-val">${totalPages.toLocaleString()}</span>
-              <span class="portal-stat-lbl">Documentation Pages</span>
-            </div>
-            <div class="portal-stat-divider"></div>
-            <div class="portal-stat-item">
-              <span class="portal-stat-val">100%</span>
-              <span class="portal-stat-lbl">Offline &amp; Print Ready</span>
-            </div>
+        <p class="portal-eyebrow">HYPERLAKE</p>
+        <h1 class="portal-title">Internal Documentation</h1>
+        <p class="portal-subtitle">Technical guides, API references, and operator manuals for all ${totalProducts} HyperLake platform components.</p>
+        <div class="portal-stats-bar">
+          <div class="portal-stat-item">
+            <span class="portal-stat-val">${totalProducts}</span>
+            <span class="portal-stat-lbl">products</span>
+          </div>
+          <div class="portal-stat-item">
+            <span class="portal-stat-val">${totalPages.toLocaleString()}</span>
+            <span class="portal-stat-lbl">pages</span>
+          </div>
+          <div class="portal-stat-item">
+            <span class="portal-stat-val">Offline</span>
+            <span class="portal-stat-lbl">no external dependencies</span>
           </div>
         </div>
       </section>
 
-      <!-- Products Grid Section -->
+      <!-- Products -->
       <section class="portal-section">
         <div class="portal-section-header">
           <div>
-            <h2 class="portal-section-title">All Products &amp; Platforms</h2>
-            <p class="portal-section-desc">Select a product to view guides, tutorials, API specifications, and operator manuals.</p>
+            <h2 class="portal-section-title">Products</h2>
+            <p class="portal-section-desc">Select a product to browse its documentation.</p>
           </div>
-          <div class="portal-filter-pills" id="portal-category-filters">
-            <button class="portal-pill active" type="button" data-category="all">All (${totalProducts})</button>
-            <button class="portal-pill" type="button" data-category="Streaming &amp; Ingestion">Streaming</button>
-            <button class="portal-pill" type="button" data-category="Computation &amp; Engine">Computation</button>
-            <button class="portal-pill" type="button" data-category="Storage &amp; Warehousing">Storage</button>
-            <button class="portal-pill" type="button" data-category="BI &amp; Exploration">Analytics &amp; BI</button>
-            <button class="portal-pill" type="button" data-category="Security &amp; Governance">Governance &amp; Security</button>
+          <div class="portal-filter-pills">
+            <button class="portal-pill active" type="button" data-category="all">All</button>
+            <button class="portal-pill" type="button" data-category="Streaming & Ingestion">Streaming</button>
+            <button class="portal-pill" type="button" data-category="Computation & Engine">Computation</button>
+            <button class="portal-pill" type="button" data-category="Storage & Warehousing">Storage</button>
+            <button class="portal-pill" type="button" data-category="BI & Exploration">Analytics</button>
+            <button class="portal-pill" type="button" data-category="Security & Governance">Governance</button>
           </div>
         </div>
 
-        <div class="portal-cards-grid" id="portal-products-grid">
+        <div class="portal-cards-grid">
           ${manifest.products.map(p => {
-            const meta = PRODUCT_METADATA[p.id] || {
-              category: 'Platform',
-              icon: '📄',
-              color: '#2563eb',
-              bg: 'rgba(37, 99, 235, 0.08)',
-              desc: 'Comprehensive documentation and reference guide.'
-            };
+            const meta = PRODUCT_METADATA[p.id] || { category: 'Platform', desc: 'Documentation and reference guide.' };
             const pageCount = Object.keys(p.pages).length;
             return `
-              <a class="portal-card" href="${hrefFor(p.id)}" data-category="${esc(meta.category)}" style="--brand-color: ${meta.color}; --brand-bg: ${meta.bg};">
-                <div class="portal-card-header">
-                  <div class="portal-card-icon">${meta.icon}</div>
-                  <span class="portal-card-category">${esc(meta.category)}</span>
-                </div>
+              <a class="portal-card" href="${hrefFor(p.id)}" data-category="${esc(meta.category)}">
+                <p class="portal-card-tag">${esc(meta.category)}</p>
                 <h3 class="portal-card-name">${esc(p.brand)}</h3>
                 <p class="portal-card-desc">${esc(meta.desc)}</p>
                 <div class="portal-card-footer">
                   <span class="portal-card-pages">${pageCount.toLocaleString()} pages</span>
-                  <span class="portal-card-link">Browse docs →</span>
+                  <span class="portal-card-arrow">→</span>
                 </div>
               </a>
             `;
@@ -1097,28 +1084,29 @@ function renderHome() {
         </div>
       </section>
 
-      <!-- Platform Features Banner -->
+      <!-- Capabilities -->
       <section class="portal-features-grid">
         <div class="portal-feature-box">
-          <div class="portal-fb-icon">⚡</div>
-          <h3>Instant Full-Text Search</h3>
-          <p>Search across 15,000+ topics, APIs, and configuration keys with keyboard shortcuts (<kbd>Ctrl</kbd>+<kbd>K</kbd>).</p>
+          <p class="portal-fb-label">Search</p>
+          <h3>Full-text search</h3>
+          <p>Search across all pages with <kbd>Ctrl</kbd>+<kbd>K</kbd>. Results are instant and ranked by relevance.</p>
         </div>
         <div class="portal-feature-box">
-          <div class="portal-fb-icon">🖨️</div>
-          <h3>Complete Product Printing</h3>
-          <p>Generate clean, professional PDF documentation manuals for any single page or an entire product library.</p>
+          <p class="portal-fb-label">Print</p>
+          <h3>PDF export</h3>
+          <p>Print any single page or compile an entire product's documentation into a clean PDF.</p>
         </div>
         <div class="portal-feature-box">
-          <div class="portal-fb-icon">📱</div>
-          <h3>Clean &amp; Responsive</h3>
-          <p>Optimized for desktop, tablet, and mobile with light/dark readability and interactive navigation.</p>
+          <p class="portal-fb-label">Offline</p>
+          <h3>No external dependencies</h3>
+          <p>All content is self-contained and works without internet access or authentication.</p>
         </div>
       </section>
+
     </div>
   `;
 
-  // Bind category filter pill clicks
+  // Filter pills
   const pills = app.querySelectorAll('.portal-pill');
   const cards = app.querySelectorAll('.portal-card');
   pills.forEach(pill => {
@@ -1127,16 +1115,12 @@ function renderHome() {
       pill.classList.add('active');
       const cat = pill.dataset.category;
       cards.forEach(card => {
-        if (cat === 'all' || card.dataset.category === cat) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
+        card.style.display = (cat === 'all' || card.dataset.category === cat) ? 'flex' : 'none';
       });
     });
   });
 
-  document.title = 'HyperLake Documentation Portal';
+  document.title = 'HyperLake Internal Documentation';
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
