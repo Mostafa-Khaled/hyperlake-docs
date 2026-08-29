@@ -10,14 +10,23 @@
         var decoded = l.search.slice(1).split('&').map(function(s) { 
           return s.replace(/~and~/g, '&');
         }).join('?');
+        var basePath = l.pathname.endsWith('/') ? l.pathname.slice(0, -1) : l.pathname;
         window.history.replaceState(null, null,
-            l.pathname.slice(0, -1) + decoded + l.hash
+            basePath + decoded + l.hash
         );
       }
     }(window.location));
   </script>
-  <link rel="stylesheet" href="viewer.css">
-  <link rel="stylesheet" href="buttons.css">
+  <script>
+    (function() {
+      var baseHref = (location.pathname.startsWith('/hyperlake-docs') || location.hostname.endsWith('github.io')) ? '/hyperlake-docs/' : '/';
+      var baseEl = document.createElement('base');
+      baseEl.href = baseHref;
+      document.head.appendChild(baseEl);
+    })();
+  </script>
+  <link rel="stylesheet" href="viewer.css?v=1.0.4">
+  <link rel="stylesheet" href="buttons.css?v=1.0.4">
 </head>
 <body>
   <header class="topbar">
@@ -68,6 +77,6 @@
   </header>
   <div id="app" class="layout"><aside id="sidebar"></aside><main id="content"><div class="loading">Loading documentation…</div></main></div>
   <div id="print-container" aria-hidden="true"></div>
-  <script type="module" src="viewer.js"></script>
+  <script type="module" src="viewer.js?v=1.0.4"></script>
 </body>
 </html>
