@@ -350,6 +350,48 @@ function bindTabs() {
       });
     });
   });
+
+  // 5. HyperBI / Ant Carousel Toggle Buttons (.toggleBtns li.toggle)
+  app.querySelectorAll('.toggleBtns').forEach(toggleList => {
+    const toggles = Array.from(toggleList.querySelectorAll('.toggle'));
+    const section = toggleList.closest('section, .css-1y8n189') || toggleList.parentElement;
+    const slides = section ? Array.from(section.querySelectorAll('.slick-slide:not(.slick-cloned)')) : [];
+
+    toggles.forEach((btn, idx) => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        toggles.forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+
+        slides.forEach((slide, sIdx) => {
+          if (sIdx === idx) {
+            slide.style.display = 'block';
+            slide.classList.add('slick-active', 'slick-current');
+            slide.setAttribute('aria-hidden', 'false');
+          } else {
+            slide.style.display = 'none';
+            slide.classList.remove('slick-active', 'slick-current');
+            slide.setAttribute('aria-hidden', 'true');
+          }
+        });
+      });
+    });
+
+    // Initialize first slide visible
+    if (slides.length) {
+      slides.forEach((s, sIdx) => {
+        if (sIdx === 0) {
+          s.style.display = 'block';
+          s.classList.add('slick-active', 'slick-current');
+          s.setAttribute('aria-hidden', 'false');
+        } else {
+          s.style.display = 'none';
+          s.classList.remove('slick-active', 'slick-current');
+          s.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
+  });
 }
 
 /**
