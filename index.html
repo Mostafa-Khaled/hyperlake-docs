@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HyperLake Internal Documentation</title>
+  <link rel="stylesheet" href="viewer.css">
+  <link rel="stylesheet" href="buttons.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <a class="brand" href="#/">
+        <span class="brand-mark">H</span>
+        <span class="brand-text">
+          <span class="brand-name">HyperLake</span>
+          <span class="brand-tag">Docs</span>
+        </span>
+      </a>
+      <div class="topbar-divider"></div>
+      <div class="product-picker-wrap">
+        <button class="product-picker-btn" id="product-picker-trigger" type="button" aria-haspopup="true" aria-expanded="false" title="Switch documentation product">
+          <span id="current-product-name">All Products</span>
+          <svg class="picker-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+        </button>
+        <div class="product-picker-dropdown" id="product-picker-menu" hidden>
+          <!-- Populated dynamically with all 11 products -->
+        </div>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <div class="search-wrap">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input id="search" type="search" placeholder="Search documentation, guides, APIs…" autocomplete="off" spellcheck="false">
+          <button class="search-clear" id="search-clear-btn" type="button" aria-label="Clear search" hidden>&times;</button>
+          <div class="search-kbd" id="search-kbd-badge"><kbd>Ctrl</kbd><kbd>K</kbd></div>
+        </div>
+        <div class="search-dropdown" id="search-dropdown" hidden>
+          <div class="search-dropdown-header">
+            <span id="search-results-count">Results</span>
+            <span class="search-dropdown-tips"><kbd>↑</kbd><kbd>↓</kbd> navigate &bull; <kbd>Enter</kbd> open &bull; <kbd>ESC</kbd> close</span>
+          </div>
+          <div class="search-dropdown-list" id="search-dropdown-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="topbar-right">
+      <a class="nav-item-btn" href="#/" title="Browse all 11 products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span>All Products</span>
+      </a>
+    </nav>
+  </header>
+  <div id="app" class="layout"><aside id="sidebar"></aside><main id="content"><div class="loading">Loading documentation…</div></main></div>
+  <div id="print-container" aria-hidden="true"></div>
+  <script type="module" src="viewer.js"></script>
+</body>
+</html>
