@@ -937,25 +937,207 @@ function renderSidebar(product, active) {
   }
 }
 
+const PRODUCT_METADATA = {
+  hyperstream: {
+    category: 'Streaming & Ingestion',
+    icon: '⚡',
+    color: '#0284c7',
+    bg: 'rgba(2, 132, 199, 0.08)',
+    desc: 'High-throughput distributed event streaming, Kafka broker clusters, Connect connectors, and Streams API.'
+  },
+  hyperbatch: {
+    category: 'Computation & Engine',
+    icon: '🔥',
+    color: '#e11d48',
+    bg: 'rgba(225, 29, 72, 0.08)',
+    desc: 'Unified large-scale analytics engine supporting SQL, PySpark, DataFrames, MLlib machine learning, and GraphX.'
+  },
+  hypervault: {
+    category: 'Security & Governance',
+    icon: '🛡️',
+    color: '#059669',
+    bg: 'rgba(5, 150, 105, 0.08)',
+    desc: 'Centralized enterprise security administration, role-based access policies, column-masking, and audit logging.'
+  },
+  hyperbi: {
+    category: 'BI & Exploration',
+    icon: '📊',
+    color: '#0891b2',
+    bg: 'rgba(8, 145, 178, 0.08)',
+    desc: 'Modern data exploration, interactive visual dashboards, SQL Lab IDE, and native connectors for 40+ databases.'
+  },
+  hypergrid: {
+    category: 'Streaming & Ingestion',
+    icon: '🌊',
+    color: '#2563eb',
+    bg: 'rgba(37, 99, 235, 0.08)',
+    desc: 'Distributed stateful stream processing, low-latency event-driven applications, and complex event processing (CEP).'
+  },
+  hyperhouse: {
+    category: 'Storage & Warehousing',
+    icon: '⚡',
+    color: '#f59e0b',
+    bg: 'rgba(245, 158, 11, 0.08)',
+    desc: 'High-performance columnar database management system for real-time analytical queries at petabyte scale.'
+  },
+  hypersync: {
+    category: 'Streaming & Ingestion',
+    icon: '🔄',
+    color: '#7c3aed',
+    bg: 'rgba(124, 58, 237, 0.08)',
+    desc: 'Visual dataflow orchestration, reliable automated data routing, transformation, and enterprise system mediation.'
+  },
+  hypergovern: {
+    category: 'Security & Governance',
+    icon: '🧭',
+    color: '#4f46e5',
+    bg: 'rgba(79, 70, 229, 0.08)',
+    desc: 'Scalable data governance services, metadata management, classification, and end-to-end data lineage tracing.'
+  },
+  hypermdm: {
+    category: 'Data Management',
+    icon: '💎',
+    color: '#0d9488',
+    bg: 'rgba(13, 148, 136, 0.08)',
+    desc: 'Master data management, deduplication, identity resolution, and golden record creation pipelines.'
+  },
+  hypercdc: {
+    category: 'Streaming & Ingestion',
+    icon: '📡',
+    color: '#d97706',
+    bg: 'rgba(217, 119, 6, 0.08)',
+    desc: 'Low-latency change data capture (CDC) streaming database row-level mutations into Kafka and event buses.'
+  },
+  hypericeberg: {
+    category: 'Storage & Warehousing',
+    icon: '🧊',
+    color: '#3b82f6',
+    bg: 'rgba(59, 130, 246, 0.08)',
+    desc: 'Open table format for huge analytic datasets, providing ACID transactions, schema evolution, and time travel.'
+  }
+};
+
 function renderHome() {
   renderSidebar(null, '');
   updateProductPickerLabel(null);
+  
+  const totalProducts = manifest.products.length;
+  const totalPages = manifest.products.reduce((acc, p) => acc + Object.keys(p.pages).length, 0);
+  
   app.innerHTML = `
-    <section class="hero">
-      <p class="eyebrow">HYPERLAKE</p>
-      <h1>Internal documentation</h1>
-      <p>Choose a product to browse its documentation snapshot.</p>
-      <div class="cards">
-        ${manifest.products.map(p => `
-          <a class="card" href="${hrefFor(p.id)}">
-            <h2>${esc(p.brand)}</h2>
-            <span>${Object.keys(p.pages).length} pages</span>
-          </a>
-        `).join('')}
-      </div>
-    </section>
+    <div class="portal-home">
+      <!-- Hero Banner -->
+      <section class="portal-hero">
+        <div class="portal-hero-inner">
+          <div class="portal-badge">HYPERLAKE DOCUMENTATION PORTAL</div>
+          <h1 class="portal-title">Explore Enterprise Data Docs</h1>
+          <p class="portal-subtitle">Comprehensive technical documentation, architecture guides, APIs, and reference manuals across all ${totalProducts} core HyperLake data ecosystem products.</p>
+          
+          <div class="portal-stats-bar">
+            <div class="portal-stat-item">
+              <span class="portal-stat-val">${totalProducts}</span>
+              <span class="portal-stat-lbl">Ecosystem Products</span>
+            </div>
+            <div class="portal-stat-divider"></div>
+            <div class="portal-stat-item">
+              <span class="portal-stat-val">${totalPages.toLocaleString()}</span>
+              <span class="portal-stat-lbl">Documentation Pages</span>
+            </div>
+            <div class="portal-stat-divider"></div>
+            <div class="portal-stat-item">
+              <span class="portal-stat-val">100%</span>
+              <span class="portal-stat-lbl">Offline &amp; Print Ready</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Products Grid Section -->
+      <section class="portal-section">
+        <div class="portal-section-header">
+          <div>
+            <h2 class="portal-section-title">All Products &amp; Platforms</h2>
+            <p class="portal-section-desc">Select a product to view guides, tutorials, API specifications, and operator manuals.</p>
+          </div>
+          <div class="portal-filter-pills" id="portal-category-filters">
+            <button class="portal-pill active" type="button" data-category="all">All (${totalProducts})</button>
+            <button class="portal-pill" type="button" data-category="Streaming &amp; Ingestion">Streaming</button>
+            <button class="portal-pill" type="button" data-category="Computation &amp; Engine">Computation</button>
+            <button class="portal-pill" type="button" data-category="Storage &amp; Warehousing">Storage</button>
+            <button class="portal-pill" type="button" data-category="BI &amp; Exploration">Analytics &amp; BI</button>
+            <button class="portal-pill" type="button" data-category="Security &amp; Governance">Governance &amp; Security</button>
+          </div>
+        </div>
+
+        <div class="portal-cards-grid" id="portal-products-grid">
+          ${manifest.products.map(p => {
+            const meta = PRODUCT_METADATA[p.id] || {
+              category: 'Platform',
+              icon: '📄',
+              color: '#2563eb',
+              bg: 'rgba(37, 99, 235, 0.08)',
+              desc: 'Comprehensive documentation and reference guide.'
+            };
+            const pageCount = Object.keys(p.pages).length;
+            return `
+              <a class="portal-card" href="${hrefFor(p.id)}" data-category="${esc(meta.category)}" style="--brand-color: ${meta.color}; --brand-bg: ${meta.bg};">
+                <div class="portal-card-header">
+                  <div class="portal-card-icon">${meta.icon}</div>
+                  <span class="portal-card-category">${esc(meta.category)}</span>
+                </div>
+                <h3 class="portal-card-name">${esc(p.brand)}</h3>
+                <p class="portal-card-desc">${esc(meta.desc)}</p>
+                <div class="portal-card-footer">
+                  <span class="portal-card-pages">${pageCount.toLocaleString()} pages</span>
+                  <span class="portal-card-link">Browse docs →</span>
+                </div>
+              </a>
+            `;
+          }).join('')}
+        </div>
+      </section>
+
+      <!-- Platform Features Banner -->
+      <section class="portal-features-grid">
+        <div class="portal-feature-box">
+          <div class="portal-fb-icon">⚡</div>
+          <h3>Instant Full-Text Search</h3>
+          <p>Search across 15,000+ topics, APIs, and configuration keys with keyboard shortcuts (<kbd>Ctrl</kbd>+<kbd>K</kbd>).</p>
+        </div>
+        <div class="portal-feature-box">
+          <div class="portal-fb-icon">🖨️</div>
+          <h3>Complete Product Printing</h3>
+          <p>Generate clean, professional PDF documentation manuals for any single page or an entire product library.</p>
+        </div>
+        <div class="portal-feature-box">
+          <div class="portal-fb-icon">📱</div>
+          <h3>Clean &amp; Responsive</h3>
+          <p>Optimized for desktop, tablet, and mobile with light/dark readability and interactive navigation.</p>
+        </div>
+      </section>
+    </div>
   `;
-  document.title = 'HyperLake Internal Documentation';
+
+  // Bind category filter pill clicks
+  const pills = app.querySelectorAll('.portal-pill');
+  const cards = app.querySelectorAll('.portal-card');
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const cat = pill.dataset.category;
+      cards.forEach(card => {
+        if (cat === 'all' || card.dataset.category === cat) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  document.title = 'HyperLake Documentation Portal';
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 async function renderRoute() {
