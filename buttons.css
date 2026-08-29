@@ -1581,19 +1581,41 @@
 }
 
 @media print {
-  /* Hide UI elements */
+  /* Complete UI suppression */
+  header,
+  header.topbar,
   .topbar,
+  .topbar *,
+  nav,
   #sidebar,
-  .copy-toast,
+  aside,
+  .sidebar-inner,
+  .side-actions,
+  .side-print-btn,
   .doc-actions-bar,
+  .doc-action-btn,
+  .page-actions-bar,
   .page-action-btn,
   .code-copy-btn,
+  .copy-toast,
   .feedback-toolbar,
   .search-wrap,
+  .search-dropdown,
+  .product-picker-dropdown,
   .print-progress-modal,
-  .side-actions,
   .no-print {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: static !important;
+    border: none !important;
+    box-shadow: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   @page {
@@ -1616,17 +1638,22 @@
     padding: 0 !important;
     margin: 0 !important;
     max-width: none !important;
+    width: 100% !important;
   }
 
   /* Single Page Print Mode */
+  body:not(.printing-entire-product) #app,
   body:not(.printing-entire-product) #content {
     display: block !important;
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
   }
 
   body:not(.printing-entire-product) .doc {
     padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
   }
 
   body:not(.printing-entire-product) #print-container {
@@ -1641,6 +1668,7 @@
 
   body.printing-entire-product #print-container {
     display: block !important;
+    width: 100% !important;
   }
 
   /* Cover Page */

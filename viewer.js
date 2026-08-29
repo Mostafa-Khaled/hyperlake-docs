@@ -7,18 +7,54 @@ let loaded = new Map();
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-const pathRoute = () => {
-  let raw = location.hash.replace(/^#\/?/, '').replace(/^internal-docs\/?/, '');
-  if (!raw) {
-    raw = location.pathname.replace(/^.*?internal-docs\/?/, '').replace(/^\/+|\/+$/g, '');
-    if (raw === 'index.html') raw = '';
+function getBasePath() {
+  const path = location.pathname;
+  if (path.startsWith('/hyperlake-docs')) {
+    return '/hyperlake-docs';
   }
-  if (!raw) return '';
-  const [routePart] = raw.split('#');
+  if (location.hostname.endsWith('github.io')) {
+    const seg = path.split('/').filter(Boolean)[0];
+    if (seg && (!manifest || !manifest.products?.some(p => p.id === seg))) {
+      return `/${seg}`;
+    }
+  }
+  return '';
+}
+
+const pathRoute = () => {
+  const base = getBasePath();
+  let path = location.pathname;
+  if (base && path.startsWith(base)) {
+    path = path.slice(base.length);
+  }
+  path = path.replace(/^\/+|\/+$/g, '');
+  if (path === 'index.html' || path === '404.html') path = '';
+
+  // Check SPA redirect query parameter
+  if (location.search && location.search.startsWith('?/')) {
+    const q = location.search.slice(2).split('&')[0].replace(/^\/+|\/+$/g, '');
+    if (q) path = q;
+  }
+
+  // Fallback to hash if present
+  let hash = location.hash.replace(/^#\/?/, '').replace(/^internal-docs\/?/, '').replace(/^\/+|\/+$/g, '');
+  if (hash === 'index.html' || hash === '/') hash = '';
+
+  let route = path || hash;
+  if (!route) return '';
+
+  route = route.replace(/^internal-docs\/?/, '');
+  const [routePart] = route.split('#');
   return routePart.replace(/^\/+|\/+$/g, '');
 };
 
-const hrefFor = route => (location.pathname.includes('internal-docs') && !location.hash) ? `/internal-docs/${route}` : `#/internal-docs/${route}`;
+const hrefFor = route => {
+  const base = getBasePath();
+  if (!route || route === '/' || route === '#/' || route === '.') return base ? `${base}/` : '/';
+  const clean = String(route).replace(/^(\/?#\/?)+/, '').replace(/^internal-docs\/?/, '').replace(/^\/+/, '');
+  if (!clean) return base ? `${base}/` : '/';
+  return base ? `${base}/${clean}` : `/${clean}`;
+};
 
 function productFor(route) {
   return manifest.products.find(p => route === p.id || route.startsWith(`${p.id}/`));
@@ -512,7 +548,7 @@ function bindAnchorLinks() {
       
       const currentRoute = pathRoute();
       if (currentRoute) {
-        history.replaceState(null, '', `#/internal-docs/${currentRoute}#${targetId}`);
+        history.replaceState(null, '', `${hrefFor(currentRoute)}#${targetId}`);
       }
       
       if (link.classList.contains('hash-link') || link.classList.contains('headerlink')) {
@@ -887,12 +923,13 @@ async function renderRoute() {
   const pureRoute = route.split('#')[0];
   const hash = location.hash;
   const lastHashIdx = hash.lastIndexOf('#');
-  const sectionId = (lastHashIdx > 1) ? hash.slice(lastHashIdx + 1) : '';
+  const sectionId = (lastHashIdx > 1) ? hash.slice(lastHashIdx + 1) : (hash.startsWith('#') && !hash.startsWith('#/') ? hash.slice(1) : '');
   
   const product = productFor(pureRoute);
   if (!product) {
     updateProductPickerLabel(null);
-    app.innerHTML = '<section class="hero"><h1>Page not found</h1><p>The requested documentation page could not be found.</p><p><a href="#/">← Return to all products</a></p></section>';
+    renderSidebar(null, '');
+    app.innerHTML = `<section class="hero"><h1>Page not found</h1><p>The requested documentation page could not be found.</p><p><a href="${hrefFor('')}">← Return to all products</a></p></section>`;
     return;
   }
   
@@ -900,7 +937,8 @@ async function renderRoute() {
   
   const page = await getPage(product, pureRoute);
   if (!page) {
-    app.innerHTML = '<section class="hero"><h1>Page not found</h1><p>The requested documentation page could not be found.</p><p><a href="#/">← Return to all products</a></p></section>';
+    renderSidebar(product, '');
+    app.innerHTML = `<section class="hero"><h1>Page not found</h1><p>The requested documentation page could not be found.</p><p><a href="${hrefFor('')}">← Return to all products</a></p></section>`;
     return;
   }
   
@@ -939,13 +977,15 @@ async function renderRoute() {
   bindDocumentControls();
   document.title = `${page.title} — ${product.brand}`;
   
-  // Rewrite any internal doc links
-  if (!location.pathname.includes('internal-docs') || location.hash) {
-    app.querySelectorAll('a[href^="/internal-docs/"]').forEach(a => {
-      const r = a.getAttribute('href').replace('/internal-docs/', '');
-      a.setAttribute('href', hrefFor(r));
-    });
-  }
+  // Rewrite legacy doc links in imported content
+  app.querySelectorAll('a[href]').forEach(a => {
+    const h = a.getAttribute('href') || '';
+    if (h.startsWith('/internal-docs/')) {
+      a.setAttribute('href', hrefFor(h.replace('/internal-docs/', '')));
+    } else if (h.startsWith('#/internal-docs/')) {
+      a.setAttribute('href', hrefFor(h.replace('#/internal-docs/', '')));
+    }
+  });
 
   // Scroll to hash target if provided
   if (sectionId) {
@@ -968,11 +1008,14 @@ document.addEventListener('click', e => {
   if (!a) return;
   const href = a.getAttribute('href') || '';
   
-  // Ignore external links and standard buttons
-  if (/^https?:\/\//i.test(href) || a.closest('.page-action-btn') || a.closest('.code-copy-btn')) return;
+  // Ignore external links, mailto, tel, downloads, or target="_blank"
+  if (!href || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:') || /^https?:\/\//i.test(href) || a.target === '_blank') {
+    return;
+  }
+  if (a.closest('.page-action-btn') || a.closest('.code-copy-btn')) return;
 
   // 1. In-page anchor link (e.g. href="#features" or href="#_interner_metrics")
-  if (href.startsWith('#') && !href.startsWith('#/internal-docs/') && !href.startsWith('#/')) {
+  if (href.startsWith('#') && !href.startsWith('#/')) {
     e.preventDefault();
     const id = href.replace(/^#/, '');
     if (!id) return;
@@ -983,32 +1026,46 @@ document.addEventListener('click', e => {
       setTimeout(() => target.classList.remove('anchor-highlight'), 1200);
       const currentRoute = pathRoute();
       if (currentRoute) {
-        history.replaceState(null, '', `#/internal-docs/${currentRoute}#${id}`);
+        history.replaceState(null, '', `${hrefFor(currentRoute)}#${id}`);
       }
     }
     return;
   }
 
-  // 2. Direct internal-docs links (e.g. href="/internal-docs/...")
-  if (href.startsWith('/internal-docs/')) {
-    e.preventDefault();
-    const targetPath = href.replace('/internal-docs/', '');
-    const [routePart, hashPart] = targetPath.split('#');
-    const currentRoute = pathRoute();
-    
-    if (routePart && routePart === currentRoute && hashPart) {
-      // Same page anchor jump
-      const target = document.getElementById(hashPart) || document.getElementsByName(hashPart)[0] || app.querySelector(`[id="${CSS.escape(hashPart)}"]`);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        target.classList.add('anchor-highlight');
-        setTimeout(() => target.classList.remove('anchor-highlight'), 1200);
-        history.replaceState(null, '', `#/internal-docs/${currentRoute}#${hashPart}`);
-        return;
-      }
+  // 2. SPA internal link navigation
+  e.preventDefault();
+  
+  let targetUrl = href;
+  if (targetUrl === '#/' || targetUrl === './' || targetUrl === '.' || targetUrl === '/') {
+    targetUrl = hrefFor('');
+  } else if (targetUrl.startsWith('#/internal-docs/')) {
+    targetUrl = hrefFor(targetUrl.replace('#/internal-docs/', ''));
+  } else if (targetUrl.startsWith('#/')) {
+    targetUrl = hrefFor(targetUrl.replace('#/', ''));
+  } else if (targetUrl.startsWith('/internal-docs/')) {
+    targetUrl = hrefFor(targetUrl.replace('/internal-docs/', ''));
+  } else if (!targetUrl.startsWith('/')) {
+    targetUrl = hrefFor(targetUrl);
+  }
+
+  const [routeAndQuery, hashPart] = targetUrl.split('#');
+  
+  if (location.pathname + location.search !== routeAndQuery) {
+    history.pushState(null, '', targetUrl);
+    renderRoute();
+    if (!hashPart) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
-    location.hash = `#/internal-docs/${targetPath}`;
-    return;
+  } else if (hashPart) {
+    const target = document.getElementById(hashPart) || document.getElementsByName(hashPart)[0] || app.querySelector(`[id="${CSS.escape(hashPart)}"]`);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.classList.add('anchor-highlight');
+      setTimeout(() => target.classList.remove('anchor-highlight'), 1200);
+      history.replaceState(null, '', targetUrl);
+    }
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 });
 
@@ -1265,6 +1322,7 @@ function updateSearchSelection(items) {
   });
 }
 
+window.addEventListener('popstate', renderRoute);
 window.addEventListener('hashchange', renderRoute);
 
 // Initialize application
