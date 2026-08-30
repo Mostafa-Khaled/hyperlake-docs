@@ -240,11 +240,12 @@
 
 /* Card grids for quickstart, installation, platforms */
 .doc-body .grid,
-.doc-body [class*="grid-cols"] {
+.doc-body [class*="grid-cols"],
+.doc-body .card-group {
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
-  gap: 16px !important;
-  margin: 24px 0 32px !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 18px !important;
+  margin: 20px 0 32px !important;
   list-style: none !important;
   padding: 0 !important;
 }
@@ -252,41 +253,104 @@
 .doc-body .grid > div,
 .doc-body [class*="grid-cols"] > div,
 .doc-body .grid > a,
-.doc-body [class*="grid-cols"] > a {
+.doc-body [class*="grid-cols"] > a,
+.doc-body .card-group > .card,
+.doc-body .card {
   display: flex !important;
   flex-direction: column !important;
-  align-items: flex-start !important;
+  align-items: stretch !important;
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
-  border-radius: 10px !important;
-  padding: 20px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
   text-decoration: none !important;
   color: inherit !important;
-  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+  transition: all 0.15s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 .doc-body .grid > div:hover,
 .doc-body [class*="grid-cols"] > div:hover,
 .doc-body .grid > a:hover,
-.doc-body [class*="grid-cols"] > a:hover {
-  border-color: #93c5fd !important;
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.09) !important;
+.doc-body [class*="grid-cols"] > a:hover,
+.doc-body .card-group > .card:hover,
+.doc-body .card:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.06) !important;
   transform: translateY(-2px) !important;
 }
 
-/* SVGs inside cards */
-.doc-body .grid svg,
-.doc-body [class*="grid-cols"] svg,
-.doc-body .card svg,
-.doc-body [class*="card"] svg {
-  width: 32px !important;
-  height: 32px !important;
-  max-width: 36px !important;
-  max-height: 36px !important;
-  margin-bottom: 12px !important;
-  display: block !important;
+/* Mintlify Card Inner Container */
+.doc-body [data-component-part="card-content-container"] {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 16px !important;
+  width: 100% !important;
+  padding: 22px 24px !important;
+  position: relative !important;
+}
+
+.doc-body [data-component-part="card-icon"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 10px !important;
+  background: rgba(124, 58, 237, 0.08) !important;
+  color: #7c3aed !important;
   flex-shrink: 0 !important;
+  margin: 0 !important;
+}
+
+.doc-body [data-component-part="card-icon"] svg,
+.doc-body [data-component-part="card-icon"] .card-part-icon {
+  width: 22px !important;
+  height: 22px !important;
+  color: #7c3aed !important;
+  margin: 0 !important;
+}
+
+.doc-body [data-component-part="card-title"],
+.doc-body h2[data-component-part="card-title"] {
+  font-size: 16.5px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0 0 6px 0 !important;
+  line-height: 1.35 !important;
+}
+
+.doc-body [data-component-part="card-content"] {
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+  color: #64748b !important;
+  margin: 0 !important;
+}
+
+/* Card Top-Right Arrow */
+.doc-body [data-component-part="card-content-container"] > div.absolute {
+  position: absolute !important;
+  top: 18px !important;
+  right: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #94a3b8 !important;
+  transition: all 0.15s ease !important;
+}
+
+.doc-body [data-component-part="card-content-container"] > div.absolute svg {
+  width: 14px !important;
+  height: 14px !important;
+  margin: 0 !important;
+}
+
+.doc-body .card:hover [data-component-part="card-content-container"] > div.absolute {
+  color: #7c3aed !important;
+  transform: translate(2px, -2px) !important;
 }
 
 .doc-body .grid h3,
