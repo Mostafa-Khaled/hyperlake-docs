@@ -71,7 +71,7 @@ async function getPage(product, route) {
     || Object.values(product.pages)[0];
   if (!ref) return null;
   if (!loaded.has(ref.chunk)) {
-    loaded.set(ref.chunk, await fetch(`${getBasePath()}/data/${ref.chunk}?v=1.1.0`).then(r => r.ok ? r.json() : []));
+    loaded.set(ref.chunk, await fetch(`${getBasePath()}/data/${ref.chunk}?v=1.1.1`).then(r => r.ok ? r.json() : []));
   }
   return loaded.get(ref.chunk)[ref.index];
 }
@@ -772,7 +772,7 @@ async function loadAllProductPages(product, onProgress) {
   
   await Promise.all(chunks.map(async chunk => {
     if (!loaded.has(chunk)) {
-      const data = await fetch(`${getBasePath()}/data/${chunk}?v=1.1.0`).then(r => r.ok ? r.json() : []);
+      const data = await fetch(`${getBasePath()}/data/${chunk}?v=1.1.1`).then(r => r.ok ? r.json() : []);
       loaded.set(chunk, data);
     }
     loadedChunks++;
@@ -1476,6 +1476,6 @@ window.addEventListener('popstate', renderRoute);
 window.addEventListener('hashchange', renderRoute);
 
 // Initialize application
-manifest = await fetch(`${getBasePath()}/data/manifest.json?v=1.1.0`).then(r => r.json());
+manifest = await fetch(`${getBasePath()}/data/manifest.json?v=1.1.1`).then(r => r.json());
 initProductPicker();
 renderRoute();
