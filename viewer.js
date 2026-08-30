@@ -1,4 +1,4 @@
-﻿const root = document.documentElement;
+const root = document.documentElement;
 const app = document.querySelector('#content');
 const sidebar = document.querySelector('#sidebar');
 const search = document.querySelector('#search');
@@ -938,145 +938,61 @@ function renderSidebar(product, active) {
 }
 
 const PRODUCT_METADATA = {
-  hyperstream: {
-    category: 'Streaming & Ingestion',
-    icon: '⚡',
-    color: '#0284c7',
-    bg: 'rgba(2, 132, 199, 0.08)',
-    desc: 'High-throughput distributed event streaming, Kafka broker clusters, Connect connectors, and Streams API.'
-  },
-  hyperbatch: {
-    category: 'Computation & Engine',
-    icon: '🔥',
-    color: '#e11d48',
-    bg: 'rgba(225, 29, 72, 0.08)',
-    desc: 'Unified large-scale analytics engine supporting SQL, PySpark, DataFrames, MLlib machine learning, and GraphX.'
-  },
-  hypervault: {
-    category: 'Security & Governance',
-    icon: '🛡️',
-    color: '#059669',
-    bg: 'rgba(5, 150, 105, 0.08)',
-    desc: 'Centralized enterprise security administration, role-based access policies, column-masking, and audit logging.'
-  },
-  hyperbi: {
-    category: 'BI & Exploration',
-    icon: '📊',
-    color: '#0891b2',
-    bg: 'rgba(8, 145, 178, 0.08)',
-    desc: 'Modern data exploration, interactive visual dashboards, SQL Lab IDE, and native connectors for 40+ databases.'
-  },
-  hypergrid: {
-    category: 'Streaming & Ingestion',
-    icon: '🌊',
-    color: '#2563eb',
-    bg: 'rgba(37, 99, 235, 0.08)',
-    desc: 'Distributed stateful stream processing, low-latency event-driven applications, and complex event processing (CEP).'
-  },
-  hyperhouse: {
-    category: 'Storage & Warehousing',
-    icon: '⚡',
-    color: '#f59e0b',
-    bg: 'rgba(245, 158, 11, 0.08)',
-    desc: 'High-performance columnar database management system for real-time analytical queries at petabyte scale.'
-  },
-  hypersync: {
-    category: 'Streaming & Ingestion',
-    icon: '🔄',
-    color: '#7c3aed',
-    bg: 'rgba(124, 58, 237, 0.08)',
-    desc: 'Visual dataflow orchestration, reliable automated data routing, transformation, and enterprise system mediation.'
-  },
-  hypergovern: {
-    category: 'Security & Governance',
-    icon: '🧭',
-    color: '#4f46e5',
-    bg: 'rgba(79, 70, 229, 0.08)',
-    desc: 'Scalable data governance services, metadata management, classification, and end-to-end data lineage tracing.'
-  },
-  hypermdm: {
-    category: 'Data Management',
-    icon: '💎',
-    color: '#0d9488',
-    bg: 'rgba(13, 148, 136, 0.08)',
-    desc: 'Master data management, deduplication, identity resolution, and golden record creation pipelines.'
-  },
-  hypercdc: {
-    category: 'Streaming & Ingestion',
-    icon: '📡',
-    color: '#d97706',
-    bg: 'rgba(217, 119, 6, 0.08)',
-    desc: 'Low-latency change data capture (CDC) streaming database row-level mutations into Kafka and event buses.'
-  },
-  hypericeberg: {
-    category: 'Storage & Warehousing',
-    icon: '🧊',
-    color: '#3b82f6',
-    bg: 'rgba(59, 130, 246, 0.08)',
-    desc: 'Open table format for huge analytic datasets, providing ACID transactions, schema evolution, and time travel.'
-  }
+  hyperstream:  { abbr: 'HS', color: '#2563eb', category: 'Streaming',   desc: 'Distributed event streaming and Kafka broker management with Connect and Streams APIs.' },
+  hyperbatch:   { abbr: 'HB', color: '#e11d48', category: 'Computation',  desc: 'Large-scale analytics engine with SQL, PySpark, DataFrames, MLlib, and GraphX.' },
+  hypervault:   { abbr: 'HV', color: '#059669', category: 'Security',     desc: 'Centralized security, role-based access policies, column masking, and audit logging.' },
+  hyperbi:      { abbr: 'BI', color: '#0891b2', category: 'Analytics',    desc: 'Visual analytics platform with interactive dashboards, SQL Lab, and 40+ database connectors.' },
+  hypergrid:    { abbr: 'HG', color: '#7c3aed', category: 'Streaming',    desc: 'Stateful stream processing with low-latency event-driven apps and complex event processing.' },
+  hyperhouse:   { abbr: 'HH', color: '#d97706', category: 'Storage',      desc: 'Columnar database for real-time analytical queries at petabyte scale.' },
+  hypersync:    { abbr: 'HC', color: '#0284c7', category: 'Integration',  desc: 'Dataflow orchestration, automated routing, transformation, and system integration.' },
+  hypergovern:  { abbr: 'GO', color: '#4f46e5', category: 'Governance',   desc: 'Data governance, metadata management, classification, and end-to-end lineage.' },
+  hypermdm:     { abbr: 'MD', color: '#0d9488', category: 'Management',   desc: 'Master data management, deduplication, identity resolution, and golden records.' },
+  hypercdc:     { abbr: 'CD', color: '#b45309', category: 'Streaming',    desc: 'Low-latency change data capture streaming row-level mutations into Kafka.' },
+  hypericeberg: { abbr: 'HI', color: '#3b82f6', category: 'Storage',      desc: 'Open table format for large analytic datasets with ACID transactions and time travel.' },
 };
 
 function renderHome() {
-  renderSidebar(null, '');
+  // Enter portal mode: hide sidebar, make content full-width
+  const layoutEl = document.querySelector('.layout') || document.getElementById('app');
+  if (layoutEl) layoutEl.classList.add('portal-mode');
+  if (sidebar) sidebar.innerHTML = '';
   updateProductPickerLabel(null);
 
-  const totalProducts = manifest.products.length;
   const totalPages = manifest.products.reduce((acc, p) => acc + Object.keys(p.pages).length, 0);
 
   app.innerHTML = `
-    <div class="portal-home">
+    <div class="ph-wrap">
 
       <!-- Hero -->
-      <section class="portal-hero">
-        <p class="portal-eyebrow">HYPERLAKE</p>
-        <h1 class="portal-title">Internal Documentation</h1>
-        <p class="portal-subtitle">Technical guides, API references, and operator manuals for all ${totalProducts} HyperLake platform components.</p>
-        <div class="portal-stats-bar">
-          <div class="portal-stat-item">
-            <span class="portal-stat-val">${totalProducts}</span>
-            <span class="portal-stat-lbl">products</span>
-          </div>
-          <div class="portal-stat-item">
-            <span class="portal-stat-val">${totalPages.toLocaleString()}</span>
-            <span class="portal-stat-lbl">pages</span>
-          </div>
-          <div class="portal-stat-item">
-            <span class="portal-stat-val">Offline</span>
-            <span class="portal-stat-lbl">no external dependencies</span>
-          </div>
+      <section class="ph-hero">
+        <p class="ph-eyebrow">HYPERLAKE DOCUMENTATION</p>
+        <h1 class="ph-title">Everything you need<br>to build with HyperLake</h1>
+        <p class="ph-sub">Technical guides, API references, and operator manuals for every platform component.</p>
+        <div class="ph-stats">
+          <div class="ph-stat"><strong>${manifest.products.length}</strong><span>Products</span></div>
+          <div class="ph-stat-div"></div>
+          <div class="ph-stat"><strong>${totalPages.toLocaleString()}</strong><span>Pages</span></div>
         </div>
+
       </section>
 
-      <!-- Products -->
-      <section class="portal-section">
-        <div class="portal-section-header">
-          <div>
-            <h2 class="portal-section-title">Products</h2>
-            <p class="portal-section-desc">Select a product to browse its documentation.</p>
-          </div>
-          <div class="portal-filter-pills">
-            <button class="portal-pill active" type="button" data-category="all">All</button>
-            <button class="portal-pill" type="button" data-category="Streaming & Ingestion">Streaming</button>
-            <button class="portal-pill" type="button" data-category="Computation & Engine">Computation</button>
-            <button class="portal-pill" type="button" data-category="Storage & Warehousing">Storage</button>
-            <button class="portal-pill" type="button" data-category="BI & Exploration">Analytics</button>
-            <button class="portal-pill" type="button" data-category="Security & Governance">Governance</button>
-          </div>
-        </div>
-
-        <div class="portal-cards-grid">
+      <!-- Cards -->
+      <section class="ph-section">
+        <div class="ph-grid">
           ${manifest.products.map(p => {
-            const meta = PRODUCT_METADATA[p.id] || { category: 'Platform', desc: 'Documentation and reference guide.' };
+            const meta = PRODUCT_METADATA[p.id] || { abbr: p.id.slice(0,2).toUpperCase(), color: '#146ef5', category: 'Platform', desc: 'Documentation and reference guide.' };
             const pageCount = Object.keys(p.pages).length;
             return `
-              <a class="portal-card" href="${hrefFor(p.id)}" data-category="${esc(meta.category)}">
-                <p class="portal-card-tag">${esc(meta.category)}</p>
-                <h3 class="portal-card-name">${esc(p.brand)}</h3>
-                <p class="portal-card-desc">${esc(meta.desc)}</p>
-                <div class="portal-card-footer">
-                  <span class="portal-card-pages">${pageCount.toLocaleString()} pages</span>
-                  <span class="portal-card-arrow">→</span>
+              <a class="ph-card" href="${hrefFor(p.id)}">
+                <div class="ph-card-head">
+                  <div class="ph-mark" style="background:${meta.color}">${esc(meta.abbr)}</div>
+                  <span class="ph-cat">${esc(meta.category).toUpperCase()}</span>
+                </div>
+                <h3 class="ph-name">${esc(p.brand)}</h3>
+                <p class="ph-desc">${esc(meta.desc)}</p>
+                <div class="ph-foot">
+                  <span class="ph-pages">${pageCount.toLocaleString()} pages</span>
+                  <span class="ph-arr">→</span>
                 </div>
               </a>
             `;
@@ -1084,50 +1000,23 @@ function renderHome() {
         </div>
       </section>
 
-      <!-- Capabilities -->
-      <section class="portal-features-grid">
-        <div class="portal-feature-box">
-          <p class="portal-fb-label">Search</p>
-          <h3>Full-text search</h3>
-          <p>Search across all pages with <kbd>Ctrl</kbd>+<kbd>K</kbd>. Results are instant and ranked by relevance.</p>
-        </div>
-        <div class="portal-feature-box">
-          <p class="portal-fb-label">Print</p>
-          <h3>PDF export</h3>
-          <p>Print any single page or compile an entire product's documentation into a clean PDF.</p>
-        </div>
-        <div class="portal-feature-box">
-          <p class="portal-fb-label">Offline</p>
-          <h3>No external dependencies</h3>
-          <p>All content is self-contained and works without internet access or authentication.</p>
-        </div>
-      </section>
-
     </div>
   `;
 
-  // Filter pills
-  const pills = app.querySelectorAll('.portal-pill');
-  const cards = app.querySelectorAll('.portal-card');
-  pills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      pills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      const cat = pill.dataset.category;
-      cards.forEach(card => {
-        card.style.display = (cat === 'all' || card.dataset.category === cat) ? 'flex' : 'none';
-      });
-    });
-  });
-
-  document.title = 'HyperLake Internal Documentation';
+  document.title = 'HyperLake Documentation';
   window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function teardownPortalMode() {
+  const layoutEl = document.querySelector('.layout') || document.getElementById('app');
+  if (layoutEl) layoutEl.classList.remove('portal-mode');
 }
 
 async function renderRoute() {
   const route = pathRoute();
   if (!route) return renderHome();
-  
+  // Leaving home — restore sidebar+content layout if needed
+  teardownPortalMode();
   const pureRoute = route.split('#')[0];
   const hash = location.hash;
   const lastHashIdx = hash.lastIndexOf('#');
