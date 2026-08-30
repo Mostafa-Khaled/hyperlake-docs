@@ -3485,7 +3485,7 @@
   display: flex !important;
   flex-wrap: wrap !important;
   gap: 10px !important;
-  margin: 20px 0 36px 0 !important;
+  margin: 20px 0 40px 0 !important;
 }
 
 .doc-body .chip,
@@ -3493,7 +3493,7 @@
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
-  padding: 6px 14px !important;
+  padding: 7px 14px !important;
   border-radius: 20px !important;
   font-size: 13px !important;
   font-weight: 600 !important;
@@ -3520,26 +3520,334 @@
   border: none !important;
 }
 
-/* Step / Get Started cards */
-.doc-body .step-card,
-.doc-body .feature-card,
+/* Section Headings */
+.doc-body .header {
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  margin: 40px 0 8px !important;
+  color: #0f172a !important;
+}
+
+.doc-body .header-description {
+  margin-bottom: 24px !important;
+}
+
+/* 1. Deployment / Get Started Cards (3 columns) */
+.doc-body .deployment-cards {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 20px !important;
+  margin: 20px 0 48px !important;
+}
+
+.doc-body .deployment-cards > div {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  padding: 24px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.doc-body .deployment-cards > div:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 10px 28px rgba(124, 58, 237, 0.08) !important;
+  transform: translateY(-2px) !important;
+}
+
+.doc-body .deployment-top {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin-bottom: 14px !important;
+}
+
+.doc-body .deployment-top span {
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: #7c3aed !important;
+  background: rgba(124, 58, 237, 0.08) !important;
+  padding: 4px 10px !important;
+  border-radius: 6px !important;
+}
+
+.doc-body .deployment-card {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+}
+
+.doc-body .deployment-card > img {
+  width: 52px !important;
+  height: 52px !important;
+  margin: 0 0 16px 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  object-fit: contain !important;
+}
+
+.doc-body .deployment-card h3 {
+  font-size: 19px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  letter-spacing: -0.02em !important;
+  margin: 0 0 8px 0 !important;
+}
+
+.doc-body .deployment-card p {
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  color: #64748b !important;
+  margin: 0 0 20px 0 !important;
+  flex: 1 !important;
+}
+
+.doc-body .read-more {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #7c3aed !important;
+  text-decoration: none !important;
+  margin-top: auto !important;
+  transition: transform 0.15s ease !important;
+}
+
+.doc-body .read-more img {
+  width: 14px !important;
+  height: 14px !important;
+  border: none !important;
+  margin: 0 !important;
+  transition: transform 0.15s ease !important;
+}
+
+.doc-body .read-more:hover {
+  color: #6d28d9 !important;
+}
+
+.doc-body .read-more:hover img {
+  transform: translateX(4px) !important;
+}
+
+/* 2. Highlights / Core Concepts Grid */
+.doc-body .highlight-cards {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 18px !important;
+  margin: 20px 0 48px !important;
+}
+
+.doc-body .highlight-card {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 22px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
+  transition: all 0.15s ease !important;
+}
+
+.doc-body .highlight-card:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06) !important;
+  transform: translateY(-2px) !important;
+}
+
+.doc-body .highlight-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 8px !important;
+}
+
+.doc-body .highlight-header img {
+  width: 22px !important;
+  height: 22px !important;
+  border: none !important;
+  margin: 0 !important;
+  object-fit: contain !important;
+}
+
+.doc-body .highlight-header h3 {
+  font-size: 16.5px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+}
+
+.doc-body .highlight-card p {
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+  color: #64748b !important;
+  margin: 0 !important;
+}
+
+/* 3. Guides Grid */
+.doc-body .guide-list {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 18px !important;
+  margin: 20px 0 48px !important;
+}
+
+.doc-body .guide-card {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 22px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
+  transition: all 0.15s ease !important;
+}
+
+.doc-body .guide-card:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06) !important;
+  transform: translateY(-2px) !important;
+}
+
+.doc-body .guide-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 8px !important;
+}
+
+.doc-body .guide-header img {
+  width: 22px !important;
+  height: 22px !important;
+  border: none !important;
+  margin: 0 !important;
+  object-fit: contain !important;
+}
+
+.doc-body .guide-header h3 {
+  font-size: 16.5px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+}
+
+.doc-body .guide-card p {
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+  color: #64748b !important;
+  margin: 0 0 16px 0 !important;
+  flex: 1 !important;
+}
+
+.doc-body .see-all {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #7c3aed !important;
+  text-decoration: none !important;
+  margin-top: auto !important;
+}
+
+.doc-body .see-all:hover {
+  text-decoration: underline !important;
+}
+
+/* 4. Quick Links */
+.doc-body .quick-links .links {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+  gap: 28px !important;
+  margin: 28px 0 52px !important;
+}
+
+.doc-body .link-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 14px !important;
+}
+
+.doc-body .link-header h3 {
+  font-size: 15.5px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+}
+
+.doc-body .link-header svg {
+  color: #7c3aed !important;
+  width: 18px !important;
+  height: 18px !important;
+  flex-shrink: 0 !important;
+}
+
+.doc-body .link-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 9px !important;
+}
+
+.doc-body .link-list a {
+  font-size: 13.5px !important;
+  color: #475569 !important;
+  text-decoration: none !important;
+  line-height: 1.45 !important;
+  transition: color 0.12s ease !important;
+}
+
+.doc-body .link-list a:hover {
+  color: #7c3aed !important;
+  text-decoration: underline !important;
+}
+
+/* 5. Explore More & Community Cards */
+.doc-body .external-links {
+  margin: 36px 0 !important;
+}
+
+.doc-body .explore-header {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  margin: 0 0 6px !important;
+}
+
+.doc-body .explore-desc {
+  font-size: 14px !important;
+  color: #64748b !important;
+  margin: 0 0 20px !important;
+}
+
+.doc-body .explore-items {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+  gap: 18px !important;
+}
+
 .doc-body .explore-card {
   display: flex !important;
   flex-direction: column !important;
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
   border-radius: 12px !important;
-  padding: 20px !important;
+  padding: 22px !important;
   text-decoration: none !important;
   color: inherit !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02) !important;
   transition: all 0.15s ease !important;
 }
 
-.doc-body .explore-card:hover,
-.doc-body .step-card:hover,
-.doc-body .feature-card:hover {
+.doc-body .explore-card:hover {
   border-color: #cbd5e1 !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
   transform: translateY(-2px) !important;
 }
 
@@ -3558,49 +3866,17 @@
   height: 22px !important;
   margin: 0 !important;
   border: none !important;
+  object-fit: contain !important;
 }
 
-.doc-body .explore-items {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
-  gap: 16px !important;
-  margin-top: 16px !important;
-}
-
-.doc-body .link-header {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin-bottom: 12px !important;
-}
-
-.doc-body .link-header h3 {
+.doc-body .explore-card p {
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+  color: #64748b !important;
   margin: 0 !important;
-  font-size: 16px !important;
-  font-weight: 700 !important;
 }
 
-.doc-body .link-header svg {
-  color: #7c3aed !important;
-}
-
-.doc-body .link-list {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-}
-
-.doc-body .link-list a {
-  font-size: 14px !important;
-  color: #475569 !important;
-  text-decoration: none !important;
-}
-
-.doc-body .link-list a:hover {
-  color: #7c3aed !important;
-  text-decoration: underline !important;
-}
-
+/* 6. Footer */
 .doc-body .home-footer {
   display: flex !important;
   align-items: center !important;
@@ -3610,29 +3886,34 @@
   border-top: 1px solid #e2e8f0 !important;
   font-size: 13px !important;
   color: #94a3b8 !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
 }
 
 .doc-body .home-footer-social {
   display: flex !important;
   align-items: center !important;
-  gap: 12px !important;
+  gap: 10px !important;
 }
 
 .doc-body .social-link {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 6px !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 8px !important;
   color: #64748b !important;
   border: 1px solid #e2e8f0 !important;
+  background: #ffffff !important;
   transition: all 0.15s ease !important;
+  text-decoration: none !important;
 }
 
 .doc-body .social-link:hover {
   color: #0f172a !important;
   background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
 }
 
 .doc-body .social-link svg {
