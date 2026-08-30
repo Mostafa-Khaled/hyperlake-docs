@@ -71,7 +71,7 @@ async function getPage(product, route) {
     || Object.values(product.pages)[0];
   if (!ref) return null;
   if (!loaded.has(ref.chunk)) {
-    loaded.set(ref.chunk, await fetch(`${getBasePath()}/data/${ref.chunk}?v=1.0.8`).then(r => r.ok ? r.json() : []));
+    loaded.set(ref.chunk, await fetch(`${getBasePath()}/data/${ref.chunk}?v=1.0.9`).then(r => r.ok ? r.json() : []));
   }
   return loaded.get(ref.chunk)[ref.index];
 }
@@ -276,21 +276,51 @@ function bindTabs() {
     });
   });
 
-  // 2. Mintlify & Sphinx Tabs (.docs-tab, [role="tablist"], .sphinx-tabs)
-  app.querySelectorAll('.docs-tab, .sphinx-tabs, [role="tablist"]:not(.tabs):not(.table-tabs)').forEach(tabGroup => {
-    const tabs = tabGroup.querySelectorAll('button[role="tab"], button, .sphinx-tabs-tab');
-    const parent = tabGroup.closest('.sphinx-tabs') || tabGroup.parentElement;
-    const panels = parent ? Array.from(parent.querySelectorAll('.sphinx-tabs-panel, [role="tabpanel"]')) : [];
+  // 2. Mintlify, Sphinx & Docusaurus Tabs
+  app.querySelectorAll('.docs-tab, .sphinx-tabs, [role="tablist"]:not(.table-tabs), .deployment-tabs, .tab-container').forEach(tabGroup => {
+    const tabs = Array.from(tabGroup.querySelectorAll('[role="tab"], button, li.cursor-pointer, .sphinx-tabs-tab'));
+    const parent = tabGroup.closest('.tab-container, .sphinx-tabs, .tabs') || tabGroup.parentElement;
+    const panels = parent ? Array.from(parent.querySelectorAll('[role="tabpanel"], .sphinx-tabs-panel, [id^="panel-"]')) : [];
+
+    // Initialize initial state if not set
+    if (panels.length) {
+      const activeIdx = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true' || t.classList.contains('active'));
+      const initialIdx = activeIdx >= 0 ? activeIdx : 0;
+      tabs.forEach((t, i) => {
+        t.setAttribute('aria-selected', i === initialIdx ? 'true' : 'false');
+        t.classList.toggle('active', i === initialIdx);
+        const btn = t.querySelector('[data-component-part="tab-button"]');
+        if (btn) {
+          btn.setAttribute('data-active', i === initialIdx ? 'true' : 'false');
+        }
+      });
+      panels.forEach((p, i) => {
+        const ctrl = tabs[initialIdx]?.getAttribute('aria-controls');
+        const pId = p.getAttribute('id');
+        const isMatch = (ctrl && pId) ? (ctrl === pId) : (i === initialIdx);
+        if (isMatch) {
+          p.removeAttribute('hidden');
+          p.style.display = 'block';
+        } else {
+          p.setAttribute('hidden', 'true');
+          p.style.display = 'none';
+        }
+      });
+    }
 
     tabs.forEach((tab, idx) => {
-      tab.addEventListener('click', e => {
+      tab.onclick = e => {
         e.preventDefault();
         tabs.forEach(t => {
           t.setAttribute('aria-selected', 'false');
           t.classList.remove('active');
+          const btn = t.querySelector('[data-component-part="tab-button"]');
+          if (btn) btn.setAttribute('data-active', 'false');
         });
         tab.setAttribute('aria-selected', 'true');
         tab.classList.add('active');
+        const activeBtn = tab.querySelector('[data-component-part="tab-button"]');
+        if (activeBtn) activeBtn.setAttribute('data-active', 'true');
 
         if (panels.length) {
           const ctrl = tab.getAttribute('aria-controls');
@@ -306,7 +336,7 @@ function bindTabs() {
             }
           });
         }
-      });
+      };
     });
   });
 
@@ -742,7 +772,7 @@ async function loadAllProductPages(product, onProgress) {
   
   await Promise.all(chunks.map(async chunk => {
     if (!loaded.has(chunk)) {
-      const data = await fetch(`${getBasePath()}/data/${chunk}?v=1.0.8`).then(r => r.ok ? r.json() : []);
+      const data = await fetch(`${getBasePath()}/data/${chunk}?v=1.0.9`).then(r => r.ok ? r.json() : []);
       loaded.set(chunk, data);
     }
     loadedChunks++;
@@ -1446,6 +1476,6 @@ window.addEventListener('popstate', renderRoute);
 window.addEventListener('hashchange', renderRoute);
 
 // Initialize application
-manifest = await fetch(`${getBasePath()}/data/manifest.json?v=1.0.8`).then(r => r.json());
+manifest = await fetch(`${getBasePath()}/data/manifest.json?v=1.0.9`).then(r => r.json());
 initProductPicker();
 renderRoute();

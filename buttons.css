@@ -156,12 +156,28 @@
   background: transparent !important;
 }
 
-.doc-body img.icon,
+/* Inline small icons: chips, inline links, list items */
+.doc-body img.icon:not([width]):not([data-og-width]):not([class*="size-"]),
 .doc-body img.inline {
   width: 18px !important;
   height: 18px !important;
   display: inline-block !important;
   vertical-align: -0.15em !important;
+  object-fit: contain !important;
+}
+
+/* Medium icons: card icons, deployment icons */
+.doc-body img.icon[width="45"],
+.doc-body img.icon[data-og-width="45"],
+.doc-body img.icon[width="48"],
+.doc-body img.icon[data-og-width="48"],
+.doc-body img.icon[width="52"],
+.doc-body img.icon[data-og-width="52"],
+.doc-body img.icon[width="62"],
+.doc-body img.icon[data-og-width="62"],
+.doc-body .card-layout img.icon {
+  width: 48px !important;
+  height: 48px !important;
   object-fit: contain !important;
 }
 
@@ -4085,5 +4101,162 @@
   border: none !important;
   object-fit: contain !important;
 }
+
+/* 8. Deployment Tabs & Card Layout (.card-layout, .deployment-tabs) */
+.doc-body .deployment-tabs {
+  display: flex !important;
+  gap: 20px !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+  margin: 24px 0 28px 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.doc-body .deployment-tabs li,
+.doc-body .deployment-tabs [role="tab"] {
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.doc-body .deployment-tabs [data-component-part="tab-button"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  padding: 10px 16px !important;
+  color: #64748b !important;
+  border-bottom: 2px solid transparent !important;
+  margin-bottom: -2px !important;
+  transition: all 0.15s ease !important;
+}
+
+.doc-body .deployment-tabs [data-component-part="tab-button"]:hover {
+  color: #0f172a !important;
+}
+
+.doc-body .deployment-tabs li.active [data-component-part="tab-button"],
+.doc-body .deployment-tabs [aria-selected="true"] [data-component-part="tab-button"] {
+  color: #7c3aed !important;
+  border-bottom-color: #7c3aed !important;
+}
+
+.doc-body .card-layout {
+  display: flex !important;
+  align-items: center !important;
+  gap: 24px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  padding: 24px 28px !important;
+  margin: 20px 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  transition: all 0.15s ease !important;
+}
+
+.doc-body .card-layout:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.06) !important;
+  transform: translateY(-2px) !important;
+}
+
+.doc-body .card-layout > div:first-child {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 12px !important;
+  background: #f8fafc !important;
+  flex-shrink: 0 !important;
+}
+
+.doc-body .card-layout > div:first-child img,
+.doc-body .card-layout img.icon {
+  width: 42px !important;
+  height: 42px !important;
+  object-fit: contain !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+.doc-body .card-layout > div:nth-child(2) {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.doc-body .card-layout .header-container {
+  display: flex !important;
+  align-items: baseline !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-bottom: 6px !important;
+}
+
+.doc-body .card-layout .header {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+}
+
+.doc-body .card-layout .header-chip {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  background: #f1f5f9 !important;
+  padding: 3px 8px !important;
+  border-radius: 4px !important;
+}
+
+.doc-body .card-layout p {
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  color: #475569 !important;
+  margin: 0 !important;
+}
+
+.doc-body .card-layout ul {
+  margin: 10px 0 0 0 !important;
+  padding-left: 20px !important;
+  font-size: 13.5px !important;
+  color: #475569 !important;
+}
+
+.doc-body .card-layout > div:last-child {
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+}
+
+.doc-body .button-card {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 9px 18px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #7c3aed !important;
+  background: rgba(124, 58, 237, 0.08) !important;
+  border: 1px solid rgba(124, 58, 237, 0.2) !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+  white-space: nowrap !important;
+}
+
+.doc-body .button-card:hover {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+  border-color: #7c3aed !important;
+}
+
+.doc-body .button-card img {
+  width: 14px !important;
+  height: 14px !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
 
 
