@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    HyperLake Documentation Interactive Elements, Buttons, Tabs & Accordions
    ========================================================================== */
 
@@ -128,8 +128,12 @@
    ========================================================================== */
 
 /* Tailwind SVG size utility classes used in imported markdown */
-.doc-body svg.size-3, .doc-body svg[class*="size-3"] { width: 12px !important; height: 12px !important; max-width: 12px !important; max-height: 12px !important; }
-.doc-body svg.size-4, .doc-body svg[class*="size-4"] { width: 16px !important; height: 16px !important; max-width: 16px !important; max-height: 16px !important; }
+.doc-body svg.size-2, .doc-body svg[class*="size-2"]:not([class*="size-2."]) { width: 8px !important; height: 8px !important; max-width: 8px !important; max-height: 8px !important; }
+.doc-body svg[class*="size-2.5"] { width: 10px !important; height: 10px !important; max-width: 10px !important; max-height: 10px !important; }
+.doc-body svg.size-3, .doc-body svg[class*="size-3"]:not([class*="size-3."]) { width: 12px !important; height: 12px !important; max-width: 12px !important; max-height: 12px !important; }
+.doc-body svg[class*="size-3.5"] { width: 14px !important; height: 14px !important; max-width: 14px !important; max-height: 14px !important; }
+.doc-body svg.size-4, .doc-body svg[class*="size-4"]:not([class*="size-4."]) { width: 16px !important; height: 16px !important; max-width: 16px !important; max-height: 16px !important; }
+.doc-body svg[class*="size-4.5"] { width: 18px !important; height: 18px !important; max-width: 18px !important; max-height: 18px !important; }
 .doc-body svg.size-5, .doc-body svg[class*="size-5"] { width: 20px !important; height: 20px !important; max-width: 20px !important; max-height: 20px !important; }
 .doc-body svg.size-6, .doc-body svg[class*="size-6"] { width: 24px !important; height: 24px !important; max-width: 24px !important; max-height: 24px !important; }
 .doc-body svg.size-7, .doc-body svg[class*="size-7"] { width: 28px !important; height: 28px !important; max-width: 28px !important; max-height: 28px !important; }
@@ -138,15 +142,77 @@
 .doc-body svg.size-12, .doc-body svg[class*="size-12"], .doc-body svg.h-12, .doc-body svg[class*="h-12"] { width: 48px !important; height: 48px !important; max-width: 48px !important; max-height: 48px !important; }
 .doc-body svg.size-16, .doc-body svg[class*="size-16"], .doc-body svg.h-16, .doc-body svg[class*="h-16"] { width: 64px !important; height: 64px !important; max-width: 64px !important; max-height: 64px !important; }
 
+/* Image icons and SVG badges */
+.doc-body img.icon,
+.doc-body img[class*="icon"],
+.doc-body img[class*="size-"],
+.doc-body img.slack-icon,
+.doc-body img.tab-icon,
+.doc-body img[src*=".svg"],
+.doc-body img[src*=".webp"][class*="icon"] {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.doc-body img.icon,
+.doc-body img.inline {
+  width: 18px !important;
+  height: 18px !important;
+  display: inline-block !important;
+  vertical-align: -0.15em !important;
+  object-fit: contain !important;
+}
+
+.doc-body img[class*="size-6"] {
+  width: 24px !important;
+  height: 24px !important;
+  object-fit: contain !important;
+}
+
+.doc-body img.slack-icon {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.doc-body img.tab-icon,
+.doc-body img.h-4 {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.doc-body [data-component-part="card-icon"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  background: #f1f5f9 !important;
+  color: #2563eb !important;
+  margin-bottom: 12px !important;
+  flex-shrink: 0 !important;
+}
+
+.doc-body [data-component-part="card-icon"] svg {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  color: #2563eb !important;
+  fill: none !important;
+  stroke: currentColor !important;
+}
+
 /* Small inline icon elements */
-.doc-body span > svg,
-.doc-body p > svg,
-.doc-body a > svg,
-.doc-body button > svg,
-.doc-body h1 > svg,
-.doc-body h2 > svg,
-.doc-body h3 > svg,
-.doc-body h4 > svg,
+.doc-body span > svg:not([class*="size-"]),
+.doc-body p > svg:not([class*="size-"]),
+.doc-body a > svg:not([class*="size-"]),
+.doc-body button > svg:not([class*="size-"]),
+.doc-body h1 > svg:not([class*="size-"]),
+.doc-body h2 > svg:not([class*="size-"]),
+.doc-body h3 > svg:not([class*="size-"]),
+.doc-body h4 > svg:not([class*="size-"]),
 .doc-body .admonitionHeading_Gvgb svg,
 .doc-body [class*="admonitionIcon"] svg {
   width: 18px;
@@ -3377,3 +3443,201 @@
   .ph-title { font-size: 28px !important; }
   .ph-stats { display: none; }
 }
+
+/* ==========================================================================
+   HyperGovern Documentation & Mintlify Component Styling
+   ========================================================================== */
+
+.doc-body .homepage-container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.doc-body .banner-content {
+  margin-bottom: 40px;
+}
+
+.doc-body .page-header {
+  font-size: 34px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  margin: 0 0 12px 0 !important;
+  color: #0f172a !important;
+}
+
+.doc-body #header-highlight {
+  color: #7c3aed !important;
+}
+
+.doc-body .page-description {
+  font-size: 16px !important;
+  color: #64748b !important;
+  line-height: 1.6 !important;
+  margin-bottom: 24px !important;
+}
+
+.doc-body .search-container {
+  display: none !important;
+}
+
+/* Category & Connector Chips */
+.doc-body .chips {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin: 20px 0 36px 0 !important;
+}
+
+.doc-body .chip,
+.doc-body a.chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  border: 1px solid #e2e8f0 !important;
+  background: #f8fafc !important;
+  color: #334155 !important;
+  transition: all 0.15s ease !important;
+}
+
+.doc-body a.chip:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+  transform: translateY(-1px) !important;
+}
+
+.doc-body .chip img,
+.doc-body a.chip img {
+  width: 16px !important;
+  height: 16px !important;
+  object-fit: contain !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+/* Step / Get Started cards */
+.doc-body .step-card,
+.doc-body .feature-card,
+.doc-body .explore-card {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  text-decoration: none !important;
+  color: inherit !important;
+  transition: all 0.15s ease !important;
+}
+
+.doc-body .explore-card:hover,
+.doc-body .step-card:hover,
+.doc-body .feature-card:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+  transform: translateY(-2px) !important;
+}
+
+.doc-body .explore-card-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 8px !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  color: #0f172a !important;
+}
+
+.doc-body .explore-card-header img {
+  width: 22px !important;
+  height: 22px !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+.doc-body .explore-items {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+  gap: 16px !important;
+  margin-top: 16px !important;
+}
+
+.doc-body .link-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 12px !important;
+}
+
+.doc-body .link-header h3 {
+  margin: 0 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+.doc-body .link-header svg {
+  color: #7c3aed !important;
+}
+
+.doc-body .link-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.doc-body .link-list a {
+  font-size: 14px !important;
+  color: #475569 !important;
+  text-decoration: none !important;
+}
+
+.doc-body .link-list a:hover {
+  color: #7c3aed !important;
+  text-decoration: underline !important;
+}
+
+.doc-body .home-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-top: 32px !important;
+  margin-top: 48px !important;
+  border-top: 1px solid #e2e8f0 !important;
+  font-size: 13px !important;
+  color: #94a3b8 !important;
+}
+
+.doc-body .home-footer-social {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.doc-body .social-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 6px !important;
+  color: #64748b !important;
+  border: 1px solid #e2e8f0 !important;
+  transition: all 0.15s ease !important;
+}
+
+.doc-body .social-link:hover {
+  color: #0f172a !important;
+  background: #f1f5f9 !important;
+}
+
+.doc-body .social-link svg {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+}
+
