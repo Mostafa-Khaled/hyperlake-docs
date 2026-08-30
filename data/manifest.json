@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-30T05:23:59.373Z",
+  "generatedAt": "2026-08-30T05:52:02.547Z",
   "products": [
     {
       "id": "hyperbatch",
@@ -17180,7 +17180,8 @@
       "minPages": 40,
       "attribution": "HyperLake Documentation",
       "chunks": [
-        "hypericeberg-0000.json"
+        "hypericeberg-0000.json",
+        "hypericeberg-0001.json"
       ],
       "pages": {
         "hypericeberg": {
@@ -17189,267 +17190,387 @@
           "title": "HyperHyperIceberg - HyperHyperIceberg™",
           "text": "Home"
         },
-        "hypericeberg/developer-snapshot-testing": {
+        "hypericeberg/benchmarks": {
           "chunk": "hypericeberg-0000.json",
           "index": 1,
+          "title": "Benchmarks - HyperHyperIceberg™",
+          "text": "Benchmarks Available Benchmarks and how to run them🔗 Benchmarks are located under <project-name>/jmh. It is generally favorable to only run the tests of interest rather than running all available benchmarks. Also note that JMH benchmarks run within the same JVM as the system-under-test, so results might vary between runs. Running Benchmarks on GitHub🔗 It is possible to run one or more Benchmarks via the JMH Benchmarks GH action on your own fork of the Iceberg repo. This GH action takes the following inputs: * The repository name where those benchmarks should be run against, such as apache/ic"
+        },
+        "hypericeberg/community": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 2,
+          "title": "Community - HyperHyperIceberg™",
+          "text": "Welcome!🔗 We're glad that you're interested in joining the Apache Iceberg community! Read along to learn how to connect with existing community members and where you can get involved with the project, both technically and socially. Join the Discussion🔗 Community discussions happen across various mailing lists, on the apache-iceberg Slack workspace, and on specific GitHub issues. Mailing Lists🔗 Apache Iceberg mailing lists: Developers: dev@iceberg.apache.org -- Iceberg community discussions Archive Subscribe Unsubscribe Commits: commits@iceberg.apache.org -- GitHub commit notifications Archi"
+        },
+        "hypericeberg/contribute": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 3,
+          "title": "Contribute - HyperHyperIceberg™",
+          "text": "Contributing🔗 In this page, you will find some guidelines on contributing to Apache Iceberg. Please keep in mind that none of these are hard rules and they're meant as a collection of helpful suggestions to make contributing as seamless of an experience as possible. If you are thinking of contributing but first would like to discuss the change you wish to make, we welcome you to head over to the Community page on the official Iceberg documentation site to find a number of ways to connect with the community, including slack and our mailing lists. Of course, always feel free to just open a in t"
+        },
+        "hypericeberg/developer-snapshot-testing": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 4,
           "title": "Developer Snapshot Testing - HyperHyperIceberg™",
           "text": "Developer Snapshot Testing🔗 For Iceberg developers only Nightly snapshots are unreleased development artifacts. They are not official Apache releases, are not intended for general use, may change or break at any time, and must not be used in production. If you are not actively participating in Iceberg development or following dev list discussions, use an official release instead. Every night, Apache Iceberg publishes snapshots of every module from unreleased changes on main to support active Iceberg developers, engine maintainers, and automated testing. Per the ASF release policy, unreleased "
         },
         "hypericeberg/docs/latest": {
           "chunk": "hypericeberg-0000.json",
-          "index": 2,
+          "index": 5,
           "title": "Introduction - HyperHyperIceberg™",
           "text": "Documentation🔗 Apache Iceberg is an open table format for huge analytic datasets. Iceberg adds tables to compute engines including Spark, Trino, PrestoDB, Flink, Hive and Impala using a high-performance table format that works just like a SQL table. User experience🔗 Iceberg avoids unpleasant surprises. Schema evolution works and won't inadvertently un-delete data. Users don't need to know about partitioning to get fast queries. Schema evolution supports add, drop, update, or rename, and has no side-effects Hidden partitioning prevents user mistakes that cause silently incorrect results or ex"
         },
         "hypericeberg/docs/latest/api": {
           "chunk": "hypericeberg-0000.json",
-          "index": 3,
+          "index": 6,
           "title": "Java API - HyperHyperIceberg™",
           "text": "Iceberg Java API🔗 Tables🔗 The main purpose of the Iceberg API is to manage table metadata, like schema, partition spec, metadata, and data files that store table data. Table metadata and operations are accessed through the Table interface. This interface will return table information. Table metadata🔗 The Table interface provides access to the table metadata: schema returns the current table schema spec returns the current table partition spec properties returns a map of key-value properties currentSnapshot returns the current table snapshot snapshots returns all valid snapshots for the tabl"
         },
         "hypericeberg/docs/latest/aws": {
           "chunk": "hypericeberg-0000.json",
-          "index": 4,
+          "index": 7,
           "title": "AWS - HyperHyperIceberg™",
           "text": "Iceberg AWS Integrations🔗 Iceberg provides integration with different AWS services through the iceberg-aws module. This section describes how to use Iceberg with AWS. Enabling AWS Integration🔗 The iceberg-aws module is bundled with Spark and Flink engine runtimes for all versions from 0.11.0 onwards. However, the AWS clients are not bundled so that you can use the same client version as your application. You will need to provide the AWS v2 SDK because that is what Iceberg depends on. You can choose to use the AWS SDK bundle, or individual AWS client packages (Glue, S3, DynamoDB, KMS, STS) if"
         },
         "hypericeberg/docs/latest/branching": {
           "chunk": "hypericeberg-0000.json",
-          "index": 5,
+          "index": 8,
           "title": "Branching and Tagging - HyperHyperIceberg™",
           "text": "Branching and Tagging🔗 Overview🔗 Iceberg table metadata maintains a snapshot log, which represents the changes applied to a table. Snapshots are fundamental in Iceberg as they are the basis for reader isolation and time travel queries. For controlling metadata size and storage costs, Iceberg provides snapshot lifecycle management procedures such as expire_snapshots for removing unused snapshots and no longer necessary data files based on table snapshot retention properties. For more sophisticated snapshot lifecycle management, Iceberg supports branches and tags which are named references to "
         },
         "hypericeberg/docs/latest/catalog-properties": {
           "chunk": "hypericeberg-0000.json",
-          "index": 6,
+          "index": 9,
           "title": "Catalog properties - HyperHyperIceberg™",
           "text": "Catalog properties🔗 Common properties🔗 Iceberg catalogs support using catalog properties to configure catalog behaviors. Here is a list of commonly used catalog properties: Property Default Description catalog-impl null a custom Catalog implementation to use by an engine io-impl null a custom FileIO implementation to use in a catalog warehouse null the root path of the data warehouse uri null a URI string, such as Hive metastore URI clients 2 client pool size cache-enabled true Whether to cache catalog entries cache.expiration-interval-ms 30000 How long catalog entries are locally cached, in"
         },
         "hypericeberg/docs/latest/configuration": {
           "chunk": "hypericeberg-0000.json",
-          "index": 7,
+          "index": 10,
           "title": "Configuration - HyperHyperIceberg™",
           "text": "Configuration🔗 Table properties🔗 Iceberg tables support table properties to configure table behavior, like the default split size for readers. Read properties🔗 Property Default Description read.split.target-size 134217728 (128 MB) Target size when combining data input splits read.split.metadata-target-size 33554432 (32 MB) Target size when combining metadata input splits read.split.planning-lookback 10 Number of bins to consider when combining input splits read.split.open-file-cost 4194304 (4 MB) The estimated cost to open a file, used as a minimum weight when combining splits. read.parquet"
         },
         "hypericeberg/docs/latest/custom-catalog": {
           "chunk": "hypericeberg-0000.json",
-          "index": 8,
+          "index": 11,
           "title": "Java Custom Catalog - HyperHyperIceberg™",
           "text": "Custom Catalog🔗 It's possible to read an iceberg table either from an hdfs path or from a hive table. It's also possible to use a custom metastore in place of hive. The steps to do that are as follows. Custom TableOperations Custom Catalog Custom FileIO Custom LocationProvider Custom IcebergSource Note: To work with encrypted tables, custom catalogs must address a number of security requirements. Custom table operations implementation🔗 Extend BaseMetastoreTableOperations to provide implementation on how to read and write metadata Example: class CustomTableOperations extends BaseMetastoreTabl"
         },
+        "hypericeberg/docs/latest/dell": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 12,
+          "title": "Dell - HyperHyperIceberg™",
+          "text": "Iceberg Dell Integration🔗 Dell ECS Integration🔗 Iceberg can be used with Dell's Enterprise Object Storage (ECS) by using the ECS catalog since 0.15.0. See Dell ECS for more information on Dell ECS. Parameters🔗 When using Dell ECS with Iceberg, these configuration parameters are required: Name Description ecs.s3.endpoint ECS S3 service endpoint ecs.s3.access-key-id ECS Username ecs.s3.secret-access-key S3 Secret Key warehouse The location of data and metadata The warehouse should use the following formats: Example Description ecs://bucket-a Use the whole bucket as the data ecs://bucket-a/ Us"
+        },
+        "hypericeberg/docs/latest/delta-lake-migration": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 13,
+          "title": "Delta Lake Migration - HyperHyperIceberg™",
+          "text": "Delta Lake Table Migration🔗 Delta Lake is a table format that supports Parquet file format and provides time travel and versioning features. When migrating data from Delta Lake to Iceberg, it is common to migrate all snapshots to maintain the history of the data. Currently, Iceberg supports the Snapshot Table action for migrating from Delta Lake to Iceberg tables. Since Delta Lake tables maintain transactions, all available transactions will be committed to the new Iceberg table as transactions in order. For Delta Lake tables, any additional data files added after the initial migration will b"
+        },
         "hypericeberg/docs/latest/encryption": {
           "chunk": "hypericeberg-0000.json",
-          "index": 9,
+          "index": 14,
           "title": "Encryption - HyperHyperIceberg™",
           "text": "Encryption🔗 Iceberg table encryption protects confidentiality and integrity of table data in an untrusted storage. The data, delete, manifest and manifest list files are encrypted and tamper-proofed before being sent to the storage backend. The metadata.json file does not contain data or stats, and is therefore not encrypted. Currently, encryption is supported in the Hive and REST catalogs for tables with Parquet and Avro data formats. Two parameters are required to activate encryption of a table: Catalog property that specifies the KMS (\"key management service\"). It can be either encryption."
         },
         "hypericeberg/docs/latest/evolution": {
           "chunk": "hypericeberg-0000.json",
-          "index": 10,
+          "index": 15,
           "title": "Evolution - HyperHyperIceberg™",
           "text": "Evolution🔗 Iceberg supports in-place table evolution. You can evolve a table schema just like SQL -- even in nested structures -- or change partition layout when data volume changes. Iceberg does not require costly distractions, like rewriting table data or migrating to a new table. For example, Hive table partitioning cannot change so moving from a daily partition layout to an hourly partition layout requires a new table. And because queries are dependent on partitions, queries must be rewritten for the new table. In some cases, even changes as simple as renaming a column are either not supp"
         },
+        "hypericeberg/docs/latest/fileio": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 16,
+          "title": "FileIO - HyperHyperIceberg™",
+          "text": "Iceberg FileIO🔗 Overview🔗 Iceberg comes with a flexible abstraction around reading and writing data and metadata files. The FileIO interface allows the Iceberg library to communicate with the underlying storage layer. FileIO is used for all metadata operations during the job planning and commit stages. Iceberg Files🔗 The metadata for an Iceberg table tracks the absolute path for data files which allows greater abstraction over the physical layout. Additionally, changes to table state are performed by writing new metadata files and never involve renaming files. This allows a much smaller set"
+        },
         "hypericeberg/docs/latest/flink": {
           "chunk": "hypericeberg-0000.json",
-          "index": 11,
+          "index": 17,
           "title": "Getting Started - HyperHyperIceberg™",
           "text": "Getting Started Tip For an overview of using Iceberg with Flink, see the Flink Quickstart Apache Iceberg supports both Apache Flink's DataStream API and Table API. See the Multi-Engine Support page for the integration of Apache Flink. Feature support Flink Notes SQL create catalog ✔️ SQL create database ✔️ SQL create table ✔️ SQL create table like ✔️ SQL alter table ✔️ Only support altering table properties, column and partition changes are not supported SQL drop_table ✔️ SQL select ✔️ Support both streaming and batch mode SQL insert into ✔️ ️ Support both streaming and batch mode SQL insert o"
         },
         "hypericeberg/docs/latest/flink-configuration": {
           "chunk": "hypericeberg-0000.json",
-          "index": 12,
+          "index": 18,
           "title": "Flink Configuration - HyperHyperIceberg™",
           "text": "Flink Configuration🔗 Catalog Configuration🔗 A catalog is created and named by executing the following query (replace <catalog_name> with your catalog name and <config_key>=<config_value> with catalog implementation config): CREATE CATALOG <catalog_name> WITH ( 'type'='iceberg', `<config_key>`=`<config_value>` ); The following properties can be set globally and are not limited to a specific catalog implementation: Property Required Values Description type ✔️ iceberg Must be iceberg. catalog-type hive, hadoop, rest, glue, jdbc or nessie The underlying Iceberg catalog implementation, HiveCatalo"
         },
         "hypericeberg/docs/latest/flink-connector": {
           "chunk": "hypericeberg-0000.json",
-          "index": 13,
+          "index": 19,
           "title": "Flink Connector - HyperHyperIceberg™",
           "text": "Flink Connector🔗 Apache Flink supports creating Iceberg table directly without creating the explicit Flink catalog in Flink SQL. That means we can just create an iceberg table by specifying 'connector'='iceberg' table option in Flink SQL which is similar to usage in the Flink official document. In Flink, the SQL CREATE TABLE test (..) WITH ('connector'='iceberg', ...) will create a Flink table in current Flink catalog (use GenericInMemoryCatalog by default), which is just mapping to the underlying iceberg table instead of maintaining iceberg table directly in current Flink catalog. To create "
         },
         "hypericeberg/docs/latest/flink-ddl": {
           "chunk": "hypericeberg-0000.json",
-          "index": 14,
+          "index": 20,
           "title": "Flink DDL - HyperHyperIceberg™",
           "text": "Flink DDL DDL commands🔗 CREATE Catalog🔗 Hive catalog🔗 This creates an Iceberg catalog named hive_catalog that can be configured using 'catalog-type'='hive', which loads tables from Hive metastore: CREATE CATALOG hive_catalog WITH ( 'type'='iceberg', 'catalog-type'='hive', 'uri'='thrift://localhost:9083', 'clients'='5', 'property-version'='1', 'warehouse'='hdfs://nn:8020/warehouse/path' ); The following properties can be set if using the Hive catalog: uri: The Hive metastore's thrift URI. (Required) clients: The Hive metastore client pool size, default value is 2. (Optional) warehouse: The H"
         },
         "hypericeberg/docs/latest/flink-maintenance": {
           "chunk": "hypericeberg-0000.json",
-          "index": 15,
+          "index": 21,
           "title": "Flink TableMaintenance - HyperHyperIceberg™",
           "text": "Flink TableMaintenance Flink Table Maintenance BatchMode🔗 Rewrite files action🔗 Iceberg provides API to rewrite small files into large files by submitting Flink batch jobs. The behavior of this Flink action is the same as Spark's rewriteDataFiles. import org.apache.iceberg.flink.actions.Actions; TableLoader tableLoader = TableLoader.fromCatalog( CatalogLoader.hive(\"my_catalog\", configuration, properties), TableIdentifier.of(\"database\", \"table\") ); Table table = tableLoader.loadTable(); RewriteDataFilesActionResult result = Actions.forTable(table) .rewriteDataFiles() .execute(); For more deta"
         },
         "hypericeberg/docs/latest/flink-queries": {
           "chunk": "hypericeberg-0000.json",
-          "index": 16,
+          "index": 22,
           "title": "Flink Queries - HyperHyperIceberg™",
           "text": "Flink Queries🔗 Iceberg support streaming and batch read With Apache Flink's DataStream API and Table API. Reading with SQL🔗 Iceberg support both streaming and batch read in Flink. Execute the following sql command to switch execution mode from streaming to batch, and vice versa: -- Execute the flink job in streaming mode for current session context SET execution.runtime-mode = streaming; -- Execute the flink job in batch mode for current session context SET execution.runtime-mode = batch; Flink batch read🔗 Submit a Flink batch job using the following sentences: -- Execute the flink job in b"
         },
         "hypericeberg/docs/latest/flink-writes": {
           "chunk": "hypericeberg-0000.json",
-          "index": 17,
+          "index": 23,
           "title": "Flink Writes - HyperHyperIceberg™",
           "text": "Flink Writes🔗 Iceberg support batch and streaming writes with Apache Flink's DataStream API and Table API. The Flink Iceberg sink guarantees exactly-once semantics. Writing with SQL🔗 Iceberg support both INSERT INTO and INSERT OVERWRITE. INSERT INTO🔗 To append new data to a table with a Flink streaming job, use INSERT INTO: INSERT INTO `hive_catalog`.`default`.`sample` VALUES (1, 'a'); INSERT INTO `hive_catalog`.`default`.`sample` SELECT id, data from other_kafka_table; INSERT OVERWRITE🔗 To replace data in the table with the result of a query, use INSERT OVERWRITE in batch job (flink strea"
         },
         "hypericeberg/docs/latest/hive": {
           "chunk": "hypericeberg-0000.json",
-          "index": 18,
+          "index": 24,
           "title": "Hive - HyperHyperIceberg™",
           "text": "Hive🔗 Iceberg supports reading and writing Iceberg tables through Hive by using a StorageHandler. Feature support🔗 Hive supports the following features with Hive version 4.0.0 and above: Creating an Iceberg table. Creating an Iceberg identity-partitioned table. Creating an Iceberg table with any partition spec, including the various transforms supported by Iceberg. Creating a table from an existing table (CTAS table). Dropping a table. Altering a table while keeping Iceberg and Hive schemas in sync. Altering the partition schema (updating columns). Altering the partition schema by specifying"
         },
+        "hypericeberg/docs/latest/hive-migration": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 25,
+          "title": "Hive Migration - HyperHyperIceberg™",
+          "text": "Hive Table Migration🔗 Apache Hive supports ORC, Parquet, and Avro file formats that could be migrated to Iceberg. When migrating data to an Iceberg table, which provides versioning and transactional updates, only the most recent data files need to be migrated. Iceberg supports all three migration actions: Snapshot Table, Migrate Table, and Add Files for migrating from Hive tables to Iceberg tables. Since Hive tables do not maintain snapshots, the migration process essentially involves creating a new Iceberg table with the existing schema and committing all data files across all partitions to "
+        },
         "hypericeberg/docs/latest/java-api-quickstart": {
           "chunk": "hypericeberg-0000.json",
-          "index": 19,
+          "index": 26,
           "title": "Java Quickstart - HyperHyperIceberg™",
           "text": "Java API Quickstart🔗 Create a table🔗 Tables are created using either a Catalog or an implementation of the Tables interface. Using a Hive catalog🔗 The Hive catalog connects to a Hive metastore to keep track of Iceberg tables. You can initialize a Hive catalog with a name and some properties. (see: Catalog properties) import java.util.HashMap; import java.util.Map; import org.apache.iceberg.hive.HiveCatalog; HiveCatalog catalog = new HiveCatalog(); catalog.setConf(spark.sparkContext().hadoopConfiguration()); // Optionally use Spark's Hadoop configuration Map <String, String> properties = new"
         },
         "hypericeberg/docs/latest/jdbc": {
           "chunk": "hypericeberg-0000.json",
-          "index": 20,
+          "index": 27,
           "title": "JDBC - HyperHyperIceberg™",
           "text": "Iceberg JDBC Integration🔗 JDBC Catalog🔗 Iceberg supports using a table in a relational database to manage Iceberg tables through JDBC. The database that JDBC connects to must support atomic transaction to allow the JDBC catalog implementation to properly support atomic Iceberg table commits and read serializable isolation. Configurations🔗 Because each database and database service provider might require different configurations, the JDBC catalog allows arbitrary configurations through: Property Default Description uri the JDBC connection string jdbc.<property_key> any key value pairs to con"
         },
+        "hypericeberg/docs/latest/kafka-connect": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 28,
+          "title": "Kafka Connect - HyperHyperIceberg™",
+          "text": "Kafka Connect🔗 Kafka Connect is a popular framework for moving data in and out of Apache Kafka via connectors. There are many different connectors available, such as the S3 sink for writing data from Kafka to S3 and Debezium source connectors for writing change data capture records from relational databases to Kafka. It has a straightforward, decentralized, distributed architecture. A cluster consists of a number of worker processes, and a connector runs tasks on these processes to perform the work. Connector deployment is configuration driven, so generally no code needs to be written to run "
+        },
         "hypericeberg/docs/latest/maintenance": {
           "chunk": "hypericeberg-0000.json",
-          "index": 21,
+          "index": 29,
           "title": "Maintenance - HyperHyperIceberg™",
           "text": "Maintenance🔗 Info Maintenance operations require the Table instance. Please refer Java API quickstart page to refer how to load an existing table. Recommended Maintenance🔗 Expire Snapshots🔗 Each write to an Iceberg table creates a new snapshot, or version, of a table. Snapshots can be used for time-travel queries, or the table can be rolled back to any valid snapshot. Snapshots accumulate until they are expired by the expireSnapshots operation. Regularly expiring snapshots is recommended to delete data files that are no longer needed, and to keep the size of table metadata small. This examp"
         },
         "hypericeberg/docs/latest/metrics-reporting": {
           "chunk": "hypericeberg-0000.json",
-          "index": 22,
+          "index": 30,
           "title": "Metrics Reporting - HyperHyperIceberg™",
           "text": "Metrics Reporting🔗 As of 1.1.0 Iceberg supports the MetricsReporter and the MetricsReport APIs. These two APIs allow expressing different metrics reports while supporting a pluggable way of reporting these reports. Type of Reports🔗 ScanReport🔗 A ScanReport carries metrics being collected during scan planning against a given table. Amongst some general information about the involved table, such as the snapshot id or the table name, it includes metrics like: total scan planning duration number of data/delete files included in the result number of data/delete manifests scanned/skipped number o"
         },
+        "hypericeberg/docs/latest/nessie": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 31,
+          "title": "Nessie - HyperHyperIceberg™",
+          "text": "Iceberg Nessie Integration🔗 Iceberg provides integration with Nessie through the iceberg-nessie module. This section describes how to use Iceberg with Nessie. Nessie provides several key features on top of Iceberg: multi-table transactions git-like operations (eg branches, tags, commits) hive-like metastore capabilities See Project Nessie for more information on Nessie. Nessie requires a server to run, see Getting Started to start a Nessie server. Enabling Nessie Catalog🔗 The iceberg-nessie module is bundled with Spark and Flink runtimes for all versions from 0.11.0. To get started with Ness"
+        },
         "hypericeberg/docs/latest/partitioning": {
           "chunk": "hypericeberg-0000.json",
-          "index": 23,
+          "index": 32,
           "title": "Partitioning - HyperHyperIceberg™",
           "text": "Partitioning🔗 What is partitioning?🔗 Partitioning is a way to make queries faster by grouping similar rows together when writing. For example, queries for log entries from a logs table would usually include a time range, like this query for logs between 10 and 12 AM: SELECT level, message FROM logs WHERE event_time BETWEEN '2018-12-01 10:00:00' AND '2018-12-01 12:00:00'; Configuring the logs table to partition by the date of event_time will group log events into files with the same event date. Iceberg keeps track of that date and will use it to skip files for other dates that don't have usef"
         },
         "hypericeberg/docs/latest/performance": {
           "chunk": "hypericeberg-0000.json",
-          "index": 24,
+          "index": 33,
           "title": "Performance - HyperHyperIceberg™",
           "text": "Performance🔗 Iceberg is designed for huge tables and is used in production where a single table can contain tens of petabytes of data. Even multi-petabyte tables can be read from a single node, without needing a distributed SQL engine to sift through table metadata. Scan planning🔗 Scan planning is the process of finding the files in a table that are needed for a query. Planning in an Iceberg table fits on a single node because Iceberg's metadata can be used to prune metadata files that aren't needed, in addition to filtering data files that don't contain matching data. Fast scan planning fro"
         },
         "hypericeberg/docs/latest/reliability": {
           "chunk": "hypericeberg-0000.json",
-          "index": 25,
+          "index": 34,
           "title": "Reliability - HyperHyperIceberg™",
           "text": "Reliability🔗 Iceberg was designed to solve correctness problems that affect Hive tables running in S3. Hive tables track data files using both a central metastore for partitions and a file system for individual files. This makes atomic changes to a table's contents impossible, and eventually consistent stores like S3 may return incorrect results due to the use of listing files to reconstruct the state of a table. It also requires job planning to make many slow listing calls: O(n) with the number of partitions. Iceberg tracks the complete list of data files in each snapshot using a persistent "
         },
         "hypericeberg/docs/latest/schemas": {
           "chunk": "hypericeberg-0000.json",
-          "index": 26,
+          "index": 35,
           "title": "Schemas - HyperHyperIceberg™",
           "text": "Schemas🔗 Iceberg tables support the following types: Type Description Notes boolean True or false int 32-bit signed integers Can promote to long long 64-bit signed integers float 32-bit IEEE 754 floating point Can promote to double double 64-bit IEEE 754 floating point decimal(P,S) Fixed-point decimal; precision P, scale S Scale is fixed and precision must be 38 or less date Calendar date without timezone or time time Time of day without date, timezone Stored as microseconds timestamp Timestamp without timezone Stored as microseconds timestamptz Timestamp with timezone Stored as microseconds "
         },
         "hypericeberg/docs/latest/spark-configuration": {
           "chunk": "hypericeberg-0000.json",
-          "index": 27,
+          "index": 36,
           "title": "Configuration - HyperHyperIceberg™",
           "text": "Spark Configuration🔗 Catalogs🔗 Spark adds an API to plug in table catalogs that are used to load, create, and manage Iceberg tables. Spark catalogs are configured by setting Spark properties under spark.sql.catalog. This creates an Iceberg catalog named hive_prod that loads tables from a Hive metastore: spark.sql.catalog.hive_prod = org.apache.iceberg.spark.SparkCatalog spark.sql.catalog.hive_prod.type = hive spark.sql.catalog.hive_prod.uri = thrift://metastore-host:port # omit uri to use the same URI as Spark: hive.metastore.uris in hive-site.xml Below is an example for a REST catalog named"
         },
         "hypericeberg/docs/latest/spark-ddl": {
           "chunk": "hypericeberg-0000.json",
-          "index": 28,
+          "index": 37,
           "title": "DDL - HyperHyperIceberg™",
           "text": "Spark DDL🔗 To use Iceberg in Spark, first configure Spark catalogs. Iceberg uses Apache Spark's DataSourceV2 API for data source and catalog implementations. CREATE TABLE🔗 Spark 3 can create tables in any Iceberg catalog with the clause USING iceberg: CREATE TABLE prod.db.sample ( id bigint NOT NULL COMMENT 'unique id', data string) USING iceberg; Iceberg will convert the column type in Spark to corresponding Iceberg type. Please check the section of type compatibility on creating table for details. Table create commands, including CTAS and RTAS, support the full range of Spark create clause"
         },
         "hypericeberg/docs/latest/spark-getting-started": {
           "chunk": "hypericeberg-0000.json",
-          "index": 29,
+          "index": 38,
           "title": "Getting Started - HyperHyperIceberg™",
           "text": "Getting Started🔗 The latest version of Iceberg is 1.11.0. Spark is currently the most feature-rich compute engine for Iceberg operations. We recommend you to get started with Spark to understand Iceberg concepts and features with examples. You can also view documentations of using Iceberg with other compute engine under the Multi-Engine Support page. Using Iceberg in Spark🔗 To use Iceberg in a Spark shell, use the --packages option: spark-shell --packages org.apache.iceberg:iceberg-spark-runtime-4.1_2.13:1.11.0 Info If you want to include Iceberg in your Spark installation, add the iceberg-s"
         },
         "hypericeberg/docs/latest/spark-procedures": {
           "chunk": "hypericeberg-0000.json",
-          "index": 30,
+          "index": 39,
           "title": "Procedures - HyperHyperIceberg™",
           "text": "Spark Procedures🔗 To use Iceberg in Spark, first configure Spark catalogs. For Spark 3.x, stored procedures are only available when using Iceberg SQL extensions in Spark. For Spark 4.0, stored procedures are supported natively without requiring the Iceberg SQL extensions. However, note that they are case-sensitive in Spark 4.0. Usage🔗 Procedures can be used from any configured Iceberg catalog with CALL. All procedures are in the namespace system. CALL supports passing arguments by name (recommended) or by position. Mixing position and named arguments is not supported. Named arguments🔗 All p"
         },
         "hypericeberg/docs/latest/spark-queries": {
           "chunk": "hypericeberg-0000.json",
-          "index": 31,
+          "index": 40,
           "title": "Queries - HyperHyperIceberg™",
           "text": "Spark Queries🔗 To use Iceberg in Spark, first configure Spark catalogs. Iceberg uses Apache Spark's DataSourceV2 API for data source and catalog implementations. Querying with SQL🔗 In Spark, tables use identifiers that include a catalog name. SELECT * FROM prod.db.table; -- catalog: prod, namespace: db, table: table Metadata tables, like history and snapshots, can use the Iceberg table name as a namespace. For example, to read from the files metadata table for prod.db.table: SELECT * FROM prod.db.table.files; content file_path file_format spec_id partition record_count file_size_in_bytes col"
         },
+        "hypericeberg/docs/latest/spark-structured-streaming": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 41,
+          "title": "Structured Streaming - HyperHyperIceberg™",
+          "text": "Spark Structured Streaming🔗 Iceberg uses Apache Spark's DataSourceV2 API for data source and catalog implementations. Spark DSv2 is an evolving API with different levels of support in Spark versions. Streaming Reads🔗 Iceberg supports processing incremental data in spark structured streaming jobs which starts from a historical timestamp: val df = spark.readStream .format(\"iceberg\") .option(\"stream-from-timestamp\", Long.toString(streamStartTimestamp)) .load(\"database.table_name\") Warning Iceberg only supports reading data from append snapshots. Overwrite snapshots cannot be processed and will "
+        },
         "hypericeberg/docs/latest/spark-writes": {
           "chunk": "hypericeberg-0000.json",
-          "index": 32,
+          "index": 42,
           "title": "Writes - HyperHyperIceberg™",
           "text": "Spark Writes🔗 To use Iceberg in Spark, first configure Spark catalogs. Some plans are only available when using Iceberg SQL extensions. Iceberg uses Apache Spark's DataSourceV2 API for data source and catalog implementations. Spark DSv2 is an evolving API with different levels of support in Spark versions: Feature support Spark Notes SQL insert into ✔️ ⚠ Requires spark.sql.storeAssignmentPolicy=ANSI (default since Spark 3.0) SQL merge into ✔️ ⚠ Requires Iceberg Spark extensions SQL insert overwrite ✔️ ⚠ Requires spark.sql.storeAssignmentPolicy=ANSI (default since Spark 3.0) SQL delete from ✔️"
         },
+        "hypericeberg/docs/latest/table-migration": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 43,
+          "title": "Overview - HyperHyperIceberg™",
+          "text": "Table Migration🔗 Apache Iceberg supports converting existing tables in other formats to Iceberg tables. This section introduces the general concept of table migration, its approaches, and existing implementations in Iceberg. Migration Approaches🔗 There are two methods for executing table migration: full data migration and in-place metadata migration. Full data migration involves copying all data files from the source table to the new Iceberg table. This method makes the new table fully isolated from the source table, but is slower and doubles the space. In practice, users can use operations "
+        },
+        "hypericeberg/docs/latest/view-configuration": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 44,
+          "title": "Configuration - HyperHyperIceberg™",
+          "text": "Configuration🔗 View properties🔗 Iceberg views support properties to configure view behavior. Below is an overview of currently available view properties. Property Default Description write.metadata.compression-codec gzip Metadata compression codec: none or gzip version.history.num-entries 10 Controls the number of versions to retain replace.drop-dialect.allowed false Controls whether a SQL dialect is allowed to be dropped during a replace operation View behavior properties🔗 Property Default Description commit.retry.num-retries 4 Number of times to retry a commit before failing commit.retry."
+        },
         "hypericeberg/flink-quickstart": {
           "chunk": "hypericeberg-0000.json",
-          "index": 34,
+          "index": 45,
           "title": "Flink and HyperIceberg Quickstart - HyperHyperIceberg™",
           "text": "Flink This guide will get you up and running with Apache Iceberg™ using Apache Flink™, including sample code to highlight some powerful features. You can learn more about Iceberg's Flink runtime by checking out the Flink section. Quickstart environment🔗 The fastest way to get started is to use Docker Compose with the Iceberg Flink Quickstart image. To use this, you'll need to install the Docker CLI. The quickstart includes: A local Flink cluster (Job Manager and Task Manager) Iceberg REST Catalog MinIO (local S3 storage) Clone the Iceberg repository and start up the Docker containers: git clo"
         },
         "hypericeberg/gcm-stream-spec": {
           "chunk": "hypericeberg-0000.json",
-          "index": 35,
+          "index": 46,
           "title": "AES GCM Stream Spec - HyperHyperIceberg™",
           "text": "AES GCM Stream file format extension🔗 Background and Motivation🔗 Iceberg supports a number of data file formats. Two of these formats (Parquet and ORC) have built-in encryption capabilities, that allow to protect sensitive information in the data files. However, besides the data files, Iceberg tables also have metadata files, that keep sensitive information too (e.g., min/max values in manifest files, or bloom filter bitsets in puffin files). Metadata file formats (AVRO, JSON, Puffin) don't have encryption support. Moreover, with the exception of Parquet, no Iceberg data or metadata file for"
         },
         "hypericeberg/hive-quickstart": {
           "chunk": "hypericeberg-0000.json",
-          "index": 36,
+          "index": 47,
           "title": "Hive and HyperIceberg Quickstart - HyperHyperIceberg™",
           "text": "Hive This guide will get you up and running with Apache Iceberg™ using Apache Hive™, including sample code to highlight some powerful features. You can learn more about Iceberg's Hive runtime by checking out the Hive section. Docker Images Creating a Table Writing Data to a Table Reading Data from a Table Next Steps Docker Images🔗 The fastest way to get started is to use Apache Hive images which provides a SQL-like interface to create and query Iceberg tables from your laptop. You need to install the Docker Desktop. Take a look at the Tags tab in Apache Hive docker images to see the available"
         },
+        "hypericeberg/how-to-release": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 48,
+          "title": "How To Release - HyperHyperIceberg™",
+          "text": "Introduction🔗 This page walks you through the release process of the Iceberg project. Here you can read about the release process in general for an Apache project. Decisions about releases are made by three groups: Release Manager: Does the work of creating the release, signing it, counting votes, announcing the release and so on. Requires the assistance of a committer for some steps. The community: Performs the discussion of whether it is the right time to create a release and what that release should contain. The community can also cast non-binding votes on the release. PMC: Gives binding v"
+        },
+        "hypericeberg/integrations/amoro": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 49,
+          "title": "Apache Amoro - HyperHyperIceberg™",
+          "text": "Apache Amoro With Iceberg🔗 Apache Amoro(incubating) is a Lakehouse management system built on open data lake formats. Working with compute engines including Flink, Spark, and Trino, Amoro brings pluggable and Table Maintenance features for a Lakehouse to provide out-of-the-box data warehouse experience, and helps data platforms or products easily build infra-decoupled, stream-and-batch-fused and lake-native architecture. AMS(Amoro Management Service) provides Lakehouse management features, like self-optimizing, data expiration, etc. It also provides a unified catalog service for all compute e"
+        },
+        "hypericeberg/integrations/daft": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 50,
+          "title": "Daft - HyperHyperIceberg™",
+          "text": "Daft🔗 Daft is a distributed query engine written in Python and Rust, two fast-growing ecosystems in the data engineering and machine learning industry. It exposes its flavor of the familiar Python DataFrame API which is a common abstraction over querying tables of data in the Python data ecosystem. Daft DataFrames are a powerful interface to power use-cases across ML/AI training, batch inference, feature engineering and traditional analytics. Daft's tight integration with Iceberg unlocks novel capabilities for both traditional analytics and Pythonic ML workloads on your data catalog. Enabling"
+        },
+        "hypericeberg/integrations/risingwave": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 51,
+          "title": "RisingWave - HyperHyperIceberg™",
+          "text": "RisingWave🔗 RisingWave is a Postgres-compatible SQL database designed for real-time event streaming data processing, analysis, and management. It can ingest millions of events per second, continuously join and analyze live data streams with historical tables, serve ad-hoc queries in real-time, and deliver fresh, consistent results. Supported Features🔗 RisingWave supports batch reads and streaming writes of Apache Iceberg™ tables via its built-in source and sink connectors. For more information, see the Iceberg source connector documentation and Iceberg sink connector documentation. Table For"
+        },
         "hypericeberg/multi-engine-support": {
           "chunk": "hypericeberg-0000.json",
-          "index": 37,
+          "index": 52,
           "title": "Multi-Engine Support - HyperHyperIceberg™",
           "text": "Multi-Engine Support🔗 Apache Iceberg is an open standard for huge analytic tables that can be used by any processing engine. The community continuously improves Iceberg core library components to enable integrations with different compute engines that power analytics, business intelligence, machine learning, etc. Connectors for Spark, Flink and Hive are maintained in the main Iceberg repository. Multi-Version Support🔗 Processing engine connectors maintained in the iceberg repository are built for multiple versions. For Spark and Flink, each new version that introduces backwards incompatible "
         },
         "hypericeberg/puffin-spec": {
           "chunk": "hypericeberg-0000.json",
-          "index": 38,
+          "index": 53,
           "title": "Puffin Spec - HyperHyperIceberg™",
           "text": "Puffin file format🔗 This is a specification for Puffin, a file format designed to store information such as indexes and statistics about data managed in an Iceberg table that cannot be stored directly within the Iceberg manifest. A Puffin file contains arbitrary pieces of information (here called \"blobs\"), along with metadata necessary to interpret them. The blobs supported by Iceberg are documented at Blob types. Format specification🔗 A file conforming to the Puffin file format specification should have the structure as described below. Versions🔗 Currently, there is a single version of the"
         },
+        "hypericeberg/releases": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 54,
+          "title": "Releases - HyperHyperIceberg™",
+          "text": "Releases Downloads🔗 The latest version of Iceberg is 1.11.0. 1.11.0 source tar.gz -- signature -- sha512 1.11.0 Spark 4.1_with Scala 2.13 runtime Jar 1.11.0 Spark 4.0_with Scala 2.13 runtime Jar 1.11.0 Spark 3.5_with Scala 2.12 runtime Jar 1.11.0 Spark 3.5_with Scala 2.13 runtime Jar 1.11.0 Flink 2.1 runtime Jar 1.11.0 Flink 2.0 runtime Jar 1.11.0 Flink 1.20 runtime Jar 1.11.0 aws-bundle Jar 1.11.0 gcp-bundle Jar 1.11.0 azure-bundle Jar To use Iceberg in Spark or Flink, download the runtime JAR for your engine version and add it to the jars folder of your installation. Gradle🔗 To add a depen"
+        },
         "hypericeberg/rest-catalog-spec": {
           "chunk": "hypericeberg-0000.json",
-          "index": 39,
+          "index": 55,
           "title": "REST Catalog Spec - HyperHyperIceberg™",
           "text": "REST Catalog Spec REST Catalog API Specification🔗 Iceberg defines a REST-based Catalog API for managing table metadata and performing catalog operations. You can find the OpenAPI specification here: REST Catalog OpenAPI YAML. You can also explore the API interactively using the Swagger UI. REST Catalog Protocol🔗 As the Iceberg project grew to support more languages and engines, pluggable catalogs started to cause some practical problems. Catalogs needed to be implemented in multiple languages and it proved difficult for commercial offerings to support many different catalogs and clients. To "
         },
         "hypericeberg/security": {
           "chunk": "hypericeberg-0000.json",
-          "index": 40,
+          "index": 56,
           "title": "Security - HyperHyperIceberg™",
           "text": "Reporting Security Issues🔗 The Apache Iceberg Project uses the standard process outlined by the Apache Security Team for reporting vulnerabilities. Note that vulnerabilities should not be publicly disclosed until the project has responded. To report a possible security vulnerability, please email security@iceberg.apache.org. Security Model🔗 Apache Iceberg is a table format and a set of libraries and integrations used inside larger systems such as catalogs, query engines, and services. In most deployments, the primary trust and authorization boundaries are enforced by the surrounding catalog,"
         },
         "hypericeberg/spark-quickstart": {
           "chunk": "hypericeberg-0000.json",
-          "index": 41,
+          "index": 57,
           "title": "Spark and HyperIceberg Quickstart - HyperHyperIceberg™",
           "text": "Spark This guide will get you up and running with Apache Iceberg™ using Apache Spark™, including sample code to highlight some powerful features. You can learn more about Iceberg's Spark runtime by checking out the Spark section. Docker-Compose Creating a table Writing Data to a Table Reading Data from a Table Adding A Catalog Next Steps Docker-Compose🔗 The fastest way to get started is to use a docker-compose file that uses the tabulario/spark-iceberg image which contains a local Spark cluster with a configured Iceberg catalog. To use this, you'll need to install the Docker CLI as well as th"
         },
         "hypericeberg/spec": {
           "chunk": "hypericeberg-0000.json",
-          "index": 42,
+          "index": 58,
           "title": "Spec - HyperHyperIceberg™",
           "text": "Iceberg Table Spec🔗 This is a specification for the Iceberg table format that is designed to manage a large, slow-changing collection of files in a distributed file system or key-value store as a table. Format Versioning🔗 Versions 1, 2 and 3 of the Iceberg spec are complete and adopted by the community. Version 4 is under active development and has not been formally adopted. The format version number is incremented when new features are added that will break forward-compatibility---that is, when older readers would not read newer table features correctly. Tables may continue to be written wi"
         },
+        "hypericeberg/status": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 59,
+          "title": "Implementation Status - HyperHyperIceberg™",
+          "text": "Implementation Status🔗 Apache Iceberg's table specification is implemented in multiple languages. This page provides an overview of the current capabilities. Libraries🔗 This section lists the libraries that implement the Apache Iceberg specification. Java PyIceberg Rust Go C++ Data Types🔗 Data Type Java PyIceberg Rust Go C++ boolean Y Y Y Y Y int Y Y Y Y Y long Y Y Y Y Y float Y Y Y Y Y double Y Y Y Y Y decimal Y Y Y Y Y date Y Y Y Y Y time Y Y Y Y Y timestamp Y Y Y Y Y timestamptz Y Y Y Y Y timestamp_ns Y Y Y Y N timestamptz_ns Y Y Y Y N unknown Y Y N Y N string Y Y Y Y Y uuid Y Y Y Y N fi"
+        },
+        "hypericeberg/talks": {
+          "chunk": "hypericeberg-0000.json",
+          "index": 60,
+          "title": "Talks - HyperHyperIceberg™",
+          "text": "Talks Iceberg Talks🔗 Official Apache Iceberg Youtube Channel: https://www.youtube.com/@ApacheIceberg🔗 Apache Iceberg Summit 2026 Playlist: Iceberg Summit 2026🔗 Apache Iceberg Summit 2025 Playlist: Iceberg Summit 2025🔗 Apache Iceberg Summit 2024 Playlist: Iceberg Summit 2024🔗"
+        },
         "hypericeberg/terms": {
           "chunk": "hypericeberg-0000.json",
-          "index": 43,
+          "index": 61,
           "title": "Terms - HyperHyperIceberg™",
           "text": "Terms🔗 Catalog🔗 Overview🔗 You may think of Iceberg as a format for managing data in a single table, but the Iceberg library needs a way to keep track of those tables by name. Tasks like creating, dropping, and renaming tables are the responsibility of a catalog. Catalogs manage a collection of tables that are usually grouped into namespaces. The most important responsibility of a catalog is tracking a table's current metadata, which is provided by the catalog when you load a table. The first step when using an Iceberg client is almost always initializing and configuring a catalog. The confi"
         },
         "hypericeberg/udf-spec": {
           "chunk": "hypericeberg-0000.json",
-          "index": 44,
+          "index": 62,
           "title": "SQL UDF Spec - HyperHyperIceberg™",
           "text": "Iceberg UDF Spec🔗 Background and Motivation🔗 A SQL user-defined function (UDF or UDTF) is a callable routine that accepts input parameters and executes a function body. Depending on the function type, the result can be: Scalar function (UDF) – returns a single value, which may be a primitive type (e.g., int, string) or a non-primitive type (e.g., struct, list). Table function (UDTF) – returns a table with zero or more rows of columns with a uniform schema. This specification introduces a standardized metadata format for UDFs in Iceberg. Goals🔗 Define a portable metadata format for both scal"
         },
-        "hypericeberg/view-spec": {
+        "hypericeberg/vendors": {
           "chunk": "hypericeberg-0000.json",
-          "index": 45,
+          "index": 63,
+          "title": "Vendors - HyperHyperIceberg™",
+          "text": "Vendors Vendors Supporting Iceberg Tables🔗 This page contains some of the vendors who are shipping and supporting Apache Iceberg in their products Amazon Web Services (AWS)🔗 AWS provides a comprehensive suite of services to support Apache Iceberg as part of its modern data architecture. Amazon S3 offers virtually unlimited, highly durable storage for data lakes, while Amazon S3 Tables deliver fully managed Iceberg tables with automated maintenance, optimization, and cost management. Amazon Athena offers a serverless, interactive query engine with native Iceberg support, enabling fast and cos"
+        },
+        "hypericeberg/view-spec": {
+          "chunk": "hypericeberg-0001.json",
+          "index": 0,
           "title": "View Spec - HyperHyperIceberg™",
           "text": "Iceberg View Spec🔗 Background and Motivation🔗 Most compute engines (e.g. Trino and Apache Spark) support views. A view is a logical table that can be referenced by future queries. Views do not contain any data. Instead, the query stored by the view is executed every time the view is referenced by another query. Each compute engine stores the metadata of the view in its proprietary format in the metastore of choice. Thus, views created from one engine can not be read or altered easily from another engine even when engines share the metastore as well as the storage system. This document standa"
         }
