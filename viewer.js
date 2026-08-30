@@ -71,7 +71,7 @@ async function getPage(product, route) {
     || Object.values(product.pages)[0];
   if (!ref) return null;
   if (!loaded.has(ref.chunk)) {
-    loaded.set(ref.chunk, await fetch(`${getBasePath()}/data/${ref.chunk}?v=1.1.1`).then(r => r.ok ? r.json() : []));
+    loaded.set(ref.chunk, await fetch(`${getBasePath()}/data/${ref.chunk}?v=1.1.2`).then(r => r.ok ? r.json() : []));
   }
   return loaded.get(ref.chunk)[ref.index];
 }
@@ -691,6 +691,35 @@ function bindImageFallbacks() {
    Sidebar & Layout Rendering
    ========================================================================== */
 
+const BRAND_MAP = {
+  mongodb: 'MongoDB',
+  mysql: 'MySQL',
+  postgresql: 'PostgreSQL',
+  mariadb: 'MariaDB',
+  sqlserver: 'SQL Server',
+  db2: 'Db2',
+  cockroachdb: 'CockroachDB',
+  informix: 'Informix',
+  cassandra: 'Cassandra',
+  spanner: 'Cloud Spanner',
+  vitess: 'Vitess',
+  oracle: 'Oracle',
+  yashandb: 'YashanDB',
+  rest: 'REST',
+  api: 'API',
+  mcp: 'MCP',
+  ui: 'UI',
+  sdk: 'SDK',
+  cli: 'CLI',
+  sql: 'SQL',
+  jdbc: 'JDBC',
+  odbc: 'ODBC',
+  kafka: 'Kafka',
+  s3: 'S3',
+  gcs: 'GCS',
+  azure: 'Azure'
+};
+
 function formatSidebarEntry(route, ref, product) {
   let rel = route.slice(product.id.length).replace(/^\/+/, '');
   if (!rel) return { section: 'Overview', label: 'Overview', route };
@@ -719,15 +748,22 @@ function formatSidebarEntry(route, ref, product) {
     .replace(/^HyperBI\s+/i, '')
     .trim();
 
-  const prettyPart = parts[parts.length - 1]
+  if (cleanTitle.toLowerCase() === 'untitled') {
+    cleanTitle = '';
+  }
+
+  const rawLastPart = parts[parts.length - 1].toLowerCase();
+  const prettyPart = BRAND_MAP[rawLastPart] || parts[parts.length - 1]
     .split(/[-_]+/)
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .map(w => BRAND_MAP[w.toLowerCase()] || (w.charAt(0).toUpperCase() + w.slice(1)))
     .join(' ');
 
-  const displayLabel = cleanTitle && cleanTitle.length > 0 && cleanTitle.length < 45 ? cleanTitle : prettyPart;
-  const prettySection = section
+  const displayLabel = cleanTitle && cleanTitle.length > 0 && cleanTitle.length < 45 
+    ? (BRAND_MAP[cleanTitle.toLowerCase()] || cleanTitle) 
+    : prettyPart;
+  const prettySection = BRAND_MAP[section.toLowerCase()] || section
     .split(/[-_]+/)
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .map(w => BRAND_MAP[w.toLowerCase()] || (w.charAt(0).toUpperCase() + w.slice(1)))
     .join(' ');
 
   return { section: prettySection, label: displayLabel, route };
@@ -772,7 +808,7 @@ async function loadAllProductPages(product, onProgress) {
   
   await Promise.all(chunks.map(async chunk => {
     if (!loaded.has(chunk)) {
-      const data = await fetch(`${getBasePath()}/data/${chunk}?v=1.1.1`).then(r => r.ok ? r.json() : []);
+      const data = await fetch(`${getBasePath()}/data/${chunk}?v=1.1.2`).then(r => r.ok ? r.json() : []);
       loaded.set(chunk, data);
     }
     loadedChunks++;
@@ -1476,6 +1512,6 @@ window.addEventListener('popstate', renderRoute);
 window.addEventListener('hashchange', renderRoute);
 
 // Initialize application
-manifest = await fetch(`${getBasePath()}/data/manifest.json?v=1.1.1`).then(r => r.json());
+manifest = await fetch(`${getBasePath()}/data/manifest.json?v=1.1.2`).then(r => r.json());
 initProductPicker();
 renderRoute();
