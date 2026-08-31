@@ -71,9 +71,103 @@ async function getPage(product, route) {
     || Object.values(product.pages)[0];
   if (!ref) return null;
   if (!loaded.has(ref.chunk)) {
-    loaded.set(ref.chunk, await fetch(`${getBasePath()}/data/${ref.chunk}?v=1.1.6`).then(r => r.ok ? r.json() : []));
+    loaded.set(ref.chunk, await fetch(`${getBasePath()}/data/${ref.chunk}?v=1.1.7`).then(r => r.ok ? r.json() : []));
   }
   return loaded.get(ref.chunk)[ref.index];
+}
+
+function cleanDisplayTitle(title, brand) {
+  if (!title) return '';
+  let t = title.trim();
+  
+  // 1. Check if the entire title is a duplicated repeated string (e.g. A + A)
+  const half = Math.floor(t.length / 2);
+  if (t.length >= 6 && t.length % 2 === 0 && t.slice(0, half) === t.slice(half)) {
+    t = t.slice(0, half).trim();
+  }
+  
+  // 2. Check pattern 'Name - BrandName - Brand' or 'Name - Brand'
+  if (brand) {
+    const parts = t.split(new RegExp('\\s*[-—|:]+\\s*' + brand, 'i')).filter(Boolean);
+    if (parts.length >= 1) {
+      t = parts[0].trim();
+    }
+  }
+  
+  // 3. Strip trailing documentation / brand suffixes
+  t = t.replace(/\s*(?:\||—|-|::)\s*(?:Documentation|Docs|Guide|Manual|Component Documentation).*$/i, '').trim();
+  t = t.replace(/[\s\-—|:]+$/, '').trim();
+  return t || title;
+}
+
+function renderHyperSyncIndex(product) {
+  const getCategory = route => {
+    const lower = route.toLowerCase();
+    if (lower.includes('.flowanalysis.') || lower.endsWith('rule')) return 'Flow Analysis Rules';
+    if (lower.includes('.parameter.') || lower.includes('parameterprovider')) return 'Parameter Providers';
+    if (lower.includes('.reporting.') || lower.includes('reportingtask')) return 'Reporting Tasks';
+    if (lower.includes('.registry.') || lower.includes('flowregistryclient') || lower.includes('.azure.devops') || lower.includes('.atlassian') || lower.includes('.github') || lower.includes('.gitlab')) return 'Flow Registry Clients';
+    if (lower.includes('.processors.') || lower.includes('processor')) return 'Processors';
+    if (lower.includes('.services.') || lower.includes('.service.') || lower.includes('.ssl.') || lower.includes('.database.') || lower.includes('.schemaregistry') || lower.includes('.lookup.') || lower.includes('.redis.') || lower.includes('.vault.') || lower.includes('controllerservice') || lower.includes('reader') || lower.includes('writer')) return 'Controller Services';
+    return 'General & Other';
+  };
+
+  const categories = {
+    'Processors': [],
+    'Controller Services': [],
+    'Reporting Tasks': [],
+    'Parameter Providers': [],
+    'Flow Registry Clients': [],
+    'Flow Analysis Rules': [],
+    'General & Other': []
+  };
+
+  for (const [route, ref] of Object.entries(product.pages)) {
+    if (route === 'hypersync' || route === 'hypersync/index') continue;
+    const cat = getCategory(route);
+    const shortName = route.split('.').pop() || route;
+    if (categories[cat]) {
+      categories[cat].push({ route, name: shortName });
+    }
+  }
+
+  for (const cat of Object.keys(categories)) {
+    categories[cat].sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  const categoryOrder = ['Processors', 'Controller Services', 'Reporting Tasks', 'Parameter Providers', 'Flow Registry Clients', 'Flow Analysis Rules', 'General & Other'];
+
+  return `
+    <div class="hs-index-wrap">
+      <div class="hs-overview-card">
+        <h3>HyperSync Orchestration Platform</h3>
+        <p>HyperSync is an enterprise dataflow orchestration system based on flow-based programming. It supports powerful, scalable directed graphs of data routing, transformation, and mediation across heterogeneous data architectures.</p>
+        <div class="hs-quick-stats">
+          <div class="hs-stat-item"><strong>${categories['Processors'].length}</strong><span>Processors</span></div>
+          <div class="hs-stat-item"><strong>${categories['Controller Services'].length}</strong><span>Controller Services</span></div>
+          <div class="hs-stat-item"><strong>${categories['Reporting Tasks'].length + categories['Parameter Providers'].length + categories['Flow Registry Clients'].length + categories['Flow Analysis Rules'].length}</strong><span>Services & Tasks</span></div>
+          <div class="hs-stat-item"><strong>${Object.keys(product.pages).length}</strong><span>Total Components</span></div>
+        </div>
+      </div>
+
+      <div class="hs-category-grid">
+        ${categoryOrder.filter(cat => categories[cat]?.length > 0).map(cat => `
+          <div class="hs-cat-card">
+            <div class="hs-cat-head">
+              <h4>${esc(cat)}</h4>
+              <span class="hs-cat-count">${categories[cat].length}</span>
+            </div>
+            <ul class="hs-cat-list">
+              ${categories[cat].slice(0, 15).map(c => `
+                <li><a href="${hrefFor(c.route)}" class="hs-cat-link">${esc(c.name)}</a></li>
+              `).join('')}
+              ${categories[cat].length > 15 ? `<li class="hs-cat-more">+ ${categories[cat].length - 15} more in left navigation</li>` : ''}
+            </ul>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
 }
 
 function cleanImportedHtml(html) {
@@ -93,7 +187,56 @@ function cleanImportedHtml(html) {
     a[href*="github.com"][href*="/tree/"], a[href*="github.com"][href*="/blob/"]
   `).forEach(el => el.remove());
 
-  // 2. Remove text-based feedback prompts and their parent containers
+  // 2. Remove NiFi / HyperSync embedded sidebar (.uk-width-1-4@m) & unwrap content
+  template.content.querySelectorAll('[class*="uk-width-1-4"]').forEach(el => {
+    el.remove();
+  });
+
+  // Remove viewport height constraints and inner scrollable constraints from panels
+  template.content.querySelectorAll('[uk-height-viewport], .uk-panel-scrollable').forEach(el => {
+    el.removeAttribute('uk-height-viewport');
+    el.classList.remove('uk-panel-scrollable');
+  });
+
+  // Unwrap uk-grid wrappers
+  template.content.querySelectorAll('[uk-grid], .uk-grid').forEach(grid => {
+    const contentPart = grid.querySelector('[class*="uk-width-3-4"], .doc-content') || grid;
+    if (contentPart && contentPart !== grid) {
+      grid.replaceWith(...Array.from(contentPart.childNodes));
+    }
+  });
+
+  // 3. Fix Property Expand/Collapse Toolbar Buttons in HyperSync
+  template.content.querySelectorAll('#expand-property-descriptors, #expand-dynamic-properties').forEach(btn => {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg><span>Expand All</span>`;
+    btn.className = 'prop-toolbar-btn prop-expand-btn';
+    btn.removeAttribute('uk-icon');
+    btn.removeAttribute('uk-tooltip');
+  });
+
+  template.content.querySelectorAll('#shrink-property-descriptors, #shrink-dynamic-properties').forEach(btn => {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline></svg><span>Collapse All</span>`;
+    btn.className = 'prop-toolbar-btn prop-collapse-btn';
+    btn.removeAttribute('uk-icon');
+    btn.removeAttribute('uk-tooltip');
+  });
+
+  // Wrap toolbar in a clean prop-toolbar header if found
+  template.content.querySelectorAll('.component-section-header').forEach(header => {
+    const parentFlex = header.closest('.uk-flex, .uk-margin');
+    if (parentFlex && parentFlex.querySelector('.prop-toolbar-btn')) {
+      parentFlex.classList.add('prop-section-toolbar');
+    }
+  });
+
+  // 4. Clean up HyperSync property accordion titles to avoid page jump
+  template.content.querySelectorAll('.property-descriptor > a.uk-accordion-title, li.property-descriptor > a').forEach(a => {
+    a.setAttribute('href', '#');
+    a.setAttribute('role', 'button');
+    a.setAttribute('tabindex', '0');
+  });
+
+  // 5. Remove text-based feedback prompts and their parent containers
   template.content.querySelectorAll('p, div, span, small, a, button, section, footer').forEach(el => {
     const text = el.textContent.trim().toLowerCase();
     if (
@@ -116,7 +259,7 @@ function cleanImportedHtml(html) {
     }
   });
 
-  // 3. Clean up empty headings (like Request heading when no parameters are present)
+  // 6. Clean up empty headings (like Request heading when no parameters are present)
   template.content.querySelectorAll('h2#request, .openapi-tabs__heading#request').forEach(heading => {
     const next = heading.nextElementSibling;
     if (!next || next.classList.contains('openapi-tabs__container') || next.id === 'responses' || next.querySelector?.('#responses')) {
@@ -124,13 +267,13 @@ function cleanImportedHtml(html) {
     }
   });
 
-  // 4. Remove broken upstream anchor icons and sprite links
+  // 7. Remove broken upstream anchor icons and sprite links
   template.content.querySelectorAll('a.anchor, .anchor, use[href*="svg-sprite"], use[xlink\\:href*="svg-sprite"]').forEach(el => {
     if (el.matches('a.anchor, .anchor')) el.remove();
     else el.closest('a.anchor, .anchor')?.remove() || el.remove();
   });
 
-  // 5. Populate empty or broken SVGs (e.g. from Mintlify / OpenMetadata cards & link headers)
+  // 8. Populate empty or broken SVGs (e.g. from Mintlify / OpenMetadata cards & link headers)
   template.content.querySelectorAll('svg').forEach(svg => {
     if (!svg.children.length && !svg.textContent.trim()) {
       const cardIcon = svg.closest('[data-component-part="card-icon"]');
@@ -484,30 +627,30 @@ function bindAccordions() {
   });
 
   // Expand / Shrink All Toolbar Buttons in HyperSync
-  app.querySelectorAll('#expand-property-descriptors, #expand-dynamic-properties').forEach(btn => {
+  app.querySelectorAll('#expand-property-descriptors, #expand-dynamic-properties, .prop-expand-btn').forEach(btn => {
     btn.onclick = e => {
       e.preventDefault();
-      const scope = btn.closest('table, section, div') || app;
+      const scope = btn.closest('.prop-section-toolbar, .uk-flex, .uk-margin')?.nextElementSibling || btn.closest('table, section, div') || app;
       scope.querySelectorAll('.property-descriptor-content, .dynamic-property-content, .uk-accordion-content').forEach(c => {
         c.classList.add('uk-open');
         c.removeAttribute('hidden');
         c.style.display = 'block';
       });
-      scope.querySelectorAll('.uk-accordion-title, dt, li').forEach(t => t.classList.add('uk-open'));
+      scope.querySelectorAll('.property-descriptor, li.property-descriptor, .uk-accordion-title, dt, li').forEach(t => t.classList.add('uk-open'));
       showToast('Expanded all properties');
     };
   });
 
-  app.querySelectorAll('#shrink-dynamic-properties, #shrink-property-descriptors').forEach(btn => {
+  app.querySelectorAll('#shrink-dynamic-properties, #shrink-property-descriptors, .prop-collapse-btn').forEach(btn => {
     btn.onclick = e => {
       e.preventDefault();
-      const scope = btn.closest('table, section, div') || app;
+      const scope = btn.closest('.prop-section-toolbar, .uk-flex, .uk-margin')?.nextElementSibling || btn.closest('table, section, div') || app;
       scope.querySelectorAll('.property-descriptor-content, .dynamic-property-content, .uk-accordion-content').forEach(c => {
         c.classList.remove('uk-open');
         c.setAttribute('hidden', 'true');
         c.style.display = 'none';
       });
-      scope.querySelectorAll('.uk-accordion-title, dt, li').forEach(t => t.classList.remove('uk-open'));
+      scope.querySelectorAll('.property-descriptor, li.property-descriptor, .uk-accordion-title, dt, li').forEach(t => t.classList.remove('uk-open'));
       showToast('Collapsed all properties');
     };
   });
@@ -1128,32 +1271,37 @@ async function renderRoute() {
     return;
   }
   
-  const displayTitle = page.title.replace(/\s+(?:\||—|-)\s+.*documentation.*$/i, '').trim();
+  const displayTitle = cleanDisplayTitle(page.title, product.brand);
   renderSidebar(product, page.route);
   
+  const isHyperSyncRoot = (product.id === 'hypersync' && (pureRoute === 'hypersync' || pureRoute === 'hypersync/index' || pureRoute === 'hypersync/index.html'));
+  const bodyContent = isHyperSyncRoot ? renderHyperSyncIndex(product) : cleanImportedHtml(page.html);
+
   app.innerHTML = `
     <article class="doc">
       <div class="doc-header">
-        <div class="doc-header-main">
-          <p class="eyebrow">${esc(product.brand)}</p>
-          <h1>${esc(displayTitle || page.title)}</h1>
-        </div>
-        <div class="doc-actions-bar">
-          <button class="doc-action-btn" type="button" id="doc-print-page-btn" title="Print this single page">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            <span>Print page</span>
-          </button>
-          <button class="doc-action-btn doc-action-primary" type="button" id="doc-print-product-btn" title="Assemble and print all ${Object.keys(product.pages).length} pages of ${esc(product.brand)}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-            <span>Print entire product</span>
-          </button>
-          <button class="doc-action-btn" type="button" id="doc-copy-page-btn" title="Copy page text to clipboard">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            <span>Copy text</span>
-          </button>
+        <p class="eyebrow">${esc(product.brand)}</p>
+        <div class="doc-header-row">
+          <div class="doc-header-title">
+            <h1 class="doc-title">${esc(displayTitle || page.title)}</h1>
+          </div>
+          <div class="doc-actions-bar">
+            <button class="doc-action-btn" type="button" id="doc-print-page-btn" title="Print this single page">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>Print page</span>
+            </button>
+            <button class="doc-action-btn doc-action-primary" type="button" id="doc-print-product-btn" title="Assemble and print all ${Object.keys(product.pages).length} pages of ${esc(product.brand)}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              <span>Print entire product</span>
+            </button>
+            <button class="doc-action-btn" type="button" id="doc-copy-page-btn" title="Copy page text to clipboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copy text</span>
+            </button>
+          </div>
         </div>
       </div>
-      <div class="doc-body">${cleanImportedHtml(page.html)}</div>
+      <div class="doc-body">${bodyContent}</div>
       <div class="doc-footer">
         <span>HyperLake Documentation &bull; ${esc(product.brand)}</span>
       </div>
@@ -1161,7 +1309,7 @@ async function renderRoute() {
   `;
   
   bindDocumentControls();
-  document.title = `${page.title} — ${product.brand}`;
+  document.title = `${displayTitle || page.title} — ${product.brand}`;
   
   // Rewrite legacy doc links in imported content
   app.querySelectorAll('a[href]').forEach(a => {
